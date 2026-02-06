@@ -28,6 +28,9 @@ export function renderTabla() {
 
   let filas = ordenarValidasSegunModo();
 
+  // ✅ Mostrar SOLO tasas frescas (scraper real)
+  filas = filas.filter(c => (c.source || '').toLowerCase() === 'scraper');
+
   // ✅ Quitar SUNAT de la tabla (SUNAT no es casa de cambio)
   filas = filas.filter(c => (c.slug ?? '').toLowerCase() !== 'sunat' && String(c.casa).toUpperCase() !== 'SUNAT');
 

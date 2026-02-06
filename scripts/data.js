@@ -100,10 +100,13 @@ export async function cargarSunatDesdeTasas() {
 }
 
 export async function cargarHistorico() {
-  const res = await fetch('data/historico.json');
+  const res = await fetch(`${API_BASE}/historico`, {
+    headers: { "x-api-key": API_KEY },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`historico ${res.status}`);
   const data = await res.json();
-
-  return data
+  return (Array.isArray(data) ? data : [])
     .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
     .slice(-7);
 }
@@ -113,14 +116,16 @@ export async function cargarHistorico() {
 // ==============================
 export async function cargarMeta() {
   try {
-    const res = await fetch('data/meta.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`meta.json ${res.status}`);
+    const res = await fetch(`${API_BASE}/meta`, {
+      headers: { "x-api-key": API_KEY },
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error(`meta ${res.status}`);
     const meta = await res.json();
-
     setState({ meta });
     return meta;
   } catch (e) {
-    console.warn('Meta no disponible:', e);
+    console.warn("Meta no disponible:", e);
     setState({ meta: null });
     return null;
   }

@@ -2,31 +2,23 @@
 // File: scripts/data.js
 // ==============================
 import { state, setState } from './state.js';
-export async function cargarTasas() {
-  const res = await fetch(`${API_BASE}/resumen`, {
-    headers: { "x-api-key": API_KEY },
-  });
 
 const API_BASE = "https://dolar-api.jaime-araujo-martech.workers.dev";
-const API_KEY  = "K3d9F2kLm8QpX7ZcA91WnY0R5uS"; // la misma que pusiste en env.API_KEY del Worker
-  if (!res.ok) throw new Error(`API resumen ${res.status}`);
+const API_KEY  = "TU_API_KEY_AQUI";
 
 /* ============================================================
    Helpers de normalización (para logos / matching / filtros)
    ============================================================ */
-  const data = await res.json();
 
 // Convierte "ZonaDólar", "Zona Dolar", "zona-dólar" => "zonadolar"
 function slugCasa(nombre = '') {
   return String(nombre)
     .trim()
     .toLowerCase()
-    .normalize('NFD')                 // separa acentos
-    .replace(/[\u0300-\u036f]/g, '')  // elimina acentos
-    .replace(/[^a-z0-9]+/g, '')       // deja solo alfanumérico
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '');
 }
-  // armamos una lista pequeña desde el resumen (sin duplicados)
-  const map = new Map();
 
 // Lista “baseline” de casas verificadas (ajústala a tu gusto)
 const VERIFIED_SLUGS = new Set([
@@ -34,12 +26,7 @@ const VERIFIED_SLUGS = new Set([
   'zonadolar',
   'inkamoney',
   'chaskidolar',
-  // agrega las que tú consideres verificadas
 ]);
-  const push = (x) => {
-    if (!x || !x.casa) return;
-    map.set(slugCasa(x.casa), x);
-  };
 
 // Carga tasas y separa válidas/ inválidas. No toca el DOM aquí.
 export async function cargarTasas() {
@@ -53,7 +40,6 @@ export async function cargarTasas() {
 
   // armamos una lista pequeña desde el resumen (sin duplicados)
   const map = new Map();
-
   const push = (x) => {
     if (!x || !x.casa) return;
     map.set(slugCasa(x.casa), x);
@@ -71,13 +57,14 @@ export async function cargarTasas() {
     return {
       ...c,
       slug,
-      verificada: VERIFIED_SLUGS.has(slug)
+      verificada: VERIFIED_SLUGS.has(slug),
     };
   });
 
   const validas = todas.filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
   const invalidas = todas.filter(c => !Number.isFinite(c.compra) || !Number.isFinite(c.venta));
 
+  // “mejores” globales (sin modo)
   const mejorCompra = validas.length ? Math.max(...validas.map(c => c.compra)) : null;
   const mejorVenta  = validas.length ? Math.min(...validas.map(c => c.venta))  : null;
 
@@ -100,12 +87,9 @@ export async function cargarTasas() {
   });
 }
 
-
 export async function cargarSunatDesdeTasas() {
-  // Busca SUNAT dentro del mismo JSON de tasas
   if (!state.tasas.length) await cargarTasas();
 
-  // Soporta variaciones del nombre (SUNAT, Sunat, etc.)
   const sunat = state.tasas.find(t => slugCasa(t.casa) === 'sunat');
 
   if (sunat && Number.isFinite(sunat.compra) && Number.isFinite(sunat.venta)) {
@@ -119,7 +103,6 @@ export async function cargarHistorico() {
   const res = await fetch('data/historico.json');
   const data = await res.json();
 
-  // Orden por fecha asc y últimos 7
   return data
     .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
     .slice(-7);
@@ -134,9 +117,7 @@ export async function cargarMeta() {
     if (!res.ok) throw new Error(`meta.json ${res.status}`);
     const meta = await res.json();
 
-    // lo guardamos en state por si lo quieres usar luego (badge, debug, etc.)
     setState({ meta });
-
     return meta;
   } catch (e) {
     console.warn('Meta no disponible:', e);

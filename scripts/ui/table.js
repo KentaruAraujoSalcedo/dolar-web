@@ -188,8 +188,15 @@ export function renderTabla() {
    Ordenar validas (tu lógica intacta)
    ============================================================ */
 function ordenarValidasSegunModo() {
-  const { validas, modo } = state;
-  const arr = [...validas];
+  const { validas, tasas, modo } = state;
+
+  // ✅ fallback: si validas está vacío, usa tasas
+  const base = (Array.isArray(validas) && validas.length)
+    ? validas
+    : (Array.isArray(tasas) ? tasas : []);
+
+  // solo numéricas
+  const arr = base.filter(c => Number.isFinite(c?.compra) && Number.isFinite(c?.venta));
 
   const { have, want } = getHaveWant();
 

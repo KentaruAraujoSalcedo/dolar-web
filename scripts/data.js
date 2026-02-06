@@ -4,7 +4,7 @@
 import { state, setState } from './state.js';
 
 const API_BASE = "https://dolar-api.jaime-araujo-martech.workers.dev";
-const API_KEY  = "k3d9F2kLm8QpX7ZcA91WnY0R5uS";
+const API_KEY  = "K3d9F2kLm8QpX7ZcA91WnY0R5uS";
 
 /* ============================================================
    Helpers de normalización (para logos / matching / filtros)

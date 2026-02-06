@@ -40,7 +40,7 @@ export function renderTabla() {
   // ✅ Actualiza el texto del label (Ver todas (N) / Ver menos)
   const labelTextEl = chk?.closest('label')?.querySelector('span');
   if (labelTextEl) {
-    labelTextEl.textContent = showAll ? 'Ver menos' : `Ver todas (${totalFilas})`;
+    labelTextEl.textContent = showAll ? 'Ver menos' : `Ver todas (Top ${totalFilas})`;
   }
 
   // ✅ Asegura que el checkbox re-renderice la tabla (aunque bindEvents no lo tenga)

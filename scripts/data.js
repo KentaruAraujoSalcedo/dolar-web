@@ -3,6 +3,9 @@
 // ==============================
 import { state, setState } from './state.js';
 
+const API_BASE = "https://dolar-api.jaime-araujo-martech.workers.dev";
+const API_KEY  = "K3d9F2kLm8QpX7ZcA91WnY0R5uS"; // la misma que pusiste en env.API_KEY del Worker
+
 /* ============================================================
    Helpers de normalización (para logos / matching / filtros)
    ============================================================ */
@@ -28,8 +31,10 @@ const VERIFIED_SLUGS = new Set([
 
 // Carga tasas y separa válidas/ inválidas. No toca el DOM aquí.
 export async function cargarTasas() {
-  const res = await fetch('data/tasas.json');
-  const todasRaw = await res.json();
+const res = await fetch(`${API_BASE}/tasas`, {
+  headers: { "x-api-key": API_KEY },
+});
+const todasRaw = await res.json();
 
   // Enriquecemos cada casa con:
   // - slug: para match con logos, consistencia, etc.

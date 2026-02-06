@@ -1,0 +1,8 @@
+/* TEAM */
+Developer: PrecioDolarHoy.pe
+Site: https://preciodolarhoy.pe
+
+/* SITE */
+Last update: 2026-02-03
+Language: Spanish
+Location: Peru

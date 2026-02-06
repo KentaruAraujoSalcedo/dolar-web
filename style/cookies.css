@@ -1,0 +1,92 @@
+/* ==============================
+   Cookie Banner (final compact)
+   ============================== */
+
+#cookie-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  max-width: 720px;
+  width: calc(100% - 32px);
+
+  background: rgba(17, 17, 17, 0.95);
+  color: #fff;
+  padding: 10px 14px;
+
+  /* IMPORTANTE: por defecto oculto */
+  display: none;
+
+  z-index: 9999;
+
+  /* Layout (se activa cuando .show lo muestra) */
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  font-size: 13px;
+  line-height: 1.4;
+
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* Visible */
+#cookie-banner.show {
+  display: flex;
+}
+
+/* Link */
+#cookie-banner a {
+  color: #60a5fa;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* Buttons */
+#cookie-banner button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Accept */
+#cookie-banner button:first-of-type {
+  background: #2563EB;
+  color: #fff;
+}
+
+/* Reject */
+#cookie-banner button:last-of-type {
+  background: #374151;
+  color: #fff;
+}
+
+/* Hover / focus */
+#cookie-banner button:hover,
+#cookie-banner button:focus {
+  opacity: 0.9;
+}
+
+#cookie-banner button:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  #cookie-banner {
+    flex-wrap: wrap;
+    border-radius: 14px;
+    padding: 12px;
+  }
+
+  #cookie-banner button {
+    width: 100%;
+    text-align: center;
+  }
+}

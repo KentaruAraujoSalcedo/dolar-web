@@ -1,0 +1,120 @@
+/* =========================================================
+   ADS.CSS
+   Publicidad lateral (sticky + sizes) + inline responsive + final (mobile)
+   AdSense-ready (espacios reservados para evitar CLS)
+   ========================================================= */
+
+/* ---------- Contenedor lateral ---------- */
+.ads{
+  width:100%;
+  position:sticky;
+  top:18px;
+  max-height:calc(100vh - 36px);
+  align-self:flex-start;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  gap:16px;
+}
+
+/* ---------- Slot base ---------- */
+.ad-slot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(255,255,255,.55);
+  border:1px dashed rgba(255,255,255,.65);
+  border-radius:16px;
+  box-shadow: var(--shadow-soft);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  overflow:hidden;
+}
+
+/* Tamaños fijos laterales (CLS = 0) */
+.ad-300x600{ width:100%; max-width:300px; height:600px; }
+.ad-300x250{ width:100%; max-width:300px; height:250px; }
+
+/* ---------- Inline (tablet/móvil) ---------- */
+.ad-inline{ display:none; }
+
+@media (max-width:1100px){
+  .ad-inline{
+    display:block;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .ad-inline .ad-slot{
+    border-radius: 12px;
+  }
+}
+
+/* ---------- Responsive (inline y final) ---------- */
+.ad-slot.ad-responsive{
+  width:100%;
+  max-width:728px;
+  margin:0 auto;
+
+  /* Reserva base para evitar CLS */
+  min-height: 250px; /* default tipo 300x250 */
+  height:auto;
+}
+
+/* Desktop: suele renderizar leaderboard */
+@media (min-width:1101px){
+  .ad-slot.ad-responsive{
+    min-height: 90px; /* leaderboard */
+  }
+}
+
+/* Mobile: banner */
+@media (max-width:600px){
+  .ad-slot.ad-responsive{
+    min-height: 100px; /* banner móvil */
+  }
+}
+
+/* ---------- Segundo anuncio lateral (zona inferior) ---------- */
+.ad-secondary{ display:none; }
+
+/* Solo en pantallas grandes y altas */
+@media (min-width:1600px) and (min-height:800px){
+  .ad-secondary{
+    display:flex;
+    margin-top:auto;
+  }
+}
+
+/* Nunca mostrar secundario en tablet/móvil */
+@media (max-width:1100px){
+  .ad-secondary{ display:none !important; }
+}
+
+/* =========================================================
+   Ad final (mobile/tablet) — grande tipo 300x250
+   (Tu HTML: <section class="panel ad-final"> ... )
+   ========================================================= */
+.ad-final{ display:none; }
+
+@media (max-width:1100px){
+  .ad-final{
+    display:block;
+    margin-top: 10px;
+  }
+
+  .ad-final .ad-slot{
+    min-height: 250px; /* 300x250 */
+    border-radius: 14px;
+  }
+}
+
+/* Si lo sientes muy grande en móviles chicos, descomenta esto:
+@media (max-width:600px){
+  .ad-final .ad-slot{ min-height: 200px; }
+}
+*/

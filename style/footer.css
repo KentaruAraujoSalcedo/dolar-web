@@ -1,0 +1,16 @@
+/* =========================================================
+   FOOTER.CSS
+   Footer + enlaces legales
+   ========================================================= */
+
+.footer-links{
+  display:inline-flex;
+  gap:12px;
+  margin-left:12px;
+  flex-wrap:wrap;
+}
+
+.footer-links a{
+  font-size:.85rem;
+  opacity:.8;
+}

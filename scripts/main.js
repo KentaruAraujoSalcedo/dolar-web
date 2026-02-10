@@ -56,7 +56,7 @@ async function init() {
 
     // 3) Datos (tasas + SUNAT)
     await cargarTasas();
-    await cargarSunatDesdeTasas();
+    await cargarSunatDesdeHistorico();
 
     // 3.1) Meta real de scrapers (Actualizado REAL)
     const meta = await cargarMeta();

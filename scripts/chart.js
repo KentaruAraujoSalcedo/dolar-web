@@ -12,7 +12,6 @@ export function renderGraficoHistorico(ultimos7) {
   const compras = ultimos7.map(d => d.compra);
   const ventas  = ultimos7.map(d => d.venta);
 
-  // Destruye gráfico anterior si existe
   if (state.chart) state.chart.destroy();
 
   state.chart = new Chart(ctx, {
@@ -23,7 +22,7 @@ export function renderGraficoHistorico(ultimos7) {
         {
           label: 'Compra SUNAT',
           data: compras,
-          borderColor: '#16A34A',           // verde marca
+          borderColor: '#16A34A',
           backgroundColor: 'rgba(22,163,74,.08)',
           borderWidth: 2,
           pointRadius: 4,
@@ -33,7 +32,7 @@ export function renderGraficoHistorico(ultimos7) {
         {
           label: 'Venta SUNAT',
           data: ventas,
-          borderColor: '#2563EB',           // azul marca
+          borderColor: '#2563EB',
           backgroundColor: 'rgba(37,99,235,.08)',
           borderWidth: 2,
           pointRadius: 4,
@@ -45,19 +44,11 @@ export function renderGraficoHistorico(ultimos7) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-
-      interaction: {
-        intersect: false,
-        mode: 'index'
-      },
-
+      interaction: { intersect: false, mode: 'index' },
       plugins: {
         legend: {
           position: 'top',
-          labels: {
-            usePointStyle: true,
-            font: { weight: 'bold' }
-          }
+          labels: { usePointStyle: true, font: { weight: 'bold' } }
         },
         tooltip: {
           callbacks: {
@@ -68,40 +59,24 @@ export function renderGraficoHistorico(ultimos7) {
           }
         }
       },
-
       scales: {
-        x: {
-          grid: { display: false }
-        },
+        x: { grid: { display: false } },
         y: {
           beginAtZero: false,
-          ticks: {
-            callback: (v) => `S/ ${v}`
-          },
-          grid: {
-            color: 'rgba(0,0,0,.05)'
-          }
+          ticks: { callback: (v) => `S/ ${v}` },
+          grid: { color: 'rgba(0,0,0,.05)' }
         }
       }
     }
   });
 }
 
-// ✅ Wrapper: dibuja usando lo que ya tengas guardado en state
+// ✅ Wrapper coherente con el nuevo sistema: SOLO sunat7
 export function renderSunatChartFromState() {
-  // intenta encontrar el histórico en donde lo guardes
-  const hist =
-    state.ultimos7 ||
-    state.historicoSunat ||
-    state.sunatHistorico ||
-    state.sunatHistorico7 ||
-    state.historico ||
-    [];
-
+  const hist = state.sunat7 || [];
   if (!Array.isArray(hist) || hist.length === 0) {
-    console.warn('No hay histórico SUNAT en state para graficar.');
+    console.warn('No hay SUNAT últimos 7 (sunat7) en state para graficar.');
     return;
   }
-
   renderGraficoHistorico(hist);
 }

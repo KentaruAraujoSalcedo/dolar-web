@@ -4,8 +4,8 @@
 import { state, setState } from './state.js';
 import {
   cargarTasas,
-  cargarSunatDesdeHistorico,
-  cargarHistorico,
+  cargarSunatHoy,
+  cargarSunatUltimos7Dias,
   cargarMeta
 } from './data.js';
 
@@ -56,7 +56,7 @@ async function init() {
 
     // 3) Datos (tasas + SUNAT)
     await cargarTasas();
-    await cargarSunatDesdeHistorico();
+    await cargarSunatHoy();
 
     // 3.1) Meta real de scrapers (Actualizado REAL)
     const meta = await cargarMeta();
@@ -74,7 +74,7 @@ async function init() {
     btnOpenChart?.addEventListener('click', async () => {
       try {
         if (!state.historico7) {
-          const ultimos7 = await cargarHistorico();
+          const ultimos7 = await cargarSunatUltimos7Dias();
           setState({ historico7: ultimos7 });
         }
 
@@ -84,7 +84,7 @@ async function init() {
           state.chart?.resize?.();
         }, 0);
       } catch (e) {
-        console.warn('Histórico no disponible:', e);
+        console.warn('SUNAT mensual (últimos 7) no disponible:', e);
       }
     });
 

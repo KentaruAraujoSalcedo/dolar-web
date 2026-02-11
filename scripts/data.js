@@ -87,16 +87,33 @@ export async function cargarTasas() {
   });
 }
 
-export async function cargarSunatDesdeTasas() {
-  if (!state.tasas.length) await cargarTasas();
+export async function cargarSunatDesdeHistorico() {
+  const res = await fetch(`${API_BASE}/historico`, {
+    headers: { "x-api-key": API_KEY },
+    cache: "no-store",
+  });
 
-  const sunat = state.tasas.find(t => slugCasa(t.casa) === 'sunat');
-
-  if (sunat && Number.isFinite(sunat.compra) && Number.isFinite(sunat.venta)) {
-    setState({ sunat: { compra: sunat.compra, venta: sunat.venta } });
-  } else {
+  if (!res.ok) {
     setState({ sunat: { compra: null, venta: null } });
+    return;
   }
+
+  const hist = await res.json();
+  if (!Array.isArray(hist) || !hist.length) {
+    setState({ sunat: { compra: null, venta: null } });
+    return;
+  }
+
+  const last = hist[hist.length - 1];
+
+  setState({
+    sunat: {
+      compra: last.compra,
+      venta: last.venta,
+      fecha: last.fecha,
+      source: "historico",
+    },
+  });
 }
 
 export async function cargarHistorico() {

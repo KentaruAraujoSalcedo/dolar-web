@@ -89,13 +89,10 @@ export async function cargarTasas() {
 
 /* ============================================================
    ✅ SUNAT (NUEVO)
-   - Ya NO usamos /historico
-   - SUNAT de hoy viene de /sunat
-   - El “histórico 7 días” viene de /sunat-mensual
    ============================================================ */
 
 export async function cargarSunatHoy() {
-  const res = await fetch(`${API_BASE}/sunat`, {
+  const res = await fetch(`${API_BASE}/sunat-mensual`, {
     headers: { "x-api-key": API_KEY },
     cache: "no-store",
   });
@@ -105,19 +102,26 @@ export async function cargarSunatHoy() {
     return;
   }
 
-  const data = await res.json();
+  const payload = await res.json();
+  const dias = Array.isArray(payload?.dias) ? payload.dias : [];
 
-  if (!data || data.status !== "ok" || !Number.isFinite(data.compra) || !Number.isFinite(data.venta)) {
+  const validos = dias
+    .filter(d => d && d.fecha && Number.isFinite(d.compra) && Number.isFinite(d.venta))
+    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+  const last = validos[validos.length - 1];
+
+  if (!last) {
     setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
     return;
   }
 
   setState({
     sunat: {
-      compra: data.compra,
-      venta: data.venta,
-      fecha: data.fecha || null,
-      source: "sunat",
+      compra: last.compra,
+      venta: last.venta,
+      fecha: last.fecha,
+      source: "sunat_mensual",
     },
   });
 }

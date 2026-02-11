@@ -73,12 +73,12 @@ async function init() {
 
     btnOpenChart?.addEventListener('click', async () => {
       try {
-        if (!state.historico7) {
+        if (!state.sunat7) {
           const ultimos7 = await cargarSunatUltimos7Dias();
-          setState({ historico7: ultimos7 });
+          setState({ sunat7: ultimos7 });
         }
 
-        renderGraficoHistorico(state.historico7);
+        renderGraficoHistorico(state.sunat7);
 
         setTimeout(() => {
           state.chart?.resize?.();
@@ -164,7 +164,7 @@ function pintarActualizado(meta) {
 // ==============================
 // SEO Tabs (Guía rápida)
 // ==============================
-(function initSeoTabs(){
+(function initSeoTabs() {
   const root = document.querySelector('.seo-tabs');
   if (!root) return;
 

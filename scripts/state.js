@@ -2,50 +2,51 @@
 // File: scripts/state.js
 // ==============================
 
-// Estado global mínimo
-// Centraliza datos + UI sin lógica pesada
 export const state = {
   // ==========================
   // DATA
   // ==========================
-  tasas: [],            // todas las casas (válidas + inválidas)
-  validas: [],          // casas con compra/venta numéricas
-  invalidas: [],        // casas con compra/venta inválidas
+  tasas: [],
+  validas: [],
+  invalidas: [],
 
-  mejorCompra: null,    // max compra global
-  mejorVenta: null,     // min venta global
+  mejorCompra: null,
+  mejorVenta: null,
 
-  winnerCompra: null,   // casa con mejor compra (CTA)
-  winnerVenta: null,    // casa con mejor venta (CTA)
+  winnerCompra: null,
+  winnerVenta: null,
 
+  // SUNAT
   sunat: {
     compra: null,
-    venta: null
+    venta: null,
+    fecha: null,
+    source: null,
   },
 
   // ==========================
   // UI / INTERACCIÓN
   // ==========================
-  modo: 'recibir',      // 'recibir' | 'necesito'
-  monedaTengo: 'USD',   // 'USD' | 'PEN'
-  monedaQuiero: 'PEN',  // siempre la opuesta
-  monto: NaN,           // ✅ mejor: vacío = NaN (tu UI ya lo soporta)
+  modo: 'recibir',
+  monedaTengo: 'USD',
+  monedaQuiero: 'PEN',
+  monto: NaN,
 
-  soloVerificadas: false, // filtro UI (futuro)
-  ready: false,           // data lista
+  soloVerificadas: false,
+  ready: false,
 
   // ==========================
   // RUNTIME
   // ==========================
-  chart: null,          // instancia Chart.js
-  meta: null,           // hora de carga de datos
-  historico7: null      // ✅ cache del histórico (últimos 7)
+  chart: null,
+  meta: null,
+
+  // ✅ cache de SUNAT últimos 7 (derivado de sunat-mensual)
+  sunat7: null
 };
 
-// Patch simple (intencionalmente)
 export const setState = (patch) => Object.assign(state, patch);
 
-// Helpers
 export const isReadySunat = () =>
   Number.isFinite(state.sunat.compra) &&
   Number.isFinite(state.sunat.venta);

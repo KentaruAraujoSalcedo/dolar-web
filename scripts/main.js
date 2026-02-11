@@ -4,7 +4,7 @@
 import { state, setState } from './state.js';
 import {
   cargarTasas,
-  cargarSunatDesdeTasas,
+  cargarSunatDesdeHistorico,
   cargarHistorico,
   cargarMeta
 } from './data.js';
@@ -56,7 +56,7 @@ async function init() {
 
     // 3) Datos (tasas + SUNAT)
     await cargarTasas();
-    await cargarSunatDesdeTasas()
+    await cargarSunatDesdeHistorico();
 
     // 3.1) Meta real de scrapers (Actualizado REAL)
     const meta = await cargarMeta();

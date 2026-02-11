@@ -87,30 +87,13 @@ export async function cargarTasas() {
   });
 }
 
-export async function cargarSunatDesdeHistorico() {
-  const res = await fetch(`${API_BASE}/historico`, {
-    headers: { "x-api-key": API_KEY },
-    cache: "no-store",
-  });
+export async function cargarSunatDesdeTasas() {
+  if (!state.tasas.length) await cargarTasas();
 
-  if (!res.ok) {
-    setState({ sunat: { compra: null, venta: null } });
-    return;
-  }
+  const sunat = state.tasas.find(t => slugCasa(t.casa) === 'sunat');
 
-  const data = await res.json();
-  if (!Array.isArray(data) || data.length === 0) {
-    setState({ sunat: { compra: null, venta: null } });
-    return;
-  }
-
-  // último registro del histórico (ya viene ordenado normalmente,
-  // pero por si acaso lo ordenamos)
-  const ordenado = [...data].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-  const last = ordenado[ordenado.length - 1];
-
-  if (Number.isFinite(last?.compra) && Number.isFinite(last?.venta)) {
-    setState({ sunat: { compra: last.compra, venta: last.venta } });
+  if (sunat && Number.isFinite(sunat.compra) && Number.isFinite(sunat.venta)) {
+    setState({ sunat: { compra: sunat.compra, venta: sunat.venta } });
   } else {
     setState({ sunat: { compra: null, venta: null } });
   }

@@ -87,50 +87,64 @@ export async function cargarTasas() {
   });
 }
 
-export async function cargarSunatDesdeHistorico() {
-  const res = await fetch(`${API_BASE}/historico`, {
+/* ============================================================
+   ✅ SUNAT (NUEVO)
+   - Ya NO usamos /historico
+   - SUNAT de hoy viene de /sunat
+   - El “histórico 7 días” viene de /sunat-mensual
+   ============================================================ */
+
+export async function cargarSunatHoy() {
+  const res = await fetch(`${API_BASE}/sunat`, {
     headers: { "x-api-key": API_KEY },
     cache: "no-store",
   });
 
   if (!res.ok) {
-    setState({ sunat: { compra: null, venta: null } });
+    setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
     return;
   }
 
-  const hist = await res.json();
-  if (!Array.isArray(hist) || !hist.length) {
-    setState({ sunat: { compra: null, venta: null } });
+  const data = await res.json();
+
+  if (!data || data.status !== "ok" || !Number.isFinite(data.compra) || !Number.isFinite(data.venta)) {
+    setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
     return;
   }
-
-  const last = hist[hist.length - 1];
 
   setState({
     sunat: {
-      compra: last.compra,
-      venta: last.venta,
-      fecha: last.fecha,
-      source: "historico",
+      compra: data.compra,
+      venta: data.venta,
+      fecha: data.fecha || null,
+      source: "sunat",
     },
   });
 }
 
-export async function cargarHistorico() {
-  const res = await fetch(`${API_BASE}/historico`, {
+// Devuelve SIEMPRE un array de días [{fecha, compra, venta}, ...] (máx 7)
+export async function cargarSunatUltimos7Dias() {
+  const res = await fetch(`${API_BASE}/sunat-mensual`, {
     headers: { "x-api-key": API_KEY },
     cache: "no-store",
   });
-  if (!res.ok) throw new Error(`historico ${res.status}`);
-  const data = await res.json();
-  return (Array.isArray(data) ? data : [])
+
+  if (!res.ok) return [];
+
+  const payload = await res.json();
+  const dias = Array.isArray(payload?.dias) ? payload.dias : [];
+
+  // Ordenar por fecha asc, filtrar válidos, y quedarnos con los últimos 7
+  return dias
+    .filter(d => d && d.fecha && Number.isFinite(d.compra) && Number.isFinite(d.venta))
     .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
     .slice(-7);
 }
 
-// ==============================
-// META (cuándo corrieron los scrapers)
-// ==============================
+/* ============================================================
+   META (cuándo corrieron los scrapers)
+   ============================================================ */
+
 export async function cargarMeta() {
   try {
     const res = await fetch(`${API_BASE}/meta`, {

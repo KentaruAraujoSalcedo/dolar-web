@@ -4,7 +4,6 @@
 import { state, setState } from './state.js';
 
 const API_BASE = "https://dolar-api.jaime-araujo-martech.workers.dev";
-const API_KEY  = "K3d9F2kLm8QpX7ZcA91WnY0R5uS";
 
 /* ============================================================
    Helpers de normalización (para logos / matching / filtros)
@@ -28,27 +27,61 @@ const VERIFIED_SLUGS = new Set([
   'chaskidolar',
 ]);
 
-// Carga tasas y separa válidas/ inválidas. No toca el DOM aquí.
-export async function cargarTasas() {
-  const res = await fetch(`${API_BASE}/resumen`, {
-    headers: { "x-api-key": API_KEY },
-  });
+/* ============================================================
+   NUEVO: carga todo en 1 sola llamada
+   - usa /api/data (cacheado en edge)
+   - NO usa x-api-key (evita preflight)
+   ============================================================ */
+export async function cargarData() {
+  const res = await fetch(`${API_BASE}/api/data`);
 
-  if (!res.ok) throw new Error(`API resumen ${res.status}`);
+  if (!res.ok) throw new Error(`API /api/data ${res.status}`);
 
-  const data = await res.json();
+  const payload = await res.json();
 
-  // armamos una lista pequeña desde el resumen (sin duplicados)
+  // meta
+  setState({ meta: payload.meta || null });
+
+  // sunat (último día)
+  if (payload.sunat && Number.isFinite(payload.sunat.compra) && Number.isFinite(payload.sunat.venta)) {
+    setState({
+      sunat: {
+        compra: payload.sunat.compra,
+        venta: payload.sunat.venta,
+        fecha: payload.sunat.fecha,
+        source: payload.sunat.source || "sunat_mensual",
+      },
+    });
+  } else {
+    setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
+  }
+
+  // resumen -> armar lista pequeña (como ya hacías)
+  const resumen = payload.resumen;
+
+  if (!resumen) {
+    setState({
+      tasas: [],
+      validas: [],
+      invalidas: [],
+      mejorCompra: null,
+      mejorVenta: null,
+      winnerCompra: null,
+      winnerVenta: null,
+    });
+    return;
+  }
+
   const map = new Map();
   const push = (x) => {
     if (!x || !x.casa) return;
     map.set(slugCasa(x.casa), x);
   };
 
-  push(data.mejorCompra);
-  push(data.mejorVenta);
-  (data.topCompra || []).forEach(push);
-  (data.topVenta || []).forEach(push);
+  push(resumen.mejorCompra);
+  push(resumen.mejorVenta);
+  (resumen.topCompra || []).forEach(push);
+  (resumen.topVenta || []).forEach(push);
 
   const todasRaw = [...map.values()];
 
@@ -64,7 +97,6 @@ export async function cargarTasas() {
   const validas = todas.filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
   const invalidas = todas.filter(c => !Number.isFinite(c.compra) || !Number.isFinite(c.venta));
 
-  // “mejores” globales (sin modo)
   const mejorCompra = validas.length ? Math.max(...validas.map(c => c.compra)) : null;
   const mejorVenta  = validas.length ? Math.min(...validas.map(c => c.venta))  : null;
 
@@ -88,80 +120,21 @@ export async function cargarTasas() {
 }
 
 /* ============================================================
-   ✅ SUNAT (NUEVO)
+   SUNAT: últimos 7 días (para el gráfico)
+   - sigue usando /sunat-mensual
+   - IMPORTANTÍSIMO: sin x-api-key y sin cache:"no-store"
    ============================================================ */
-
-export async function cargarSunatHoy() {
-  const res = await fetch(`${API_BASE}/sunat-mensual`, {
-    headers: { "x-api-key": API_KEY },
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
-    return;
-  }
-
-  const payload = await res.json();
-  const dias = Array.isArray(payload?.dias) ? payload.dias : [];
-
-  const validos = dias
-    .filter(d => d && d.fecha && Number.isFinite(d.compra) && Number.isFinite(d.venta))
-    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-
-  const last = validos[validos.length - 1];
-
-  if (!last) {
-    setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
-    return;
-  }
-
-  setState({
-    sunat: {
-      compra: last.compra,
-      venta: last.venta,
-      fecha: last.fecha,
-      source: "sunat_mensual",
-    },
-  });
-}
 
 // Devuelve SIEMPRE un array de días [{fecha, compra, venta}, ...] (máx 7)
 export async function cargarSunatUltimos7Dias() {
-  const res = await fetch(`${API_BASE}/sunat-mensual`, {
-    headers: { "x-api-key": API_KEY },
-    cache: "no-store",
-  });
-
+  const res = await fetch(`${API_BASE}/sunat-mensual`);
   if (!res.ok) return [];
 
   const payload = await res.json();
   const dias = Array.isArray(payload?.dias) ? payload.dias : [];
 
-  // Ordenar por fecha asc, filtrar válidos, y quedarnos con los últimos 7
   return dias
     .filter(d => d && d.fecha && Number.isFinite(d.compra) && Number.isFinite(d.venta))
     .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
     .slice(-7);
-}
-
-/* ============================================================
-   META (cuándo corrieron los scrapers)
-   ============================================================ */
-
-export async function cargarMeta() {
-  try {
-    const res = await fetch(`${API_BASE}/meta`, {
-      headers: { "x-api-key": API_KEY },
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error(`meta ${res.status}`);
-    const meta = await res.json();
-    setState({ meta });
-    return meta;
-  } catch (e) {
-    console.warn("Meta no disponible:", e);
-    setState({ meta: null });
-    return null;
-  }
 }

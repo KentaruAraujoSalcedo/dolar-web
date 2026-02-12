@@ -3,10 +3,8 @@
 // ==============================
 import { state, setState } from './state.js';
 import {
-  cargarTasas,
-  cargarSunatHoy,
-  cargarSunatUltimos7Dias,
-  cargarMeta
+  cargarData,
+  cargarSunatUltimos7Dias
 } from './data.js';
 
 import {
@@ -55,12 +53,8 @@ async function init() {
     });
 
     // 3) Datos (tasas + SUNAT)
-    await cargarTasas();
-    await cargarSunatHoy();
-
-    // 3.1) Meta real de scrapers (Actualizado REAL)
-    const meta = await cargarMeta();
-    pintarActualizado(meta);
+    await cargarData();
+    pintarActualizado(state.meta);
 
     // 4) Header: mejores valores globales
     pintarMejoresHeader();

@@ -1,0 +1,136 @@
+/* =========================================================
+   MODAL.CSS
+   Modal + Chart (alineado con tu HTML)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:1000;
+}
+
+/* Tu JS cambia aria-hidden */
+.modal[aria-hidden="false"]{
+  display:flex;                 /* ✅ mejor centrado */
+  align-items:flex-start;
+  justify-content:center;
+  padding: 6vh 10px;            /* ✅ margen consistente */
+}
+
+.modal__overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(15,23,42,.55);
+}
+
+/* Panel */
+.modal__panel{
+  position:relative;
+  width:100%;
+  max-width:900px;
+
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
+  overflow:hidden;
+
+  max-height: 88vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Header */
+.modal__head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(2,6,23,.10);
+  background:linear-gradient(180deg,#FFFFFF 0%, #F7FAFF 100%);
+}
+
+.modal__title{
+  margin:0;
+  font-size:18px;
+  font-weight:950;
+  color:var(--brand-blue-deep);
+}
+
+.modal__close{
+  background:none;
+  border:none;
+  font-size:20px;
+  cursor:pointer;
+  color:rgba(2,6,23,.7);
+}
+
+.modal__close:hover{
+  color:rgba(2,6,23,.95);
+}
+
+.modal__body{
+  padding:14px 16px 16px;
+  overflow:auto;
+  -webkit-overflow-scrolling: touch; /* ✅ iOS scroll suave */
+}
+
+body.modal-open{
+  overflow:hidden;
+}
+
+/* Chart */
+#graficoSunat{
+  width:100% !important;
+  height:340px !important;
+  display:block;
+}
+
+.modal__close:focus-visible{
+  outline: none;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px rgba(37,99,235,.35);
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — (no aplica aquí) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .modal[aria-hidden="false"]{
+    padding: 10vh 10px;  /* un poco más abajo para que no tape todo */
+  }
+
+  .modal__panel{
+    border-radius: 16px;
+    max-height: 84vh;
+  }
+
+  #graficoSunat{
+    height: 280px !important;  /* ✅ menos “gigante” en mobile */
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  #graficoSunat{
+    height: 240px !important;
+  }
+}

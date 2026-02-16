@@ -1,0 +1,160 @@
+/* =========================================================
+   SEO-TABS.CSS
+   SEO Tabs (Guía rápida)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+.seo-tabs{
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  box-shadow: none;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.seo-tabs__head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.seo-tabs__title{
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 900;
+  color: var(--ink-900);
+  opacity: .90;
+}
+
+.seo-tabs__controls{
+  display:flex;
+  gap:8px;
+}
+
+.seo-tabs__arrow{
+  width: 36px;
+  height: 32px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(255,255,255,.50);
+  background: rgba(255,255,255,.55);
+
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+
+  box-shadow: 0 8px 18px rgba(2,6,23,.06);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  transition: transform .08s ease, filter .12s ease;
+}
+
+.seo-tabs__arrow:hover{ filter: brightness(1.03); }
+.seo-tabs__arrow:active{ transform: translateY(1px); }
+
+.seo-tabs__nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin: 0 0 10px;
+}
+
+.seo-tabs__tab{
+  border: 1px solid rgba(255,255,255,.55);
+  background: rgba(255,255,255,.48);
+  border-radius: 999px;
+  padding: 8px 10px;
+
+  cursor:pointer;
+  font-size: .9rem;
+  font-weight: 800;
+  color: var(--ink-800);
+
+  box-shadow: 0 10px 20px rgba(2,6,23,.05);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  transition: transform .08s ease, filter .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.seo-tabs__tab:hover{
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+.seo-tabs__tab:active{
+  transform: translateY(0);
+}
+
+.seo-tabs__tab.is-active{
+  border-color: rgba(37,99,235,.35);
+  background: rgba(37,99,235,.10);
+  color: var(--ink-900);
+}
+
+.seo-tabs__panels h3{
+  margin: 0 0 6px;
+  font-size: .95rem;
+  font-weight: 900;
+  color: var(--ink-900);
+}
+
+.seo-tabs__panels p{
+  margin: 0;
+  line-height: 1.55;
+  font-size: .92rem;
+  color: var(--ink-700);
+  opacity: .95;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — (no aplica aquí) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .seo-tabs{
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .seo-tabs__title{
+    font-size: .95rem;
+  }
+
+  .seo-tabs__tab{
+    font-size: .85rem;
+    padding: 6px 9px;
+  }
+
+  .seo-tabs__panels p{
+    font-size: .88rem;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .seo-tabs__nav{ gap:6px; }
+}

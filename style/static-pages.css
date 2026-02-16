@@ -1,0 +1,165 @@
+/* =========================================================
+   STATIC-PAGES.CSS
+   Páginas estáticas (About, Terms, Privacy, etc.)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+/* Contenedor simple (sin ads laterales) */
+.shell-simple{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Contenedor principal de páginas estáticas */
+.static-page{
+  max-width: 820px;                 /* un poco más cómodo que 720 */
+  margin: 0 auto;
+  padding: 22px 24px;
+
+  /* Glass consistente con tu UI */
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 20px;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+/* Tipografía base */
+.static-content{
+  color: var(--ink-800, #334155);
+}
+
+.static-content h1{
+  margin: 0 0 10px;
+  font-size: 1.45rem;
+  font-weight: 950;
+  color: var(--ink-900);
+  letter-spacing: -0.01em;
+}
+
+.static-content h2{
+  margin: 20px 0 10px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--ink-900);
+}
+
+.static-content h3{
+  margin: 16px 0 8px;
+  font-size: .98rem;
+  font-weight: 900;
+  color: var(--ink-900);
+  opacity: .95;
+}
+
+/* Texto */
+.static-content p{
+  line-height: 1.75;
+  margin: 0 0 14px;
+  color: var(--ink-800, #334155);
+}
+
+/* Listas (Terms/Privacy suelen tener) */
+.static-content ul,
+.static-content ol{
+  margin: 0 0 14px 18px;
+  padding: 0;
+  line-height: 1.75;
+}
+
+.static-content li{
+  margin: 6px 0;
+}
+
+/* Links */
+.static-content a{
+  font-weight: 700;
+  color: var(--brand-blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Bloques tipo nota (si usas <blockquote> o similar) */
+.static-content blockquote{
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-left: 4px solid rgba(37,99,235,.35);
+  background: rgba(255,255,255,.20);
+  border-radius: 14px;
+}
+
+/* Skip link (accesibilidad) */
+.skip-link{
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus{
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  padding: 10px 12px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  z-index: 9999;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — tablet */
+@media (max-width:1100px){
+  .static-page{
+    padding: 20px 22px;
+    border-radius: 18px;
+  }
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .static-page{
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .static-content h1{
+    font-size: 1.25rem;
+  }
+
+  .static-content h2{
+    font-size: 1rem;
+  }
+
+  .static-content p{
+    font-size: .95rem;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .static-page{
+    padding: 16px 14px;
+  }
+
+  .static-content p{
+    font-size: .93rem;
+  }
+}

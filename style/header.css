@@ -1,0 +1,137 @@
+/* =========================================================
+   HEADER.CSS
+   Header limpio + responsive
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+.pdh-header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Marca */
+.pdh-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0; /* ✅ permite ellipsis si algo se aprieta */
+}
+
+.pdh-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+/* Texto */
+.brand-title {
+  margin: 0;
+  font-weight: 900;
+  font-size: 2.05rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--brand-blue-deep);
+}
+
+.brand-title .accent-hoy { color: var(--brand-green); }
+.brand-title .accent-pe  { color: var(--brand-blue); }
+
+.brand-subtitle {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  color: var(--ink-600);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Controles derecha */
+.pdh-top-controls {
+  display: flex;
+  align-items: flex-start;
+  min-width: 0; /* ✅ evita overflow cuando hay poco espacio */
+}
+
+/* Estado de actualización (muy discreto) */
+.pdh-updated{
+  font-size: .72rem;
+  color: var(--ink-600);
+  opacity: .65;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  max-width: 100%;
+}
+
+/* Para que el texto pueda hacer ellipsis dentro de flex */
+.pdh-updated,
+.brand-subtitle{
+  min-width: 0;
+}
+
+.pdh-updated strong{
+  font-weight: 700;
+  color: var(--ink-700);
+}
+
+/* Accesibilidad */
+.pdh-header__top a:focus-visible,
+.pdh-header__top button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37,99,235,.35);
+  border-radius: 10px;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí por ahora) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — tablet */
+@media (max-width:1100px){
+  .pdh-header__top{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .brand-title{ font-size: 1.55rem; }
+
+  .brand-subtitle{ font-size: .95rem; }
+
+  .pdh-logo{
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .pdh-updated{
+    font-size: .70rem;
+    opacity: .6;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .brand-title{ font-size: 1.45rem; } /* ✅ evita que se sienta enorme en 320–360 */
+  .brand-subtitle{ font-size: .92rem; }
+}

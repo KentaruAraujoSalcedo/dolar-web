@@ -1,0 +1,445 @@
+/* =========================================================
+   CALCULATOR.CSS (PRO: compacto + línea de monedas)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+.conversor-wrapper-modern{
+  padding-bottom: 10px;
+  animation: fadeUp .35s ease-out both;
+}
+
+/* =====================
+   MODO (barra segmentada)
+   ===================== */
+.modo-opciones{
+  display:flex;
+  gap:8px;
+  padding:8px;
+  margin:0 16px;
+
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.radio-pill{
+  position:relative;
+  flex:1;
+  cursor:pointer;
+}
+
+/* Input invisible: se usa para :checked pero NO captura el mouse */
+.radio-pill input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+}
+
+.radio-pill span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  height:40px;
+  padding:0 12px;
+  border-radius:12px;
+
+  font-weight:900;
+  font-size:.88rem;
+  color:var(--ink-700);
+
+  background: transparent;
+  border:1px solid transparent;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition:
+    background .14s ease,
+    border-color .14s ease,
+    box-shadow .14s ease,
+    transform .08s ease,
+    color .14s ease;
+}
+
+.radio-pill input:checked + span{
+  background: rgba(255,255,255,.92);
+  border-color: rgba(255,255,255,.86);
+  box-shadow: 0 10px 22px rgba(2,6,23,.08);
+  color:var(--ink-900);
+  font-weight:1000;
+}
+
+/* Active (más estable que input:active) */
+.radio-pill:active span{
+  transform: translateY(1px);
+}
+
+/* Hover (cuando NO está seleccionado) */
+.modo-opciones .radio-pill:hover input:not(:checked) + span{
+  background: rgba(59,130,246,.10);
+  color:#1E3A8A;
+  box-shadow: 0 8px 18px rgba(59,130,246,.15);
+  transform: translateY(-1px);
+}
+.modo-opciones .radio-pill:active input:not(:checked) + span{
+  transform: translateY(0);
+}
+
+/* =====================
+   QUICK AMOUNTS (chips pro)
+   ===================== */
+.quick-row{
+  display:flex;
+  gap:8px;
+  padding:10px 16px 6px;
+  flex-wrap:wrap;
+}
+
+/* Overrides del chip SOLO en el conversor */
+.quick-row .chip{
+  font-size:.84rem;
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+}
+
+/* Chip especial del conversor */
+.quick-row .quick-amt{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.78);
+  background: rgba(255,255,255,.55);
+  color: var(--ink-800);
+
+  padding:7px 11px;
+  border-radius:999px;
+
+  font-weight:900;
+  font-size:.84rem;
+  line-height:1;
+
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  cursor:pointer;
+  transition:
+    transform .08s ease,
+    filter .12s ease,
+    box-shadow .12s ease,
+    background .12s ease,
+    border-color .12s ease;
+}
+
+.quick-row .chip:hover,
+.quick-row .quick-amt:hover{
+  filter: brightness(1.03);
+  box-shadow: 0 12px 26px rgba(2,6,23,.08);
+}
+
+.quick-row .chip:active,
+.quick-row .quick-amt:active{
+  transform: translateY(1px);
+}
+
+/* Estado “seleccionado” (opcional) */
+.quick-row .chip.is-active,
+.quick-row .quick-amt.is-active{
+  background: rgba(255,255,255,.92);
+  border-color: rgba(255,255,255,.86);
+  color: var(--ink-900);
+  box-shadow: 0 14px 30px rgba(2,6,23,.10);
+}
+
+/* Vida chips */
+.quick-row .quick-amt{
+  position:relative;
+}
+.quick-row .quick-amt:hover{
+  background: rgba(22,163,74,.12);
+  border-color: rgba(22,163,74,.35);
+  color:#14532D;
+  box-shadow:
+    0 10px 22px rgba(22,163,74,.18),
+    inset 0 0 0 1px rgba(22,163,74,.25);
+  transform: translateY(-1px);
+}
+.quick-row .quick-amt:active{
+  transform: translateY(0);
+  box-shadow:
+    0 6px 14px rgba(22,163,74,.18),
+    inset 0 2px 4px rgba(0,0,0,.08);
+}
+.quick-row .quick-amt:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 2px rgba(22,163,74,.35),
+    0 10px 22px rgba(22,163,74,.18);
+}
+
+/* =====================
+   FILA PRO (Monto + Monedas)
+   ===================== */
+.fila-triple{
+  display:grid;
+  gap:10px;
+  padding:8px 16px 0;
+  align-items:end;
+}
+
+.fila-triple--pro{
+  grid-template-columns: 1.35fr 1.65fr;
+}
+
+.grupo-campo{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.grupo-campo label{
+  font-size:.78rem;
+  font-weight:900;
+  color:var(--ink-600);
+}
+
+/* Input con prefijo (Monto) */
+.input-with-prefix{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  height:44px;
+  padding:0 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.70);
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:0 10px 22px rgba(2,6,23,.07);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.input-with-prefix .prefix{
+  font-weight:900;
+  color:var(--ink-600);
+  opacity:.70;
+}
+
+.input-with-prefix input{
+  border:0;
+  outline:0;
+  background:transparent;
+  width:100%;
+  font-weight:900;
+  color:var(--ink-900);
+  font-size:1rem;
+}
+
+.input-with-prefix input::placeholder{
+  color:var(--ink-500);
+  font-weight:800;
+}
+
+.input-with-prefix.is-empty .prefix{
+  opacity:.55;
+}
+
+/* Línea PRO de monedas */
+.gc-moneda-pro > label{ display:none; }
+
+.gc-moneda-pro .currency-line{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.cur-pill{
+  flex:1;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px;
+  border-radius:14px;
+
+  background:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 6px 14px rgba(2,6,23,.045);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  font-weight:900;
+  font-size:.84rem;
+  color:var(--ink-900);
+  white-space:nowrap;
+
+  transition: transform .18s ease, filter .12s ease;
+}
+
+.cur-pill--ghost{
+  opacity:.90;
+  color:var(--ink-700);
+}
+
+/* Swap */
+.swap{
+  height:44px;
+  width:44px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.75);
+  background:rgba(255,255,255,.92);
+  box-shadow:0 10px 22px rgba(2,6,23,.08);
+  font-size:1.05rem;
+  cursor:pointer;
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  transition: transform .18s ease, filter .12s ease;
+}
+
+.swap:hover{ filter:brightness(1.03); }
+.swap:active{ transform:translateY(1px); }
+
+/* Animación swap (con clase .is-swap en .currency-line) */
+.currency-line.is-swap .swap{ transform: rotate(180deg); }
+.currency-line.is-swap .cur-pill{ transform: translateY(-1px); }
+
+/* =====================
+   Resultado + nota
+   ===================== */
+.resultado-modern{
+  margin:10px 16px 0;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(22,163,74,.10);
+  border:1px solid rgba(22,163,74,.22);
+  color:#14532D;
+  font-weight:900;
+  font-size:.92rem;
+  line-height:1.35;
+}
+
+.fineprint{
+  margin:6px 16px 0;
+  font-size:.74rem;
+  color:var(--ink-500);
+}
+
+/* =====================
+   Accesibilidad / Focus
+   ===================== */
+.radio-pill input:focus-visible + span{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37,99,235,.35),
+              0 10px 22px rgba(2,6,23,.08);
+}
+
+.swap:focus-visible{
+  outline:none;
+  box-shadow: 0 0 0 2px rgba(37,99,235,.35),
+              0 10px 22px rgba(2,6,23,.08);
+}
+
+.input-with-prefix:focus-within{
+  border-color: rgba(37,99,235,.35);
+  box-shadow:
+    0 0 0 2px rgba(37,99,235,.20),
+    0 10px 22px rgba(2,6,23,.07);
+}
+
+/* =====================
+   Prioridad visual: Monto primero
+   ===================== */
+.conversor-wrapper-modern .gc-monto label{
+  color: var(--ink-900);
+  font-size: .82rem;
+}
+
+.conversor-wrapper-modern .gc-monto .input-with-prefix{
+  box-shadow: 0 14px 32px rgba(2,6,23,.10);
+  border-color: rgba(37,99,235,.25);
+  background: rgba(255,255,255,.85);
+  transition: box-shadow .18s ease, border-color .18s ease, background .18s ease;
+
+  /* animación de entrada sutil */
+  animation: focusPulse .6s ease-out 1;
+}
+
+/* Reduce ruido visual de modo + chips (sin ocultarlos) */
+.conversor-wrapper-modern .modo-opciones{ opacity: .92; }
+.conversor-wrapper-modern .quick-row{ opacity: .92; }
+
+/* =====================
+   Animaciones
+   ===================== */
+@keyframes fadeUp{
+  from{ opacity:0; transform: translateY(6px); }
+  to{ opacity:1; transform:none; }
+}
+
+@keyframes focusPulse {
+  0%   { box-shadow: 0 0 0 rgba(37,99,235,0); }
+  50%  { box-shadow: 0 0 0 4px rgba(37,99,235,.18); }
+  100% { box-shadow: 0 0 0 rgba(37,99,235,0); }
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — (no aplica aquí por ahora) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  .fila-triple--pro{
+    grid-template-columns: 1fr;
+  }
+
+  .gc-moneda-pro{
+    margin-top:8px;
+  }
+
+  /* Selector de modo más compacto */
+  .modo-opciones{ margin: 0 14px; padding: 7px; }
+  .radio-pill span{
+    height: 32px;
+    font-size: .78rem;
+    padding: 0 8px;
+  }
+
+  /* Chips un pelín más compactos */
+  .quick-row{ padding: 10px 14px 6px; }
+
+  /* Resultado: menos alto */
+  .resultado-modern{ margin: 10px 14px 0; }
+  .fineprint{ margin: 6px 14px 0; }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .quick-row{
+    gap:6px;
+    padding:8px 14px 4px;
+  }
+  .quick-row .quick-amt{
+    padding:6px 10px;
+    font-size:.82rem;
+  }
+}

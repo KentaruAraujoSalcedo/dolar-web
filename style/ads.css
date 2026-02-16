@@ -2,6 +2,13 @@
    ADS.CSS
    Publicidad lateral (sticky + sizes) + inline responsive + final (mobile)
    AdSense-ready (espacios reservados para evitar CLS)
+
+   Breakpoints del diseño:
+   1550 / 1100 / 700 / 360
+
+   Excepciones permitidas SOLO para Ads:
+   - Desktop-only: min-width:1101px (evita solape con max-width:1100px)
+   - XXL screens:  min-width:1600px & min-height:800px
    ========================================================= */
 
 /* =========================
@@ -105,7 +112,7 @@
 
 
 /* =========================
-   RESPONSIVE
+   RESPONSIVE (Diseño)
    ========================= */
 
 /* 1550px — (no aplica aquí por ahora) */
@@ -115,6 +122,7 @@
 
 /* 1100px — tablet/móvil */
 @media (max-width:1100px){
+
   /* Inline visible */
   .ad-inline{
     display:block;
@@ -153,14 +161,20 @@
   /* si luego necesitas ajustar alturas/márgenes, va aquí */
 }
 
-/* Desktop: suele renderizar leaderboard */
+
+/* =========================
+   RESPONSIVE (Excepciones Ads)
+   ========================= */
+
+/* Desktop-only: suele renderizar leaderboard
+   (min-width:1101 evita solape con max-width:1100) */
 @media (min-width:1101px){
   .ad-slot.ad-responsive{
     min-height: 90px; /* leaderboard */
   }
 }
 
-/* Solo en pantallas grandes y altas */
+/* XXL: solo en pantallas grandes y altas */
 @media (min-width:1600px) and (min-height:800px){
   .ad-secondary{
     display:flex;

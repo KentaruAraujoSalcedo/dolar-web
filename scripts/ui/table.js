@@ -37,7 +37,7 @@ export function renderTabla() {
   const totalFilas = filas.length; // ✅ para mostrar (N)
 
   // ✅ Toggle: checked = Ver todas
-  const chk = $('#solo-verificadas');
+  const chk = $('#ver-todo');
   const showAll = chk ? !!chk.checked : false;
 
   // ✅ Actualiza el texto del label (Ver todas (N) / Ver menos)

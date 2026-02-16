@@ -152,6 +152,11 @@
   .seo-tabs__panels p{
     font-size: .88rem;
   }
+
+  .seo-tabs__nav{
+    display:none;
+  }
+   
 }
 
 /* 360px — mobile pequeño */

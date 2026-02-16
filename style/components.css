@@ -120,7 +120,7 @@
 /* =====================
    Checkbox (Ver todas / Top)
    ===================== */
-.solo-verificadas {
+.ver-todo {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -129,7 +129,7 @@
   user-select: none;
 }
 
-.solo-verificadas input {
+.ver-todo input {
   width: 16px;
   height: 16px;
   accent-color: var(--brand-green);

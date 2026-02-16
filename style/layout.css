@@ -140,16 +140,19 @@
     border-radius: 20px;
   }
 
+  .sunat-widget{
+    display: none;
+  }
+
   .pdh-main-grid {
     grid-template-columns: 1fr;
     grid-template-areas:
       "pills"
       "calc"
       "ad"
-      "table"
       "best"
       "final"
-      "sunat";
+      "table";
   }
 }
 

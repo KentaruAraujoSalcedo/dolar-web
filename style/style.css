@@ -1,0 +1,56 @@
+/* =========================================================
+   STYLE.CSS
+   Punto de entrada global del proyecto
+   NO define diseño.
+   Solo organiza el sistema en orden correcto.
+   ========================================================= */
+
+/* =========================
+   1. RESET
+   ========================= */
+@import url("./core/reset.css");
+
+/* =========================
+   2. TOKENS (contrato base)
+   ========================= */
+@import url("./core/tokens.css");
+
+/* =========================
+   3. THEME (activo)
+   El HTML debe tener:
+   <link rel="stylesheet" href="style/themes/theme-inicial.css" id="theme">
+   ========================= */
+
+/* =========================
+   4. TIPOGRAFÍA
+   ========================= */
+@import url("./core/typography.css");
+
+/* =========================
+   5. BASE GLOBAL
+   ========================= */
+@import url("./core/base.css");
+
+/* =========================
+   6. LAYOUT
+   ========================= */
+@import url("./core/layout.css");
+
+/* =========================
+   7. EFFECTS (glass / shadow)
+   ========================= */
+@import url("./core/effects.css");
+
+/* =========================
+   8. COMPONENTES
+   ========================= */
+@import url("./components/header.css");
+@import url("./components/components.css");
+@import url("./components/calculator.css");
+@import url("./components/table.css");
+@import url("./components/ads.css");
+@import url("./components/modal.css");
+@import url("./components/cookies.css");
+@import url("./components/seo-tabs.css");
+@import url("./components/static-pages.css");
+@import url("./components/footer.css");

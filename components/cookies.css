@@ -1,0 +1,90 @@
+/* =========================================================
+   COOKIES.CSS (compatible con cookies.js)
+   - El JS controla visibilidad con clase .show
+   ========================================================= */
+
+/* Oculto por defecto */
+#cookie-banner{
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  z-index: 1100;
+
+  width: min(980px, calc(100% - 20px));
+  background: var(--cookie-bg);
+  color: var(--cookie-fg);
+
+  border-radius: 16px;
+  box-shadow: var(--cookie-shadow);
+
+  padding: 12px 14px;
+
+  /* ✅ clave: oculto si NO hay .show */
+  display: none;
+
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  font-size: .90rem;
+  line-height: 1.35;
+}
+
+/* Visible cuando JS pone .show */
+#cookie-banner.show{
+  display: flex;
+}
+
+/* Texto + link */
+#cookie-banner a{
+  color: var(--cookie-link-fg);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-left: 6px;
+}
+
+/* Botones */
+#cookie-banner button{
+  border: 0;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  font-weight: 900;
+  font-size: .85rem;
+
+  color: var(--cookie-btn-fg);
+  background: var(--cookie-reject-bg);
+
+  transition: filter .12s ease, transform .08s ease;
+}
+
+/* 1er botón = aceptar, 2do = rechazar (si tu HTML sigue ese orden) */
+#cookie-banner button:nth-of-type(1){
+  background: var(--cookie-accept-bg);
+}
+#cookie-banner button:nth-of-type(2){
+  background: var(--cookie-reject-bg);
+}
+
+#cookie-banner button:hover{ filter: brightness(1.05); }
+#cookie-banner button:active{ transform: translateY(1px); }
+
+#cookie-banner button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--cookie-focus-ring);
+}
+
+/* Mobile */
+@media (max-width:700px){
+  #cookie-banner{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  #cookie-banner button{
+    width: 100%;
+  }
+}

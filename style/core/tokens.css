@@ -1,0 +1,178 @@
+/* =========================================================
+   TOKENS.CSS (SEMÁNTICO / THEME-READY)
+   Contrato de diseño:
+   - Componentes y core SOLO consumen estos tokens.
+   - Los themes (theme-*.css) sobreescriben tokens para cambiar el look.
+   ========================================================= */
+
+:root {
+   /* =========================================================
+   LAYOUT SIZING TOKENS (estructura)
+   ========================================================= */
+   --ad-col: clamp(240px, 18vw, 320px);
+   --center-max: clamp(740px, 60vw, 920px);
+   --gap: clamp(12px, 1.2vw, 18px);
+
+   /* si lo usabas en tabla */
+   --table-max-h: 230px;
+
+   /* =========================================================
+     0) BRAND (identidad)
+     ========================================================= */
+   --brand-blue-deep: #0B2C4A;
+   --brand-blue: #2563EB;
+   --brand-green: #16A34A;
+
+   /* Tipografía (puede vivir también en theme) */
+   --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+   --font-display: ui-serif, Georgia, "Times New Roman", serif;
+   --heading-tracking: -0.02em;
+   --heading-weight: 900;
+
+   /* Radius / motion */
+   --radius: 18px;
+   --radius-lg: 22px;
+   --radius-pill: 999px;
+
+   /* =========================================================
+     1) SEMÁNTICOS BASE (lo que cambian los themes)
+     ========================================================= */
+
+   /* Fondo de página */
+   --bg-page: #EEF2FF;
+
+   /* Superficies */
+   --surface-1: rgba(255, 255, 255, .26);
+   /* glass principal (center) */
+   --surface-2: rgba(255, 255, 255, .40);
+   /* panel/card */
+   --surface-3: rgba(255, 255, 255, .55);
+   /* inputs/headers suaves */
+
+   /* Bordes */
+   --border-1: rgba(255, 255, 255, .42);
+   --border-2: rgba(255, 255, 255, .60);
+   --border-3: rgba(255, 255, 255, .75);
+
+   /* Texto */
+   --text-1: #0b1b2b;
+   /* principal */
+   --text-2: #334155;
+   /* normal */
+   --text-3: #475569;
+   /* secundario */
+   --text-4: rgba(15, 23, 42, .45);
+   /* muted */
+
+   /* Sombras */
+   --shadow-1: 0 14px 40px rgba(2, 6, 23, .10);
+   --shadow-2: 0 26px 70px rgba(2, 6, 23, .14);
+
+   /* Glass */
+   --glass-bg: var(--surface-1);
+   --glass-border: var(--border-1);
+   --glass-blur: 18px;
+
+   /* Acentos / estados */
+   --accent: var(--brand-blue);
+   --accent-2: var(--brand-green);
+
+   --positive: #16A34A;
+   --negative: #DC2626;
+   --warning: #F59E0B;
+
+   /* Focus ring */
+   --focus-ring: rgba(37, 99, 235, .35);
+
+   /* =========================================================
+     2) ALIASES COMPATIBLES (para tus CSS actuales)
+     (Así no rompemos nada mientras migramos archivo por archivo)
+     ========================================================= */
+
+   /* Tu sistema de “ink-*” */
+   --ink-900: var(--text-1);
+   --ink-800: color-mix(in srgb, var(--text-1) 88%, #ffffff 12%);
+   --ink-700: var(--text-2);
+   --ink-600: var(--text-3);
+   --ink-500: color-mix(in srgb, var(--text-3) 60%, #ffffff 40%);
+
+   /* Fondo global (compat: effects.css usa --page-bg) */
+   --page-bg: var(--bg-page);
+
+   /* Shadows (compat) */
+   --shadow-soft: var(--shadow-1);
+   --shadow-strong: var(--shadow-2);
+
+   /* =========================================================
+     3) TOKENS DE COMPONENTES (semánticos, pero ya listos)
+     (Los components deben usar estos; los themes los pueden override)
+     ========================================================= */
+
+   /* Botón principal */
+   --btn-primary-fg: #fff;
+   --btn-primary-bg: linear-gradient(180deg, #1E7A3B 0%, #166534 100%);
+   --btn-primary-shadow: 0 14px 28px rgba(22, 101, 52, .22);
+
+   /* Link button */
+   --btn-link-fg: var(--accent);
+   --btn-link-hover-bg: rgba(37, 99, 235, .10);
+
+   /* Chips / pills */
+   --chip-fg: var(--brand-blue-deep);
+   --checkbox-accent: var(--accent-2);
+
+   /* Tabla */
+   --table-head-bg: var(--surface-3);
+   --table-head-fg: var(--text-3);
+   --table-row-bg: rgba(255, 255, 255, .18);
+   --table-row-hover-bg: rgba(255, 255, 255, .28);
+   --table-buy-fg: #14532D;
+   --table-sell-fg: #7F1D1D;
+
+   --table-winner-bg: rgba(16, 185, 129, .10);
+   --table-winner-border: rgba(22, 163, 74, .22);
+
+   /* Ads placeholders */
+   --ad-slot-bg: rgba(255, 255, 255, .55);
+   --ad-slot-border: rgba(255, 255, 255, .65);
+
+   --ad-placeholder-title: "Publicidad";
+   --ad-placeholder-sub: "Espacio reservado";
+   --ad-placeholder-title-fg: rgba(15, 23, 42, .55);
+   --ad-placeholder-sub-fg: rgba(15, 23, 42, .45);
+   --ad-placeholder-pill-bg: rgba(255, 255, 255, .55);
+   --ad-placeholder-pill-border: rgba(255, 255, 255, .70);
+
+   /* Modal */
+   --modal-overlay-bg: rgba(15, 23, 42, .55);
+   --modal-panel-bg: #fff;
+   --modal-panel-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+   --modal-head-border: rgba(2, 6, 23, .10);
+   --modal-head-bg: linear-gradient(180deg, #FFFFFF 0%, #F7FAFF 100%);
+   --modal-title-fg: var(--brand-blue-deep);
+   --modal-close-fg: rgba(2, 6, 23, .70);
+   --modal-close-fg-hover: rgba(2, 6, 23, .95);
+
+   /* Cookies */
+   --cookie-bg: rgba(17, 17, 17, 0.96);
+   --cookie-fg: #fff;
+   --cookie-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+   --cookie-link-fg: #60a5fa;
+   --cookie-btn-fg: #fff;
+   --cookie-accept-bg: #2563EB;
+   --cookie-reject-bg: #374151;
+   --cookie-focus-ring: #60a5fa;
+
+   /* Footer */
+   --footer-copy-fg: rgba(15, 23, 42, .45);
+   --footer-link-fg: inherit;
+   --footer-link-hover-fg: var(--accent);
+
+   /* SEO Tabs */
+   --seo-tabs-bg: rgba(255, 255, 255, .18);
+   --seo-tabs-border: rgba(255, 255, 255, .28);
+   --seo-tabs-tab-bg: rgba(255, 255, 255, .48);
+   --seo-tabs-tab-border: rgba(255, 255, 255, .55);
+   --seo-tabs-tab-active-bg: rgba(37, 99, 235, .10);
+   --seo-tabs-tab-active-border: rgba(37, 99, 235, .35);
+}

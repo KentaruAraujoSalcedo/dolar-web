@@ -1,0 +1,192 @@
+/* =========================================================
+   BASE.CSS
+   Base global (core) — NO define “look final”.
+   Todo lo visual viene de tokens + theme.
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+/* Base mínima (aunque tengas reset.css, esto no estorba) */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text-2);
+  background: var(--bg-page);
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Textura suave (muy leve) — theme-friendly */
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, .05) 0px,
+      rgba(255, 255, 255, .05) 2px,
+      transparent 2px,
+      transparent 12px
+    );
+
+  opacity: .16;
+  mix-blend-mode: overlay;
+}
+
+/* =====================
+   Panel base (cards)
+   ===================== */
+.panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  overflow: hidden;
+}
+
+/* =====================
+   Accesibilidad / Helpers
+   ===================== */
+.sr-only{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
+/* Focus ring global para elementos interactivos (opcional pero pro) */
+:where(a, button, input, textarea, select):focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-ring);
+  border-radius: 10px;
+}
+
+/* =====================
+   SEO blocks (intro + FAQ)
+   ===================== */
+
+/* Intro colapsable */
+.seo-intro{
+  margin: 4px 0 6px;
+}
+
+.seo-intro details{
+  background: var(--surface-1);
+  border: 1px solid var(--border-2);
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: none;
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.seo-intro summary{
+  cursor: pointer;
+  list-style: none;
+
+  font-size: .86rem;
+  font-weight: 800;
+  color: var(--text-3);
+}
+
+.seo-intro summary::-webkit-details-marker{ display:none; }
+
+.seo-intro p{
+  margin: 8px 0 0;
+  font-size: .90rem;
+  line-height: 1.45;
+  color: var(--text-3);
+}
+
+/* FAQ */
+.seo-faq{
+  margin-top: 14px;
+  padding: 12px 14px 14px;
+  border-radius: 18px;
+
+  background: var(--surface-1);
+  border: 1px solid var(--border-2);
+  box-shadow: none;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.seo-faq h2{
+  margin: 0 0 10px;
+  font-size: .92rem;
+  font-weight: 900;
+  color: var(--text-2);
+  opacity: .85;
+}
+
+.seo-faq details{
+  background: color-mix(in srgb, var(--surface-1) 75%, #fff 25%);
+  border: 1px solid var(--border-2);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+
+.seo-faq summary{
+  cursor: pointer;
+  list-style: none;
+  font-weight: 900;
+  color: var(--text-1);
+}
+
+.seo-faq summary::-webkit-details-marker{ display:none; }
+
+.seo-faq details p{
+  margin: 8px 0 0;
+  color: var(--text-2);
+  line-height: 1.45;
+  font-size: .92rem;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .seo-faq{ padding: 12px; }
+  .seo-faq details{ margin: 8px 0; }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .seo-intro summary{ font-size: .84rem; }
+  .seo-faq details p{ font-size: .90rem; }
+}

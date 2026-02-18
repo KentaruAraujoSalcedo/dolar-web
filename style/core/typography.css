@@ -1,0 +1,36 @@
+/* =========================================================
+   TYPOGRAPHY.CSS
+   ========================================================= */
+
+/* Fuentes (Google Fonts via CSS import)
+   Si luego quieres performance pro: se pasa a <link rel="preconnect"> y <link href=...> en HTML */
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:opsz@8..60&family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+body{
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3{
+  font-family: var(--font-display);
+  letter-spacing: var(--heading-tracking);
+  font-weight: var(--heading-weight);
+}
+
+.brand-title,
+.section-title,
+.seo-tabs__title,
+.seo-tabs__panels h3,
+.static-content h1,
+.static-content h2,
+.static-content h3{
+  font-family: var(--font-display);
+  letter-spacing: var(--heading-tracking);
+}
+
+.brand-subtitle,
+.table-subtitle,
+.seo-tabs__panels p,
+.static-content p{
+  font-family: var(--font-sans);
+}

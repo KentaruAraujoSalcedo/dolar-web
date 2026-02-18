@@ -1,0 +1,428 @@
+/* =========================================================
+   CALCULATOR.CSS
+   Conversor (theme-ready con tokens semánticos)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+.conversor-wrapper-modern{
+  padding-bottom: 10px;
+  animation: fadeUp .35s ease-out both;
+}
+
+/* =====================
+   MODO (barra segmentada)
+   ===================== */
+.modo-opciones{
+  display:flex;
+  gap:8px;
+  padding:8px;
+  margin:0 16px;
+
+  background: color-mix(in srgb, var(--surface-3) 85%, transparent 15%);
+  border: 1px solid var(--border-3);
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.radio-pill{
+  position:relative;
+  flex:1;
+  cursor:pointer;
+}
+
+.radio-pill input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+}
+
+.radio-pill span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  height:40px;
+  padding:0 12px;
+  border-radius:12px;
+
+  font-weight:900;
+  font-size:.88rem;
+  color: var(--text-2);
+
+  background: transparent;
+  border: 1px solid transparent;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition:
+    background .14s ease,
+    border-color .14s ease,
+    box-shadow .14s ease,
+    transform .08s ease,
+    color .14s ease;
+}
+
+.radio-pill input:checked + span{
+  background: color-mix(in srgb, var(--surface-3) 92%, transparent 8%);
+  border-color: var(--border-3);
+  box-shadow: 0 10px 22px rgba(2,6,23,.08);
+  color: var(--text-1);
+  font-weight: 1000;
+}
+
+.radio-pill:active span{ transform: translateY(1px); }
+
+/* Hover cuando NO está seleccionado */
+.modo-opciones .radio-pill:hover input:not(:checked) + span{
+  background: color-mix(in srgb, var(--accent) 10%, transparent 90%);
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-1) 45%);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 22%, transparent 78%);
+  transform: translateY(-1px);
+}
+.modo-opciones .radio-pill:active input:not(:checked) + span{ transform: translateY(0); }
+
+/* =====================
+   QUICK AMOUNTS (chips)
+   ===================== */
+.quick-row{
+  display:flex;
+  gap:8px;
+  padding:10px 16px 6px;
+  flex-wrap:wrap;
+}
+
+/* Chip del conversor */
+.quick-row .quick-amt{
+  appearance:none;
+  border:1px solid var(--border-3);
+  background: color-mix(in srgb, var(--surface-3) 75%, transparent 25%);
+  color: var(--text-2);
+
+  padding:7px 11px;
+  border-radius: var(--radius-pill);
+
+  font-weight:900;
+  font-size:.84rem;
+  line-height:1;
+
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  cursor:pointer;
+  transition:
+    transform .08s ease,
+    filter .12s ease,
+    box-shadow .12s ease,
+    background .12s ease,
+    border-color .12s ease,
+    color .12s ease;
+}
+
+.quick-row .quick-amt:hover{
+  filter: brightness(1.03);
+  box-shadow: 0 12px 26px rgba(2,6,23,.08);
+}
+
+.quick-row .quick-amt:active{
+  transform: translateY(1px);
+}
+
+/* Estado seleccionado (si lo usas) */
+.quick-row .quick-amt.is-active{
+  background: color-mix(in srgb, var(--surface-3) 92%, transparent 8%);
+  border-color: var(--border-3);
+  color: var(--text-1);
+  box-shadow: 0 14px 30px rgba(2,6,23,.10);
+}
+
+/* Hover “fintech” */
+.quick-row .quick-amt:hover{
+  background: color-mix(in srgb, var(--positive) 12%, transparent 88%);
+  border-color: color-mix(in srgb, var(--positive) 30%, transparent 70%);
+  color: color-mix(in srgb, var(--positive) 30%, var(--text-1) 70%);
+  box-shadow:
+    0 10px 22px color-mix(in srgb, var(--positive) 18%, transparent 82%),
+    inset 0 0 0 1px color-mix(in srgb, var(--positive) 25%, transparent 75%);
+  transform: translateY(-1px);
+}
+.quick-row .quick-amt:active{
+  transform: translateY(0);
+  box-shadow:
+    0 6px 14px color-mix(in srgb, var(--positive) 18%, transparent 82%),
+    inset 0 2px 4px rgba(0,0,0,.08);
+}
+
+.quick-row .quick-amt:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 2px var(--focus-ring),
+    0 10px 22px color-mix(in srgb, var(--positive) 18%, transparent 82%);
+}
+
+/* =====================
+   FILA PRO (Monto + Monedas)
+   ===================== */
+.fila-triple{
+  display:grid;
+  gap:10px;
+  padding:8px 16px 0;
+  align-items:end;
+}
+
+.fila-triple--pro{
+  grid-template-columns: 1.35fr 1.65fr;
+}
+
+.grupo-campo{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.grupo-campo label{
+  font-size:.78rem;
+  font-weight:900;
+  color: var(--text-3);
+}
+
+/* Input con prefijo (Monto) */
+.input-with-prefix{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  height:44px;
+  padding:0 12px;
+  border-radius:14px;
+
+  background: color-mix(in srgb, var(--surface-3) 85%, transparent 15%);
+  border: 1px solid var(--border-3);
+  box-shadow: 0 10px 22px rgba(2,6,23,.07);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.input-with-prefix .prefix{
+  font-weight:900;
+  color: var(--text-3);
+  opacity:.70;
+}
+
+.input-with-prefix input{
+  border:0;
+  outline:0;
+  background:transparent;
+  width:100%;
+  font-weight:900;
+  color: var(--text-1);
+  font-size:1rem;
+}
+
+.input-with-prefix input::placeholder{
+  color: color-mix(in srgb, var(--text-3) 70%, transparent 30%);
+  font-weight:800;
+}
+
+.input-with-prefix.is-empty .prefix{ opacity:.55; }
+
+/* Línea PRO de monedas */
+.gc-moneda-pro > label{ display:none; }
+
+.gc-moneda-pro .currency-line{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* Moneda pill */
+.cur-pill{
+  flex:1;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px;
+  border-radius:14px;
+
+  background: color-mix(in srgb, var(--surface-3) 75%, transparent 25%);
+  border: 1px solid var(--border-2);
+  box-shadow: 0 6px 14px rgba(2,6,23,.045);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  font-weight:900;
+  font-size:.84rem;
+  color: var(--text-1);
+  white-space:nowrap;
+
+  transition: transform .18s ease, filter .12s ease;
+}
+
+.cur-pill--ghost{
+  opacity:.90;
+  color: var(--text-2);
+}
+
+/* Swap */
+.swap{
+  height:44px;
+  width:44px;
+  border-radius:14px;
+
+  border: 1px solid var(--border-3);
+  background: color-mix(in srgb, var(--surface-3) 92%, transparent 8%);
+  box-shadow: 0 10px 22px rgba(2,6,23,.08);
+
+  font-size:1.05rem;
+  cursor:pointer;
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+
+  transition: transform .18s ease, filter .12s ease;
+}
+
+.swap:hover{ filter: brightness(1.03); }
+.swap:active{ transform: translateY(1px); }
+
+/* Animación swap */
+.currency-line.is-swap .swap{ transform: rotate(180deg); }
+.currency-line.is-swap .cur-pill{ transform: translateY(-1px); }
+
+/* =====================
+   Resultado + nota
+   ===================== */
+.resultado-modern{
+  margin:10px 16px 0;
+  padding:10px 12px;
+  border-radius:14px;
+
+  background: color-mix(in srgb, var(--positive) 10%, transparent 90%);
+  border: 1px solid color-mix(in srgb, var(--positive) 22%, transparent 78%);
+  color: color-mix(in srgb, var(--positive) 25%, var(--text-1) 75%);
+
+  font-weight:900;
+  font-size:.92rem;
+  line-height:1.35;
+}
+
+.fineprint{
+  margin:6px 16px 0;
+  font-size:.74rem;
+  color: var(--text-4);
+}
+
+/* =====================
+   Focus / estados
+   ===================== */
+.radio-pill input:focus-visible + span{
+  outline:none;
+  box-shadow:
+    0 0 0 2px var(--focus-ring),
+    0 10px 22px rgba(2,6,23,.08);
+}
+
+.swap:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 2px var(--focus-ring),
+    0 10px 22px rgba(2,6,23,.08);
+}
+
+.input-with-prefix:focus-within{
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-3) 65%);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent 80%),
+    0 10px 22px rgba(2,6,23,.07);
+}
+
+/* Prioridad visual: Monto primero */
+.conversor-wrapper-modern .gc-monto label{
+  color: var(--text-1);
+  font-size: .82rem;
+}
+
+.conversor-wrapper-modern .gc-monto .input-with-prefix{
+  box-shadow: 0 14px 32px rgba(2,6,23,.10);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--border-3) 75%);
+  background: color-mix(in srgb, var(--surface-3) 92%, transparent 8%);
+  transition: box-shadow .18s ease, border-color .18s ease, background .18s ease;
+
+  animation: focusPulse .6s ease-out 1;
+}
+
+/* Reduce ruido visual de modo + chips */
+.conversor-wrapper-modern .modo-opciones{ opacity: .92; }
+.conversor-wrapper-modern .quick-row{ opacity: .92; }
+
+/* =====================
+   Animaciones
+   ===================== */
+@keyframes fadeUp{
+  from{ opacity:0; transform: translateY(6px); }
+  to{ opacity:1; transform:none; }
+}
+
+@keyframes focusPulse{
+  0%   { box-shadow: 0 0 0 rgba(37,99,235,0); }
+  50%  { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent 78%); }
+  100% { box-shadow: 0 0 0 rgba(37,99,235,0); }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  .fila-triple--pro{ grid-template-columns: 1fr; }
+
+  .gc-moneda-pro{ margin-top:8px; }
+
+  .modo-opciones{ margin: 0 14px; padding: 7px; }
+
+  .radio-pill span{
+    height: 32px;
+    font-size: .78rem;
+    padding: 0 8px;
+  }
+
+  .quick-row{ padding: 10px 14px 6px; }
+
+  .resultado-modern{ margin: 10px 14px 0; }
+  .fineprint{ margin: 6px 14px 0; }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .quick-row{
+    gap:6px;
+    padding:8px 14px 4px;
+  }
+  .quick-row .quick-amt{
+    padding:6px 10px;
+    font-size:.82rem;
+  }
+}

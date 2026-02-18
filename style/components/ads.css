@@ -1,0 +1,184 @@
+/* =========================================================
+   ADS.CSS
+   Publicidad lateral (sticky) + inline + final
+   (Theme-ready con tokens semánticos)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+.ads{
+  width:100%;
+  position: sticky;
+  top: 18px;
+  max-height: calc(100vh - 36px);
+  align-self: flex-start;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  gap:16px;
+}
+
+/* Slot base */
+.ad-slot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background: var(--ad-slot-bg);
+  border: 1px dashed var(--ad-slot-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-1);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  overflow:hidden;
+
+  position:relative;
+}
+
+/* Tamaños fijos laterales */
+.ad-300x600{ width:100%; max-width:300px; height:600px; }
+.ad-300x250{ width:100%; max-width:300px; height:250px; }
+
+/* Inline */
+.ad-inline{ display:none; }
+
+/* Responsive container */
+.ad-slot.ad-responsive{
+  width:100%;
+  max-width:728px;
+  margin:0 auto;
+
+  /* reserva base (evita CLS) */
+  min-height: 250px;
+  height:auto;
+}
+
+/* 2do anuncio lateral */
+.ad-secondary{ display:none; }
+
+/* Ad final */
+.ad-final{ display:none; }
+
+/* Placeholder */
+.ad-slot::before{
+  content: var(--ad-placeholder-title);
+  font-weight:800;
+  font-size:.85rem;
+  color: var(--ad-placeholder-title-fg);
+
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+
+  background: var(--ad-placeholder-pill-bg);
+  border: 1px solid var(--ad-placeholder-pill-border);
+
+  position:absolute;
+  top:10px;
+  left:10px;
+  pointer-events:none;
+}
+
+.ad-slot::after{
+  content: var(--ad-placeholder-sub);
+  font-weight:700;
+  font-size:.80rem;
+  color: var(--ad-placeholder-sub-fg);
+
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  pointer-events:none;
+
+  max-width: 85%;
+}
+
+/* Oculta placeholder cuando haya ad real */
+.ad-slot:has(iframe)::before,
+.ad-slot:has(iframe)::after,
+.ad-slot:has(ins)::before,
+.ad-slot:has(ins)::after{
+  display:none;
+}
+
+/* Fallback manual por clase */
+.ad-slot.is-filled::before,
+.ad-slot.is-filled::after{
+  display:none;
+}
+
+
+/* =========================
+   RESPONSIVE (diseño)
+   ========================= */
+
+/* 1550px */
+@media (max-width:1550px){
+  /* vacío */
+}
+
+/* 1100px — tablet/móvil */
+@media (max-width:1100px){
+
+  .ad-inline{
+    display:block;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .ad-inline .ad-slot{ border-radius: 12px; }
+
+  .ad-secondary{ display:none !important; }
+
+  .ad-final{
+    display:block;
+    margin-top: 10px;
+  }
+
+  .ad-final .ad-slot{
+    min-height: 250px;
+    border-radius: 14px;
+  }
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .ad-slot.ad-responsive{
+    min-height: 100px;
+  }
+}
+
+/* 360px */
+@media (max-width:360px){
+  /* reservado */
+}
+
+
+/* =========================
+   EXCEPCIONES ADS
+   ========================= */
+
+/* Desktop-only (>=1101px) */
+@media (min-width:1101px){
+
+  .ad-slot.ad-responsive{
+    min-height: 90px;
+  }
+
+  .ad-secondary{
+    display:flex;
+    margin-top:auto;
+  }
+}
+
+/* XXL screens: permite 300x600 + 300x250 sin cortes */
+@media (min-width:1600px) and (min-height:800px){
+  .ads{
+    top: 22px;
+    max-height: calc(100vh - 44px);
+  }
+}

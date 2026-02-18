@@ -1,0 +1,118 @@
+/* =========================================================
+   THEME-CLASICO.CSS
+   Replica el look antiguo: limpio, blanco, suave, fintech claro
+   ========================================================= */
+
+:root{
+  /* BRAND */
+  --brand-blue-deep: #0B2C4A;
+  --brand-blue: #2563EB;
+  --brand-green: #16A34A;
+
+  /* TIPOGRAFÍA (más “clásica”, menos Neo) */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: var(--font-sans); /* <- títulos en sans como antes */
+  --heading-tracking: -0.01em;
+  --heading-weight: 900;
+
+  /* FONDO GLOBAL (muy claro y limpio, como tu captura antigua) */
+  --bg-page:
+    radial-gradient(900px 520px at 18% 6%, rgba(99,102,241,.16), transparent 58%),
+    radial-gradient(980px 560px at 86% 8%, rgba(34,197,94,.12), transparent 60%),
+    linear-gradient(180deg, #EEF3FF 0%, #F7FAFF 55%, #EEF6FF 100%);
+
+  /* TEXTO */
+  --text-1: #0f172a;
+  --text-2: #1e293b;
+  --text-3: #475569;
+  --text-4: rgba(15,23,42,.55);
+
+  /* SUPERFICIES (más blancas, menos “glass oscuro”) */
+  --surface-1: rgba(255,255,255,.72);
+  --surface-2: rgba(255,255,255,.86);
+  --surface-3: rgba(255,255,255,.94);
+
+  /* BORDES (sutiles, no blancos) */
+  --border-1: rgba(15,23,42,.08);
+  --border-2: rgba(15,23,42,.12);
+  --border-3: rgba(15,23,42,.16);
+
+  /* SOMBRAS (soft, “card UI” como antes) */
+  --shadow-1: 0 12px 34px rgba(2, 6, 23, .10);
+  --shadow-2: 0 26px 70px rgba(2, 6, 23, .14);
+
+  /* GLASS */
+  --glass-bg: var(--surface-1);
+  --glass-border: rgba(255,255,255,.65);
+  --glass-blur: 16px;
+
+  /* ACCENTS */
+  --accent: var(--brand-blue);
+  --accent-2: var(--brand-green);
+  --positive: #16A34A;
+  --negative: #DC2626;
+  --warning: #F59E0B;
+
+  --focus-ring: rgba(37,99,235,.28);
+
+  /* BOTONES */
+  --btn-primary-fg: #fff;
+  --btn-primary-bg: linear-gradient(180deg, #1E7A3B 0%, #166534 100%);
+  --btn-primary-shadow: 0 14px 26px rgba(22,101,52,.18);
+
+  --btn-link-fg: var(--accent);
+  --btn-link-hover-bg: rgba(37,99,235,.10);
+
+  /* TABLA */
+  --table-head-bg: rgba(255,255,255,.92);
+  --table-head-fg: rgba(15,23,42,.55);
+
+  --table-row-bg: rgba(255,255,255,.78);
+  --table-row-hover-bg: rgba(255,255,255,.92);
+
+  --table-buy-fg: #14532D;
+  --table-sell-fg: #7F1D1D;
+
+  --table-winner-bg: rgba(16,185,129,.08);
+  --table-winner-border: rgba(22,163,74,.18);
+
+  /* ADS (placeholders blancos) */
+  --ad-slot-bg: rgba(255,255,255,.88);
+  --ad-slot-border: rgba(15,23,42,.10);
+
+  --ad-placeholder-title: "Publicidad";
+  --ad-placeholder-sub: "Espacio reservado";
+  --ad-placeholder-title-fg: rgba(15,23,42,.55);
+  --ad-placeholder-sub-fg: rgba(15,23,42,.45);
+  --ad-placeholder-pill-bg: rgba(255,255,255,.90);
+  --ad-placeholder-pill-border: rgba(15,23,42,.12);
+
+  /* MODAL */
+  --modal-overlay-bg: rgba(15,23,42,.55);
+  --modal-panel-bg: #fff;
+  --modal-panel-shadow: 0 30px 80px rgba(0,0,0,.35);
+  --modal-head-border: rgba(2,6,23,.10);
+  --modal-head-bg: linear-gradient(180deg,#FFFFFF 0%, #F7FAFF 100%);
+  --modal-title-fg: var(--brand-blue-deep);
+  --modal-close-fg: rgba(2,6,23,.70);
+  --modal-close-fg-hover: rgba(2,6,23,.95);
+
+  /* COOKIES */
+  --cookie-bg: rgba(17,17,17,.96);
+  --cookie-fg: #fff;
+  --cookie-shadow: 0 10px 30px rgba(0,0,0,.35);
+  --cookie-link-fg: #60a5fa;
+  --cookie-btn-fg: #fff;
+  --cookie-accept-bg: #2563EB;
+  --cookie-reject-bg: #374151;
+  --cookie-focus-ring: #60a5fa;
+
+  /* FOOTER */
+  --footer-copy-fg: rgba(15,23,42,.45);
+  --footer-link-fg: rgba(15,23,42,.70);
+  --footer-link-hover-fg: var(--accent);
+
+  /* SEO TABS */
+  --seo-tabs-bg: rgba(255,255,255,.70);
+  --seo-tabs-border: rgba(15,23,42,.10);
+}

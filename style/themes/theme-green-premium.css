@@ -1,0 +1,235 @@
+/* =========================================================
+   THEME-GREEN-PREMIUM.CSS
+   Verde tech (tipo CEDFX) + “islas blancas” para lectura
+   - Fondo verde con grid sutil (branding)
+   - Contenido blanco (alta legibilidad para números)
+   - Acentos verdes + azul/cyan discreto
+   ========================================================= */
+
+:root{
+  /* =========================================================
+     BRAND / ACCENTS
+     ========================================================= */
+  --brand-blue-deep: #0B2C4A;          /* tu marca puede quedarse */
+  --brand-blue: #2E7CF6;              /* azul limpio para enlaces/acentos */
+  --brand-green: #1FD06B;             /* verde “vivo” tipo tech */
+  --brand-green-deep: #0A2A1A;         /* verde fondo */
+
+  --accent: var(--brand-green);
+  --accent-2: var(--brand-blue);
+
+  /* Señales (datos) */
+  --positive: #16C172;
+  --negative: #E5484D;
+  --warning:  #F5A524;
+
+  --focus-ring: rgba(31, 208, 107, .35);
+
+  /* =========================================================
+     TYPOGRAPHY (más corporate / fintech)
+     ========================================================= */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* En este theme NO usamos serif en títulos para que se sienta CEDFX */
+  --font-display: var(--font-sans);
+
+  --heading-tracking: -0.015em;
+  --heading-weight: 950;
+
+  /* =========================================================
+     PAGE BACKGROUND (verde + grid)
+     ========================================================= */
+
+  /* Fondo principal (verde profundo, sin “manchas sucias”) */
+  --bg-page:
+    radial-gradient(900px 520px at 14% 10%, rgba(31,208,107,.16), transparent 62%),
+    radial-gradient(860px 520px at 88% 12%, rgba(46,124,246,.12), transparent 64%),
+    linear-gradient(180deg, #06150F 0%, #071D14 50%, #06150F 100%);
+
+  /* Grid overlay (sutil como tu imagen verde) */
+  --bg-grid:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.05) 0px,
+      rgba(255,255,255,.05) 1px,
+      transparent 1px,
+      transparent 52px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.05) 0px,
+      rgba(255,255,255,.05) 1px,
+      transparent 1px,
+      transparent 52px
+    );
+
+  /* =========================================================
+     TEXT (como tendremos islas blancas, el texto base es oscuro)
+     ========================================================= */
+  --text-1: #0B1220;
+  --text-2: #1F2A3A;
+  --text-3: #4B5565;
+  --text-4: rgba(15, 23, 42, .55);
+
+  /* =========================================================
+     SURFACES (ISLAS BLANCAS)
+     - esto hace que el contenido sea súper legible
+     ========================================================= */
+  --surface-1: rgba(255,255,255,.92); /* cards principales */
+  --surface-2: rgba(255,255,255,.96); /* secciones internas */
+  --surface-3: rgba(246,248,252,.98); /* cabeceras/rows suaves */
+
+  /* Bordes (sutiles, elegantes) */
+  --border-1: rgba(15,23,42,.08);
+  --border-2: rgba(15,23,42,.12);
+  --border-3: rgba(15,23,42,.18);
+
+  /* =========================================================
+     SHADOWS (card UI limpia)
+     ========================================================= */
+  --shadow-1: 0 18px 50px rgba(0,0,0,.14);
+  --shadow-2: 0 30px 90px rgba(0,0,0,.22);
+
+  /* =========================================================
+     GLASS (solo lo usamos sutil, pero sobre blanco)
+     ========================================================= */
+  --glass-bg: var(--surface-1);
+  --glass-border: rgba(255,255,255,.70);
+  --glass-blur: 12px;
+
+  /* =========================================================
+     BUTTONS
+     ========================================================= */
+  --btn-primary-fg: #04110B;
+  --btn-primary-bg: linear-gradient(180deg, #1FD06B 0%, #11A857 100%);
+  --btn-primary-shadow: 0 18px 34px rgba(31,208,107,.22);
+
+  --btn-link-fg: var(--brand-blue);
+  --btn-link-hover-bg: rgba(46,124,246,.10);
+
+  /* =========================================================
+     TABLE (clarísima como fintech)
+     ========================================================= */
+  --table-head-bg: rgba(246,248,252,.98);
+  --table-head-fg: rgba(15,23,42,.55);
+
+  --table-row-bg: rgba(255,255,255,.92);
+  --table-row-hover-bg: rgba(255,255,255,.98);
+
+  --table-buy-fg: #0F7A45;
+  --table-sell-fg: #9B1C1C;
+
+  --table-winner-bg: rgba(31,208,107,.10);
+  --table-winner-border: rgba(31,208,107,.22);
+
+  /* =========================================================
+     ADS (en blanco para no distraer)
+     ========================================================= */
+  --ad-slot-bg: rgba(255,255,255,.90);
+  --ad-slot-border: rgba(15,23,42,.12);
+
+  --ad-placeholder-title: "Publicidad";
+  --ad-placeholder-sub: "Espacio reservado";
+  --ad-placeholder-title-fg: rgba(15,23,42,.55);
+  --ad-placeholder-sub-fg: rgba(15,23,42,.45);
+  --ad-placeholder-pill-bg: rgba(255,255,255,.92);
+  --ad-placeholder-pill-border: rgba(15,23,42,.12);
+
+  /* =========================================================
+     MODAL (blanco)
+     ========================================================= */
+  --modal-overlay-bg: rgba(0,0,0,.55);
+  --modal-panel-bg: rgba(255,255,255,.98);
+  --modal-panel-shadow: 0 40px 120px rgba(0,0,0,.40);
+  --modal-head-border: rgba(15,23,42,.10);
+  --modal-head-bg: linear-gradient(180deg, #FFFFFF 0%, #F7FAFF 100%);
+  --modal-title-fg: #0B1220;
+  --modal-close-fg: rgba(15,23,42,.70);
+  --modal-close-fg-hover: rgba(15,23,42,.95);
+
+  /* =========================================================
+     COOKIES (oscuro para contraste, como la mayoría)
+     ========================================================= */
+  --cookie-bg: rgba(10, 12, 14, .92);
+  --cookie-fg: rgba(255,255,255,.92);
+  --cookie-shadow: 0 18px 56px rgba(0,0,0,.55);
+  --cookie-link-fg: #7AB0FF;
+  --cookie-btn-fg: #061225;
+  --cookie-accept-bg: linear-gradient(180deg, #1FD06B 0%, #11A857 100%);
+  --cookie-reject-bg: rgba(255,255,255,.14);
+  --cookie-focus-ring: rgba(31,208,107,.85);
+
+  /* =========================================================
+     FOOTER
+     ========================================================= */
+  --footer-copy-fg: rgba(15,23,42,.50);
+  --footer-link-fg: rgba(15,23,42,.72);
+  --footer-link-hover-fg: var(--brand-blue);
+
+  /* =========================================================
+     SEO TABS / STATIC
+     ========================================================= */
+  --seo-tabs-bg: rgba(255,255,255,.92);
+  --seo-tabs-border: rgba(15,23,42,.10);
+}
+
+/* =========================================================
+   PAGE BACKGROUND APPLICATION
+   - Fondo verde + grid sutil
+   - Sin animación: data-first, limpio
+   ========================================================= */
+.page{
+  background:
+    var(--bg-grid),
+    var(--bg-page);
+
+  /* grid no debe ser dominante */
+  background-blend-mode: overlay, normal;
+}
+
+/* =========================================================
+   (Opcional, recomendado) “halo” detrás del contenedor central
+   - Esto hace que el centro se lea mejor sobre el verde
+   ========================================================= */
+.page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    radial-gradient(900px 700px at 50% 15%, rgba(255,255,255,.16), transparent 70%),
+    radial-gradient(1200px 900px at 50% 90%, rgba(255,255,255,.10), transparent 72%);
+}
+
+/* Asegura que el contenido esté sobre el halo */
+.page > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   (Opcional) Si quieres el fondo “mar” pero PRO:
+   Descomenta esto (es MUY leve, no ensucia)
+   ========================================================= */
+/*
+.page{
+  background:
+    var(--bg-grid),
+    var(--bg-page);
+  background-size:
+    auto,
+    120% 120%, 120% 120%, 100% 100%;
+  animation: greenDrift 26s ease-in-out infinite;
+}
+
+@keyframes greenDrift{
+  0%   { background-position: 0 0, 12% 10%, 88% 12%, 0 0; }
+  50%  { background-position: 0 0, 16% 12%, 84% 15%, 0 0; }
+  100% { background-position: 0 0, 12% 10%, 88% 12%, 0 0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .page{ animation: none; }
+}
+*/

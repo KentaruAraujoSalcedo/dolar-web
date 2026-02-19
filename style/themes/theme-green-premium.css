@@ -191,21 +191,3 @@
    (Opcional, recomendado) “halo” detrás del contenedor central
    - Esto hace que el centro se lea mejor sobre el verde
    ========================================================= */
-.page::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-
-  background:
-    radial-gradient(900px 700px at 50% 15%, rgba(255,255,255,.16), transparent 70%),
-    radial-gradient(1200px 900px at 50% 90%, rgba(255,255,255,.10), transparent 72%);
-}
-
-/* Asegura que el contenido esté sobre el halo */
-.page > *{
-  position: relative;
-  z-index: 1;
-}
-

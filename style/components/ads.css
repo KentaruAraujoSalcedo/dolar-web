@@ -182,12 +182,3 @@
     max-height: calc(100vh - 44px);
   }
 }
-
-/* TEST: apaga TODA la publicidad */
-aside.ads.left,
-aside.ads.right,
-.ad-inline,
-.ad-final,
-.ad-slot{
-  display: none !important;
-}

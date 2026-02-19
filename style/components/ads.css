@@ -182,3 +182,47 @@
     max-height: calc(100vh - 44px);
   }
 }
+
+/* =========================================================
+   FIX MOBILE/TABLET: evita “ad detrás” al scrollear
+   - Sticky solo en desktop
+   - En mobile/tablet el contenedor lateral no debe flotar
+   ========================================================= */
+
+/* 1100px ↓ (tablet/móvil): desactiva sticky del lateral */
+@media (max-width:1100px){
+  .ads{
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+  }
+}
+
+/* 700px ↓ (mobile): si el lateral NO debería existir, ocúltalo */
+@media (max-width:700px){
+  /* Si tu layout ya mete ads inline, este sidebar solo estorba */
+  .ads{
+    display: none !important;
+  }
+
+  /* Evita “bloque blanco” en slots vacíos */
+  .ad-slot{
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: rgba(15,23,42,.10) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Reservas de altura: más pequeñas en móvil */
+  .ad-slot.ad-responsive{
+    min-height: 90px !important;
+  }
+
+  /* Si no hay contenido real, que no reserve tanto */
+  .ad-slot:not(:has(iframe)):not(:has(ins)){
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+}
+

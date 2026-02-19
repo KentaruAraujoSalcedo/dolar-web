@@ -2,6 +2,11 @@
    HOTFIX MOBILE (FUERTE)
    Elimina flashes/cuadrados blancos al scrollear en Android/iOS
    ========================================================= */
+@media (max-width: 768px){
+  body{
+    outline: 8px solid red !important;
+  }
+}
 
 @media (max-width: 768px){
 

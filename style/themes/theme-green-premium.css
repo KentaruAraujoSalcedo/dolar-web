@@ -209,13 +209,3 @@
   z-index: 1;
 }
 
-/* =========================================================
-   PERF FIX (mobile):
-   Overlays fixed + gradientes => tiles blancos en scroll
-   ========================================================= */
-@media (max-width: 900px){
-  .page::before{
-    display: none !important;
-  }
-}
-

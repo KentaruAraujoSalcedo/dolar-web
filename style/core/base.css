@@ -23,14 +23,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Textura suave (muy leve) — theme-friendly */
-.page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-
-  background:
+/* Textura suave: pásala al fondo real, NO a un overlay fixed */
+body{
+  background: var(--bg-page);
+  /* textura encima del bg-page, sin fixed */
+  background-image:
     repeating-linear-gradient(
       135deg,
       rgba(255, 255, 255, .05) 0px,
@@ -38,10 +35,9 @@ body {
       transparent 2px,
       transparent 12px
     );
-
-  opacity: .16;
-  mix-blend-mode: overlay;
+  background-blend-mode: overlay;
 }
+.page::before{ content:none; display:none; } /* por si quedó algo */
 
 /* =====================
    Panel base (cards)

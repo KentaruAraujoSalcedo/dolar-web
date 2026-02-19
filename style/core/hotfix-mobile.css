@@ -4,6 +4,6 @@
    ========================================================= */
 
 @media (max-width: 768px){
-  /* SOLO test blend */
-  *{ mix-blend-mode: normal !important; }
+  /* SOLO test sombras */
+  *{ box-shadow: none !important; }
 }

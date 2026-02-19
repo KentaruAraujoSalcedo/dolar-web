@@ -4,9 +4,6 @@
    ========================================================= */
 
 @media (max-width: 768px){
-  /* SOLO test blur */
-  *{
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
+  /* SOLO test blend */
+  *{ mix-blend-mode: normal !important; }
 }

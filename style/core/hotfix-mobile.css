@@ -1,16 +1,21 @@
 /* =========================================================
-   HOTFIX MOBILE: flash / cuadrados blancos al scrollear
-   Causa: fixed overlay + backdrop-filter (blur) en Android/iOS
+   HOTFIX MOBILE – Corrige cuadrados blancos al scrollear
+   Causa: fixed overlays + backdrop-filter + blend modes
+   Aplica SOLO en dispositivos táctiles
    ========================================================= */
 
-@media (hover: none) and (pointer: coarse) {
+@media (max-width: 768px){
 
-  /* 1) Capa fija con blend-mode (principal sospechoso) */
+  /* -------------------------------------------------
+     1) Elimina la capa fija global (principal causa)
+     ------------------------------------------------- */
   .page::before{
     display: none !important;
   }
 
-  /* 2) Desactivar blur en superficies grandes (evita repaints) */
+  /* -------------------------------------------------
+     2) Desactiva blur (backdrop-filter) en mobile
+     ------------------------------------------------- */
   .panel,
   .glass,
   .calc-card,
@@ -22,9 +27,32 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  /* 3) Asegura que no “asome” blanco del fondo al repintar */
-  html, body{
+  /* -------------------------------------------------
+     3) Desactiva blend modes si existen
+     ------------------------------------------------- */
+  .panel,
+  .glass{
+    mix-blend-mode: normal !important;
+  }
+
+  /* -------------------------------------------------
+     4) Fuerza fondo sólido (evita “asomo” blanco)
+     ------------------------------------------------- */
+  html,
+  body{
     background: var(--bg-page) !important;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+  }
+
+  /* -------------------------------------------------
+     5) Mejora estabilidad de render en scroll
+     ------------------------------------------------- */
+  .panel,
+  .seo-tabs,
+  .seo-faq,
+  .calc-card{
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
   }
 }

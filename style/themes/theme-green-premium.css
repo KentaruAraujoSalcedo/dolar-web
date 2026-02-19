@@ -210,26 +210,12 @@
 }
 
 /* =========================================================
-   (Opcional) Si quieres el fondo “mar” pero PRO:
-   Descomenta esto (es MUY leve, no ensucia)
+   PERF FIX (mobile):
+   Overlays fixed + gradientes => tiles blancos en scroll
    ========================================================= */
-/*
-.page{
-  background:
-    var(--bg-grid),
-    var(--bg-page);
-  background-size:
-    auto,
-    120% 120%, 120% 120%, 100% 100%;
-  animation: greenDrift 26s ease-in-out infinite;
+@media (max-width: 900px){
+  .page::before{
+    display: none !important;
+  }
 }
 
-@keyframes greenDrift{
-  0%   { background-position: 0 0, 12% 10%, 88% 12%, 0 0; }
-  50%  { background-position: 0 0, 16% 12%, 84% 15%, 0 0; }
-  100% { background-position: 0 0, 12% 10%, 88% 12%, 0 0; }
-}
-@media (prefers-reduced-motion: reduce){
-  .page{ animation: none; }
-}
-*/

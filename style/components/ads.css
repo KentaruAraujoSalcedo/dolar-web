@@ -183,26 +183,4 @@
   }
 }
 
-/* =========================================================
-   FIX: En móvil el sidebar de ads NO debe existir
-   (evita “bloques blancos detrás” al scrollear)
-   ========================================================= */
-
-@media (max-width: 1100px){
-  /* En tablet/móvil: desactiva sticky en laterales */
-  aside.ads.left,
-  aside.ads.right{
-    position: static !important;
-    top: auto !important;
-    max-height: none !important;
-  }
-}
-
-@media (max-width: 700px){
-  /* En móvil: oculta laterales, usa solo ads inline */
-  aside.ads.left,
-  aside.ads.right{
-    display: none !important;
-  }
-}
 

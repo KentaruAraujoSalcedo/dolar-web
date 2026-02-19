@@ -1,58 +1,46 @@
 /* =========================================================
-   HOTFIX MOBILE – Corrige cuadrados blancos al scrollear
-   Causa: fixed overlays + backdrop-filter + blend modes
-   Aplica SOLO en dispositivos táctiles
+   HOTFIX MOBILE (FUERTE)
+   Elimina flashes/cuadrados blancos al scrollear en Android/iOS
    ========================================================= */
 
 @media (max-width: 768px){
 
-  /* -------------------------------------------------
-     1) Elimina la capa fija global (principal causa)
-     ------------------------------------------------- */
-  .page::before{
-    display: none !important;
+  /* Fondo sólido para que nunca asome blanco */
+  html, body, .page{
+    background: var(--bg-page, #f6f7fb) !important;
+    overflow-x: hidden !important;
   }
 
-  /* -------------------------------------------------
-     2) Desactiva blur (backdrop-filter) en mobile
-     ------------------------------------------------- */
-  .panel,
-  .glass,
-  .calc-card,
-  .seo-tabs,
-  .seo-faq,
-  .ad-slot,
-  .tabla-casas thead th{
+  /* Apaga overlays fijos tipo "halo/texture" */
+  .page::before,
+  .page::after{
+    display: none !important;
+    content: none !important;
+  }
+
+  /* MUY CLAVE: en mobile desactiva blur global (backdrop-filter) */
+  *{
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
-  /* -------------------------------------------------
-     3) Desactiva blend modes si existen
-     ------------------------------------------------- */
-  .panel,
-  .glass{
+  /* También desactiva blend-mode (causa repaints raros) */
+  *{
     mix-blend-mode: normal !important;
   }
 
-  /* -------------------------------------------------
-     4) Fuerza fondo sólido (evita “asomo” blanco)
-     ------------------------------------------------- */
-  html,
-  body{
-    background: var(--bg-page) !important;
-    overflow-x: hidden !important;
+  /* Reduce “repaint” de sombras pesadas si tu UI tiene muchas cards */
+  .panel,
+  .glass,
+  .glass-strong{
+    box-shadow: none !important;
   }
 
-  /* -------------------------------------------------
-     5) Mejora estabilidad de render en scroll
-     ------------------------------------------------- */
+  /* Evita que algo cree un canvas raro durante scroll */
   .panel,
-  .seo-tabs,
-  .seo-faq,
-  .calc-card{
+  .glass,
+  .glass-strong{
     transform: translateZ(0);
     backface-visibility: hidden;
-    will-change: transform;
   }
 }

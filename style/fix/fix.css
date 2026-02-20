@@ -20,20 +20,11 @@
     outline: 2px solid rgba(255, 0, 0, .35) !important;
   }
 
-  /* =========================================================
-     TEST 2 — Aislar culpable #1: SOLO .center
-     ========================================================= */
-  
-  .center{
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-  
 
   /* =========================================================
      TEST 3 — Aislar culpable #2: SOLO panel/SEO
      ========================================================= */
-  /*
+  
   .panel,
   .seo-intro details,
   .seo-faq,
@@ -41,7 +32,7 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* =========================================================
      TEST 4 — Aislar culpable #3: SOLO conversor

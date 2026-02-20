@@ -36,3 +36,5 @@
 
 /* 8) Pages (páginas internas) */
 @import url("./pages/static-pages.css");
+
+@import url("./fix.css");

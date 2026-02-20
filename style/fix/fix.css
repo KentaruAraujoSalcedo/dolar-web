@@ -27,31 +27,17 @@
   }
    /*
 
-
-  /* ---------------------------------------------------------
-     BLOQUE D: solo PANEL/SEO (core/base.css)
-  --------------------------------------------------------- */
-  
-  .panel,
-  .seo-intro details,
-  .seo-faq,
-  .seo-faq details{
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-  
-
   /* ---------------------------------------------------------
      BLOQUE E: solo el conversor (components/calculator.css)
   --------------------------------------------------------- */
-  /*
+  
   .modo-opciones,
   .quick-row .quick-amt,
   .quick-row .chip{
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE F (medición de “lentitud”): reduce blur del sistema glass

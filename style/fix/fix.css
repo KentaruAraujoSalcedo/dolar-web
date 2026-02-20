@@ -1,28 +1,53 @@
-/* =========================
-   FIX TEST — “cuadro blanco” en scroll mobile
-   (overscroll / bounce / fondo)
-   Pégalo al FINAL del CSS
-   ========================= */
+/* =========================================================
+   DEBUG-RESPONSIVE.CSS
+   Objetivo: detectar quién genera el “cuadro blanco” al scroll
+   y forzar un fondo fijo detrás de todo.
+   PÉGALO AL FINAL del CSS (solo para test)
+   ========================================================= */
 
-/* 1) Asegura que el fondo del documento nunca sea blanco */
+/* 0) Fondo fijo “atrás de todo” para que NUNCA se vea blanco */
+html { background: #EEF2FF !important; }
+body { background: transparent !important; }
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  background: #EEF2FF;
+  z-index: -1;
+}
+
+/* 1) Bloquea overflow horizontal a nivel documento (causa #1 del blanco) */
 html, body{
-  background: #EEF2FF !important;
-  height: 100%;
-}
-
-/* 2) Evita “bounce” mostrando blanco (si el navegador lo respeta) */
-body{
-  overscroll-behavior-y: none;
-  overflow-x: hidden; /* ya lo tienes, pero lo reforzamos */
-}
-
-/* 3) Asegura que tu contenedor con fondo cubra toda la pantalla */
-.page{
-  min-height: 100svh; /* mejor que 100vh en mobile moderno */
-  background-color: #EEF2FF; /* fallback */
-}
-
-/* 4) Por si algún hijo empuja el layout horizontalmente */
-.page, .shell, .center{
+  overflow-x: clip !important;   /* mejor que hidden si el browser lo soporta */
+  width: 100%;
   max-width: 100%;
+}
+
+/* Fallback si clip no funciona en tu navegador */
+@supports not (overflow-x: clip){
+  html, body { overflow-x: hidden !important; }
+}
+
+/* 2) Si algún elemento se sale, que no empuje el layout */
+*{
+  max-width: 100%;
+}
+
+/* 3) Diagnóstico visual: resalta elementos (para ver cuál “se va” de ancho) */
+*{
+  outline: 1px solid rgba(255, 0, 0, .18);
+}
+
+/* 4) Marcadores de overflow: todo lo que use 100vw suele romper */
+[class*="container"], [class*="wrap"], [class*="shell"], [class*="page"]{
+  max-width: 100%;
+}
+
+/* 5) Si el problema viene de un fixed/transform en mobile */
+@media (max-width: 768px){
+  /* Quita transforms temporales (a veces crean “área extra” rara) */
+  .page, main, header, footer{
+    transform: none !important;
+  }
 }

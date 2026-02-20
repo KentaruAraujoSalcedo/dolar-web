@@ -1,14 +1,6 @@
-/* =========================================================
-   DEBUG CONFIRM GLASS (ZIP)
-   Objetivo:
-   1) Confirmar si el bug es backdrop-filter
-   2) Identificar qué elemento lo dispara
-   3) Separar blur vs overlay fixed+blend
-   ========================================================= */
+@media (max-width: 1100px) {
 
-@media (max-width: 1100px){
-
-  /* A) Marca visual: resalta TODO lo que tenga glass/blur */
+  /* --------------------------------------------------------- BLOQUE B (confirmación total): APAGA TODO backdrop-filter Si con esto desaparece el cuadro 100%, ya está confirmado. --------------------------------------------------------- */
   .center,
   .panel,
   .seo-intro details,
@@ -16,18 +8,8 @@
   .seo-faq details,
   .modo-opciones,
   .quick-row .quick-amt,
-  .quick-row .chip{
-    outline: 2px solid rgba(255, 0, 0, .35) !important;
+  .quick-row .chip {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
-  
-
-  /* =========================================================
-     TEST 5 — Si NO es blur: apaga overlay global fixed+blend
-     (tu base.css tiene .page::before con fixed+mix-blend-mode)
-     ========================================================= */
-  
-  .page::before{
-    display:none !important;
-  }
-  
 }

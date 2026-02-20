@@ -1,31 +1,85 @@
 /* =========================================================
-   debug-backdrop-probe.css  (basado en tu ZIP)
-   Objetivo: confirmar si el bug es backdrop-filter y aislar el culpable.
-   USO: descomenta 1 bloque a la vez.
-   PÉGALO AL FINAL (o último @import).
+   DEBUG CONFIRM GLASS (ZIP)
+   Objetivo:
+   1) Confirmar si el bug es backdrop-filter
+   2) Identificar qué elemento lo dispara
+   3) Separar blur vs overlay fixed+blend
    ========================================================= */
 
 @media (max-width: 1100px){
 
-
-  /* ---------------------------------------------------------
-     BLOQUE B (confirmación total): APAGA TODO backdrop-filter
-     Si con esto desaparece el cuadro 100%, ya está confirmado.
-  --------------------------------------------------------- */
-  
+  /* A) Marca visual: resalta TODO lo que tenga glass/blur */
   .center,
   .panel,
   .seo-intro details,
   .seo-faq,
   .seo-faq details,
+  .modo-opciones,
+  .quick-row .quick-amt,
+  .quick-row .chip{
+    outline: 2px solid rgba(255, 0, 0, .35) !important;
+  }
 
+  /* =========================================================
+     TEST 1 — Confirmación TOTAL de backdrop-filter
+     (si con esto el cuadro desaparece 100% => ES blur/backdrop)
+     ========================================================= */
+  /*
+  .center,
+  .panel,
+  .seo-intro details,
+  .seo-faq,
+  .seo-faq details,
   .modo-opciones,
   .quick-row .quick-amt,
   .quick-row .chip{
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-   
+  */
 
-  
+  /* =========================================================
+     TEST 2 — Aislar culpable #1: SOLO .center
+     ========================================================= */
+  /*
+  .center{
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  */
+
+  /* =========================================================
+     TEST 3 — Aislar culpable #2: SOLO panel/SEO
+     ========================================================= */
+  /*
+  .panel,
+  .seo-intro details,
+  .seo-faq,
+  .seo-faq details{
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  */
+
+  /* =========================================================
+     TEST 4 — Aislar culpable #3: SOLO conversor
+     ========================================================= */
+  /*
+  .modo-opciones,
+  .quick-row .quick-amt,
+  .quick-row .chip{
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  */
+
+  /* =========================================================
+     TEST 5 — Si NO es blur: apaga overlay global fixed+blend
+     (tu base.css tiene .page::before con fixed+mix-blend-mode)
+     ========================================================= */
+  /*
+  .page::before{
+    display:none !important;
+  }
+  */
 }

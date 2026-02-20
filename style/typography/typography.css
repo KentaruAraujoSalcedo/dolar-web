@@ -1,0 +1,194 @@
+/* =========================================================
+   TYPOGRAPHY.CSS
+   Tipografía global + “prose” para contenidos (páginas/SEO)
+   NO layout (sin grids, sin contenedores)
+   ========================================================= */
+
+/* =====================
+   Texto base
+   ===================== */
+
+p {
+  margin: 0 0 14px;
+  line-height: 1.75;
+  color: var(--ink-800, #334155);
+}
+
+/* Links globales (si no hay override local) */
+a {
+  color: var(--c-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* =====================
+   Headings base
+   (usados en páginas estáticas y bloques de contenido)
+   ===================== */
+
+h1, h2, h3 {
+  margin: 0;
+  color: var(--ink-900);
+}
+
+h1 {
+  font-size: 1.45rem;
+  font-weight: 950;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 1.05rem;
+  font-weight: 900;
+  margin: 20px 0 10px;
+}
+
+h3 {
+  font-size: .98rem;
+  font-weight: 900;
+  margin: 16px 0 8px;
+  opacity: .95;
+}
+
+/* =====================
+   Prose container (opcional)
+   Para envolver contenido tipo artículo: Terms/Privacy/About
+   ===================== */
+
+.prose {
+  color: var(--ink-800, #334155);
+}
+
+.prose p {
+  line-height: 1.75;
+  margin: 0 0 14px;
+  color: var(--ink-800, #334155);
+}
+
+.prose a {
+  font-weight: 700;
+  color: var(--c-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Listas */
+.prose ul,
+.prose ol{
+  margin: 0 0 14px 18px;
+  padding: 0;
+  line-height: 1.75;
+}
+
+.prose li{
+  margin: 6px 0;
+}
+
+/* Bloques tipo nota */
+.prose blockquote{
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-left: 4px solid rgba(37,99,235,.35);
+  background: rgba(255,255,255,.20);
+  border-radius: var(--radius-small);
+}
+
+/* =====================
+   Compatibilidad con tu HTML actual
+   (static-pages.css usa .static-content)
+   ===================== */
+
+.static-content {
+  color: var(--ink-800, #334155);
+}
+
+.static-content h1{
+  margin: 0 0 10px;
+  font-size: 1.45rem;
+  font-weight: 950;
+  color: var(--ink-900);
+  letter-spacing: -0.01em;
+}
+
+.static-content h2{
+  margin: 20px 0 10px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--ink-900);
+}
+
+.static-content h3{
+  margin: 16px 0 8px;
+  font-size: .98rem;
+  font-weight: 900;
+  color: var(--ink-900);
+  opacity: .95;
+}
+
+.static-content p{
+  line-height: 1.75;
+  margin: 0 0 14px;
+  color: var(--ink-800, #334155);
+}
+
+.static-content ul,
+.static-content ol{
+  margin: 0 0 14px 18px;
+  padding: 0;
+  line-height: 1.75;
+}
+
+.static-content li{
+  margin: 6px 0;
+}
+
+.static-content a{
+  font-weight: 700;
+  color: var(--c-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.static-content blockquote{
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-left: 4px solid rgba(37,99,235,.35);
+  background: rgba(255,255,255,.20);
+  border-radius: var(--radius-small);
+}
+
+/* =========================
+   RESPONSIVE (manteniendo tu estándar)
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — tablet */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  h1 { font-size: 1.25rem; }
+  h2 { font-size: 1rem; }
+
+  .static-content h1{ font-size: 1.25rem; }
+  .static-content h2{ font-size: 1rem; }
+
+  .static-content p{
+    font-size: .95rem;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .static-content p{
+    font-size: .93rem;
+  }
+}

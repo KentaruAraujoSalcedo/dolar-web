@@ -6,19 +6,6 @@
 
 @media (max-width: 1100px){
 
-
-  /* =========================================================
-     BLOQUE 5 — Apagar animaciones/transiciones
-     (a veces el “flash” viene por animaciones + blur)
-     ========================================================= */
-  
-  *, *::before, *::after{
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  
-
   /* =========================================================
      BLOQUE 6 — Ocultar componentes “pesados” uno por uno
      (para aislar cuál dispara el glitch)
@@ -55,8 +42,8 @@
      BLOQUE 7 — Cazar overflow horizontal (si “se abre” el layout)
      (si hay un elemento que se va de ancho, suele causar flashes)
      ========================================================= */
-  /*
+  
   *{ outline: 1px solid rgba(255,0,0,.18); }
   html, body{ overflow-x: hidden !important; }
-  */
+  
 }

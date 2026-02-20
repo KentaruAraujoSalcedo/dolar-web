@@ -1,121 +1,37 @@
 /* =========================================================
-   debug-probe.css  (SOLO PARA PRUEBAS)
-   Pega esto AL FINAL de style.css (o impórtalo al final)
-   Ve activando bloques uno por uno.
+   FIX DEFINITIVO — glitch “cuadro” en scroll/zoom (iOS + Android)
+   Causa: backdrop-filter en paneles grandes (glass)
    ========================================================= */
 
 @media (max-width: 1100px){
 
-  /* =========================================================
-     BLOQUE 0 — “Base sólida” (evita blancos del documento)
-     ========================================================= */
-  html { background: var(--c-bg-page-start) !important; }
-  body { background: var(--c-bg-page-start) !important; overflow-x: hidden !important; }
-  .page { min-height: 100svh; }
-
-  /* =========================================================
-     BLOQUE 1 — Apagar la textura overlay (page::before)
-     (si desaparece el blanco: el problema es fixed/blend/repaint)
-     ========================================================= */
-  
-  .page::before{
-    display: none !important;
-  }
-  
-
-  /* =========================================================
-     BLOQUE 2 — Cambiar page::before de fixed -> absolute
-     (alternativa si quieres mantener la textura)
-     ========================================================= */
-  
-  .page{ position: relative; isolation: isolate; }
-  .page::before{
-    position: absolute !important;
-    inset: 0;
-    z-index: 0;
-    mix-blend-mode: normal !important;
-  }
-  .shell, .center, header, main, footer{
-    position: relative;
-    z-index: 1;
-  }
-  
-
-  /* =========================================================
-     BLOQUE 3 — Desactivar backdrop-filter (glass)
-     (iOS/Android a veces pinta rectángulos blancos al scroll)
-     ========================================================= */
-  /*
-  .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
-    backdrop-filter: none !important;
+  /* 1) Glass SAFE en mobile (sin backdrop-filter) */
+  .panel,
+  .center,
+  .best-deal,
+  .seo-intro details,
+  .seo-faq,
+  .seo-faq details{
     -webkit-backdrop-filter: none !important;
-  }
-  */
+    backdrop-filter: none !important;
 
-  /* =========================================================
-     BLOQUE 4 — Acelerar “glass” (anti-flicker)
-     (si el bug es repaint de compositing)
-     ========================================================= */
-  
-  .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
+    /* Mantén la estética glass sin blur real */
+    background: rgba(10, 18, 28, 0.78) !important;  /* ajusta si quieres */
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35) !important;
+  }
+
+  /* 2) Anti-flicker/composición (ayuda con zoom/scroll) */
+  .panel,
+  .center,
+  .best-deal,
+  .seo-intro details,
+  .seo-faq,
+  .seo-faq details{
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     will-change: transform;
   }
-  
-
-  /* =========================================================
-     BLOQUE 5 — Apagar animaciones/transiciones
-     (a veces el “flash” viene por animaciones + blur)
-     ========================================================= */
-  
-  *, *::before, *::after{
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  
-
-  /* =========================================================
-     BLOQUE 6 — Ocultar componentes “pesados” uno por uno
-     (para aislar cuál dispara el glitch)
-     ========================================================= */
-
-  /* 6A: oculta ADS */
-  
-  .ads, .ad-inline, .ad-final{ display:none !important; }
-  
-
-  /* 6B: oculta el “best-deal” */
-  
-  .best-deal{ display:none !important; }
-  
-
-  /* 6C: oculta tabla */
-  
-  .casas-cambio, .table-wrap, .pdh-table{ display:none !important; }
-  
-
-  /* 6D: oculta SEO blocks */
-  
-  .seo-intro, .seo-faq{ display:none !important; }
-  
-
-  /* 6E: oculta cookies/modal (fixed layers típicas) */
-  
-  .cookie-banner, .cookie-consent, .cookies, .modal, .modal-backdrop, .overlay{
-    display:none !important;
-  }
-  
-
-  /* =========================================================
-     BLOQUE 7 — Cazar overflow horizontal (si “se abre” el layout)
-     (si hay un elemento que se va de ancho, suele causar flashes)
-     ========================================================= */
-  
-  *{ outline: 1px solid rgba(255,0,0,.18); }
-  html, body{ overflow-x: hidden !important; }
-  
 }

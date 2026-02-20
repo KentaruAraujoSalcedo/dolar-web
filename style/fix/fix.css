@@ -7,36 +7,108 @@
 @media (max-width: 1100px){
 
   /* =========================================================
+     BLOQUE 0 — “Base sólida” (evita blancos del documento)
+     ========================================================= */
+  html { background: var(--c-bg-page-start) !important; }
+  body { background: var(--c-bg-page-start) !important; overflow-x: hidden !important; }
+  .page { min-height: 100svh; }
+
+  /* =========================================================
+     BLOQUE 1 — Apagar la textura overlay (page::before)
+     (si desaparece el blanco: el problema es fixed/blend/repaint)
+     ========================================================= */
+  
+  .page::before{
+    display: none !important;
+  }
+  
+
+  /* =========================================================
+     BLOQUE 2 — Cambiar page::before de fixed -> absolute
+     (alternativa si quieres mantener la textura)
+     ========================================================= */
+  
+  .page{ position: relative; isolation: isolate; }
+  .page::before{
+    position: absolute !important;
+    inset: 0;
+    z-index: 0;
+    mix-blend-mode: normal !important;
+  }
+  .shell, .center, header, main, footer{
+    position: relative;
+    z-index: 1;
+  }
+  
+
+  /* =========================================================
+     BLOQUE 3 — Desactivar backdrop-filter (glass)
+     (iOS/Android a veces pinta rectángulos blancos al scroll)
+     ========================================================= */
+  /*
+  .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  */
+
+  /* =========================================================
+     BLOQUE 4 — Acelerar “glass” (anti-flicker)
+     (si el bug es repaint de compositing)
+     ========================================================= */
+  
+  .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    will-change: transform;
+  }
+  
+
+  /* =========================================================
+     BLOQUE 5 — Apagar animaciones/transiciones
+     (a veces el “flash” viene por animaciones + blur)
+     ========================================================= */
+  
+  *, *::before, *::after{
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  
+
+  /* =========================================================
      BLOQUE 6 — Ocultar componentes “pesados” uno por uno
      (para aislar cuál dispara el glitch)
      ========================================================= */
 
   /* 6A: oculta ADS */
-  /*
+  
   .ads, .ad-inline, .ad-final{ display:none !important; }
-  */
+  
 
   /* 6B: oculta el “best-deal” */
-  /*
+  
   .best-deal{ display:none !important; }
-  */
+  
 
   /* 6C: oculta tabla */
-  /*
+  
   .casas-cambio, .table-wrap, .pdh-table{ display:none !important; }
-  */
+  
 
   /* 6D: oculta SEO blocks */
-  /*
+  
   .seo-intro, .seo-faq{ display:none !important; }
-  */
+  
 
   /* 6E: oculta cookies/modal (fixed layers típicas) */
-  /*
+  
   .cookie-banner, .cookie-consent, .cookies, .modal, .modal-backdrop, .overlay{
     display:none !important;
   }
-  */
+  
 
   /* =========================================================
      BLOQUE 7 — Cazar overflow horizontal (si “se abre” el layout)

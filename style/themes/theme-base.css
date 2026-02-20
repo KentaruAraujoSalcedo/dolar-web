@@ -1,0 +1,154 @@
+/* =========================================================
+   THEME-BASE.CSS
+   Tema visual actual (NO layout)
+   Solo variables + fondo visual
+   ========================================================= */
+
+:root {
+
+  /* =========================
+     BRAND
+     ========================= */
+  --brand-blue-deep: #0B2C4A; /* “precio dólar” */
+  --brand-blue: #2563EB;      /* “.pe” */
+  --brand-green: #16A34A;     /* “hoy” */
+
+  /* =========================
+     NEUTRALES (texto)
+     ========================= */
+  --ink-900: #0b1b2b;
+  --ink-800: #1F2937;
+  --ink-700: #334155;
+  --ink-600: #475569;
+  --ink-500: #64748B;
+
+  /* =========================
+     SEMÁNTICOS (base)
+     ========================= */
+  --c-primary: var(--brand-blue);
+  --c-primary-ink: #1E3A8A;
+
+  --c-success: #16A34A;
+  --c-success-ink: #14532D;
+
+  --c-danger: #DC2626;
+  --c-danger-ink: #7F1D1D;
+
+  /* =========================
+     SUPERFICIES (base)
+     ========================= */
+  --c-bg-page-start: #EEF2FF;
+  --c-bg-page-mid:   #F8FAFC;
+  --c-bg-page-end:   #EEF6FF;
+
+  --c-surface: rgba(255, 255, 255, .40);
+  --c-surface-soft: rgba(255, 255, 255, .18);
+  --c-border-soft: rgba(255, 255, 255, .42);
+
+  /* =========================
+     GLASS SYSTEM
+     ========================= */
+  --glass-bg: rgba(255, 255, 255, .26);
+  --glass-border: rgba(255, 255, 255, .42);
+  --glass-blur: 18px;
+
+  /* =========================
+     SOMBRAS
+     ========================= */
+  --shadow-soft: 0 14px 40px rgba(2, 6, 23, .10);
+  --shadow-strong: 0 26px 70px rgba(2, 6, 23, .14);
+
+  /* =========================
+     ESTADOS SUAVES (bg/border)
+     ========================= */
+  --primary-bg-soft:   rgba(37, 99, 235, .10);
+  --primary-bg-soft-2: rgba(37, 99, 235, .12);
+
+  --primary-tint-soft:   rgba(59, 130, 246, .10);
+  --primary-tint-shadow: rgba(59, 130, 246, .15);
+
+  --success-bg-soft:     rgba(22, 163, 74, .10);
+  --success-border-soft: rgba(22, 163, 74, .22);
+
+  --danger-bg-soft:     rgba(220, 38, 38, .10);
+  --danger-border-soft: rgba(220, 38, 38, .22);
+
+  /* =========================
+     FOCUS RING
+     ========================= */
+  --focus-ring: 0 0 0 2px rgba(37, 99, 235, .35);
+  --focus-ring-strong: 0 0 0 2px rgba(37, 99, 235, .35), 0 10px 22px rgba(2, 6, 23, .08);
+
+  /* Header usa el ring global (evita duplicar) */
+  --header-focus-ring: var(--focus-ring);
+  --header-updated: rgba(15,23,42,.65);
+  --header-updated-strong: rgba(15,23,42,.80);
+
+  /* =========================
+     BOTONES / GRADIENTES
+     ========================= */
+  --gradient-success: linear-gradient(180deg, #1E7A3B 0%, #166534 100%);
+
+  /* =========================
+     MODAL
+     ========================= */
+  --modal-surface: #ffffff;
+  --modal-head-grad-start: #ffffff;
+  --modal-head-grad-end: #F7FAFF;
+
+  --modal-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+  --modal-border: rgba(2, 6, 23, .10);
+  --modal-close: rgba(2, 6, 23, .70);
+  --modal-close-hover: rgba(2, 6, 23, .95);
+
+  /* =========================
+     OVERLAYS
+     ========================= */
+  --overlay-dark: rgba(15, 23, 42, .55);
+
+  /* =========================
+     COOKIES
+     ========================= */
+  --cookie-bg: rgba(17, 17, 17, 0.96);
+  --cookie-text: #ffffff;
+  --cookie-link: #60a5fa;
+  --cookie-reject-bg: #374151;
+  --cookie-focus: #60a5fa;
+
+  /* =========================
+     ADS PLACEHOLDER
+     ========================= */
+  --ads-ph-text: rgba(15, 23, 42, .55);
+  --ads-ph-subtext: rgba(15, 23, 42, .45);
+
+  /* =========================
+     FOOTER
+     ========================= */
+  --footer-border: rgba(255,255,255,.45);
+  --footer-copy: rgba(15,23,42,.45);
+  --footer-link: rgba(15,23,42,.75);
+  --footer-link-hover: var(--c-primary);
+
+  /* =========================
+     STATIC PAGES
+     ========================= */
+  --static-bg: rgba(255,255,255,.18);
+  --static-border: rgba(255,255,255,.28);
+
+  --skiplink-bg: #ffffff;
+  --skiplink-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
+
+/* =========================================================
+   Fondo visual principal (solo estética)
+   ========================================================= */
+.page {
+  background:
+    radial-gradient(900px 420px at 18% 2%, rgba(99, 102, 241, .18), transparent 60%),
+    radial-gradient(950px 460px at 82% 6%, rgba(34, 197, 94, .12), transparent 62%),
+    radial-gradient(1200px 720px at 50% 100%, rgba(59, 130, 246, .12), transparent 58%),
+    linear-gradient(180deg,
+      var(--c-bg-page-start) 0%,
+      var(--c-bg-page-mid) 55%,
+      var(--c-bg-page-end) 100%);
+}

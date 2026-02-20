@@ -1,35 +1,41 @@
 /* =========================================================
-   IOS-BACKDROP-FIX.CSS  (TEST / FIX)
-   Problema: “cuadro blanco” al hacer scroll en responsive
-   Causa típica: backdrop-filter en Safari iOS
-   Pegar AL FINAL del CSS
+   FIX-SCROLL-WHITE-BLOCK.CSS
+   (para el “cuadro blanco” en scroll iOS/Android)
+   Enfocado en .page::before (fixed+blend) + .panel (backdrop)
+   PÉGALO AL FINAL
    ========================================================= */
 
-/* 1) Aísla el fondo para que nada “se meta” por stacking raro */
+/* 1) Aisla el stacking para que nada “flote” raro encima */
 .page{
   position: relative;
-  isolation: isolate;
+  isolation: isolate; /* clave: crea un contexto de mezcla/controlado */
 }
 
-/* 2) Fuerza composición GPU (reduce glitches al scrollear) */
-.panel,
-.center{
-  transform: translateZ(0);
+/* 2) Cambia el overlay de textura: de FIXED -> ABSOLUTE
+      (evita el bug de repaint al scrollear) */
+.page::before{
+  position: absolute !important; /* antes: fixed */
+  inset: 0;
+  z-index: 0;
+}
+
+/* Asegura que el contenido esté por encima del overlay */
+.shell, .center, header, main, footer{
+  position: relative;
+  z-index: 1;
+}
+
+/* 3) Anti-flicker para elementos con backdrop-filter (glass)
+      (Safari/iOS suele “blanquear” al hacer scroll) */
+.panel, .center, .best-deal{
   -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  will-change: transform;
 }
 
-/* 3) FIX directo: en iOS/Safari, apagar backdrop-filter (lo que más falla) */
-@supports (-webkit-touch-callout: none) {
-  .panel,
-  .center{
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-
-    /* deja un “glass” fake estable */
-    background: rgba(255,255,255,.70) !important;
-    border: 1px solid rgba(255,255,255,.45) !important;
-  }
+/* 4) Extra: evita micro overflow horizontal que dispara glitches */
+html, body{
+  overflow-x: hidden;
 }

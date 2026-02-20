@@ -1,0 +1,183 @@
+/* =========================================================
+   BASE.CSS
+   Reset + Base global + Helpers
+   (SIN :root — los tokens viven en themes/ + layout-tokens/)
+   ========================================================= */
+
+/* =====================
+   Reset / Base
+   ===================== */
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink-700);
+
+  /* Fondo neutro (el fondo real está en .page desde el theme) */
+  background: var(--c-bg-page-start);
+
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Textura suave (muy leve) — estética ligera, pero no cambia layout */
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(255, 255, 255, .05) 0px,
+      rgba(255, 255, 255, .05) 2px,
+      transparent 2px,
+      transparent 12px);
+  opacity: .16;
+  mix-blend-mode: overlay;
+}
+
+/* =====================
+   Panel base (cards)
+   ===================== */
+.panel {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-soft);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-soft);
+
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  overflow: hidden;
+}
+
+/* =====================
+   Accesibilidad / Helpers
+   ===================== */
+.sr-only{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
+/* =====================
+   SEO blocks (intro + FAQ)
+   (estructura suave, usa vars)
+   ===================== */
+
+/* Intro colapsable (suave, no protagonista) */
+.seo-intro{
+  margin: 4px 0 6px;
+}
+
+.seo-intro details{
+  background: var(--c-surface-soft);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: none;
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.seo-intro summary{
+  cursor: pointer;
+  list-style: none;
+
+  font-size: .86rem;
+  font-weight: 800;
+  color: var(--ink-600);
+}
+
+.seo-intro summary::-webkit-details-marker{ display:none; }
+
+.seo-intro p{
+  margin: 8px 0 0;
+  font-size: .90rem;
+  line-height: 1.45;
+  color: var(--ink-600);
+}
+
+/* FAQ (suave, no protagonista) */
+.seo-faq{
+  margin-top: 14px;
+  padding: 12px 14px 14px;
+  border-radius: var(--radius-base);
+
+  background: var(--c-surface-soft);
+  border: 1px solid rgba(255,255,255,.28);
+  box-shadow: none;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.seo-faq h2{
+  margin: 0 0 10px;
+  font-size: .92rem;
+  font-weight: 900;
+  color: var(--ink-700);
+  opacity: .85;
+}
+
+.seo-faq details{
+  background: rgba(255,255,255,.22);
+  border: 1px solid rgba(255,255,255,.30);
+  border-radius: var(--radius-small);
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+
+.seo-faq summary{
+  cursor: pointer;
+  list-style: none;
+
+  font-weight: 900;
+  color: var(--ink-900);
+}
+
+.seo-faq summary::-webkit-details-marker{ display:none; }
+
+.seo-faq details p{
+  margin: 8px 0 0;
+  color: var(--ink-700);
+  line-height: 1.45;
+  font-size: .92rem;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — (no aplica aquí) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .seo-faq{ padding: 12px; }
+  .seo-faq details{ margin: 8px 0; }
+}
+
+/* 360px — mobile pequeño (opcional) */
+@media (max-width:360px){
+  .seo-intro summary{ font-size: .84rem; }
+  .seo-faq details p{ font-size: .90rem; }
+}

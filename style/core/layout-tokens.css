@@ -1,0 +1,50 @@
+/* =========================================================
+   LAYOUT-TOKENS.CSS
+   Tokens estructurales (NO visuales)
+   Anchos, gaps, radios, límites, medidas globales
+   ========================================================= */
+
+:root {
+
+  /* =========================
+     Radios globales
+     ========================= */
+
+  --radius-base: 18px;
+  --radius-large: 26px;
+  --radius-small: 14px;
+
+  /* =========================
+     Layout principal
+     ========================= */
+
+  /* Columnas ads laterales */
+  --ad-col: clamp(240px, 18vw, 320px);
+
+  /* Ancho máximo del centro */
+  --center-max: clamp(740px, 60vw, 920px);
+
+  /* Gap general del grid */
+  --gap: clamp(12px, 1.2vw, 18px);
+
+  /* =========================
+     Tabla
+     ========================= */
+
+  --table-max-h: 300px;
+
+  /* =========================
+     Modal
+     ========================= */
+
+  --modal-max-width: 900px;
+  --modal-max-height: 88vh;
+
+  /* =========================
+     Alturas útiles
+     ========================= */
+
+  --header-logo-size-desktop: 64px;
+  --header-logo-size-tablet: 48px;
+
+}

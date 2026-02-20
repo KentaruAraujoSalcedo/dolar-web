@@ -1,50 +1,31 @@
 /* =========================================================
    STYLE.CSS
-   Punto de entrada global del proyecto
-   NO define diseño.
-   Solo organiza el sistema en orden correcto.
+   Orquestador de CSS (solo imports)
+   Orden: theme -> tokens -> base -> typography -> effects
+          -> layout -> components -> pages
    ========================================================= */
 
-/* =========================
-   1. RESET
-   ========================= */
-@import url("./core/reset.css");
+/* 1) Theme (solo estética: colores, sombras, glass, fondos) */
+@import url("./themes/theme-base.css");
 
-/* =========================
-   2. TOKENS (contrato base)
-   ========================= */
-@import url("./core/tokens.css");
+/* 2) Tokens no estéticos (layout widths, gaps, heights) */
+@import url("./core/layout-tokens.css");
 
-/* =========================
-   3. THEME (activo)
-   El HTML debe tener:
-   <link rel="stylesheet" href="style/themes/theme-inicial.css" id="theme">
-   ========================= */
-
-/* =========================
-   4. TIPOGRAFÍA
-   ========================= */
-@import url("./core/typography.css");
-
-/* =========================
-   5. BASE GLOBAL
-   ========================= */
+/* 3) Base global (reset + helpers + panel base) */
 @import url("./core/base.css");
 
-/* =========================
-   6. LAYOUT
-   ========================= */
-@import url("./core/layout.css");
+/* 4) Tipografía (prose global / headings / textos) */
+@import url("./typography/typography.css");
 
-/* =========================
-   7. EFFECTS (glass / shadow)
-   ========================= */
-@import url("./core/effects.css");
+/* 5) Effects (keyframes + animaciones globales) */
+@import url("./effects/effects.css");
 
-/* =========================
-   8. COMPONENTES
-   ========================= */
-@import url("./components/header.css");
+/* 6) Layout estructural (grid / header / footer) */
+@import url("./layout/layout.css");
+@import url("./layout/header.css");
+@import url("./layout/footer.css");
+
+/* 7) Components (UI) */
 @import url("./components/components.css");
 @import url("./components/calculator.css");
 @import url("./components/table.css");
@@ -52,11 +33,6 @@
 @import url("./components/modal.css");
 @import url("./components/cookies.css");
 @import url("./components/seo-tabs.css");
-@import url("./components/static-pages.css");
-@import url("./components/footer.css");
 
-/* =========================
-   FIXES
-     
-@import url("./core/hotfix-mobile.css"); 
-    ========================= */
+/* 8) Pages (páginas internas) */
+@import url("./pages/static-pages.css");

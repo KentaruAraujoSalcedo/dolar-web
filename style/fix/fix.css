@@ -8,30 +8,16 @@
 
 
   /* =========================================================
-     BLOQUE 4 — Acelerar “glass” (anti-flicker)
-     (si el bug es repaint de compositing)
-     ========================================================= */
-  
-  .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-    will-change: transform;
-  }
-  
-
-  /* =========================================================
      BLOQUE 5 — Apagar animaciones/transiciones
      (a veces el “flash” viene por animaciones + blur)
      ========================================================= */
-  /*
+  
   *, *::before, *::after{
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
   }
-  */
+  
 
   /* =========================================================
      BLOQUE 6 — Ocultar componentes “pesados” uno por uno

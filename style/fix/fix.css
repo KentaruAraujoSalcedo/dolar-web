@@ -12,7 +12,7 @@
      BLOQUE B (confirmación total): APAGA TODO backdrop-filter
      Si con esto desaparece el cuadro 100%, ya está confirmado.
   --------------------------------------------------------- */
-  
+  /* 
   .center,
   .panel,
   .seo-intro details,
@@ -25,18 +25,18 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  
+   /*
 
   /* ---------------------------------------------------------
      BLOQUE C: solo .center (el “marco” grande glass)
      Si esto solo lo arregla, el culpable principal es .center.
   --------------------------------------------------------- */
-  /*
+  
   .center{
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE D: solo PANEL/SEO (core/base.css)

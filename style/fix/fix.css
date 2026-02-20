@@ -24,7 +24,7 @@
      TEST 1 — Confirmación TOTAL de backdrop-filter
      (si con esto el cuadro desaparece 100% => ES blur/backdrop)
      ========================================================= */
-  /*
+  
   .center,
   .panel,
   .seo-intro details,
@@ -36,7 +36,7 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* =========================================================
      TEST 2 — Aislar culpable #1: SOLO .center

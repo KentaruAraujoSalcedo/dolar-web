@@ -12,17 +12,17 @@
      Si con esto se arregla, el problema no era blur sino .page::before
      (core/base.css tiene position:fixed + mix-blend-mode)
   --------------------------------------------------------- */
-  /*
+  
   .page::before{
     display:none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE B (confirmación total): APAGA TODO backdrop-filter
      Si con esto desaparece el cuadro 100%, ya está confirmado.
   --------------------------------------------------------- */
-  /*
+  
   .center,
   .panel,
   .seo-intro details,
@@ -35,23 +35,23 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE C: solo .center (el “marco” grande glass)
      Si esto solo lo arregla, el culpable principal es .center.
   --------------------------------------------------------- */
-  /*
+  
   .center{
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE D: solo PANEL/SEO (core/base.css)
   --------------------------------------------------------- */
-  /*
+  
   .panel,
   .seo-intro details,
   .seo-faq,
@@ -59,39 +59,39 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE E: solo el conversor (components/calculator.css)
   --------------------------------------------------------- */
-  /*
+  
   .modo-opciones,
   .quick-row .quick-amt,
   .quick-row .chip{
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE F (medición de “lentitud”): reduce blur del sistema glass
      SIN apagarlo del todo.
      Si esto reduce mucho el lag sin quitar el efecto, ya sabes que era blur alto.
   --------------------------------------------------------- */
-  /*
+  
   :root{ --glass-blur: 6px !important; }
   .panel{ backdrop-filter: blur(6px) saturate(140%) !important; -webkit-backdrop-filter: blur(6px) saturate(140%) !important; }
   .seo-intro details{ backdrop-filter: blur(5px) saturate(135%) !important; -webkit-backdrop-filter: blur(5px) saturate(135%) !important; }
   .seo-faq{ backdrop-filter: blur(6px) saturate(135%) !important; -webkit-backdrop-filter: blur(6px) saturate(135%) !important; }
   .modo-opciones,
   .quick-row .quick-amt{ backdrop-filter: blur(5px) saturate(135%) !important; -webkit-backdrop-filter: blur(5px) saturate(135%) !important; }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE G (si el cuadro aparece “encima”): forzar composición estable
      Esto NO arregla si el blur es el culpable, pero a veces reduce flicker.
   --------------------------------------------------------- */
-  /*
+  
   .center, .panel, .seo-intro details, .seo-faq, .modo-opciones, .quick-row .quick-amt{
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
@@ -99,5 +99,5 @@
     -webkit-backface-visibility: hidden;
     will-change: transform;
   }
-  */
+  
 }

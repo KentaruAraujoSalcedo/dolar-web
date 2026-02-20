@@ -27,21 +27,11 @@
   }
    /*
 
-  /* ---------------------------------------------------------
-     BLOQUE C: solo .center (el “marco” grande glass)
-     Si esto solo lo arregla, el culpable principal es .center.
-  --------------------------------------------------------- */
-  
-  .center{
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-  
 
   /* ---------------------------------------------------------
      BLOQUE D: solo PANEL/SEO (core/base.css)
   --------------------------------------------------------- */
-  /*
+  
   .panel,
   .seo-intro details,
   .seo-faq,
@@ -49,7 +39,7 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  */
+  
 
   /* ---------------------------------------------------------
      BLOQUE E: solo el conversor (components/calculator.css)

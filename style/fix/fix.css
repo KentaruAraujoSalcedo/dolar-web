@@ -1,19 +1,29 @@
 /* =========================================================
-   debug.css — Confirmación definitiva de backdrop-filter
-   IMPORTANTE: debe cargarse AL FINAL de style.css
+   FIX DEFINITIVO MOBILE: eliminar capa transparente + aligerar
    ========================================================= */
 
 @media (max-width: 1100px){
 
-  /* TEST 1: apagar absolutamente TODO backdrop-filter */
+  /* 1) ELIMINA el overlay global que puede “flotar” encima al scroll/zoom */
+  .page::before{
+    content: none !important;
+    display: none !important;
+  }
+
+  /* 2) Elimina blur costoso en mobile (y evita bugs de composición) */
   *, *::before, *::after{
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
 
-  /* TEST 2 (extra): apagar el overlay global que también puede glitchear
-     core/base.css tiene .page::before con position:fixed + mix-blend-mode */
-  .page::before{
-    display: none !important;
+  /* 3) Asegura que el fondo real sea el del documento (no “blanco detrás”) */
+  html, body{
+    background: var(--c-bg-page-start) !important; /* o tu color base */
+  }
+
+  /* 4) (Opcional, recomendado) reduce animaciones en mobile */
+  *{
+    animation: none !important;
+    transition: none !important;
   }
 }

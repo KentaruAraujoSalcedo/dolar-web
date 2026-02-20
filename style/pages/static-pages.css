@@ -1,0 +1,92 @@
+/* =========================================================
+   STATIC-PAGES.CSS
+   Páginas estáticas (About, Terms, Privacy, etc.)
+   SOLO estructura + estética via variables (theme-ready)
+   ========================================================= */
+
+/* =========================
+   ESTILOS NORMALES
+   ========================= */
+
+/* Contenedor simple (sin ads laterales) */
+.shell-simple{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Contenedor principal de páginas estáticas */
+.static-page{
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 22px 24px;
+
+  background: var(--static-bg);
+  border: 1px solid var(--static-border);
+  border-radius: 20px;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+/* Wrapper del contenido (tipografía en typography.css) */
+.static-content{
+  color: var(--ink-800, #334155);
+}
+
+/* Skip link (accesibilidad) */
+.skip-link{
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus{
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  padding: 10px 12px;
+
+  background: var(--skiplink-bg);
+  border-radius: 12px;
+  box-shadow: var(--skiplink-shadow);
+
+  z-index: 9999;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 1550px — (no aplica aquí) */
+@media (max-width:1550px){
+  /* vacío intencional */
+}
+
+/* 1100px — tablet */
+@media (max-width:1100px){
+  .static-page{
+    padding: 20px 22px;
+    border-radius: 18px;
+  }
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .static-page{
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .static-page{
+    padding: 16px 14px;
+  }
+}

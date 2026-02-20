@@ -1,37 +1,22 @@
 /* =========================================================
-   FIX DEFINITIVO — glitch “cuadro” en scroll/zoom (iOS + Android)
-   Causa: backdrop-filter en paneles grandes (glass)
+   debug-probe.css  (SOLO PARA PRUEBAS)
+   Pega esto AL FINAL de style.css (o impórtalo al final)
+   Ve activando bloques uno por uno.
    ========================================================= */
 
 @media (max-width: 1100px){
 
-  /* 1) Glass SAFE en mobile (sin backdrop-filter) */
-  .panel,
-  .center,
-  .best-deal,
-  .seo-intro details,
-  .seo-faq,
-  .seo-faq details{
-    -webkit-backdrop-filter: none !important;
+
+  /* =========================================================
+     BLOQUE 3 — Desactivar backdrop-filter (glass)
+     (iOS/Android a veces pinta rectángulos blancos al scroll)
+     ======================================================== */
+  
+  .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
     backdrop-filter: none !important;
-
-    /* Mantén la estética glass sin blur real */
-    background: rgba(10, 18, 28, 0.78) !important;  /* ajusta si quieres */
-    border: 1px solid rgba(255,255,255,0.10) !important;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.35) !important;
+    -webkit-backdrop-filter: none !important;
   }
+  
 
-  /* 2) Anti-flicker/composición (ayuda con zoom/scroll) */
-  .panel,
-  .center,
-  .best-deal,
-  .seo-intro details,
-  .seo-faq,
-  .seo-faq details{
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    will-change: transform;
-  }
+
 }

@@ -22,24 +22,12 @@
   
 
   /* =========================================================
-     TEST 4 — Aislar culpable #3: SOLO conversor
-     ========================================================= */
-  
-  .modo-opciones,
-  .quick-row .quick-amt,
-  .quick-row .chip{
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-  
-
-  /* =========================================================
      TEST 5 — Si NO es blur: apaga overlay global fixed+blend
      (tu base.css tiene .page::before con fixed+mix-blend-mode)
      ========================================================= */
-  /*
+  
   .page::before{
     display:none !important;
   }
-  */
+  
 }

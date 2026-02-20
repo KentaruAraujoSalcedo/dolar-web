@@ -6,34 +6,18 @@
 
 @media (max-width: 1100px){
 
-  /* =========================================================
-     BLOQUE 2 — Cambiar page::before de fixed -> absolute
-     (alternativa si quieres mantener la textura)
-     ========================================================= */
-  
-  .page{ position: relative; isolation: isolate; }
-  .page::before{
-    position: absolute !important;
-    inset: 0;
-    z-index: 0;
-    mix-blend-mode: normal !important;
-  }
-  .shell, .center, header, main, footer{
-    position: relative;
-    z-index: 1;
-  }
-  
+
 
   /* =========================================================
      BLOQUE 3 — Desactivar backdrop-filter (glass)
      (iOS/Android a veces pinta rectángulos blancos al scroll)
      ========================================================= */
-  /*
+  
   .center, .panel, .seo-intro details, .seo-faq, .seo-faq details{
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  */
+  
 
   /* =========================================================
      BLOQUE 4 — Acelerar “glass” (anti-flicker)

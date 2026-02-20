@@ -1,41 +1,22 @@
 /* =========================================================
-   FIX-SCROLL-WHITE-BLOCK.CSS
-   (para el “cuadro blanco” en scroll iOS/Android)
-   Enfocado en .page::before (fixed+blend) + .panel (backdrop)
-   PÉGALO AL FINAL
+   FIX — White block / flash en scroll (iOS + Android)
+   Causa: .page::before (fixed + mix-blend-mode)
    ========================================================= */
 
-/* 1) Aisla el stacking para que nada “flote” raro encima */
 .page{
   position: relative;
-  isolation: isolate; /* clave: crea un contexto de mezcla/controlado */
+  isolation: isolate;           /* crea contexto de mezcla estable */
 }
 
-/* 2) Cambia el overlay de textura: de FIXED -> ABSOLUTE
-      (evita el bug de repaint al scrollear) */
 .page::before{
-  position: absolute !important; /* antes: fixed */
+  position: absolute !important; /* en vez de fixed */
   inset: 0;
   z-index: 0;
+  mix-blend-mode: normal !important; /* overlay causa glitches en scroll */
 }
 
-/* Asegura que el contenido esté por encima del overlay */
+/* Asegura contenido encima */
 .shell, .center, header, main, footer{
   position: relative;
   z-index: 1;
-}
-
-/* 3) Anti-flicker para elementos con backdrop-filter (glass)
-      (Safari/iOS suele “blanquear” al hacer scroll) */
-.panel, .center, .best-deal{
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* 4) Extra: evita micro overflow horizontal que dispara glitches */
-html, body{
-  overflow-x: hidden;
 }

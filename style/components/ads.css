@@ -1,0 +1,198 @@
+/* =========================================================
+   COMPONENTS / ADS.CSS
+   Publicidad (estructura + reservas anti-CLS)
+   ---------------------------------------------------------
+   ✅ Sticky lateral + slots con tamaños fijos (CLS 0)
+   ✅ Inline + final en <=1100
+   ✅ Excepciones solo Ads (desktop-only, xxl)
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO sombras
+   ⚠️ NO gradientes decorativos
+   ⚠️ Placeholder debe ser liviano
+   ========================================================= */
+
+
+/* ======================================================
+   CONTENEDOR LATERAL (sticky)
+   ====================================================== */
+
+.ads{
+  width:100%;
+  position: sticky;
+  top: 18px;
+  max-height: calc(100vh - 36px);
+  align-self:flex-start;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  gap: var(--space-7);
+}
+
+
+/* ======================================================
+   SLOT BASE
+   ====================================================== */
+
+.ad-slot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  /* anti-CLS: tamaño lo da la clase ad-xxx */
+  border-radius: var(--radius-md);
+  overflow:hidden;
+
+  position:relative; /* placeholder liviano */
+  background: var(--c-ad-bg);
+  border: 1px dashed var(--c-ad-border);
+}
+
+/* Tamaños fijos laterales (CLS = 0) */
+.ad-300x600{ width:100%; max-width:300px; height:600px; }
+.ad-300x250{ width:100%; max-width:300px; height:250px; }
+
+/* Inline (tablet/móvil) — oculto en desktop */
+.ad-inline{ display:none; }
+
+/* Responsive slot (inline / final) */
+.ad-slot.ad-responsive{
+  width:100%;
+  max-width:728px;
+  margin:0 auto;
+
+  /* Reserva base para evitar CLS */
+  min-height: 250px; /* default tipo 300x250 */
+  height:auto;
+}
+
+/* Segundo anuncio lateral (zona inferior) */
+.ad-secondary{ display:none; }
+
+/* Ad final: oculto en desktop por defecto */
+.ad-final{ display:none; }
+
+
+/* ======================================================
+   PLACEHOLDER LIVIANO (mientras no hay AdSense)
+   - Nada de blur, sombras, gradients
+   ====================================================== */
+
+.ad-slot::before{
+  content:"Publicidad";
+  font-weight: var(--fw-800);
+  font-size: var(--fs-13);
+  color: var(--c-ad-label);
+
+  padding: 6px 10px;
+  border-radius: 999px;
+
+  background: var(--c-ad-chip-bg);
+  border: 1px solid var(--c-ad-chip-border);
+
+  position:absolute;
+  top: 10px;
+  left: 10px;
+
+  pointer-events:none;
+}
+
+.ad-slot::after{
+  content:"Espacio reservado";
+  font-weight: var(--fw-700);
+  font-size: var(--fs-12);
+  color: var(--c-ad-note);
+
+  position:absolute;
+  bottom: 10px;
+  left: 10px;
+
+  pointer-events:none;
+  max-width: 85%;
+}
+
+/* ✅ Ocultar placeholder si el slot tiene contenido:
+   - Opción moderna: :has()
+   - Fallback: clase .is-filled desde JS (opcional) */
+
+.ad-slot.is-filled::before,
+.ad-slot.is-filled::after{
+  display:none;
+}
+
+/* Modern browsers */
+@supports selector(:has(*)){
+  .ad-slot:has(iframe)::before,
+  .ad-slot:has(iframe)::after,
+  .ad-slot:has(ins)::before,
+  .ad-slot:has(ins)::after{
+    display:none;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE (DISEÑO)
+   Breakpoint principal: 1100px
+   ========================================================= */
+
+/* 1100px — tablet/móvil */
+@media (max-width:1100px){
+
+  /* Inline visible */
+  .ad-inline{
+    display:block;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .ad-inline .ad-slot{
+    border-radius: var(--radius-sm);
+  }
+
+  /* Nunca mostrar secundario en tablet/móvil */
+  .ad-secondary{ display:none !important; }
+
+  /* Ad final (tablet/móvil) */
+  .ad-final{
+    display:block;
+    margin-top: var(--space-5);
+  }
+
+  .ad-final .ad-slot{
+    min-height: 250px; /* 300x250 */
+    border-radius: var(--radius-md);
+  }
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+  .ad-slot.ad-responsive{
+    min-height: 100px; /* banner móvil */
+  }
+}
+
+/* 360px — mobile pequeño (reservado) */
+@media (max-width:360px){
+  /* si luego necesitas ajustar alturas/márgenes, va aquí */
+}
+
+
+/* =========================================================
+   RESPONSIVE (EXCEPCIONES ADS)
+   ========================================================= */
+
+/* Desktop-only (>=1101px): leaderboard + 2do ad lateral */
+@media (min-width:1101px){
+
+  .ad-slot.ad-responsive{
+    min-height: 90px; /* leaderboard */
+  }
+
+  .ad-secondary{
+    display:flex;
+    margin-top:auto;
+  }
+}

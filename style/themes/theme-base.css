@@ -1,0 +1,458 @@
+/* =========================================================
+   THEMES / THEME-BASE.CSS
+   Tema visual base (reemplazable por theme-dark.css)
+   ---------------------------------------------------------
+   ✅ Paleta, superficies, borders, sombras
+   ✅ “Glass” (desktop) + fallback mobile policy (<=1100px)
+   ✅ Visual de componentes (sin tocar estructura)
+   ---------------------------------------------------------
+   ⚠️ NO layout estructural (eso vive en core/layout/components)
+   ⚠️ NO mix-blend-mode
+   ⚠️ NO overlays full-screen fixed
+   ========================================================= */
+
+
+/* ======================================================
+   1) VARIABLES (COLORES / SUPERFICIES / SOMBRAS)
+   ====================================================== */
+
+:root{
+  /* Brand */
+  --c-brand-primary: #0B2C4A;   /* “precio dólar” */
+  --c-brand-secondary: #2563EB; /* “.pe” */
+  --c-brand-accent: #16A34A;    /* “hoy” */
+
+  /* Texto */
+  --c-strong: #0b1b2b;
+  --c-text:   #334155;
+  --c-muted:  #64748B;
+
+  /* Links */
+  --c-link: #2563EB;
+  --c-link-hover-bg: rgba(37,99,235,.10);
+
+  /* Selección */
+  --c-selection-bg: rgba(37,99,235,.22);
+  --c-selection-text: #0b1b2b;
+
+  /* Bordes / superficies */
+  --c-border: rgba(255,255,255,.55);
+  --c-border-soft: rgba(255,255,255,.45);
+
+  --c-surface-1: rgba(255,255,255,.40);
+  --c-surface-2: rgba(255,255,255,.55);
+
+  /* Fondo de página (seguro: SIN pseudo-element fixed) */
+  --c-page-bg:
+    /* textura leve, segura */
+    repeating-linear-gradient(135deg,
+      rgba(255,255,255,.05) 0px,
+      rgba(255,255,255,.05) 2px,
+      transparent 2px,
+      transparent 12px),
+    radial-gradient(900px 420px at 18% 2%, rgba(99, 102, 241, .18), transparent 60%),
+    radial-gradient(950px 460px at 82% 6%, rgba(34, 197, 94, .12), transparent 62%),
+    radial-gradient(1200px 720px at 50% 100%, rgba(59, 130, 246, .12), transparent 58%),
+    linear-gradient(180deg, #EEF2FF 0%, #F8FAFC 55%, #EEF6FF 100%);
+
+  /* Focus */
+  --c-focus-ring: rgba(37,99,235,.35);
+  --c-focus-ring-soft: rgba(37,99,235,.20);
+  --c-focus-border: rgba(37,99,235,.35);
+
+  /* Hover suave */
+  --c-hover-soft: rgba(59,130,246,.10);
+
+  /* Accent (checkbox) */
+  --c-accent: #16A34A;
+
+  /* Sombras */
+  --shadow-elev-1: 0 14px 40px rgba(2, 6, 23, .10);
+  --shadow-elev-2: 0 26px 70px rgba(2, 6, 23, .14);
+
+  --shadow-modal: 0 30px 80px rgba(0,0,0,.35);
+  --shadow-cookie: 0 10px 30px rgba(0,0,0,.35);
+
+  /* Glass tokens (desktop) */
+  --glass-bg: rgba(255,255,255,.26);
+  --glass-border: rgba(255,255,255,.42);
+  --glass-blur: 18px;
+
+  /* Botón primario */
+  --c-btn-primary-bg: linear-gradient(180deg, #1E7A3B 0%, #166534 100%);
+  --c-btn-primary-text: #ffffff;
+
+  /* Link soft (SUNAT) */
+  --c-link-soft-bg: rgba(37,99,235,.08);
+  --c-link-soft-bg-hover: rgba(37,99,235,.12);
+
+  /* Best-deal */
+  --c-best-border: rgba(34,197,94,.18);
+  --c-best-head-bg: rgba(22,163,74,.10);
+
+  --c-best-tag-bg: rgba(34,197,94,.14);
+  --c-best-tag-border: rgba(34,197,94,.22);
+  --c-best-tag-text: #14532D;
+
+  /* Resultado conversor */
+  --c-result-bg: rgba(22,163,74,.10);
+  --c-result-border: rgba(22,163,74,.22);
+  --c-result-text: #14532D;
+
+  /* Quick hover */
+  --c-quick-hover-bg: rgba(22,163,74,.12);
+  --c-quick-hover-border: rgba(22,163,74,.35);
+  --c-quick-hover-text: #14532D;
+
+  /* Tabla */
+  --c-table-head-bg: rgba(255,255,255,.55);
+  --c-table-row-bg: rgba(255,255,255,.18);
+  --c-table-row-hover-bg: rgba(255,255,255,.28);
+
+  --c-logo-bg: rgba(255,255,255,.55);
+
+  --c-buy: #14532D;
+  --c-sell: #7F1D1D;
+
+  --c-winner-bg: rgba(16,185,129,.10);
+  --c-winner-border: rgba(22,163,74,.22);
+  --c-winner-hover-bg: rgba(16,185,129,.14);
+
+  --c-col-highlight-buy-bg: rgba(22,163,74,.12);
+  --c-col-highlight-buy-line: rgba(22,163,74,.55);
+
+  --c-col-highlight-sell-bg: rgba(220,38,38,.10);
+  --c-col-highlight-sell-line: rgba(220,38,38,.50);
+
+  --c-badge-bg: rgba(59,130,246,.12);
+  --c-badge-border: rgba(59,130,246,.22);
+  --c-badge-text: var(--c-strong);
+
+  /* Scrollbar tabla */
+  --c-scroll-thumb: rgba(2,6,23,.18);
+  --c-scroll-track: rgba(255,255,255,.35);
+  --c-scroll-track-border: rgba(255,255,255,.55);
+
+  /* SEO tabs */
+  --c-tab-active-bg: rgba(37,99,235,.10);
+  --c-tab-active-border: rgba(37,99,235,.35);
+
+  /* Ads placeholders */
+  --c-ad-bg: rgba(255,255,255,.55);
+  --c-ad-border: rgba(255,255,255,.65);
+  --c-ad-label: rgba(15,23,42,.55);
+  --c-ad-note: rgba(15,23,42,.45);
+  --c-ad-chip-bg: rgba(255,255,255,.55);
+  --c-ad-chip-border: rgba(255,255,255,.70);
+
+  /* Cookie banner */
+  --c-cookie-bg: rgba(17,17,17,.96);
+  --c-cookie-text: #ffffff;
+  --c-cookie-link: #60a5fa;
+
+  --c-cookie-btn-bg: #374151;
+  --c-cookie-btn-text: #ffffff;
+
+  --c-cookie-accept-bg: #2563EB;
+  --c-cookie-accept-text: #ffffff;
+
+  --c-cookie-reject-bg: #374151;
+  --c-cookie-reject-text: #ffffff;
+
+  /* Modal */
+  --c-modal-overlay: rgba(15,23,42,.55);
+  --c-modal-bg: #ffffff;
+  --c-modal-head-bg: linear-gradient(180deg,#FFFFFF 0%, #F7FAFF 100%);
+
+  /* Static pages quote */
+  --c-quote-bg: rgba(255,255,255,.20);
+  --c-quote-border: rgba(37,99,235,.35);
+
+  /* CALCULATOR "MONTO PRIORITARIO" (visual) */
+  --c-monto-bg: rgba(255,255,255,.85);
+  --c-monto-border: rgba(37,99,235,.22);
+  --c-monto-shadow: 0 14px 30px rgba(2,6,23,.10);
+}
+
+
+/* ======================================================
+   2) APLICACIÓN VISUAL GLOBAL
+   ====================================================== */
+
+/* Centro: glass principal */
+.center{
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-elev-2);
+
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+}
+
+/* Panel base */
+.panel{
+  background: var(--c-surface-1);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-elev-1);
+
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+
+/* Pills/chips y superficies pequeñas */
+.pdh-pill,
+.chip,
+.seo-tabs,
+.seo-intro details,
+.seo-faq,
+.seo-faq details,
+.sunat-item,
+.best-deal__rate{
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+
+/* ======================================================
+   3) SEO INTRO + FAQ (VISUAL COMPLETO)
+   ====================================================== */
+
+.seo-intro details{
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: var(--radius-lg);
+}
+
+.seo-faq{
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+}
+
+.seo-faq details{
+  background: rgba(255,255,255,.22);
+  border: 1px solid rgba(255,255,255,.30);
+}
+
+.seo-faq h2{
+  color: var(--c-text);
+  opacity: .85;
+}
+
+
+/* ======================================================
+   4) TABLA / BEST-DEAL / EXTRAS VISUALES
+   ====================================================== */
+
+/* Tabla head con glass leve */
+.tabla-casas thead th{
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* Logo best-deal */
+.best-deal__logo img{
+  filter: drop-shadow(0 10px 18px rgba(2, 6, 23, .12));
+}
+
+/* Glow suave best-deal (solo desktop; en mobile se apaga) */
+.best-deal{
+  box-shadow:
+    0 22px 50px rgba(2, 6, 23, .14),
+    0 0 0 6px rgba(34, 197, 94, .06);
+}
+
+/* Borde degradado (sin blend) */
+.best-deal::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  padding:1px;
+  border-radius: var(--radius-lg);
+
+  background: linear-gradient(135deg,
+    rgba(34, 197, 94, .55),
+    rgba(37, 99, 235, .35),
+    rgba(34, 197, 94, .15));
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events:none;
+}
+
+.best-deal::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-90px;
+  top:-110px;
+  background: radial-gradient(circle,
+    rgba(34,197,94,.22),
+    rgba(34,197,94,0) 60%);
+  pointer-events:none;
+}
+
+
+/* ======================================================
+   5) CALCULATOR — “MONTO PRIORITARIO” (VISUAL)
+   (esto era parte de tu look original)
+   ====================================================== */
+
+/* Hace que el bloque de monto destaque sutilmente */
+.conversor-wrapper-modern .gc-monto .input-with-prefix{
+  background: var(--c-monto-bg);
+  border-color: var(--c-monto-border);
+  box-shadow: var(--c-monto-shadow);
+}
+
+/* En tu producción se veía un poco más “suave” el resto */
+.conversor-wrapper-modern .modo-opciones{
+  background: rgba(255,255,255,.45);
+  border-color: rgba(255,255,255,.55);
+}
+
+.conversor-wrapper-modern .quick-row{
+  opacity: .98; /* casi imperceptible, pero iguala el look */
+}
+
+/* Resultado green pill */
+.resultado-modern{
+  background: var(--c-result-bg);
+  border-color: var(--c-result-border);
+  color: var(--c-result-text);
+}
+
+
+/* ======================================================
+   6) FOCUS RING (global)
+   ====================================================== */
+
+.btn-primary:focus-visible,
+.btn-link:focus-visible,
+.sunat-widget__link:focus-visible,
+.chip:focus-visible,
+.seo-tabs__tab:focus-visible,
+.seo-tabs__arrow:focus-visible,
+.tabla-casas .casa-wrap:focus-visible,
+#cookie-banner button:focus-visible,
+.modal__close:focus-visible{
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+
+/* ======================================================
+   7) MOBILE POLICY (<=1100px)
+   performance + cero bugs scroll/zoom
+   ====================================================== */
+
+@media (max-width:1100px){
+
+  /* 1) Apagar blur globalmente */
+  .center,
+  .panel,
+  .pdh-pill,
+  .chip,
+  .seo-tabs,
+  .seo-intro details,
+  .seo-faq,
+  .seo-faq details,
+  .sunat-item,
+  .best-deal__rate,
+  .tabla-casas thead th{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 2) Fallback seguro del “glass” */
+  .center{
+    background: rgba(255,255,255,.70);
+    border-color: rgba(255,255,255,.72);
+    box-shadow: var(--shadow-elev-1);
+  }
+
+  .panel{
+    background: rgba(255,255,255,.72);
+    border-color: rgba(255,255,255,.75);
+    box-shadow: 0 14px 34px rgba(2,6,23,.10);
+  }
+
+  /* 3) Reducir decoraciones grandes */
+  .best-deal::before,
+  .best-deal::after{
+    display:none;
+  }
+
+  .best-deal{
+    box-shadow: 0 18px 44px rgba(2,6,23,.12);
+  }
+
+  /* 4) Monto prioritario: sin shadow grande en mobile (más ligero) */
+  .conversor-wrapper-modern .gc-monto .input-with-prefix{
+    box-shadow: none;
+    background: rgba(255,255,255,.85);
+    border-color: rgba(37,99,235,.22);
+  }
+}
+
+/* ======================================================
+   CALCULATOR — Legacy visuals (match producción)
+   ====================================================== */
+
+/* Barra segmentada (modo) */
+.modo-opciones{
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* Pills dentro del segmented */
+.radio-pill span{
+  border-radius: 12px;
+  color: var(--c-muted);
+}
+
+/* Seleccionado */
+.radio-pill input:checked + span{
+  background: rgba(255,255,255,.92);
+  border-color: rgba(255,255,255,.86);
+  box-shadow: 0 10px 22px rgba(2,6,23,.08);
+  color: var(--c-strong);
+}
+
+/* Hover no seleccionado */
+.modo-opciones .radio-pill:hover input:not(:checked) + span{
+  background: rgba(59,130,246,.10);
+  color: #1E3A8A;
+  box-shadow: 0 8px 18px rgba(59,130,246,.15);
+}
+
+/* Quick row chips: sombra suave como producción */
+.quick-row .chip{
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+}
+
+/* Quick amounts: borde/fondo exacto + sombra leve */
+.quick-row .quick-amt{
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.78);
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+}
+
+
+/* ======================================================
+   8) reduce-motion (decorativo)
+   ====================================================== */
+
+@media (prefers-reduced-motion: reduce){
+  .best-deal{
+    animation: none !important;
+  }
+}

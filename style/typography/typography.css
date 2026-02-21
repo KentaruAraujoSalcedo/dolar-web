@@ -1,0 +1,132 @@
+/* =========================================================
+   TYPOGRAPHY / TYPOGRAPHY.CSS
+   Tipografía global + jerarquía de texto
+   ---------------------------------------------------------
+   ✅ Tamaños, pesos, line-height
+   ✅ Font stack (Inter)
+   ✅ Defaults de headings / párrafos
+   ---------------------------------------------------------
+   ⚠️ Colores SIEMPRE por variables del theme:
+      --c-text, --c-muted, --c-strong, --c-link, etc.
+   ========================================================= */
+
+
+/* ======================================================
+   GLOBAL FONT STACK
+   ====================================================== */
+
+:root{
+  /* Tipografía base */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* Escala tipográfica (estructura) */
+  --fs-12: 0.75rem;   /* 12px */
+  --fs-13: 0.8125rem; /* 13px */
+  --fs-14: 0.875rem;  /* 14px */
+  --fs-15: 0.9375rem; /* 15px */
+  --fs-16: 1rem;      /* 16px */
+  --fs-18: 1.125rem;  /* 18px */
+  --fs-20: 1.25rem;   /* 20px */
+  --fs-24: 1.5rem;    /* 24px */
+  --fs-32: 2rem;      /* 32px */
+
+  /* Pesos (estructura) */
+  --fw-500: 500;
+  --fw-600: 600;
+  --fw-700: 700;
+  --fw-800: 800;
+  --fw-900: 900;
+  --fw-950: 950;
+
+  /* Line-height */
+  --lh-tight: 1.1;
+  --lh-snug: 1.25;
+  --lh-base: 1.5;
+  --lh-relaxed: 1.75;
+}
+
+
+/* ======================================================
+   BODY DEFAULTS
+   ====================================================== */
+
+body{
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  line-height: var(--lh-base);
+
+  /* Color viene del theme */
+  color: var(--c-text);
+}
+
+
+/* ======================================================
+   HEADINGS
+   ====================================================== */
+
+h1, h2, h3, h4{
+  margin: 0;
+  line-height: var(--lh-tight);
+  color: var(--c-strong);
+}
+
+h1{ font-size: var(--fs-32); font-weight: var(--fw-900); }
+h2{ font-size: var(--fs-18); font-weight: var(--fw-800); }
+h3{ font-size: var(--fs-16); font-weight: var(--fw-900); }
+h4{ font-size: var(--fs-15); font-weight: var(--fw-800); }
+
+
+/* ======================================================
+   TEXT ELEMENTS
+   ====================================================== */
+
+p{
+  margin: 0;
+  color: var(--c-text);
+}
+
+small{
+  font-size: var(--fs-13);
+  color: var(--c-muted);
+}
+
+strong{
+  font-weight: var(--fw-800);
+  color: inherit; /* no forzar color; el theme define jerarquía */
+}
+
+
+/* ======================================================
+   LINKS (sin estilo visual agresivo)
+   ====================================================== */
+
+a{
+  color: var(--c-link);
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+
+/* ======================================================
+   FORM TYPO (inputs)
+   ====================================================== */
+
+input,
+select,
+textarea{
+  color: var(--c-strong);
+}
+
+
+/* ======================================================
+   SELECCIÓN (opcional, themeable)
+   ====================================================== */
+
+::selection{
+  background: var(--c-selection-bg);
+  color: var(--c-selection-text);
+}

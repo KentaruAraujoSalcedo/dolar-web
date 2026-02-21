@@ -1,0 +1,146 @@
+/* =========================================================
+   COMPONENTS / MODAL.CSS
+   Modal + Chart (estructura / comportamiento)
+   ---------------------------------------------------------
+   ✅ Overlay + panel + scroll interno
+   ✅ Compatible con tu HTML/JS (aria-hidden)
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO mix-blend-mode
+   ⚠️ NO sombras hardcodeadas (usar variables)
+   ⚠️ NO overlays raros full-screen con pseudo-elementos
+   ========================================================= */
+
+.modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: var(--z-modal);
+}
+
+/* Tu JS cambia aria-hidden */
+.modal[aria-hidden="false"]{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  /* margen consistente */
+  padding: 6vh 10px;
+}
+
+/* Overlay (simple y seguro para mobile) */
+.modal__overlay{
+  position: absolute;
+  inset: 0;
+  background: var(--c-modal-overlay);
+}
+
+/* Panel */
+.modal__panel{
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+
+  /* visual por theme */
+  background: var(--c-modal-bg);
+  box-shadow: var(--shadow-modal);
+
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.modal__head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+
+  padding: 12px 16px;
+
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-modal-head-bg);
+}
+
+.modal__title{
+  margin: 0;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-950);
+  color: var(--c-strong);
+}
+
+.modal__close{
+  background: none;
+  border: none;
+
+  font-size: 20px;
+  cursor: pointer;
+
+  color: var(--c-muted);
+}
+
+.modal__close:hover{
+  color: var(--c-strong);
+}
+
+.modal__body{
+  padding: 14px 16px 16px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; /* iOS scroll suave */
+}
+
+/* Estado del body cuando modal está abierto (estructura) */
+body.modal-open{
+  overflow: hidden;
+}
+
+/* Chart */
+#graficoSunat{
+  width: 100% !important;
+  height: 340px !important;
+  display: block;
+}
+
+.modal__close:focus-visible{
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* 1100px — (no aplica aquí) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  .modal[aria-hidden="false"]{
+    padding: 10vh 10px; /* un poco más abajo para que no tape todo */
+  }
+
+  .modal__panel{
+    border-radius: var(--radius-md);
+    max-height: 84vh;
+  }
+
+  #graficoSunat{
+    height: 280px !important; /* menos grande en mobile */
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  #graficoSunat{
+    height: 240px !important;
+  }
+}

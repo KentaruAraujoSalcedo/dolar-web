@@ -1,0 +1,402 @@
+/* =========================================================
+   COMPONENTS / TABLE.CSS
+   Tabla Casas (Top / Ver todas)
+   ---------------------------------------------------------
+   ✅ Estructura: sticky head, scroll interno, widths
+   ✅ Responsive: ocultar compra/venta en mobile
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO sombras
+   ⚠️ NO gradientes
+   ⚠️ NO colores hardcodeados
+   ========================================================= */
+
+
+/* ======================================================
+   TOKENS LOCALES (solo tabla, estructurales)
+   ====================================================== */
+
+.tabla-casas{
+  --tbl-header-size: 0.80rem;  /* CASA / COMPRA / VENTA / RESULTADO */
+  --tbl-value-size:  0.95rem;  /* valores numéricos */
+  --tbl-casa-size:   1.00rem;  /* nombre de la casa */
+  --tbl-result-size: 0.90rem;  /* resultado final */
+}
+
+
+/* ======================================================
+   WRAPPER + SCROLL
+   ====================================================== */
+
+.tabla-casas-wrapper{
+  padding: var(--space-4) var(--space-7) var(--space-7);
+}
+
+.tabla-casas-wrapper--wide{
+  padding: var(--space-4) var(--space-7) var(--space-7);
+  border-top: 1px solid var(--c-border);
+
+  max-height: none;
+  overflow: visible;
+  scrollbar-gutter: stable;
+}
+
+/* Ver todas: scroll interno (NO agranda la página) */
+.tabla-casas-wrapper--wide.is-all{
+  max-height: 300px; /* ≈ 4 filas visibles */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+/* Header un poco más bajo dentro del scroll */
+.tabla-casas-wrapper--wide.is-all .tabla-casas thead th{
+  padding: 10px 12px;
+}
+
+/* Scroll (webkit) — colores themeables */
+.tabla-casas-wrapper--wide::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+.tabla-casas-wrapper--wide::-webkit-scrollbar-thumb{
+  background: var(--c-scroll-thumb);
+  border-radius: 999px;
+  border: 2px solid var(--c-scroll-track-border);
+}
+.tabla-casas-wrapper--wide::-webkit-scrollbar-track{
+  background: var(--c-scroll-track);
+  border-radius: 999px;
+}
+
+
+/* ======================================================
+   TABLA BASE
+   ====================================================== */
+
+.tabla-casas{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.92rem;
+}
+
+
+/* ======================================================
+   HEAD
+   ====================================================== */
+
+.tabla-casas thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  padding: 12px 12px;
+  text-align: left;
+
+  font-size: var(--tbl-header-size);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+
+  font-weight: var(--fw-900);
+  color: var(--c-muted);
+
+  background: var(--c-table-head-bg);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.tabla-casas thead th:first-child{ border-top-left-radius: var(--radius-md); }
+.tabla-casas thead th:last-child{ border-top-right-radius: var(--radius-md); }
+
+/* Centrar headers numéricos */
+.tabla-casas thead th.compra,
+.tabla-casas thead th.venta,
+.tabla-casas thead th#columna-resultado{
+  text-align: center;
+}
+
+
+/* ======================================================
+   BODY CELLS
+   ====================================================== */
+
+.tabla-casas tbody td{
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--c-border-soft);
+
+  color: var(--c-text);
+  vertical-align: middle;
+
+  background: var(--c-table-row-bg);
+}
+
+.tabla-casas tbody tr:hover td{
+  background: var(--c-table-row-hover-bg);
+}
+
+
+/* ======================================================
+   CASA (col 1)
+   ====================================================== */
+
+.tabla-casas td.casa{
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  font-size: var(--tbl-casa-size);
+}
+
+.tabla-casas td .casa-wrap{
+  text-decoration: none;
+  color: inherit;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-5);
+
+  min-width: 0; /* permite truncar texto si aprieta */
+}
+
+/* Contenedor fijo para que TODOS los logos se vean consistentes */
+.tabla-casas td .casa-logo{
+  width: 88px;
+  height: 34px;
+
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+
+  background: var(--c-logo-bg);
+  border: 1px solid var(--c-border);
+}
+
+.tabla-casas td .casa-logo img{
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* fallback si falta logo */
+.tabla-casas td .logo-fallback{
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 1000;
+  font-size: 0.80rem;
+  letter-spacing: .04em;
+  color: var(--c-strong);
+}
+
+/* Chevron tipo dropdown */
+.tabla-casas td .casa-chevron{
+  margin-left: auto;
+  font-size: 14px;
+  opacity: .55;
+  color: var(--c-muted);
+}
+
+
+/* ======================================================
+   COMPRA / VENTA (valores)
+   ====================================================== */
+
+.tabla-casas td.compra,
+.tabla-casas td.venta{
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--fw-900);
+  font-size: var(--tbl-value-size);
+  text-align: center;
+}
+
+/* Colores por theme (no hardcode) */
+.tabla-casas td.compra{ color: var(--c-buy); }
+.tabla-casas td.venta{ color: var(--c-sell); }
+
+
+/* ======================================================
+   RESULTADO
+   ====================================================== */
+
+.tabla-casas td.resultado{
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--fw-900);
+  font-size: var(--tbl-result-size);
+
+  color: var(--c-strong);
+  text-align: center;
+  white-space: nowrap;
+}
+
+
+/* ======================================================
+   WINNER ROW
+   ====================================================== */
+
+.tabla-casas tbody tr.winner-row td{
+  background: var(--c-winner-bg);
+  border-bottom: 1px solid var(--c-winner-border);
+}
+
+.tabla-casas tbody tr.winner-row:hover td{
+  background: var(--c-winner-hover-bg);
+}
+
+
+/* ======================================================
+   INDICADOR VISUAL: USA COMPRA O VENTA (solo visual)
+   (se pinta con variables del theme)
+   ====================================================== */
+
+.tabla-casas thead th.compra,
+.tabla-casas thead th.venta{
+  transition: background .2s ease, box-shadow .2s ease;
+}
+
+.tabla-casas.usa-compra thead th.compra{
+  font-weight: 1000;
+  background: var(--c-col-highlight-buy-bg);
+  box-shadow: inset 0 -3px 0 var(--c-col-highlight-buy-line);
+  border-radius: 10px 10px 0 0;
+}
+
+.tabla-casas.usa-venta thead th.venta{
+  font-weight: 1000;
+  background: var(--c-col-highlight-sell-bg);
+  box-shadow: inset 0 -3px 0 var(--c-col-highlight-sell-line);
+  border-radius: 10px 10px 0 0;
+}
+
+
+/* ======================================================
+   BADGE (si lo usas)
+   ====================================================== */
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap: var(--space-2);
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  font-size: 0.78rem;
+  font-weight: var(--fw-900);
+
+  background: var(--c-badge-bg);
+  border: 1px solid var(--c-badge-border);
+  color: var(--c-badge-text);
+}
+
+
+/* ======================================================
+   FOOTER TABLA (si lo usas)
+   ====================================================== */
+
+.table-footer{
+  padding: var(--space-4) var(--space-7) var(--space-7);
+  border-top: 1px solid var(--c-border);
+
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+}
+
+.table-footer--split{
+  justify-content:space-between;
+}
+
+
+/* ======================================================
+   ANCHOS DE COLUMNAS (4 columnas)
+   ====================================================== */
+
+.tabla-casas thead th:nth-child(1){ width:40%; }
+.tabla-casas thead th:nth-child(2){ width:16%; }
+.tabla-casas thead th:nth-child(3){ width:16%; }
+.tabla-casas thead th:nth-child(4){ width:28%; }
+
+
+/* ======================================================
+   FOCUS (accesibilidad)
+   ====================================================== */
+
+.tabla-casas .casa-wrap:focus-visible{
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* 1100px — (no aplica aquí por ahora) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile: ocultar Compra/Venta y compactar */
+@media (max-width:700px){
+
+  .tabla-casas thead th:nth-child(1){ width:auto; }
+  .tabla-casas thead th:nth-child(4){ width:auto; }
+
+  .tabla-casas{ min-width: 0; }
+
+  .tabla-casas th.compra,
+  .tabla-casas th.venta,
+  .tabla-casas td.compra,
+  .tabla-casas td.venta{
+    display: none;
+  }
+
+  /* Header más bajo */
+  .tabla-casas thead th{
+    padding: 10px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Filas compactas */
+  .tabla-casas tbody td{
+    padding: 10px 10px;
+  }
+
+  /* Resultado compacto */
+  .tabla-casas td.resultado{
+    font-size: 0.90rem;
+    font-weight: var(--fw-800);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .tabla-casas th#columna-resultado{
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* Logo más compacto */
+  .tabla-casas td .casa-logo{
+    width: 64px;
+    height: 28px;
+    border-radius: 10px;
+  }
+
+  .tabla-casas td .casa-chevron{
+    display:none;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  /* reservado */
+}

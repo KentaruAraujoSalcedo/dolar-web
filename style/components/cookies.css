@@ -1,0 +1,144 @@
+/* =========================================================
+   COMPONENTS / COOKIES.CSS
+   Cookie Banner (estructura + comportamiento)
+   ---------------------------------------------------------
+   ✅ Fixed bottom compacto
+   ✅ Estado .show
+   ✅ Responsive para mobile
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO sombras hardcodeadas (usar variables)
+   ⚠️ NO colores hardcodeados
+   ========================================================= */
+
+#cookie-banner{
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+
+  max-width: 720px;
+  width: calc(100% - 32px);
+
+  padding: 10px 14px;
+
+  display: none;
+
+  z-index: var(--z-cookie);
+
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  font-size: var(--fs-13);
+  line-height: 1.4;
+
+  border-radius: 999px;
+
+  /* Visual: theme decide */
+  background: var(--c-cookie-bg);
+  color: var(--c-cookie-text);
+  box-shadow: var(--shadow-cookie);
+}
+
+/* Visible con animación */
+#cookie-banner.show{
+  display: flex;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Transiciones (baratas) */
+#cookie-banner{
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+/* Link */
+#cookie-banner a{
+  color: var(--c-cookie-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+/* Buttons */
+#cookie-banner button{
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  font-weight: var(--fw-600);
+  font-size: var(--fs-13);
+
+  transition: transform .08s ease, opacity .15s ease;
+
+  color: var(--c-cookie-btn-text);
+  background: var(--c-cookie-btn-bg);
+}
+
+/* Accept */
+#cookie-banner button:first-of-type{
+  background: var(--c-cookie-accept-bg);
+  color: var(--c-cookie-accept-text);
+}
+
+/* Reject */
+#cookie-banner button:last-of-type{
+  background: var(--c-cookie-reject-bg);
+  color: var(--c-cookie-reject-text);
+}
+
+#cookie-banner button:hover{
+  opacity: .92;
+}
+
+#cookie-banner button:active{
+  transform: translateY(1px);
+}
+
+#cookie-banner button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* 1100px — (no aplica aquí) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  #cookie-banner{
+    flex-wrap: wrap;
+    border-radius: var(--radius-md);
+    padding: 12px;
+    bottom: 14px;
+  }
+
+  #cookie-banner button{
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+
+  #cookie-banner{
+    font-size: var(--fs-12);
+    padding: 10px;
+  }
+
+  #cookie-banner button{
+    font-size: var(--fs-12);
+    padding: 6px 10px;
+  }
+}

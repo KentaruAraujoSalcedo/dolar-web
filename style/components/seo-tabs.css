@@ -1,0 +1,190 @@
+/* =========================================================
+   COMPONENTS / SEO-TABS.CSS
+   SEO Tabs (Guía rápida) — estructura
+   ---------------------------------------------------------
+   ✅ Layout / spacing / tamaños
+   ✅ Estados (is-active) sin “efectos caros”
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO sombras
+   ⚠️ NO gradientes
+   ⚠️ NO colores hardcodeados
+   ========================================================= */
+
+
+/* ======================================================
+   WRAPPER
+   ====================================================== */
+
+.seo-tabs{
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+}
+
+
+/* ======================================================
+   HEAD
+   ====================================================== */
+
+.seo-tabs__head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.seo-tabs__title{
+  font-size: var(--fs-16);
+  margin: 0;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  opacity: .90;
+}
+
+.seo-tabs__controls{
+  display:flex;
+  gap: var(--space-3);
+}
+
+
+/* ======================================================
+   ARROWS
+   ====================================================== */
+
+.seo-tabs__arrow{
+  width: 36px;
+  height: 32px;
+  border-radius: var(--radius-md);
+
+  border: 1px solid var(--c-border);
+  background: var(--c-surface-1);
+
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+
+  transition: transform .08s ease, filter .12s ease;
+}
+
+.seo-tabs__arrow:hover{ filter: brightness(1.02); }
+.seo-tabs__arrow:active{ transform: translateY(1px); }
+
+
+/* ======================================================
+   NAV (tabs)
+   ====================================================== */
+
+.seo-tabs__nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+}
+
+.seo-tabs__tab{
+  border: 1px solid var(--c-border);
+  background: var(--c-surface-2);
+
+  border-radius: 999px;
+  padding: 8px 10px;
+
+  cursor:pointer;
+  font-size: 0.90rem;
+  font-weight: var(--fw-800);
+  color: var(--c-text);
+
+  transition: transform .08s ease, filter .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.seo-tabs__tab:hover{
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+}
+
+.seo-tabs__tab:active{
+  transform: translateY(0);
+}
+
+.seo-tabs__tab.is-active{
+  border-color: var(--c-tab-active-border);
+  background: var(--c-tab-active-bg);
+  color: var(--c-strong);
+}
+
+
+/* ======================================================
+   PANELS
+   ====================================================== */
+
+.seo-tabs__panels h3{
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.seo-tabs__panels p{
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.92rem;
+  color: var(--c-text);
+  opacity: .95;
+}
+
+
+/* ======================================================
+   FOCUS
+   ====================================================== */
+
+.seo-tabs__tab:focus-visible,
+.seo-tabs__arrow:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* 1100px — (no aplica aquí por ahora) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  .seo-tabs{
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+  }
+
+  .seo-tabs__title{
+    font-size: 0.95rem;
+  }
+
+  .seo-tabs__tab{
+    font-size: 0.85rem;
+    padding: 6px 9px;
+  }
+
+  .seo-tabs__panels p{
+    font-size: 0.88rem;
+  }
+
+  /* Mantienes tu comportamiento actual */
+  .seo-tabs__nav{
+    display:none;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+  .seo-tabs__nav{ gap: var(--space-2); }
+}

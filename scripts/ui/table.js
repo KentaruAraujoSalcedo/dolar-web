@@ -14,6 +14,7 @@ import {
   recalcResultadosEnContainer,
   getCasasValidasLimpias,
   sortCasas,
+  getResultadoLabel, 
 } from './tableShared.js';
 
 // ⚠️ IMPORTANTE (GitHub Pages)
@@ -32,8 +33,8 @@ export function renderTabla() {
   if (!tbody) return;
   tbody.innerHTML = '';
 
-let filas = getCasasValidasLimpias({ fallbackToTasas: true });
-filas = sortCasas(filas, "auto");
+  let filas = getCasasValidasLimpias({ fallbackToTasas: true });
+  filas = sortCasas(filas, "auto");
 
   // ✅ Home SIEMPRE = Top 3 (el ranking completo vive en el modal)
   const TOP_N = 3;

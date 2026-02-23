@@ -82,13 +82,21 @@ function renderMeta() {
 function getRankingArray(mode) {
   const arr = Array.isArray(state?.validas) ? [...state.validas] : [];
 
-  const onlyScraper = arr.filter((c) => (c.source || "").toLowerCase() === "scraper");
-  const clean = onlyScraper.filter(
-    (c) => String(c.casa).toUpperCase() !== "SUNAT" && (c.slug ?? "").toLowerCase() !== "sunat"
-  );
+  // 1) Solo scraper + quitar SUNAT
+  const clean = arr
+    .filter(c => (c.source || "").toLowerCase() === "scraper")
+    .filter(c => String(c.casa).toUpperCase() !== "SUNAT" && (c.slug ?? "").toLowerCase() !== "sunat")
+    // 2) Coerción a número + filtrar finitos (igual que la tabla principal)
+    .map(c => ({
+      ...c,
+      compra: Number(c.compra),
+      venta: Number(c.venta),
+    }))
+    .filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
 
-  if (mode === "compra") clean.sort((a, b) => (b.compra ?? 0) - (a.compra ?? 0));
-  else clean.sort((a, b) => (a.venta ?? 999) - (b.venta ?? 999));
+  // 3) Orden
+  if (mode === "compra") clean.sort((a, b) => b.compra - a.compra);
+  else clean.sort((a, b) => a.venta - b.venta);
 
   return clean;
 }

@@ -99,22 +99,21 @@ export function buildCasaCellHTML(c, { content = "tabla", basePath = "" } = {}) 
 
   const urlConUTM = c?.url
     ? withUTM(c.url, {
-        source: "preciodolarhoy",
-        medium: "referral",
-        campaign: "clickout",
-        content,
-      })
+      source: "preciodolarhoy",
+      medium: "referral",
+      campaign: "clickout",
+      content,
+    })
     : "";
 
   return `
     <td class="casa">
       <a class="casa-wrap" href="${urlConUTM}" target="_blank" rel="noopener sponsored" title="${casaLabel}">
         <span class="casa-logo ${logoSrc ? "" : "is-missing"}" aria-hidden="${logoSrc ? "false" : "true"}">
-          ${
-            logoSrc
-              ? `<img src="${logoSrc}" alt="${casaLabel}" loading="lazy" decoding="async">`
-              : `<span class="logo-fallback" aria-hidden="true">${casaLabel.slice(0, 2).toUpperCase()}</span>`
-          }
+          ${logoSrc
+      ? `<img src="${logoSrc}" alt="${casaLabel}" loading="lazy" decoding="async" width="88" height="34">`
+      : `<span class="logo-fallback" aria-hidden="true">${casaLabel.slice(0, 2).toUpperCase()}</span>`
+    }
         </span>
 
         <span class="casa-name sr-only">${casaLabel}</span>

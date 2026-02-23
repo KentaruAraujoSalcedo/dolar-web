@@ -121,7 +121,7 @@ function loadChartModuleOnce() {
 btnOpenChart?.addEventListener("click", async () => {
   try {
     const mod = await loadChartModuleOnce();
-    await mod.renderGraficoHistorico();
+    await mod.renderSunatChartFromState();
   } catch (err) {
     console.error(err);
     alert("No se pudo cargar el gráfico. Intenta nuevamente.");

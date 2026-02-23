@@ -20,9 +20,25 @@ import {
   syncMontoUI
 } from './ui/index.js';
 
-import { renderGraficoHistorico } from './chart.js';
-
 window.addEventListener('DOMContentLoaded', init);
+
+let chartJsLoadingPromise = null;
+
+function loadChartJsOnce() {
+  if (window.Chart) return Promise.resolve();
+  if (chartJsLoadingPromise) return chartJsLoadingPromise;
+
+  chartJsLoadingPromise = new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js";
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("No se pudo cargar Chart.js"));
+    document.head.appendChild(s);
+  });
+
+  return chartJsLoadingPromise;
+}
 
 async function init() {
   try {
@@ -81,26 +97,36 @@ async function init() {
     // 5) Render inicial
     renderAll();
 
-    // 6) Modal gráfico
-    const btnOpenChart = document.getElementById('btn-open-chart');
+// 6) Modal gráfico (lazy-load Chart.js + tu chart.js)
+const btnOpenChart = document.getElementById("btn-open-chart");
 
-    btnOpenChart?.addEventListener('click', async () => {
-      try {
-        if (!state.sunat7) {
-          const ultimos7 = await cargarSunatUltimos7Dias();
-          setState({ sunat7: ultimos7 });
-        }
+let chartModulePromise = null;
 
-        renderGraficoHistorico(state.sunat7);
+function loadChartModuleOnce() {
+  if (chartModulePromise) return chartModulePromise;
 
-        setTimeout(() => {
-          state.chart?.resize?.();
-        }, 0);
+  chartModulePromise = (async () => {
+    // 1) Cargar Chart.js (CDN) solo cuando se necesite
+    await loadChartJsOnce();
 
-      } catch (e) {
-        console.warn('SUNAT mensual (últimos 7) no disponible:', e);
-      }
-    });
+    // 2) Importar tu módulo chart.js solo cuando se necesite
+    // (esto evita que el bundle inicial ejecute cosas del gráfico)
+    const mod = await import("./chart.js");
+    return mod;
+  })();
+
+  return chartModulePromise;
+}
+
+btnOpenChart?.addEventListener("click", async () => {
+  try {
+    const mod = await loadChartModuleOnce();
+    await mod.renderGraficoHistorico();
+  } catch (err) {
+    console.error(err);
+    alert("No se pudo cargar el gráfico. Intenta nuevamente.");
+  }
+});
 
     // 7) Eventos reactivos
     bindEvents({

@@ -12,7 +12,8 @@ import {
   buildCasaCellHTML,
   applyTableRateModeByConverter,
   recalcResultadosEnContainer,
-  getResultadoLabel,
+  getCasasValidasLimpias,
+  sortCasas,
 } from './tableShared.js';
 
 // ⚠️ IMPORTANTE (GitHub Pages)
@@ -31,13 +32,8 @@ export function renderTabla() {
   if (!tbody) return;
   tbody.innerHTML = '';
 
-  let filas = ordenarValidasSegunModo();
-
-  // ✅ Mostrar SOLO tasas frescas (scraper real)
-  filas = filas.filter(c => (c.source || '').toLowerCase() === 'scraper');
-
-  // ✅ Quitar SUNAT de la tabla (SUNAT no es casa de cambio)
-  filas = filas.filter(c => (c.slug ?? '').toLowerCase() !== 'sunat' && String(c.casa).toUpperCase() !== 'SUNAT');
+let filas = getCasasValidasLimpias({ fallbackToTasas: true });
+filas = sortCasas(filas, "auto");
 
   // ✅ Home SIEMPRE = Top 3 (el ranking completo vive en el modal)
   const TOP_N = 3;
@@ -127,39 +123,6 @@ export function renderTabla() {
 
   // ✅ ahorro winner (tu lógica actual)
   attachAhorroToWinnerRow();
-}
-
-/* ============================================================
-   Ordenar validas (tu lógica intacta)
-   ============================================================ */
-function ordenarValidasSegunModo() {
-  const { validas, tasas, modo } = state;
-
-  // ✅ fallback: si validas está vacío, usa tasas
-  const base = (Array.isArray(validas) && validas.length)
-    ? validas
-    : (Array.isArray(tasas) ? tasas : []);
-
-  // solo numéricas
-  const arr = base.filter(c => Number.isFinite(c?.compra) && Number.isFinite(c?.venta));
-
-  const { have, want } = getHaveWant();
-
-  if (modo === 'recibir') {
-    if (have === 'USD' && want === 'PEN') {
-      arr.sort((a, b) => b.compra - a.compra);
-    } else if (have === 'PEN' && want === 'USD') {
-      arr.sort((a, b) => a.venta - b.venta);
-    }
-  } else {
-    if (want === 'USD' && have === 'PEN') {
-      arr.sort((a, b) => a.venta - b.venta);
-    } else if (want === 'PEN' && have === 'USD') {
-      arr.sort((a, b) => b.compra - a.compra);
-    }
-  }
-
-  return arr;
 }
 
 /* ============================================================

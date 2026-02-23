@@ -13,6 +13,8 @@ import {
   getResultadoLabel,
   applyTableRateModeByConverter,
   recalcResultadosEnContainer,
+  getCasasValidasLimpias,
+  sortCasas,
 } from "./tableShared.js";
 
 export function initRankingModalUI() {
@@ -80,25 +82,8 @@ function renderMeta() {
 }
 
 function getRankingArray(mode) {
-  const arr = Array.isArray(state?.validas) ? [...state.validas] : [];
-
-  // 1) Solo scraper + quitar SUNAT
-  const clean = arr
-    .filter(c => (c.source || "").toLowerCase() === "scraper")
-    .filter(c => String(c.casa).toUpperCase() !== "SUNAT" && (c.slug ?? "").toLowerCase() !== "sunat")
-    // 2) Coerción a número + filtrar finitos (igual que la tabla principal)
-    .map(c => ({
-      ...c,
-      compra: Number(c.compra),
-      venta: Number(c.venta),
-    }))
-    .filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
-
-  // 3) Orden
-  if (mode === "compra") clean.sort((a, b) => b.compra - a.compra);
-  else clean.sort((a, b) => a.venta - b.venta);
-
-  return clean;
+  const filas = getCasasValidasLimpias({ fallbackToTasas: false });
+  return sortCasas(filas, mode === "compra" ? "compra" : "venta");
 }
 
 function renderRanking(mode) {

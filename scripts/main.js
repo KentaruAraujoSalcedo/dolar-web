@@ -121,7 +121,14 @@ function loadChartModuleOnce() {
 btnOpenChart?.addEventListener("click", async () => {
   try {
     const mod = await loadChartModuleOnce();
-    await mod.renderSunatChartFromState();
+
+    // ✅ Si aún no tenemos historial, lo pedimos 1 sola vez y lo cacheamos en state
+    if (!Array.isArray(state.sunat7) || state.sunat7.length === 0) {
+      const hist = await cargarSunatUltimos7Dias();
+      setState({ sunat7: hist });
+    }
+
+    mod.renderSunatChartFromState();
   } catch (err) {
     console.error(err);
     alert("No se pudo cargar el gráfico. Intenta nuevamente.");

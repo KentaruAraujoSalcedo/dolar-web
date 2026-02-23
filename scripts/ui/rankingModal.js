@@ -149,6 +149,9 @@ export function refreshRankingModal() {
   // Si nunca se abrió, no hagas nada
   if (modal.dataset.bound !== "1") return;
 
+  // ✅ Si el modal está cerrado, no recalcules nada
+  if (modal.getAttribute("aria-hidden") === "true") return;
+
   renderRankingAuto();
   renderMeta();
   ensureLogos();

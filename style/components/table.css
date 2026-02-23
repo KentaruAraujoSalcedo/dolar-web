@@ -30,6 +30,9 @@
 
 .tabla-casas-wrapper{
   padding: var(--space-4) var(--space-7) var(--space-7);
+
+  /* Reserva espacio para evitar CLS mientras JS llena el tbody */
+  min-height: 249px; /* Top 3 fijo */
 }
 
 .tabla-casas-wrapper--wide{

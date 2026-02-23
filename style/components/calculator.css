@@ -326,6 +326,16 @@
   font-weight: var(--fw-900);
   font-size: 0.92rem;
   line-height: 1.35;
+
+  /* Evita CLS: reserva altura para texto */
+  min-height: 41px;          /* 1–2 líneas en mobile */
+  display: flex;
+  align-items: center;
+}
+
+/* ✅ Si está vacío, no se ve, pero sigue reservando espacio (sin CLS) */
+.resultado-modern:empty{
+  visibility: hidden;
 }
 
 .fineprint{

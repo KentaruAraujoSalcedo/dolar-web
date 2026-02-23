@@ -89,9 +89,8 @@
   background: var(--c-link-hover-bg);
 }
 
-
 /* ======================================================
-   PILLS (Mejor compra / venta) — estructura
+   PILLS (Mejor compra / venta) — estructura + anti-CLS
    ====================================================== */
 
 .pdh-pills{
@@ -121,19 +120,29 @@
   white-space: nowrap;
 }
 
+/* ✅ Anti-CLS: reservar ancho fijo para que "—" → "3.357" no mueva nada */
 .pdh-pill__value{
   font-size: 1.05rem;
   font-weight: var(--fw-900);
   color: var(--c-strong);
   white-space: nowrap;
+
+  display: inline-block;
+  width: 3.9ch; /* reserva para 3.357 */
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
+/* ✅ Anti-CLS: reservar ancho del icono para que no cambie el layout */
 .pdh-pill__arrow{
   font-size: .95rem;
   opacity: .7;
   color: var(--c-muted);
-}
 
+  display: inline-block;
+  width: 1.5ch;
+  text-align: center;
+}
 
 /* ======================================================
    Checkbox (Ver todas / Top)
@@ -527,6 +536,8 @@
     padding: 6px 0;
     background: transparent;
     border: 0;
+
+    justify-content: space-between; 
   }
 
   .pdh-pill__label{

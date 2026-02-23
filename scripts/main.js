@@ -8,7 +8,7 @@ import {
   cargarSunatUltimos7Dias
 } from './data.js';
 import { initModal } from "./ui/modal.js";
-import { initRankingModalUI } from "./ui/rankingModal.js";
+import { initRankingModalUI, refreshRankingModal } from "./ui/rankingModal.js";
 
 import {
   initStaticUI,
@@ -112,11 +112,8 @@ async function init() {
         renderBestDeal();
         pintarMejoresHeader();
 
-        // Refresca ranking SOLO si está abierto
-        const rk = document.getElementById("rankingModal");
-        if (rk && rk.getAttribute("aria-hidden") === "false") {
-          initRankingModalUI();
-        }
+        // Refresca ranking si ya fue inicializado (abierto al menos 1 vez)
+        refreshRankingModal();
       },
     });
 

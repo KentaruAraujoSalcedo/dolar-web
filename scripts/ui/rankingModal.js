@@ -3,6 +3,7 @@
 // ==============================
 
 import { state } from "../state.js";
+import { getHaveWant } from "./haveWant.js";
 import { rateFmt } from "./format.js";
 import { getCasasCatalog } from "./logos.js";
 import { withUTM } from "./utm.js";
@@ -21,35 +22,31 @@ export function initRankingModalUI() {
   const modal = document.getElementById("rankingModal");
   if (!modal) return;
 
-  // Si ya está bindeado: solo refresca contenido (monto/modo puede haber cambiado)
+  // Ya bindeado: solo refresca contenido
   if (modal.dataset.bound === "1") {
     const mode = modal.dataset.mode || "venta";
     renderRanking(mode);
     renderMeta();
-
-    const logosBox = document.getElementById("rankingLogos");
-    if (logosBox && !logosBox.dataset.built) {
-      renderAllLogos();
-      logosBox.dataset.built = "1";
-    }
+    ensureLogos();
     return;
   }
 
   modal.dataset.bound = "1";
 
   const controls = document.querySelectorAll("#rankingModal [data-rk]");
-  let mode = "venta";
+
+  // 🔹 Modo inicial: recomendado por conversor (UX)
+  let mode = getRecommendedRankingMode();
   modal.dataset.mode = mode;
+  syncRankingTabsUI(mode);
 
   controls.forEach((btn) => {
     btn.addEventListener("click", () => {
+      // 🔸 Manual: el usuario manda
       mode = btn.dataset.rk === "compra" ? "compra" : "venta";
       modal.dataset.mode = mode;
 
-      controls.forEach((b) =>
-        b.setAttribute("aria-selected", b === btn ? "true" : "false")
-      );
-
+      syncRankingTabsUI(mode);
       renderRanking(mode);
     });
   });
@@ -57,12 +54,7 @@ export function initRankingModalUI() {
   // render inicial
   renderRanking(mode);
   renderMeta();
-
-  const logosBox = document.getElementById("rankingLogos");
-  if (logosBox && !logosBox.dataset.built) {
-    renderAllLogos();
-    logosBox.dataset.built = "1";
-  }
+  ensureLogos();
 }
 
 function renderMeta() {
@@ -74,8 +66,8 @@ function renderMeta() {
   const validasTxt = Number.isFinite(state?.meta?.validas)
     ? state.meta.validas
     : Array.isArray(state?.validas)
-    ? state.validas.length
-    : "—";
+      ? state.validas.length
+      : "—";
 
   meta.textContent = `Monitoreadas: ${totalTxt} · Válidas hoy: ${validasTxt}`;
   if (metaAll) metaAll.textContent = `${totalTxt} casas`;
@@ -110,25 +102,28 @@ function renderRanking(mode) {
     tbody.appendChild(tr);
   }
 
-  // ✅ label y cálculo, iguales a table.js
+  // Label + cálculo
   setResultadoLabelRankingModal();
   recalcResultadosEnContainer(document.getElementById("rankingModal"));
 
-  // ✅ IMPORTANTE:
-  // El highlight visual de columnas debe depender del conversor,
-  // igual que en la tabla principal (no del toggle compra/venta).
-  // (Si quieres que el toggle cambie el highlight, dime y lo hacemos sin romper la lógica)
+  // Highlight por conversor (NO por toggle)
   const table = document.querySelector("#rankingModal .tabla-casas");
   applyTableRateModeByConverter(table);
-
-  // si quieres mantener el viejo comportamiento del toggle:
-  // setRankingHeaderHighlight(mode);
 }
 
 function setResultadoLabelRankingModal() {
   const thR = document.getElementById("rk-col-resultado");
   if (!thR) return;
   thR.textContent = getResultadoLabel();
+}
+
+function ensureLogos() {
+  const box = document.getElementById("rankingLogos");
+  if (!box) return;
+
+  if (box.children.length === 0) {
+    renderAllLogos();
+  }
 }
 
 function renderAllLogos() {
@@ -163,4 +158,65 @@ function renderAllLogos() {
 
     box.appendChild(a);
   }
+}
+
+/**
+ * Llamar desde main.js en cada cambio del conversor
+ * (swap, modo, monedas, monto).
+ * - Si el modal ya fue inicializado (se abrió alguna vez), lo mantiene consistente.
+ */
+export function refreshRankingModal() {
+  const modal = document.getElementById("rankingModal");
+  if (!modal) return;
+
+  if (modal.dataset.bound !== "1") return;
+
+  // 🔹 Si el usuario eligió manualmente un modo, lo respetamos...
+  // ...PERO si cambió el conversor, alineamos a recomendado.
+  // Para detectar cambio real, guardamos la "firma" del conversor.
+  const sigNow = getConverterSignature();
+  const sigPrev = modal.dataset.convSig || "";
+
+  if (sigNow !== sigPrev) {
+    const recommended = getRecommendedRankingMode();
+    modal.dataset.mode = recommended;
+    syncRankingTabsUI(recommended);
+  }
+
+  modal.dataset.convSig = sigNow;
+
+  const mode = modal.dataset.mode || "venta";
+  renderRanking(mode);
+  renderMeta();
+  ensureLogos();
+}
+
+function getRecommendedRankingMode() {
+  const { modo } = state;
+  const { have, want } = getHaveWant();
+
+  const usaCompra =
+    (modo === "recibir" && have === "USD" && want === "PEN") ||
+    (modo === "necesito" && have === "USD" && want === "PEN");
+
+  const usaVenta =
+    (modo === "recibir" && have === "PEN" && want === "USD") ||
+    (modo === "necesito" && have === "PEN" && want === "USD");
+
+  if (usaCompra) return "compra";
+  if (usaVenta) return "venta";
+  return "venta";
+}
+
+function getConverterSignature() {
+  const { modo, monedaTengo, monedaQuiero } = state;
+  return `${modo}|${monedaTengo}|${monedaQuiero}`;
+}
+
+function syncRankingTabsUI(mode) {
+  const controls = document.querySelectorAll("#rankingModal [data-rk]");
+  controls.forEach((btn) => {
+    const isActive = btn.dataset.rk === mode;
+    btn.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
 }

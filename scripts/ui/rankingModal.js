@@ -1,5 +1,6 @@
 // ==============================
 // File: scripts/ui/rankingModal.js
+// (SIN botones de ranking compra/venta)
 // ==============================
 
 import { state } from "../state.js";
@@ -22,37 +23,10 @@ export function initRankingModalUI() {
   const modal = document.getElementById("rankingModal");
   if (!modal) return;
 
-  // Ya bindeado: solo refresca contenido
-  if (modal.dataset.bound === "1") {
-    const mode = modal.dataset.mode || "venta";
-    renderRanking(mode);
-    renderMeta();
-    ensureLogos();
-    return;
-  }
-
+  // Marcar como inicializado (sirve para refreshRankingModal)
   modal.dataset.bound = "1";
 
-  const controls = document.querySelectorAll("#rankingModal [data-rk]");
-
-  // 🔹 Modo inicial: recomendado por conversor (UX)
-  let mode = getRecommendedRankingMode();
-  modal.dataset.mode = mode;
-  syncRankingTabsUI(mode);
-
-  controls.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      // 🔸 Manual: el usuario manda
-      mode = btn.dataset.rk === "compra" ? "compra" : "venta";
-      modal.dataset.mode = mode;
-
-      syncRankingTabsUI(mode);
-      renderRanking(mode);
-    });
-  });
-
-  // render inicial
-  renderRanking(mode);
+  renderRankingAuto();
   renderMeta();
   ensureLogos();
 }
@@ -73,17 +47,30 @@ function renderMeta() {
   if (metaAll) metaAll.textContent = `${totalTxt} casas`;
 }
 
-function getRankingArray(mode) {
-  const filas = getCasasValidasLimpias({ fallbackToTasas: false });
-  return sortCasas(filas, mode === "compra" ? "compra" : "venta");
+function getRecommendedSortMode() {
+  const { modo } = state;
+  const { have, want } = getHaveWant();
+
+  const usaCompra =
+    (modo === "recibir" && have === "USD" && want === "PEN") ||
+    (modo === "necesito" && have === "USD" && want === "PEN");
+
+  const usaVenta =
+    (modo === "recibir" && have === "PEN" && want === "USD") ||
+    (modo === "necesito" && have === "PEN" && want === "USD");
+
+  if (usaCompra) return "compra";
+  if (usaVenta) return "venta";
+  return "venta";
 }
 
-function renderRanking(mode) {
+function renderRankingAuto() {
   const tbody = document.getElementById("rankingBody");
   if (!tbody) return;
   tbody.innerHTML = "";
 
-  const filas = getRankingArray(mode);
+  const sortMode = getRecommendedSortMode();
+  const filas = sortCasas(getCasasValidasLimpias({ fallbackToTasas: false }), sortMode);
 
   for (const c of filas) {
     const tr = document.createElement("tr");
@@ -93,7 +80,6 @@ function renderRanking(mode) {
 
     tr.innerHTML = `
       ${buildCasaCellHTML(c, { content: "ranking_modal", basePath: "" })}
-
       <td class="compra">${rateFmt(c.compra)}</td>
       <td class="venta">${rateFmt(c.venta)}</td>
       <td class="resultado">-</td>
@@ -103,18 +89,14 @@ function renderRanking(mode) {
   }
 
   // Label + cálculo
-  setResultadoLabelRankingModal();
+  const thR = document.getElementById("rk-col-resultado");
+  if (thR) thR.textContent = getResultadoLabel();
+
   recalcResultadosEnContainer(document.getElementById("rankingModal"));
 
-  // Highlight por conversor (NO por toggle)
+  // Highlight por conversor (usa-compra / usa-venta)
   const table = document.querySelector("#rankingModal .tabla-casas");
   applyTableRateModeByConverter(table);
-}
-
-function setResultadoLabelRankingModal() {
-  const thR = document.getElementById("rk-col-resultado");
-  if (!thR) return;
-  thR.textContent = getResultadoLabel();
 }
 
 function ensureLogos() {
@@ -160,63 +142,14 @@ function renderAllLogos() {
   }
 }
 
-/**
- * Llamar desde main.js en cada cambio del conversor
- * (swap, modo, monedas, monto).
- * - Si el modal ya fue inicializado (se abrió alguna vez), lo mantiene consistente.
- */
 export function refreshRankingModal() {
   const modal = document.getElementById("rankingModal");
   if (!modal) return;
 
+  // Si nunca se abrió, no hagas nada
   if (modal.dataset.bound !== "1") return;
 
-  // 🔹 Si el usuario eligió manualmente un modo, lo respetamos...
-  // ...PERO si cambió el conversor, alineamos a recomendado.
-  // Para detectar cambio real, guardamos la "firma" del conversor.
-  const sigNow = getConverterSignature();
-  const sigPrev = modal.dataset.convSig || "";
-
-  if (sigNow !== sigPrev) {
-    const recommended = getRecommendedRankingMode();
-    modal.dataset.mode = recommended;
-    syncRankingTabsUI(recommended);
-  }
-
-  modal.dataset.convSig = sigNow;
-
-  const mode = modal.dataset.mode || "venta";
-  renderRanking(mode);
+  renderRankingAuto();
   renderMeta();
   ensureLogos();
-}
-
-function getRecommendedRankingMode() {
-  const { modo } = state;
-  const { have, want } = getHaveWant();
-
-  const usaCompra =
-    (modo === "recibir" && have === "USD" && want === "PEN") ||
-    (modo === "necesito" && have === "USD" && want === "PEN");
-
-  const usaVenta =
-    (modo === "recibir" && have === "PEN" && want === "USD") ||
-    (modo === "necesito" && have === "PEN" && want === "USD");
-
-  if (usaCompra) return "compra";
-  if (usaVenta) return "venta";
-  return "venta";
-}
-
-function getConverterSignature() {
-  const { modo, monedaTengo, monedaQuiero } = state;
-  return `${modo}|${monedaTengo}|${monedaQuiero}`;
-}
-
-function syncRankingTabsUI(mode) {
-  const controls = document.querySelectorAll("#rankingModal [data-rk]");
-  controls.forEach((btn) => {
-    const isActive = btn.dataset.rk === mode;
-    btn.setAttribute("aria-selected", isActive ? "true" : "false");
-  });
 }

@@ -132,13 +132,6 @@ body.modal-open{ overflow: hidden; }
    RANKING MODAL (solo #rankingModal)
    ========================================================= */
 
-#rankingModal .ranking-controls{
-  display:flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
 /* Tabla ranking: números alineados */
 #rankingModal .tabla-casas th,
 #rankingModal .tabla-casas td{

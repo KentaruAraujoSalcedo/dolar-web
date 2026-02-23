@@ -5,10 +5,15 @@
 import { state } from '../state.js';
 import { $ } from './dom.js';
 import { getHaveWant } from './haveWant.js';
-import { moneyFmt, rateFmt } from './format.js';
-import { getCasaLogoSrc } from './logos.js';
+import { rateFmt } from './format.js';
 import { attachAhorroToWinnerRow } from './savings.js';
-import { withUTM } from './utm.js';
+
+import {
+  buildCasaCellHTML,
+  applyTableRateModeByConverter,
+  recalcResultadosEnContainer,
+  getResultadoLabel,
+} from './tableShared.js';
 
 // ⚠️ IMPORTANTE (GitHub Pages)
 // Si tu web vive en /NOMBRE-REPO/, pon BASE_PATH = '/NOMBRE-REPO/'.
@@ -81,9 +86,6 @@ export function renderTabla() {
     winnerCasa = (filas.find(x => x.venta === bestVenta))?.casa || null;
   }
 
-  // (Opcional) debug: casas sin logo
-  const missing = new Set();
-
   // ============================
   // Render filas
   // ============================
@@ -96,44 +98,8 @@ export function renderTabla() {
     const isWinner = (winnerCasa && c.casa === winnerCasa);
     if (isWinner) tr.classList.add('winner-row');
 
-    // Logo con normalizador + BASE_PATH para GH Pages
-    const rawLogo = getCasaLogoSrc(c.casa);
-    const logoSrc = rawLogo ? (BASE_PATH + rawLogo.replace(/^\//, '')) : null;
-    if (!logoSrc) missing.add(c.casa);
-
-    const casaLabel = String(c.casa || '').trim() || 'Casa de cambio';
-
-    const urlConUTM = c.url
-      ? withUTM(c.url, {
-        source: 'preciodolarhoy',
-        medium: 'referral',
-        campaign: 'clickout',
-        content: 'tabla',
-      })
-      : '';
-
-
-    const casaCell = `
-  <td class="casa">
-      <a class="casa-wrap" href="${urlConUTM}" target="_blank" rel="noopener sponsored" title="${casaLabel}">
-      <span class="casa-logo ${logoSrc ? '' : 'is-missing'}" aria-hidden="${logoSrc ? 'false' : 'true'}">
-        ${logoSrc
-        ? `<img src="${logoSrc}" alt="${casaLabel}" loading="lazy" decoding="async">`
-        : `<span class="logo-fallback" aria-hidden="true">${casaLabel.slice(0, 2).toUpperCase()}</span>`
-      }
-      </span>
-
-      <!-- Mantén el nombre solo para accesibilidad/SEO -->
-      <span class="casa-name sr-only">${casaLabel}</span>
-
-      <span class="casa-chevron" aria-hidden="true">▾</span>
-    </a>
-  </td>
-`;
-
-
     tr.innerHTML = `
-      ${casaCell}
+      ${buildCasaCellHTML(c, { content: 'tabla', basePath: BASE_PATH })}
 
       <td class="compra
         ${paintCompra && c.compra === bestCompra ? 'mejor-compra' : ''}
@@ -153,14 +119,13 @@ export function renderTabla() {
     tbody.appendChild(tr);
   }
 
-  if (missing.size) {
-    console.log('Casas sin logo (por nombre no coincide o ruta falla):', [...missing]);
-  }
-
+  // ✅ Encabezados y clases usa-compra / usa-venta (por conversor)
   actualizarEncabezadosTabla();
+
+  // ✅ Recalcula resultado usando la MISMA fórmula shared (tabla + modal)
   recalcularCeldas();
 
-  // ✅ ahora viene de savings.js
+  // ✅ ahorro winner (tu lógica actual)
   attachAhorroToWinnerRow();
 }
 
@@ -198,88 +163,28 @@ function ordenarValidasSegunModo() {
 }
 
 /* ============================================================
-   Encabezado tabla (ahora 1 sola columna: Resultado)
+   Encabezado tabla (1 sola columna: Resultado)
    ============================================================ */
 function actualizarEncabezadosTabla() {
   const thR = $('#columna-resultado');
   if (!thR) return;
 
-  const { modo } = state;
-  const { have, want } = getHaveWant();
+  // Mantenemos tu label EXACTO (no lo moví aquí para no tocar comportamiento)
+  // (Pero si quieres, lo hacemos 100% shared también, dime)
+  thR.textContent = getResultadoLabel();
 
-  let label = 'Resultado';
-
-  if (modo === 'recibir') {
-    if (have === 'PEN' && want === 'USD') label = '$ Recibidos';
-    if (have === 'USD' && want === 'PEN') label = 'S/. Recibidos';
-  } else {
-    if (have === 'PEN' && want === 'USD') label = 'S/. Necesarios';
-    if (have === 'USD' && want === 'PEN') label = '$ Necesarios';
-  }
-
-  thR.textContent = label;
-
+  // ✅ aplica usa-compra/usa-venta igual en tabla (y también puede usarse en modal)
   const table = document.querySelector('.tabla-casas');
-  if (table) {
-    table.classList.remove('usa-compra', 'usa-venta');
-
-    const { modo } = state;
-    const { have, want } = getHaveWant();
-
-    const usaCompra =
-      (modo === 'recibir' && have === 'USD' && want === 'PEN') ||
-      (modo === 'necesito' && have === 'USD' && want === 'PEN');
-
-    const usaVenta =
-      (modo === 'recibir' && have === 'PEN' && want === 'USD') ||
-      (modo === 'necesito' && have === 'PEN' && want === 'USD');
-
-    if (usaCompra) table.classList.add('usa-compra');
-    if (usaVenta) table.classList.add('usa-venta');
-  }
-
+  applyTableRateModeByConverter(table);
 }
 
 /* ============================================================
-   Recalcular celdas (misma fórmula, 1 sola celda)
+   Recalcular celdas (shared)
    ============================================================ */
 export function recalcularCeldas() {
-  const { monto, modo } = state;
-  if (!monto || monto <= 0) return;
+  // Recalcula SOLO dentro de la tabla home
+  const table = document.querySelector('.tabla-casas');
+  if (!table) return;
 
-  const { have, want } = getHaveWant();
-
-  document.querySelectorAll('.fila-casa').forEach(fila => {
-    const compra = parseFloat(fila.dataset.compra);
-    const venta = parseFloat(fila.dataset.venta);
-
-    const celR = fila.querySelector('.resultado');
-    if (!celR) return;
-
-    celR.textContent = '-';
-
-    if (!Number.isFinite(compra) || !Number.isFinite(venta)) return;
-
-    // Recibir:
-    // - PEN -> USD: recibes USD = monto / venta
-    // - USD -> PEN: recibes PEN = monto * compra
-    if (modo === 'recibir') {
-      if (have === 'PEN' && want === 'USD') {
-        celR.textContent = moneyFmt(monto / venta, 'USD');
-      } else if (have === 'USD' && want === 'PEN') {
-        celR.textContent = moneyFmt(monto * compra, 'PEN');
-      }
-      return;
-    }
-
-    // Necesito:
-    // - PEN -> USD: soles necesarios = monto * venta  (tu lógica original)
-    // - USD -> PEN: dólares necesarios = monto / compra (tu lógica original)
-    if (have === 'PEN' && want === 'USD') {
-      celR.textContent = moneyFmt(monto * venta, 'PEN');
-    } else if (have === 'USD' && want === 'PEN') {
-      celR.textContent = moneyFmt(monto / compra, 'USD');
-    }
-  });
+  recalcResultadosEnContainer(table, '.fila-casa');
 }
-

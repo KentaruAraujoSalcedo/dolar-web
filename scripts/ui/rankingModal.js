@@ -3,12 +3,17 @@
 // ==============================
 
 import { state } from "../state.js";
-import { moneyFmt, rateFmt } from "./format.js";
-import { getHaveWant } from "./haveWant.js";
-import { getCasaLogoSrc, getCasasCatalog } from "./logos.js";
+import { rateFmt } from "./format.js";
+import { getCasasCatalog } from "./logos.js";
 import { withUTM } from "./utm.js";
+import { $ } from "./dom.js";
 
-function $(sel) { return document.querySelector(sel); }
+import {
+  buildCasaCellHTML,
+  getResultadoLabel,
+  applyTableRateModeByConverter,
+  recalcResultadosEnContainer,
+} from "./tableShared.js";
 
 export function initRankingModalUI() {
   const modal = document.getElementById("rankingModal");
@@ -19,7 +24,7 @@ export function initRankingModalUI() {
     const mode = modal.dataset.mode || "venta";
     renderRanking(mode);
     renderMeta();
-    // logos: si ya existen, no los vuelvas a construir
+
     const logosBox = document.getElementById("rankingLogos");
     if (logosBox && !logosBox.dataset.built) {
       renderAllLogos();
@@ -34,12 +39,15 @@ export function initRankingModalUI() {
   let mode = "venta";
   modal.dataset.mode = mode;
 
-  controls.forEach(btn => {
+  controls.forEach((btn) => {
     btn.addEventListener("click", () => {
       mode = btn.dataset.rk === "compra" ? "compra" : "venta";
       modal.dataset.mode = mode;
 
-      controls.forEach(b => b.setAttribute("aria-selected", b === btn ? "true" : "false"));
+      controls.forEach((b) =>
+        b.setAttribute("aria-selected", b === btn ? "true" : "false")
+      );
+
       renderRanking(mode);
     });
   });
@@ -63,7 +71,9 @@ function renderMeta() {
   const totalTxt = Number.isFinite(state?.meta?.total) ? state.meta.total : "—";
   const validasTxt = Number.isFinite(state?.meta?.validas)
     ? state.meta.validas
-    : (Array.isArray(state?.validas) ? state.validas.length : "—");
+    : Array.isArray(state?.validas)
+    ? state.validas.length
+    : "—";
 
   meta.textContent = `Monitoreadas: ${totalTxt} · Válidas hoy: ${validasTxt}`;
   if (metaAll) metaAll.textContent = `${totalTxt} casas`;
@@ -72,8 +82,10 @@ function renderMeta() {
 function getRankingArray(mode) {
   const arr = Array.isArray(state?.validas) ? [...state.validas] : [];
 
-  const onlyScraper = arr.filter(c => (c.source || "").toLowerCase() === "scraper");
-  const clean = onlyScraper.filter(c => String(c.casa).toUpperCase() !== "SUNAT" && (c.slug ?? "") !== "sunat");
+  const onlyScraper = arr.filter((c) => (c.source || "").toLowerCase() === "scraper");
+  const clean = onlyScraper.filter(
+    (c) => String(c.casa).toUpperCase() !== "SUNAT" && (c.slug ?? "").toLowerCase() !== "sunat"
+  );
 
   if (mode === "compra") clean.sort((a, b) => (b.compra ?? 0) - (a.compra ?? 0));
   else clean.sort((a, b) => (a.venta ?? 999) - (b.venta ?? 999));
@@ -94,32 +106,8 @@ function renderRanking(mode) {
     tr.dataset.compra = c.compra;
     tr.dataset.venta = c.venta;
 
-    const casaLabel = String(c.casa || "").trim() || "Casa de cambio";
-    const logoSrc = getCasaLogoSrc(c.casa) || null;
-
-    const urlConUTM = c.url
-      ? withUTM(c.url, {
-          source: "preciodolarhoy",
-          medium: "referral",
-          campaign: "clickout",
-          content: "ranking_modal",
-        })
-      : "";
-
     tr.innerHTML = `
-      <td class="casa">
-        <a class="casa-wrap" href="${urlConUTM}" target="_blank" rel="noopener sponsored" title="${casaLabel}">
-          <span class="casa-logo ${logoSrc ? "" : "is-missing"}" aria-hidden="${logoSrc ? "false" : "true"}">
-            ${
-              logoSrc
-                ? `<img src="${logoSrc}" alt="${casaLabel}" loading="lazy" decoding="async">`
-                : `<span class="logo-fallback" aria-hidden="true">${casaLabel.slice(0, 2).toUpperCase()}</span>`
-            }
-          </span>
-          <span class="casa-name sr-only">${casaLabel}</span>
-          <span class="casa-chevron" aria-hidden="true">▾</span>
-        </a>
-      </td>
+      ${buildCasaCellHTML(c, { content: "ranking_modal", basePath: "" })}
 
       <td class="compra">${rateFmt(c.compra)}</td>
       <td class="venta">${rateFmt(c.venta)}</td>
@@ -129,40 +117,25 @@ function renderRanking(mode) {
     tbody.appendChild(tr);
   }
 
-  // depende del conversor
+  // ✅ label y cálculo, iguales a table.js
   setResultadoLabelRankingModal();
-  recalcularResultadoEnModal();
+  recalcResultadosEnContainer(document.getElementById("rankingModal"));
 
-  // depende del toggle compra/venta
-  setRankingHeaderHighlight(mode);
+  // ✅ IMPORTANTE:
+  // El highlight visual de columnas debe depender del conversor,
+  // igual que en la tabla principal (no del toggle compra/venta).
+  // (Si quieres que el toggle cambie el highlight, dime y lo hacemos sin romper la lógica)
+  const table = document.querySelector("#rankingModal .tabla-casas");
+  applyTableRateModeByConverter(table);
+
+  // si quieres mantener el viejo comportamiento del toggle:
+  // setRankingHeaderHighlight(mode);
 }
 
-function recalcularResultadoEnModal() {
-  const { monto, modo } = state;
-  if (!monto || monto <= 0) return;
-
-  const { have, want } = getHaveWant();
-  const rows = document.querySelectorAll("#rankingModal .fila-casa");
-
-  rows.forEach(fila => {
-    const compra = parseFloat(fila.dataset.compra);
-    const venta = parseFloat(fila.dataset.venta);
-
-    const celR = fila.querySelector(".resultado");
-    if (!celR) return;
-
-    celR.textContent = "-";
-    if (!Number.isFinite(compra) || !Number.isFinite(venta)) return;
-
-    if (modo === "recibir") {
-      if (have === "PEN" && want === "USD") celR.textContent = moneyFmt(monto / venta, "USD");
-      else if (have === "USD" && want === "PEN") celR.textContent = moneyFmt(monto * compra, "PEN");
-      return;
-    }
-
-    if (have === "PEN" && want === "USD") celR.textContent = moneyFmt(monto * venta, "PEN");
-    else if (have === "USD" && want === "PEN") celR.textContent = moneyFmt(monto / compra, "USD");
-  });
+function setResultadoLabelRankingModal() {
+  const thR = document.getElementById("rk-col-resultado");
+  if (!thR) return;
+  thR.textContent = getResultadoLabel();
 }
 
 function renderAllLogos() {
@@ -188,7 +161,6 @@ function renderAllLogos() {
       a.target = "_blank";
       a.rel = "noopener sponsored";
     } else {
-      // sin URL: queda visual pero no clickeable
       a.setAttribute("aria-disabled", "true");
     }
 
@@ -198,39 +170,4 @@ function renderAllLogos() {
 
     box.appendChild(a);
   }
-}
-
-/* ============================================================
-   Encabezado: Resultado (depende del conversor)
-   ============================================================ */
-function setResultadoLabelRankingModal() {
-  const thR = document.getElementById("rk-col-resultado");
-  if (!thR) return;
-
-  const { modo } = state;
-  const { have, want } = getHaveWant();
-
-  let label = "Resultado";
-
-  if (modo === "recibir") {
-    if (have === "PEN" && want === "USD") label = "$ Recibidos";
-    if (have === "USD" && want === "PEN") label = "S/. Recibidos";
-  } else {
-    if (have === "PEN" && want === "USD") label = "S/. Necesarios";
-    if (have === "USD" && want === "PEN") label = "$ Necesarios";
-  }
-
-  thR.textContent = label;
-}
-
-/* ============================================================
-   Highlight header (depende SOLO del toggle del modal)
-   ============================================================ */
-function setRankingHeaderHighlight(mode){
-  const table = document.querySelector("#rankingModal .tabla-casas");
-  if (!table) return;
-
-  // Reutiliza EXACTO el sistema de la tabla principal
-  table.classList.remove("usa-compra", "usa-venta");
-  table.classList.add(mode === "compra" ? "usa-compra" : "usa-venta");
 }

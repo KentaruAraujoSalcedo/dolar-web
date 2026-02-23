@@ -234,27 +234,3 @@ function setRankingHeaderHighlight(mode){
   table.classList.remove("usa-compra", "usa-venta");
   table.classList.add(mode === "compra" ? "usa-compra" : "usa-venta");
 }
-
-/* ============================================================
-
-   ============================================================ */
-
-export function refreshRankingModalIfOpen(){
-  const modal = document.getElementById("rankingModal");
-  if (!modal) return;
-  if (modal.getAttribute("aria-hidden") !== "false") return;
-
-  try {
-    // 1) label del header Resultado (depende del conversor)
-    setResultadoLabelRankingModal();
-
-    // 2) recalcula resultado de filas ya renderizadas
-    recalcularResultadoEnModal();
-
-    // 3) repaint header highlight según el toggle guardado
-    const mode = modal.dataset.mode || "venta";
-    setRankingHeaderHighlight(mode);
-  } catch (e) {
-    console.warn("refreshRankingModalIfOpen falló:", e);
-  }
-}

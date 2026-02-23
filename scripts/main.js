@@ -1,13 +1,14 @@
 // ==============================
 // File: scripts/main.js
 // ==============================
+
 import { state, setState } from './state.js';
 import {
   cargarData,
   cargarSunatUltimos7Dias
 } from './data.js';
 import { initModal } from "./ui/modal.js";
-import { initRankingModalUI, refreshRankingModalIfOpen } from "./ui/rankingModal.js";
+import { initRankingModalUI } from "./ui/rankingModal.js";
 
 import {
   initStaticUI,
@@ -25,25 +26,26 @@ window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
   try {
+
     // 1) UI estática (fallback)
     initStaticUI();
-    // Modal SUNAT (abre/cierra)
+
+    // Modal SUNAT
     initModal({
       modalId: "chartModal",
       openerSelector: "#btn-open-chart",
     });
 
-    // Modal ranking (abre/cierra)
+    // Modal ranking
     initModal({
       modalId: "rankingModal",
       openerSelector: "#btn-open-ranking",
       onOpen: () => {
-        // Renderiza contenido del ranking cuando se abre
         initRankingModalUI();
       }
     });
 
-    // ✅ Autofocus SOLO en desktop (evita teclado en móvil)
+    // Autofocus SOLO desktop
     const montoFocus = document.getElementById("monto");
     if (montoFocus && window.matchMedia("(min-width: 700px)").matches) {
       montoFocus.focus();
@@ -69,17 +71,17 @@ async function init() {
       monto: Number.isFinite(montoIni) ? montoIni : NaN
     });
 
-    // 3) Datos (tasas + SUNAT)
+    // 3) Cargar datos
     await cargarData();
     pintarActualizado(state.meta);
 
-    // 4) Header: mejores valores globales
+    // 4) Header mejores valores
     pintarMejoresHeader();
 
-    // 5) Render inicial completo
+    // 5) Render inicial
     renderAll();
 
-    // 6) Modal gráfico: cargar y dibujar SOLO cuando se abre
+    // 6) Modal gráfico
     const btnOpenChart = document.getElementById('btn-open-chart');
 
     btnOpenChart?.addEventListener('click', async () => {
@@ -94,6 +96,7 @@ async function init() {
         setTimeout(() => {
           state.chart?.resize?.();
         }, 0);
+
       } catch (e) {
         console.warn('SUNAT mensual (últimos 7) no disponible:', e);
       }
@@ -109,14 +112,18 @@ async function init() {
         renderBestDeal();
         pintarMejoresHeader();
 
-        // solo refresca si está abierto, sin re-render pesado
-        refreshRankingModalIfOpen();
+        // Refresca ranking SOLO si está abierto
+        const rk = document.getElementById("rankingModal");
+        if (rk && rk.getAttribute("aria-hidden") === "false") {
+          initRankingModalUI();
+        }
       },
     });
 
-    // ==================================================
-    // Render helpers
-    // ==================================================
+    // ==============================
+    // Helpers internos
+    // ==============================
+
     function renderAll() {
       syncMontoUI();
       renderSunat();
@@ -142,20 +149,16 @@ async function init() {
       }
     }
 
-    // Pinta "Actualizado" con la fecha REAL del scrape
     function pintarActualizado(meta) {
       const fechaEl = document.getElementById('fecha');
       const horaEl = document.getElementById('hora');
       const timeEl = document.getElementById('updatedAt');
 
       if (!fechaEl || !horaEl || !timeEl) return;
-
-      // si no hay meta real del scraper, no tocamos nada
       if (!meta?.run_at_utc) return;
 
       const d = new Date(meta.run_at_utc);
 
-      // Texto visible (humano)
       fechaEl.textContent = d.toLocaleDateString('es-PE', {
         year: 'numeric',
         month: 'long',
@@ -167,13 +170,13 @@ async function init() {
         minute: '2-digit',
       });
 
-      // Atributo SEO (Google)
       timeEl.setAttribute('datetime', d.toISOString());
     }
 
     // ==============================
-    // SEO Tabs (Guía rápida)
+    // SEO Tabs
     // ==============================
+
     (function initSeoTabs() {
       const root = document.querySelector('.seo-tabs');
       if (!root) return;
@@ -203,7 +206,9 @@ async function init() {
       };
 
       tabs.forEach((t) => {
-        t.addEventListener('click', () => setActive(Number(t.dataset.seoTab)));
+        t.addEventListener('click', () => {
+          setActive(Number(t.dataset.seoTab));
+        });
       });
 
       btnPrev?.addEventListener('click', () => setActive(idx - 1));
@@ -211,3 +216,8 @@ async function init() {
 
       setActive(0);
     })();
+
+  } catch (e) {
+    console.error('Error inicializando la app:', e);
+  }
+}

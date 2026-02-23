@@ -2,6 +2,7 @@
 // File: scripts/ui/rankingModal.js
 // ==============================
 
+import { state } from "../state.js";
 import { rateFmt } from "./format.js";
 import { getCasasCatalog } from "./logos.js";
 import { withUTM } from "./utm.js";

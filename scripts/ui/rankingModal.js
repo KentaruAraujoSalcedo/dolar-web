@@ -226,12 +226,13 @@ function setResultadoLabelRankingModal() {
 /* ============================================================
    Highlight header (depende SOLO del toggle del modal)
    ============================================================ */
-function setRankingHeaderHighlight(mode) {
+function setRankingHeaderHighlight(mode){
   const table = document.querySelector("#rankingModal .tabla-casas");
   if (!table) return;
 
-  table.classList.remove("rk-compra", "rk-venta");
-  table.classList.add(mode === "compra" ? "rk-compra" : "rk-venta");
+  // Reutiliza EXACTO el sistema de la tabla principal
+  table.classList.remove("usa-compra", "usa-venta");
+  table.classList.add(mode === "compra" ? "usa-compra" : "usa-venta");
 }
 
 /* ============================================================

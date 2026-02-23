@@ -1,11 +1,10 @@
 // ==============================
 // File: scripts/ui/tableShared.js
 // Shared helpers para tabla home + ranking modal
-// - render celda CASA
 // - 1 sola fórmula de resultado
-// - 1 solo label Resultado
-// - 1 sola lógica usa-compra/usa-venta
-// - 1 solo pipeline limpio + sort (para consistencia)
+// - 1 solo label de Resultado
+// - 1 sola lógica de usa-compra / usa-venta
+// - 1 solo builder de celda "casa" (logo + UTM + fallback)
 // ==============================
 
 import { state } from "../state.js";
@@ -14,9 +13,10 @@ import { moneyFmt } from "./format.js";
 import { getCasaLogoSrc } from "./logos.js";
 import { withUTM } from "./utm.js";
 
-/* ============================================================
-   Resultado (misma fórmula en todo el sitio)
-   ============================================================ */
+/**
+ * Calcula el texto de resultado según monto/modo/have/want y compra/venta.
+ * Devuelve string listo para pintar (o "-" si no aplica).
+ */
 export function calcResultadoTexto({ compra, venta }) {
   const { monto, modo } = state;
   if (!monto || monto <= 0) return "-";
@@ -42,24 +42,9 @@ export function calcResultadoTexto({ compra, venta }) {
   return "-";
 }
 
-export function recalcResultadosEnContainer(containerEl, rowSelector = ".fila-casa") {
-  if (!containerEl) return;
-
-  const rows = containerEl.querySelectorAll(rowSelector);
-  rows.forEach((fila) => {
-    const compra = Number(fila.dataset.compra);
-    const venta = Number(fila.dataset.venta);
-
-    const celR = fila.querySelector(".resultado");
-    if (!celR) return;
-
-    celR.textContent = calcResultadoTexto({ compra, venta });
-  });
-}
-
-/* ============================================================
-   Label Resultado (1 sola fuente de verdad)
-   ============================================================ */
+/**
+ * Label de la columna Resultado (igual que table.js)
+ */
 export function getResultadoLabel() {
   const { modo } = state;
   const { have, want } = getHaveWant();
@@ -77,9 +62,10 @@ export function getResultadoLabel() {
   return label;
 }
 
-/* ============================================================
-   Highlight de columna (usa-compra / usa-venta) según conversor
-   ============================================================ */
+/**
+ * Aplica clases usa-compra / usa-venta al <table> según el conversor (igual que tu tabla)
+ * OJO: Esto depende del conversor, NO del toggle compra/venta del modal.
+ */
 export function applyTableRateModeByConverter(tableEl) {
   if (!tableEl) return;
 
@@ -100,9 +86,11 @@ export function applyTableRateModeByConverter(tableEl) {
   if (usaVenta) tableEl.classList.add("usa-venta");
 }
 
-/* ============================================================
-   Celda CASA (logo + fallback + UTM)
-   ============================================================ */
+/**
+ * Builder de la celda CASA (logo + fallback + UTM)
+ * options.content: para diferenciar en analytics/UTM (tabla, ranking_modal, etc)
+ * options.basePath: para GH Pages (si necesitas prefijo de ruta)
+ */
 export function buildCasaCellHTML(c, { content = "tabla", basePath = "" } = {}) {
   const casaLabel = String(c?.casa || "").trim() || "Casa de cambio";
 
@@ -128,6 +116,7 @@ export function buildCasaCellHTML(c, { content = "tabla", basePath = "" } = {}) 
               : `<span class="logo-fallback" aria-hidden="true">${casaLabel.slice(0, 2).toUpperCase()}</span>`
           }
         </span>
+
         <span class="casa-name sr-only">${casaLabel}</span>
         <span class="casa-chevron" aria-hidden="true">▾</span>
       </a>
@@ -135,9 +124,40 @@ export function buildCasaCellHTML(c, { content = "tabla", basePath = "" } = {}) 
   `;
 }
 
-/* ============================================================
-   Dataset limpio + sort (consistencia tabla + modal)
-   ============================================================ */
+/**
+ * Recalcula resultados dentro de un contenedor (tabla home o modal).
+ * rowSelector = ".fila-casa"
+ */
+export function recalcResultadosEnContainer(containerEl, rowSelector = ".fila-casa") {
+  if (!containerEl) return;
+
+  const rows = containerEl.querySelectorAll(rowSelector);
+  rows.forEach((fila) => {
+    const compra = parseFloat(fila.dataset.compra);
+    const venta = parseFloat(fila.dataset.venta);
+
+    const celR = fila.querySelector(".resultado");
+    if (!celR) return;
+
+    celR.textContent = calcResultadoTexto({ compra, venta });
+  });
+}
+
+// ============================================================
+// Shared: obtener dataset limpio + ordenado (tabla y modal)
+// ============================================================
+
+/**
+ * Devuelve array limpio:
+ * - solo source="scraper"
+ * - sin SUNAT
+ * - compra/venta numéricas (Number)
+ * - filtra solo finitas
+ *
+ * fallbackToTasas:
+ *  - true  => si state.validas está vacío, usa state.tasas
+ *  - false => usa solo state.validas
+ */
 export function getCasasValidasLimpias({ fallbackToTasas = false } = {}) {
   const base =
     Array.isArray(state?.validas) && state.validas.length
@@ -145,20 +165,22 @@ export function getCasasValidasLimpias({ fallbackToTasas = false } = {}) {
       : (fallbackToTasas && Array.isArray(state?.tasas) ? state.tasas : []);
 
   return base
-    .filter((c) => (c?.source || "").toLowerCase() === "scraper")
-    .filter(
-      (c) =>
-        String(c?.casa || "").toUpperCase() !== "SUNAT" &&
-        String(c?.slug || "").toLowerCase() !== "sunat"
-    )
-    .map((c) => ({
+    .filter(c => (c?.source || "").toLowerCase() === "scraper")
+    .filter(c => String(c?.casa || "").toUpperCase() !== "SUNAT" && String(c?.slug || "").toLowerCase() !== "sunat")
+    .map(c => ({
       ...c,
       compra: Number(c?.compra),
       venta: Number(c?.venta),
     }))
-    .filter((c) => Number.isFinite(c.compra) && Number.isFinite(c.venta));
+    .filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
 }
 
+/**
+ * Ordena casas por:
+ * - "auto"  : igual que tu tabla (depende del conversor: state.modo + have/want)
+ * - "compra": compra desc (mejor compra primero)
+ * - "venta" : venta asc (mejor venta primero)
+ */
 export function sortCasas(casas, sortBy = "auto") {
   const arr = Array.isArray(casas) ? [...casas] : [];
 
@@ -172,7 +194,7 @@ export function sortCasas(casas, sortBy = "auto") {
     return arr;
   }
 
-  // sortBy === "auto" (igual que tu criterio de tabla)
+  // sortBy === "auto" (misma lógica que ordenarValidasSegunModo)
   const { modo } = state;
   const { have, want } = getHaveWant();
 
@@ -180,6 +202,7 @@ export function sortCasas(casas, sortBy = "auto") {
     if (have === "USD" && want === "PEN") arr.sort((a, b) => b.compra - a.compra);
     else if (have === "PEN" && want === "USD") arr.sort((a, b) => a.venta - b.venta);
   } else {
+    // necesito
     if (want === "USD" && have === "PEN") arr.sort((a, b) => a.venta - b.venta);
     else if (want === "PEN" && have === "USD") arr.sort((a, b) => b.compra - a.compra);
   }

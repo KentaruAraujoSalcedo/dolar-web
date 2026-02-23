@@ -1,0 +1,413 @@
+/* =========================================================
+   COMPONENTS / CALCULATOR.CSS
+   Conversor (estructura) — sin efectos caros
+   ---------------------------------------------------------
+   ✅ Layout / spacing / tamaños
+   ✅ Estados estructurales
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO sombras
+   ⚠️ NO gradientes
+   ⚠️ NO colores hardcodeados
+   ⚠️ Animaciones decorativas -> effects/effects.css
+   ========================================================= */
+
+
+/* ======================================================
+   WRAPPER
+   ====================================================== */
+
+.conversor-wrapper-modern{
+  padding-bottom: var(--space-4);
+}
+
+
+/* ======================================================
+   MODO (barra segmentada)
+   ====================================================== */
+
+.modo-opciones{
+  display:flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  margin: 0 var(--space-7);
+
+  border-radius: var(--radius-md);
+
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+}
+
+.radio-pill{
+  position:relative;
+  flex:1;
+  cursor:pointer;
+}
+
+/* Input invisible: se usa para :checked pero NO captura el mouse */
+.radio-pill input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+}
+
+.radio-pill span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  height:40px;
+  padding:0 12px;
+  border-radius: var(--radius-sm);
+
+  font-weight: var(--fw-900);
+  font-size: 0.88rem;
+  color: var(--c-text);
+
+  background: transparent;
+  border:1px solid transparent;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition:
+    background .14s ease,
+    border-color .14s ease,
+    transform .08s ease,
+    color .14s ease;
+}
+
+.radio-pill input:checked + span{
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+  color: var(--c-strong);
+  font-weight: var(--fw-950);
+}
+
+/* Active (más estable que input:active) */
+.radio-pill:active span{
+  transform: translateY(1px);
+}
+
+/* Hover (cuando NO está seleccionado) */
+.modo-opciones .radio-pill:hover input:not(:checked) + span{
+  background: var(--c-hover-soft);
+  color: var(--c-strong);
+  transform: translateY(-1px);
+}
+.modo-opciones .radio-pill:active input:not(:checked) + span{
+  transform: translateY(0);
+}
+
+
+/* ======================================================
+   QUICK AMOUNTS (chips)
+   ====================================================== */
+
+.quick-row{
+  display:flex;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-7) var(--space-3);
+  flex-wrap:wrap;
+}
+
+/* Overrides del chip SOLO en el conversor */
+.quick-row .chip{
+  font-size: 0.84rem;
+}
+
+/* Chip especial del conversor (mantiene tu clase) */
+.quick-row .quick-amt{
+  appearance:none;
+  border-radius: 999px;
+  padding: 7px 11px;
+
+  font-weight: var(--fw-900);
+  font-size: 0.84rem;
+  line-height: 1;
+
+  cursor:pointer;
+
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  color: var(--c-strong);
+
+  transition:
+    transform .08s ease,
+    filter .12s ease,
+    background .12s ease,
+    border-color .12s ease;
+}
+
+.quick-row .chip:hover,
+.quick-row .quick-amt:hover{
+  filter: brightness(1.02);
+}
+
+.quick-row .chip:active,
+.quick-row .quick-amt:active{
+  transform: translateY(1px);
+}
+
+/* Estado “seleccionado” (opcional) */
+.quick-row .chip.is-active,
+.quick-row .quick-amt.is-active{
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+  color: var(--c-strong);
+}
+
+/* Hover “verde” (tema define tonos) */
+.quick-row .quick-amt:hover{
+  background: var(--c-quick-hover-bg);
+  border-color: var(--c-quick-hover-border);
+  color: var(--c-quick-hover-text);
+  transform: translateY(-1px);
+}
+.quick-row .quick-amt:active{
+  transform: translateY(0);
+}
+
+
+/* ======================================================
+   FILA PRO (Monto + Monedas)
+   ====================================================== */
+
+.fila-triple{
+  display:grid;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-7) 0;
+  align-items:end;
+}
+
+.fila-triple--pro{
+  grid-template-columns: 1.35fr 1.65fr;
+}
+
+.grupo-campo{
+  display:flex;
+  flex-direction:column;
+  gap: var(--space-3);
+}
+
+.grupo-campo label{
+  font-size: 0.78rem;
+  font-weight: var(--fw-900);
+  color: var(--c-muted);
+}
+
+/* Prioridad visual: Monto primero */
+.conversor-wrapper-modern .gc-monto label{
+  color: var(--c-strong);
+  font-size: 0.82rem;
+}
+
+/* Input con prefijo (Monto) */
+.input-with-prefix{
+  display:flex;
+  align-items:center;
+  gap: var(--space-3);
+
+  height:44px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+
+  background: var(--c-surface-1);
+  border: 1px solid var(--c-border);
+}
+
+.input-with-prefix .prefix{
+  font-weight: var(--fw-900);
+  color: var(--c-muted);
+  opacity: .75;
+}
+
+.input-with-prefix input{
+  border:0;
+  outline:0;
+  background:transparent;
+  width:100%;
+
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  font-size: 1rem;
+}
+
+.input-with-prefix input::placeholder{
+  color: var(--c-muted);
+  font-weight: var(--fw-800);
+}
+
+.input-with-prefix.is-empty .prefix{
+  opacity: .60;
+}
+
+
+/* ======================================================
+   LÍNEA PRO DE MONEDAS
+   ====================================================== */
+
+.gc-moneda-pro > label{ display:none; }
+
+.gc-moneda-pro .currency-line{
+  display:flex;
+  align-items:center;
+  gap: var(--space-4);
+}
+
+.cur-pill{
+  flex:1;
+  height:44px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding: 0 10px;
+  border-radius: var(--radius-md);
+
+  font-weight: var(--fw-900);
+  font-size: 0.84rem;
+  color: var(--c-strong);
+  white-space: nowrap;
+
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+
+  transition: transform .18s ease, filter .12s ease;
+}
+
+.cur-pill--ghost{
+  opacity: .90;
+  color: var(--c-text);
+}
+
+/* Swap */
+.swap{
+  height:44px;
+  width:44px;
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--c-border);
+
+  background: var(--c-surface-1);
+  color: var(--c-strong);
+
+  font-size: 1.05rem;
+  cursor:pointer;
+
+  transition: transform .18s ease, filter .12s ease;
+}
+
+.swap:hover{ filter: brightness(1.02); }
+.swap:active{ transform: translateY(1px); }
+
+/* Animación swap: solo transform (barato) */
+.currency-line.is-swap .swap{ transform: rotate(180deg); }
+.currency-line.is-swap .cur-pill{ transform: translateY(-1px); }
+
+
+/* ======================================================
+   RESULTADO + NOTA
+   ====================================================== */
+
+.resultado-modern{
+  margin: var(--space-5) var(--space-7) 0;
+  padding: 10px 12px;
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--c-result-border);
+
+  background: var(--c-result-bg);
+  color: var(--c-result-text);
+
+  font-weight: var(--fw-900);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.fineprint{
+  margin: var(--space-3) var(--space-7) 0;
+  font-size: var(--fs-12);
+  color: var(--c-muted);
+}
+
+
+/* ======================================================
+   FOCUS (theme define ring)
+   ====================================================== */
+
+.radio-pill input:focus-visible + span,
+.swap:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+.input-with-prefix:focus-within{
+  border-color: var(--c-focus-border);
+  box-shadow: 0 0 0 2px var(--c-focus-ring-soft);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* 1100px — (no aplica aquí por ahora) */
+@media (max-width:1100px){
+  /* vacío intencional */
+}
+
+/* 700px — mobile */
+@media (max-width:700px){
+
+  .fila-triple--pro{
+    grid-template-columns: 1fr;
+  }
+
+  .gc-moneda-pro{
+    margin-top: var(--space-4);
+  }
+
+  /* Selector de modo más compacto */
+  .modo-opciones{
+    margin: 0 var(--space-6);
+    padding: 7px;
+  }
+
+  .radio-pill span{
+    height: 32px;
+    font-size: 0.78rem;
+    padding: 0 8px;
+  }
+
+  /* Chips un pelín más compactos */
+  .quick-row{
+    padding: var(--space-5) var(--space-6) var(--space-3);
+  }
+
+  /* Resultado: menos “alto” */
+  .resultado-modern{
+    margin: var(--space-5) var(--space-6) 0;
+  }
+
+  .fineprint{
+    margin: var(--space-3) var(--space-6) 0;
+  }
+}
+
+/* 360px — mobile pequeño */
+@media (max-width:360px){
+
+  .quick-row{
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-6) var(--space-2);
+  }
+
+  .quick-row .quick-amt{
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+}

@@ -1,0 +1,81 @@
+/* =========================================================
+   EFFECTS / EFFECTS.CSS
+   Animaciones decorativas opcionales
+   ---------------------------------------------------------
+   ✅ Solo opacity + transform (barato)
+   ✅ Sin blur / sin filter / sin repaints caros
+   ✅ Apagado en mobile (<=1100px)
+   ✅ Respeta prefers-reduced-motion
+   ========================================================= */
+
+
+/* ======================================================
+   1) FADE UP (entrada suave)
+   ====================================================== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicación ligera a bloques principales */
+.center,
+.best-deal,
+.panel{
+  animation: fadeUp .45s ease both;
+}
+
+
+/* ======================================================
+   2) FOCUS PULSE (muy sutil)
+   ====================================================== */
+
+@keyframes focusPulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--c-focus-ring);
+  }
+  100% {
+    box-shadow: 0 0 0 6px rgba(37,99,235,0);
+  }
+}
+
+/* Solo en elementos clave */
+.btn-primary:focus-visible,
+.btn-link:focus-visible{
+  animation: focusPulse .35s ease;
+}
+
+
+/* ======================================================
+   3) MOBILE POLICY (performance)
+   ====================================================== */
+
+@media (max-width:1100px){
+
+  /* Apagar animaciones decorativas */
+  .center,
+  .best-deal,
+  .panel,
+  .btn-primary:focus-visible,
+  .btn-link:focus-visible{
+    animation: none !important;
+  }
+}
+
+
+/* ======================================================
+   4) ACCESSIBILITY
+   ====================================================== */
+
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation: none !important;
+    transition: none !important;
+  }
+}

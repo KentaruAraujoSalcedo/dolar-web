@@ -1,0 +1,509 @@
+/* =========================================================
+   THEMES / THEME-BASE.CSS
+   Production-match theme (visual only)
+   ---------------------------------------------------------
+   ✅ Colores, superficies, borders, sombras, glass
+   ✅ Visual exacto de bloques (SEO/Calculator/Best/Sunat/etc.)
+   ✅ Mobile policy <=1100: blur OFF (anti-bugs + performance)
+   ---------------------------------------------------------
+   ⚠️ NO layout estructural
+   ⚠️ NO mix-blend-mode
+   ⚠️ NO overlays fixed
+   ========================================================= */
+
+
+/* ======================================================
+   1) ROOT TOKENS (VISUAL)
+   ====================================================== */
+
+:root{
+  /* Marca (como tu base.css fuente) */
+  --brand-blue-deep: #0B2C4A; /* “precio dólar” */
+  --brand-blue: #2563EB;      /* “.pe” */
+  --brand-green: #16A34A;     /* “hoy” */
+
+  /* Neutros (como tu fuente) */
+  --ink-900: #0b1b2b;
+  --ink-800: #1F2937;
+  --ink-700: #334155;
+  --ink-600: #475569;
+  --ink-500: #64748B;
+
+  /* Alias para el sistema themeable (lo que usan tus CSS refactor) */
+  --c-strong: var(--ink-900);
+  --c-text:   var(--ink-700);
+  --c-muted:  var(--ink-600);
+
+  --c-link: var(--brand-blue);
+  --c-link-hover-bg: rgba(37, 99, 235, .10);
+
+  /* Surfaces/borders base (match fuente) */
+  --c-surface-1: rgba(255, 255, 255, .40); /* panel */
+  --c-surface-2: rgba(255, 255, 255, .55); /* chips/small cards */
+  --c-border: rgba(255, 255, 255, .42);
+  --c-border-soft: rgba(255, 255, 255, .30);
+
+  /* Shadows (match fuente) */
+  --shadow-soft: 0 14px 40px rgba(2, 6, 23, .10);
+  --shadow-strong: 0 26px 70px rgba(2, 6, 23, .14);
+
+  /* Focus */
+  --c-focus-ring: rgba(37,99,235,.35);
+  --c-focus-ring-soft: rgba(37,99,235,.20);
+  --c-focus-border: rgba(37,99,235,.35);
+
+  /* Glass tokens (match fuente) */
+  --glass-bg: rgba(255, 255, 255, .26);
+  --glass-border: rgba(255, 255, 255, .42);
+  --glass-blur: 18px;
+
+  /* Fondo de página (match layout.css fuente) + textura segura
+     Nota: en fuente la textura era .05 con opacity .16 (efectivo ~0.008)
+     Aquí la integramos directo al background (sin fixed/mix-blend). */
+  --c-page-bg:
+    repeating-linear-gradient(135deg,
+      rgba(255,255,255,.008) 0px,
+      rgba(255,255,255,.008) 2px,
+      transparent 2px,
+      transparent 12px),
+    radial-gradient(900px 420px at 18% 2%, rgba(99, 102, 241, .18), transparent 60%),
+    radial-gradient(950px 460px at 82% 6%, rgba(34, 197, 94, .12), transparent 62%),
+    radial-gradient(1200px 720px at 50% 100%, rgba(59, 130, 246, .12), transparent 58%),
+    linear-gradient(180deg, #EEF2FF 0%, #F8FAFC 55%, #EEF6FF 100%);
+
+  /* Accent checkbox */
+  --c-accent: var(--brand-green);
+
+  /* Botón primario (match look fuente) */
+  --c-btn-primary-bg: linear-gradient(180deg, #1E7A3B 0%, #166534 100%);
+  --c-btn-primary-text: #fff;
+
+  /* SUNAT link soft */
+  --c-link-soft-bg: rgba(37,99,235,.08);
+  --c-link-soft-bg-hover: rgba(37,99,235,.12);
+
+  /* Best deal (match fuente) */
+  --c-best-border: rgba(34, 197, 94, .18);
+  --c-best-head-bg: rgba(22, 163, 74, .10);
+  --c-best-tag-bg: rgba(34, 197, 94, .14);
+  --c-best-tag-border: rgba(34, 197, 94, .22);
+  --c-best-tag-text: #14532D;
+
+  /* Conversor resultado */
+  --c-result-bg: rgba(22,163,74,.10);
+  --c-result-border: rgba(22,163,74,.22);
+  --c-result-text: #14532D;
+
+  /* Quick hover */
+  --c-quick-hover-bg: rgba(22,163,74,.12);
+  --c-quick-hover-border: rgba(22,163,74,.35);
+  --c-quick-hover-text: #14532D;
+
+  /* Tabla */
+  --c-table-head-bg: rgba(255,255,255,.55);
+  --c-table-row-bg: rgba(255,255,255,.18);
+  --c-table-row-hover-bg: rgba(255,255,255,.28);
+  --c-logo-bg: rgba(255,255,255,.55);
+
+  --c-buy: #14532D;
+  --c-sell: #7F1D1D;
+
+  --c-winner-bg: rgba(16,185,129,.10);
+  --c-winner-border: rgba(22,163,74,.22);
+  --c-winner-hover-bg: rgba(16,185,129,.14);
+
+  --c-col-highlight-buy-bg: rgba(22,163,74,.12);
+  --c-col-highlight-buy-line: rgba(22,163,74,.55);
+  --c-col-highlight-sell-bg: rgba(220,38,38,.10);
+  --c-col-highlight-sell-line: rgba(220,38,38,.50);
+
+  --c-badge-bg: rgba(59,130,246,.12);
+  --c-badge-border: rgba(59,130,246,.22);
+  --c-badge-text: var(--ink-900);
+
+  /* Scrollbar */
+  --c-scroll-thumb: rgba(2,6,23,.18);
+  --c-scroll-track: rgba(255,255,255,.35);
+  --c-scroll-track-border: rgba(255,255,255,.55);
+
+  /* SEO tabs active */
+  --c-tab-active-bg: rgba(37,99,235,.10);
+  --c-tab-active-border: rgba(37,99,235,.35);
+
+  /* Ads placeholders */
+  --c-ad-bg: rgba(255,255,255,.55);
+  --c-ad-border: rgba(255,255,255,.65);
+  --c-ad-label: rgba(15,23,42,.55);
+  --c-ad-note: rgba(15,23,42,.45);
+  --c-ad-chip-bg: rgba(255,255,255,.55);
+  --c-ad-chip-border: rgba(255,255,255,.70);
+
+  /* Cookies */
+  --shadow-cookie: 0 10px 30px rgba(0,0,0,.35);
+  --c-cookie-bg: rgba(17,17,17,.96);
+  --c-cookie-text: #fff;
+  --c-cookie-link: #60a5fa;
+  --c-cookie-btn-bg: #374151;
+  --c-cookie-btn-text: #fff;
+  --c-cookie-accept-bg: #2563EB;
+  --c-cookie-accept-text: #fff;
+  --c-cookie-reject-bg: #374151;
+  --c-cookie-reject-text: #fff;
+
+  /* Modal */
+  --shadow-modal: 0 30px 80px rgba(0,0,0,.35);
+  --c-modal-overlay: rgba(15,23,42,.55);
+  --c-modal-bg: #fff;
+  --c-modal-head-bg: linear-gradient(180deg,#FFFFFF 0%, #F7FAFF 100%);
+
+  /* Static quote */
+  --c-quote-bg: rgba(255,255,255,.20);
+  --c-quote-border: rgba(37,99,235,.35);
+}
+
+
+/* ======================================================
+   2) GLOBAL VISUAL HOOKS
+   ====================================================== */
+
+::selection{
+  background: rgba(37,99,235,.22);
+  color: var(--ink-900);
+}
+
+/* center/panel visuals (match fuente exacto) */
+.center{
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-strong);
+
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+}
+
+.panel{
+  background: rgba(255, 255, 255, .40);
+  border: 1px solid rgba(255, 255, 255, .42);
+  box-shadow: var(--shadow-soft);
+
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+
+
+/* ======================================================
+   3) PILLS / CHIP (match fuente)
+   ====================================================== */
+
+/* pills: en fuente tenían shadow + blur + opacidades específicas */
+.pdh-pill{
+  background: rgba(255, 255, 255, .62);
+  border: 1px solid rgba(255, 255, 255, .65);
+  box-shadow: 0 10px 22px rgba(2, 6, 23, .08);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* chip: en fuente NO tenía blur/shadow por defecto */
+.chip{
+  background: rgba(255, 255, 255, .55);
+  border: 1px solid rgba(255, 255, 255, .65);
+  color: var(--brand-blue-deep);
+}
+
+
+/* ======================================================
+   4) SEO TABS (match fuente exacto)
+   ====================================================== */
+
+.seo-tabs{
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  box-shadow: none;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.seo-tabs__title{
+  color: var(--ink-900);
+}
+
+.seo-tabs__arrow{
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.60);
+  color: var(--ink-700);
+}
+
+.seo-tabs__tab{
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.60);
+  color: var(--ink-700);
+}
+
+.seo-tabs__tab.is-active{
+  background: rgba(37,99,235,.10);
+  border-color: rgba(37,99,235,.35);
+  color: var(--ink-900);
+}
+
+
+/* ======================================================
+   5) SEO INTRO + FAQ (match fuente exacto)
+   ====================================================== */
+
+.seo-intro details{
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.seo-faq{
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  box-shadow: none;
+
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.seo-faq h2{
+  color: var(--ink-700);
+  opacity: .85;
+}
+
+.seo-faq details{
+  background: rgba(255,255,255,.22);
+  border: 1px solid rgba(255,255,255,.30);
+}
+
+
+/* ======================================================
+   6) TABLE (match fuente head glass)
+   ====================================================== */
+
+.tabla-casas thead th{
+  background: rgba(255,255,255,.55);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+
+/* ======================================================
+   7) BEST DEAL (match fuente exacto)
+   ====================================================== */
+
+.best-deal{
+  box-shadow:
+    0 22px 50px rgba(2, 6, 23, .14),
+    0 0 0 6px rgba(34, 197, 94, .06);
+}
+
+/* borde degradado (como fuente) */
+.best-deal::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  padding:1px;
+  border-radius: 18px;
+
+  background: linear-gradient(135deg,
+      rgba(34, 197, 94, .55),
+      rgba(37, 99, 235, .35),
+      rgba(34, 197, 94, .15));
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events:none;
+}
+
+/* glow radial (como fuente) */
+.best-deal::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-90px;
+  top:-110px;
+
+  background: radial-gradient(circle,
+      rgba(34, 197, 94, .22),
+      rgba(34, 197, 94, 0) 60%);
+
+  pointer-events:none;
+}
+
+/* logo drop shadow (como fuente) */
+.best-deal__logo img{
+  filter: drop-shadow(0 10px 18px rgba(2, 6, 23, .12));
+}
+
+
+/* ======================================================
+   8) CALCULATOR (match fuente exacto)
+   ====================================================== */
+
+/* wrapper: la animación fadeUp vive en effects.css */
+.conversor-wrapper-modern{
+  /* sin visual aquí */
+}
+
+/* modo-opciones: exacto del fuente */
+.modo-opciones{
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* pills dentro de modo */
+.radio-pill span{
+  color: var(--ink-700);
+}
+
+.radio-pill input:checked + span{
+  background: rgba(255,255,255,.92);
+  border-color: rgba(255,255,255,.86);
+  box-shadow: 0 10px 22px rgba(2,6,23,.08);
+  color: var(--ink-900);
+}
+
+/* hover no-check */
+.modo-opciones .radio-pill:hover input:not(:checked) + span{
+  background: rgba(59,130,246,.10);
+  color:#1E3A8A;
+  box-shadow: 0 8px 18px rgba(59,130,246,.15);
+}
+
+/* quick-row chip shadow (como fuente) */
+.quick-row .chip{
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+}
+
+/* quick-amt: shadow + blur como fuente */
+.quick-row .quick-amt{
+  border: 1px solid rgba(255,255,255,.78);
+  background: rgba(255,255,255,.55);
+  color: var(--ink-800);
+
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* hover verde (match tu comportamiento) */
+.quick-row .quick-amt:hover{
+  background: rgba(22,163,74,.12);
+  border-color: rgba(22,163,74,.35);
+  color: #14532D;
+}
+
+/* prioridad visual del monto (exacto del fuente) */
+.conversor-wrapper-modern .gc-monto .input-with-prefix{
+  box-shadow: 0 14px 32px rgba(2,6,23,.10);
+  border-color: rgba(37,99,235,.25);
+  background: rgba(255,255,255,.85);
+
+  transition: box-shadow .18s ease, border-color .18s ease, background .18s ease;
+}
+
+/* reduce ruido visual (exacto fuente) */
+.conversor-wrapper-modern .modo-opciones{ opacity: .92; }
+.conversor-wrapper-modern .quick-row{ opacity: .92; }
+
+/* resultado (match fuente) */
+.resultado-modern{
+  background: rgba(22,163,74,.10);
+  border-color: rgba(22,163,74,.22);
+  color: #14532D;
+}
+
+
+/* ======================================================
+   9) FOCUS RING GLOBAL
+   ====================================================== */
+
+.btn-primary:focus-visible,
+.btn-link:focus-visible,
+.sunat-widget__link:focus-visible,
+.chip:focus-visible,
+.seo-tabs__tab:focus-visible,
+.seo-tabs__arrow:focus-visible,
+.tabla-casas .casa-wrap:focus-visible,
+#cookie-banner button:focus-visible,
+.modal__close:focus-visible{
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+
+/* ======================================================
+   10) MOBILE POLICY (<=1100px)
+   - blur OFF + reduce efectos grandes
+   ====================================================== */
+
+@media (max-width:1100px){
+
+  /* Apagar blur (principal anti-bug scroll/zoom) */
+  .center,
+  .panel,
+  .pdh-pill,
+  .seo-tabs,
+  .seo-intro details,
+  .seo-faq,
+  .quick-row .quick-amt,
+  .modo-opciones,
+  .tabla-casas thead th{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* fallback glass seguro */
+  .center{
+    background: rgba(255,255,255,.70);
+    border-color: rgba(255,255,255,.72);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .panel{
+    background: rgba(255,255,255,.72);
+    border-color: rgba(255,255,255,.75);
+    box-shadow: 0 14px 34px rgba(2,6,23,.10);
+  }
+
+  /* best-deal decor grandes OFF (súper seguro) */
+  .best-deal::before,
+  .best-deal::after{
+    display:none;
+  }
+
+  /* sombras livianas en mobile */
+  .pdh-pill,
+  .quick-row .chip,
+  .quick-row .quick-amt,
+  .radio-pill input:checked + span{
+    box-shadow: none;
+  }
+
+  /* monto prioritario sin shadow grande */
+  .conversor-wrapper-modern .gc-monto .input-with-prefix{
+    box-shadow: none;
+  }
+
+  /* En mobile evitamos reducir opacidad (se siente más “lavado”) */
+  .conversor-wrapper-modern .modo-opciones,
+  .conversor-wrapper-modern .quick-row{
+    opacity: 1;
+  }
+}

@@ -1,0 +1,92 @@
+/* =========================================================
+   CORE / LAYOUT-TOKENS.CSS
+   Tokens estructurales globales
+   - Tamaños
+   - Espaciados
+   - Radios
+   - Layout 3 columnas
+   - Z-index
+   ---------------------------------------------------------
+   ⚠️ NO colores
+   ⚠️ NO sombras
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO overlays
+   ========================================================= */
+
+:root{
+
+  /* ======================================================
+     RADII (estructura únicamente)
+     ====================================================== */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 20px;
+  --radius-2xl: 26px;
+
+  /* Compatibilidad con tu CSS actual */
+  --radius: var(--radius-lg);
+
+
+  /* ======================================================
+     SPACING SCALE (estructura)
+     ====================================================== */
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 10px;
+  --space-5: 12px;
+  --space-6: 14px;
+  --space-7: 16px;
+  --space-8: 18px;
+  --space-9: 22px;
+  --space-10: 26px;
+
+
+  /* ======================================================
+     LAYOUT — 3 COLUMNAS (ADS + CENTER + ADS)
+     ====================================================== */
+
+  /* Ancho columnas ads */
+  --ad-col: clamp(240px, 18vw, 320px);
+
+  /* Ancho máximo del contenido central */
+  --center-max: clamp(740px, 60vw, 920px);
+
+  /* Gap entre columnas */
+  --gap: clamp(12px, 1.2vw, 18px);
+
+  /* Padding global página */
+  --page-pad-desktop: 18px;
+  --page-pad-1550: 14px;
+  --page-pad-mobile: 8px;
+
+  /* Padding contenedor central */
+  --center-pad-desktop: 22px;
+  --center-pad-mobile: 12px;
+
+
+  /* ======================================================
+     TABLA (estructura)
+     ====================================================== */
+  --table-max-h: 230px;
+
+
+  /* ======================================================
+     Z-INDEX (estructura, nunca visual)
+     ====================================================== */
+  --z-base: 0;
+  --z-header: 10;
+  --z-sticky: 20;
+  --z-modal: 1000;
+  --z-cookie: 9999;
+
+
+  /* ======================================================
+     BREAKPOINT PRINCIPAL
+     (No se usa directamente en @media porque CSS
+     no permite variables en media queries aún.
+     Se documenta aquí para consistencia.)
+     ====================================================== */
+  --bp-main: 1100px;
+}

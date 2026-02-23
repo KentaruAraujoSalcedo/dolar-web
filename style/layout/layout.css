@@ -1,0 +1,143 @@
+/* =========================================================
+   LAYOUT / LAYOUT.CSS
+   Estructura general + grid + responsive (SOLO estructura)
+   ---------------------------------------------------------
+   ✅ display/grid/flex/spacing/widths
+   ✅ responsive de estructura
+   ---------------------------------------------------------
+   ⚠️ NO backgrounds decorativos
+   ⚠️ NO sombras
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO overlays
+   ========================================================= */
+
+
+/* ======================================================
+   PAGE / SHELL (3 columnas: ads - center - ads)
+   ====================================================== */
+
+.page{
+  min-height: 100vh;
+  padding: var(--page-pad-desktop);
+
+  /* Fondo visual va en theme */
+  background: var(--c-page-bg);
+}
+
+.shell{
+  /* Igual que antes: 2 ads + center + gaps */
+  max-width: calc((var(--ad-col) * 2) + var(--center-max) + (var(--gap) * 2));
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: var(--ad-col) minmax(0, 1fr) var(--ad-col);
+  gap: var(--gap);
+  align-items: start;
+}
+
+
+/* ======================================================
+   CENTER (contenedor principal)
+   ====================================================== */
+
+.center{
+  min-height: auto;
+  padding: var(--center-pad-desktop);
+  padding-bottom: clamp(8px, 2vh, 16px);
+
+  border-radius: var(--radius-2xl);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+
+  max-width: var(--center-max);
+  margin: 0 auto;
+
+  /* Estilo visual (glass/border/shadow) va en theme */
+}
+
+
+/* ======================================================
+   MAIN GRID (centro)
+   ====================================================== */
+
+.pdh-main{ flex: 0; }
+
+.pdh-main-grid{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 18px;
+  row-gap: 10px;
+  align-items: start;
+
+  grid-template-areas:
+    "pills pills"
+    "ad    ad"
+    "calc  best"
+    "table best"
+    "table sunat"
+    "final final";
+}
+
+/* Áreas */
+.pdh-pills{ grid-area: pills; }
+.conversor-wrapper-modern{ grid-area: calc; }
+.best-deal{ grid-area: best; }
+.casas-cambio{ grid-area: table; }
+.sunat-widget{ grid-area: sunat; }
+.ad-inline{ grid-area: ad; }
+.ad-final{ grid-area: final; }
+
+
+/* =========================================================
+   RESPONSIVE (estructura)
+   Breakpoint principal: 1100px
+   ========================================================= */
+
+/* 1100px — 3 columnas -> 1 columna (tablet/móvil) */
+@media (max-width:1100px){
+
+  .shell{
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  /* Oculta SOLO los laterales (estructura) */
+  .ads.left,
+  .ads.right{
+    display: none;
+  }
+}
+
+
+/* 700px — mobile (estructura: padding + reordenar grid) */
+@media (max-width:700px){
+
+  .page{ padding: var(--page-pad-mobile); }
+
+  .center{
+    padding: var(--center-pad-mobile);
+    border-radius: var(--radius-xl);
+  }
+
+  /* Mantienes tu comportamiento actual: SUNAT oculto en mobile */
+  .sunat-widget{ display: none; }
+
+  .pdh-main-grid{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "pills"
+      "calc"
+      "ad"
+      "best"
+      "final"
+      "table";
+  }
+}
+
+
+/* 360px — mobile pequeño (estructura opcional) */
+@media (max-width:360px){
+  /* reservado por si luego necesitas micro-ajustes estructurales */
+}

@@ -1,0 +1,263 @@
+/* =========================================================
+   COMPONENTS / MODAL.CSS
+   Modal + Chart (estructura / comportamiento)
+   ---------------------------------------------------------
+   ✅ Overlay + panel + scroll interno
+   ✅ Compatible con tu HTML/JS (aria-hidden)
+   ---------------------------------------------------------
+   ⚠️ NO blur / backdrop-filter
+   ⚠️ NO mix-blend-mode
+   ⚠️ NO sombras hardcodeadas (usar variables)
+   ⚠️ NO overlays raros full-screen con pseudo-elementos
+   ========================================================= */
+/* =========================================================
+   COMPONENTS / MODAL.CSS
+   Base modal (SUNAT + Ranking)
+   ========================================================= */
+
+.modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: var(--z-modal);
+}
+
+/* Tu JS cambia aria-hidden */
+.modal[aria-hidden="false"]{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 10px;
+}
+
+/* Overlay */
+.modal__overlay{
+  position: absolute;
+  inset: 0;
+  background: var(--c-modal-overlay);
+  z-index: 0;
+}
+
+/* Panel */
+.modal__panel{
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+
+  background: var(--c-modal-bg);
+  box-shadow: var(--shadow-modal);
+
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* Header */
+.modal__head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+
+  padding: 12px 16px;
+
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-modal-head-bg);
+}
+
+.modal__title{
+  margin: 0;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-950);
+  color: var(--c-strong);
+}
+
+.modal__meta{
+  margin-top: 2px;
+  font-size: var(--fs-13);
+  color: var(--c-muted);
+}
+
+.modal__close{
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--c-muted);
+}
+
+.modal__close:hover{ color: var(--c-strong); }
+
+.modal__body{
+  padding: 14px 16px 16px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* body locked */
+body.modal-open{ overflow: hidden; }
+
+/* Chart */
+#graficoSunat{
+  width: 100% !important;
+  height: 340px !important;
+  display: block;
+}
+
+.modal__close:focus-visible{
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width:700px){
+  .modal[aria-hidden="false"]{ padding: 10vh 10px; }
+  .modal__panel{ border-radius: var(--radius-md); max-height: 84vh; }
+  #graficoSunat{ height: 280px !important; }
+}
+
+@media (max-width:360px){
+  #graficoSunat{ height: 240px !important; }
+}
+
+/* =========================================================
+   RANKING MODAL (solo #rankingModal)
+   ========================================================= */
+
+#rankingModal .ranking-controls{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Tabla ranking: números alineados */
+#rankingModal .tabla-casas th,
+#rankingModal .tabla-casas td{
+  white-space: nowrap;
+}
+
+#rankingModal .tabla-casas td.compra,
+#rankingModal .tabla-casas td.venta,
+#rankingModal .tabla-casas td.resultado{
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Header resultado alineado */
+#rankingModal #rk-col-resultado{
+  text-align: center;
+}
+
+#rankingModal .tabla-casas-wrapper{
+  margin-bottom: 14px;
+}
+
+/* ✅ Highlight del header SEGÚN el toggle del modal
+   (tu JS debe agregar rk-compra o rk-venta a la tabla)
+*/
+#rankingModal .tabla-casas.rk-compra thead th.compra{
+  background: var(--c-good-soft);
+  border-bottom: 2px solid var(--c-good);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#rankingModal .tabla-casas.rk-venta thead th.venta{
+  background: var(--c-bad-soft);
+  border-bottom: 2px solid var(--c-bad);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Casas monitoreadas */
+#rankingModal .ranking-all{
+  margin-top: 6px;
+}
+
+#rankingModal .ranking-all__head{
+  display:flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0 10px;
+}
+
+#rankingModal .ranking-all__title{
+  margin: 0;
+  font-size: var(--fs-15);
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+#rankingModal .ranking-all__meta{
+  font-size: var(--fs-13);
+  color: var(--c-muted);
+}
+
+/* ✅ Grid estable de logos
+   IMPORTANTE: el div debe ser class="ranking-logos" id="rankingLogos"
+*/
+#rankingModal .ranking-logos{
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width:1100px){
+  #rankingModal .ranking-logos{
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:700px){
+  #rankingModal .ranking-logos{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+#rankingModal .ranking-logos a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  height: 64px;
+  border-radius: var(--radius-md);
+
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  text-decoration: none;
+
+  overflow: hidden;
+  transition: transform .08s ease, filter .12s ease;
+}
+
+#rankingModal .ranking-logos a:hover{ filter: brightness(1.03); }
+#rankingModal .ranking-logos a:active{ transform: translateY(1px); }
+
+#rankingModal .ranking-logos a[aria-disabled="true"]{
+  opacity: .55;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+#rankingModal .ranking-logos img{
+  max-width: 92%;
+  max-height: 70%;
+  object-fit: contain;
+  display:block;
+}
+
+#rankingModal .ranking-logos .logo-fallback{
+  font-weight: var(--fw-900);
+  color: var(--c-muted);
+}

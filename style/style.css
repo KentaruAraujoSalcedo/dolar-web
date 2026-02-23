@@ -1,0 +1,44 @@
+/* =========================================================
+   STYLE / STYLE.CSS
+   Manifest de CSS (orden de carga)
+   ---------------------------------------------------------
+   1) Core (estructura base + tokens)
+   2) Typography
+   3) Layout (estructura macro)
+   4) Components (estructura por componente)
+   5) Pages
+   6) Effects (opcional)
+   7) Theme (todo lo visual + mobile policy)
+   ========================================================= */
+
+/* ---------- CORE ---------- */
+@import url("./core/layout-tokens.css");
+@import url("./core/base.css");
+
+/* ---------- TYPOGRAPHY ---------- */
+@import url("./typography/typography.css");
+
+/* ---------- LAYOUT ---------- */
+@import url("./layout/layout.css");
+@import url("./layout/header.css");
+@import url("./layout/footer.css");
+
+/* ---------- COMPONENTS ---------- */
+@import url("./components/components.css");
+@import url("./components/calculator.css");
+@import url("./components/table.css");
+@import url("./components/seo-tabs.css");
+@import url("./components/ads.css");
+@import url("./components/cookies.css");
+@import url("./components/modal.css");
+
+/* ---------- PAGES ---------- */
+@import url("./pages/static-pages.css");
+
+/* ---------- EFFECTS (opcional, decorativo) ----------
+   Si aún no lo usas, puedes comentarlo sin romper nada. */
+@import url("./effects/effects.css");
+
+/* ---------- THEME (SIEMPRE AL FINAL) ----------
+   Todo lo visual, reemplazable por theme-dark.css en el futuro. */
+@import url("./themes/theme-base.css");

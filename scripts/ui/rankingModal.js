@@ -53,7 +53,7 @@ function renderRankingAuto() {
 
   const filas = sortCasas(
     getCasasValidasLimpias({ fallbackToTasas: false }),
-    auto
+    "auto"
   );
 
   const frag = document.createDocumentFragment();

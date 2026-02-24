@@ -8,4 +8,6 @@ export const moneyFmt = (n, cur) =>
     : '-';
 
 export const rateFmt = (n) =>
-  Number.isFinite(n) ? n.rateFmt() : '–';
+  Number.isFinite(n)
+    ? n.toLocaleString('es-PE', { minimumFractionDigits: 3, maximumFractionDigits: 3 })
+    : '–';

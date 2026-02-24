@@ -2,6 +2,7 @@
 // File: scripts/chart.js
 // ==============================
 import { state } from './state.js';
+import { rateFmt } from './ui/format.js';
 
 export function renderGraficoHistorico(ultimos7) {
   const canvas = document.getElementById('graficoSunat');
@@ -54,7 +55,7 @@ export function renderGraficoHistorico(ultimos7) {
           callbacks: {
             label: (ctx) => {
               const v = ctx.parsed.y;
-              return `${ctx.dataset.label}: S/ ${v.rateFmt()}`;
+              return `${ctx.dataset.label}: S/ ${rateFmt(v)}`;
             }
           }
         }

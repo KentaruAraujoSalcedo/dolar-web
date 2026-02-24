@@ -51,8 +51,10 @@ function renderRankingAuto() {
   const tbody = document.getElementById("rankingBody");
   if (!tbody) return;
 
-  const sortMode = getRecommendedSortMode();
-  const filas = sortCasas(getCasasValidasLimpias({ fallbackToTasas: false }), sortMode);
+  const filas = sortCasas(
+    getCasasValidasLimpias({ fallbackToTasas: false }),
+    auto
+  );
 
   const frag = document.createDocumentFragment();
 

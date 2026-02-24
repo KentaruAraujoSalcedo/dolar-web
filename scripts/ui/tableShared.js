@@ -13,6 +13,9 @@ import { moneyFmt } from "./format.js";
 import { getCasaLogoSrc } from "./logos.js";
 import { withUTM } from "./utm.js";
 
+// Cache por referencia del array base (state.validas o state.tasas)
+const _cleanCasasCache = new WeakMap();
+
 /**
  * Calcula el texto de resultado según monto/modo/have/want y compra/venta.
  * Devuelve string listo para pintar (o "-" si no aplica).
@@ -163,7 +166,13 @@ export function getCasasValidasLimpias({ fallbackToTasas = false } = {}) {
       ? state.validas
       : (fallbackToTasas && Array.isArray(state?.tasas) ? state.tasas : []);
 
-  return base
+  if (!Array.isArray(base) || base.length === 0) return [];
+
+  // ✅ Memo: si ya limpiamos ese mismo array, lo devolvemos tal cual
+  const cached = _cleanCasasCache.get(base);
+  if (cached) return cached;
+
+  const out = base
     .filter(c => (c?.source || "").toLowerCase() === "scraper")
     .filter(c => String(c?.casa || "").toUpperCase() !== "SUNAT" && String(c?.slug || "").toLowerCase() !== "sunat")
     .map(c => ({
@@ -172,6 +181,9 @@ export function getCasasValidasLimpias({ fallbackToTasas = false } = {}) {
       venta: Number(c?.venta),
     }))
     .filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
+
+  _cleanCasasCache.set(base, out);
+  return out;
 }
 
 /**

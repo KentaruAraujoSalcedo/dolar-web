@@ -1,7 +1,7 @@
 // ==============================
 // File: scripts/main.js
 // ==============================
-
+import { getEls } from './ui/els.js';
 import { state, setState } from './state.js';
 import {
   cargarData,
@@ -9,11 +9,13 @@ import {
 } from './data.js';
 import { initModal } from "./ui/modal.js";
 import { initRankingModalUI, refreshRankingModal } from "./ui/rankingModal.js";
+import { renderBestHeader } from './ui/bestHeader.js';
 
 import {
   initStaticUI,
   bindEvents,
   renderTabla,
+  recalcularCeldas,
   renderSunat,
   renderResultadoConversor,
   renderBestDeal,
@@ -43,7 +45,6 @@ function loadChartJsOnce() {
 async function init() {
   try {
 
-    // 1) UI estática (fallback)
     initStaticUI();
 
     // Modal SUNAT
@@ -91,62 +92,67 @@ async function init() {
     await cargarData();
     pintarActualizado(state.meta);
 
-    // 4) Header mejores valores
-    pintarMejoresHeader();
-
     // 5) Render inicial
     renderAll();
 
-// 6) Modal gráfico (lazy-load Chart.js + tu chart.js)
-const btnOpenChart = document.getElementById("btn-open-chart");
+    // 6) Modal gráfico (lazy-load Chart.js + tu chart.js)
+    const btnOpenChart = document.getElementById("btn-open-chart");
 
-let chartModulePromise = null;
+    let chartModulePromise = null;
 
-function loadChartModuleOnce() {
-  if (chartModulePromise) return chartModulePromise;
+    function loadChartModuleOnce() {
+      if (chartModulePromise) return chartModulePromise;
 
-  chartModulePromise = (async () => {
-    // 1) Cargar Chart.js (CDN) solo cuando se necesite
-    await loadChartJsOnce();
+      chartModulePromise = (async () => {
+        // 1) Cargar Chart.js (CDN) solo cuando se necesite
+        await loadChartJsOnce();
 
-    // 2) Importar tu módulo chart.js solo cuando se necesite
-    // (esto evita que el bundle inicial ejecute cosas del gráfico)
-    const mod = await import("./chart.js");
-    return mod;
-  })();
+        // 2) Importar tu módulo chart.js solo cuando se necesite
+        // (esto evita que el bundle inicial ejecute cosas del gráfico)
+        const mod = await import("./chart.js");
+        return mod;
+      })();
 
-  return chartModulePromise;
-}
-
-btnOpenChart?.addEventListener("click", async () => {
-  try {
-    const mod = await loadChartModuleOnce();
-
-    // ✅ Si aún no tenemos historial, lo pedimos 1 sola vez y lo cacheamos en state
-    if (!Array.isArray(state.sunat7) || state.sunat7.length === 0) {
-      const hist = await cargarSunatUltimos7Dias();
-      setState({ sunat7: hist });
+      return chartModulePromise;
     }
 
-    mod.renderSunatChartFromState();
-  } catch (err) {
-    console.error(err);
-    alert("No se pudo cargar el gráfico. Intenta nuevamente.");
-  }
-});
+    btnOpenChart?.addEventListener("click", async () => {
+      try {
+        const mod = await loadChartModuleOnce();
+
+        // ✅ Si aún no tenemos historial, lo pedimos 1 sola vez y lo cacheamos en state
+        if (!Array.isArray(state.sunat7) || state.sunat7.length === 0) {
+          const hist = await cargarSunatUltimos7Dias();
+          setState({ sunat7: hist });
+        }
+
+        mod.renderSunatChartFromState();
+      } catch (err) {
+        console.error(err);
+        alert("No se pudo cargar el gráfico. Intenta nuevamente.");
+      }
+    });
 
     // 7) Eventos reactivos
+
     bindEvents({
-      onChange: () => {
+      onChange: ({ type } = {}) => {
         syncMontoUI();
         renderSunat();
-        renderTabla();
+
+        if (type === 'amount') {
+          // ✅ no reconstruyas filas; solo recalcula "Resultado"
+          recalcularCeldas();
+        } else {
+          // ✅ si cambió modo/moneda/filtros, ahí sí reconstruye
+          renderTabla();
+        }
+
         renderResultadoConversor();
         renderBestDeal();
-        pintarMejoresHeader();
+        renderBestHeader(state);
 
-        // Refresca ranking si ya fue inicializado (abierto al menos 1 vez)
-        refreshRankingModal();
+        refreshRankingModal({ onlyRecalc: type === 'amount' });
       },
     });
 
@@ -160,47 +166,29 @@ btnOpenChart?.addEventListener("click", async () => {
       renderTabla();
       renderResultadoConversor();
       renderBestDeal();
-    }
-
-    function pintarMejoresHeader() {
-      const bc = document.getElementById('best-compra');
-      const bv = document.getElementById('best-venta');
-
-      if (bc) {
-        bc.textContent = Number.isFinite(state.mejorCompra)
-          ? state.mejorCompra.toFixed(3)
-          : '—';
-      }
-
-      if (bv) {
-        bv.textContent = Number.isFinite(state.mejorVenta)
-          ? state.mejorVenta.toFixed(3)
-          : '—';
-      }
+      renderBestHeader(state);
     }
 
     function pintarActualizado(meta) {
-      const fechaEl = document.getElementById('fecha');
-      const horaEl = document.getElementById('hora');
-      const timeEl = document.getElementById('updatedAt');
+      const els = getEls();
 
-      if (!fechaEl || !horaEl || !timeEl) return;
+      if (!els.fecha || !els.hora || !els.updatedAt) return;
       if (!meta?.run_at_utc) return;
 
       const d = new Date(meta.run_at_utc);
 
-      fechaEl.textContent = d.toLocaleDateString('es-PE', {
+      els.fecha.textContent = d.toLocaleDateString('es-PE', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       });
 
-      horaEl.textContent = d.toLocaleTimeString('es-PE', {
+      els.hora.textContent = d.toLocaleTimeString('es-PE', {
         hour: '2-digit',
         minute: '2-digit',
       });
 
-      timeEl.setAttribute('datetime', d.toISOString());
+      els.updatedAt.setAttribute('datetime', d.toISOString());
     }
 
     // ==============================

@@ -8,4 +8,4 @@ export const moneyFmt = (n, cur) =>
     : '-';
 
 export const rateFmt = (n) =>
-  Number.isFinite(n) ? n.toFixed(3) : '–';
+  Number.isFinite(n) ? n.rateFmt() : '–';

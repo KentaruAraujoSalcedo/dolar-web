@@ -54,7 +54,7 @@ export function renderGraficoHistorico(ultimos7) {
           callbacks: {
             label: (ctx) => {
               const v = ctx.parsed.y;
-              return `${ctx.dataset.label}: S/ ${v.toFixed(3)}`;
+              return `${ctx.dataset.label}: S/ ${v.rateFmt()}`;
             }
           }
         }

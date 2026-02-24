@@ -6,6 +6,7 @@ import { getHaveWant } from './haveWant.js';
 import { rateFmt, moneyFmt } from './format.js';
 import { getCasaLogoSrc } from './logos.js';
 import { withUTM } from './utm.js';
+import { getEls } from './els.js';
 
 // ⚠️ GitHub Pages: si tu repo es /precio-dolar-hoy/, pon '/precio-dolar-hoy/'
 const BASE_PATH = '';
@@ -19,12 +20,13 @@ function isSunatRow(x) {
 
 export function renderBestDeal() {
   // IDs reales de tu HTML ✅
-  const nameEl = document.getElementById('best-name');
-  const buyEl = document.getElementById('best-buy');
-  const sellEl = document.getElementById('best-sell');
-  const noteEl = document.getElementById('best-note');
-  const btnEl = document.getElementById('btn-ir-mejor');
-  const logoEl = document.getElementById('best-logo'); // en tu HTML sí existe
+const els = getEls();
+const nameEl = els.bestName;
+const buyEl  = els.bestBuy;
+const sellEl = els.bestSell;
+const noteEl = els.bestNote;
+const btnEl  = els.btnIrMejor;
+const logoEl = els.bestLogo;
 
   if (!nameEl || !buyEl || !sellEl) return;
 

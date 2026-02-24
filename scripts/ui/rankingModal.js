@@ -47,30 +47,14 @@ function renderMeta() {
   if (metaAll) metaAll.textContent = `${totalTxt} casas`;
 }
 
-function getRecommendedSortMode() {
-  const { modo } = state;
-  const { have, want } = getHaveWant();
-
-  const usaCompra =
-    (modo === "recibir" && have === "USD" && want === "PEN") ||
-    (modo === "necesito" && have === "USD" && want === "PEN");
-
-  const usaVenta =
-    (modo === "recibir" && have === "PEN" && want === "USD") ||
-    (modo === "necesito" && have === "PEN" && want === "USD");
-
-  if (usaCompra) return "compra";
-  if (usaVenta) return "venta";
-  return "venta";
-}
-
 function renderRankingAuto() {
   const tbody = document.getElementById("rankingBody");
   if (!tbody) return;
-  tbody.innerHTML = "";
 
   const sortMode = getRecommendedSortMode();
   const filas = sortCasas(getCasasValidasLimpias({ fallbackToTasas: false }), sortMode);
+
+  const frag = document.createDocumentFragment();
 
   for (const c of filas) {
     const tr = document.createElement("tr");
@@ -85,16 +69,17 @@ function renderRankingAuto() {
       <td class="resultado">-</td>
     `;
 
-    tbody.appendChild(tr);
+    frag.appendChild(tr);
   }
 
-  // Label + cálculo
+  // ✅ Un solo update DOM
+  tbody.replaceChildren(frag);
+
   const thR = document.getElementById("rk-col-resultado");
   if (thR) thR.textContent = getResultadoLabel();
 
   recalcResultadosEnContainer(document.getElementById("rankingModal"));
 
-  // Highlight por conversor (usa-compra / usa-venta)
   const table = document.querySelector("#rankingModal .tabla-casas");
   applyTableRateModeByConverter(table);
 }
@@ -111,9 +96,9 @@ function ensureLogos() {
 function renderAllLogos() {
   const box = document.getElementById("rankingLogos");
   if (!box) return;
-  box.innerHTML = "";
 
   const catalog = typeof getCasasCatalog === "function" ? getCasasCatalog() : [];
+  const frag = document.createDocumentFragment();
 
   for (const item of catalog) {
     const { casa, url, logo } = item;
@@ -138,21 +123,33 @@ function renderAllLogos() {
       ? `<img src="${logo}" alt="${casa}" loading="lazy" decoding="async">`
       : `<span class="logo-fallback" aria-hidden="true">${String(casa).slice(0, 2).toUpperCase()}</span>`;
 
-    box.appendChild(a);
+    frag.appendChild(a);
   }
+
+  // ✅ Un solo update DOM
+  box.replaceChildren(frag);
 }
 
-export function refreshRankingModal() {
+export function refreshRankingModal({ onlyRecalc = false } = {}) {
   const modal = document.getElementById("rankingModal");
   if (!modal) return;
 
   // Si nunca se abrió, no hagas nada
   if (modal.dataset.bound !== "1") return;
 
-  // ✅ Si el modal está cerrado, no recalcules nada
+  // ✅ Si está cerrado, no reproceses nada
   if (modal.getAttribute("aria-hidden") === "true") return;
 
-  renderRankingAuto();
-  renderMeta();
-  ensureLogos();
+  if (onlyRecalc) {
+    recalcResultadosEnContainer(modal);
+  } else {
+    renderRankingAuto();
+    renderMeta();
+  }
+}
+
+export function recalcRankingResultadosOnly() {
+  const modal = document.getElementById("rankingModal");
+  if (!modal) return;
+  recalcResultadosEnContainer(modal);
 }

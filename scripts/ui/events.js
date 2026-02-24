@@ -36,7 +36,7 @@ export function bindEvents({ onChange }) {
       setState({ modo: r.value });
       updateLabels();
       syncAdornmentAndChips();
-      onChange();
+      onChange({ type: 'mode' });
     });
   });
 
@@ -44,7 +44,7 @@ export function bindEvents({ onChange }) {
   montoEl?.addEventListener('input', () => {
     setMontoFromInput();
     syncAdornmentAndChips();
-    onChange();
+    onChange({ type: 'amount' });
   });
 
   // ✅ Chips rápidos (dispara input para que todo siga el mismo flujo)
@@ -83,7 +83,7 @@ export function bindEvents({ onChange }) {
     setMontoFromInput();
 
     paintCurrencyLine();
-    onChange();
+    onChange({ type: 'currency' });
   });
 
 
@@ -95,7 +95,7 @@ export function bindEvents({ onChange }) {
   btnCalc?.addEventListener('click', () => {
     setMontoFromInput();
     syncAdornmentAndChips();
-    onChange();
+    onChange({ type: 'amount' });
   });
 
 

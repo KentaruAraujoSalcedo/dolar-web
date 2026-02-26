@@ -17,36 +17,36 @@
    SECTION HEADERS (util)
    ====================================================== */
 
-.section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--space-5);
   padding: var(--space-6) var(--space-7);
   border-bottom: 1px solid var(--c-border);
 }
 
-.section-head--tight{
+.section-head--tight {
   padding: var(--space-5) var(--space-6);
 }
 
-.section-title{
-  margin:0;
+.section-title {
+  margin: 0;
   font-size: var(--fs-16);
   font-weight: var(--fw-800);
   color: var(--c-strong);
 }
 
-.table-subtitle{
-  display:block;
+.table-subtitle {
+  display: block;
   font-size: var(--fs-13);
   color: var(--c-muted);
   margin-top: 2px;
 }
 
-.table-head-left{
-  display:flex;
-  flex-direction:column;
+.table-head-left {
+  display: flex;
+  flex-direction: column;
   gap: 2px;
 }
 
@@ -55,10 +55,10 @@
    BOTONES (estructura)
    ====================================================== */
 
-.btn-primary{
-  width:100%;
-  border:0;
-  cursor:pointer;
+.btn-primary {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
 
   padding: 12px 14px;
   border-radius: var(--radius-md);
@@ -70,13 +70,18 @@
   transition: transform .08s ease, filter .12s ease;
 }
 
-.btn-primary:hover{ filter: brightness(1.03); }
-.btn-primary:active{ transform: translateY(1px); }
+.btn-primary:hover {
+  filter: brightness(1.03);
+}
 
-.btn-link{
-  border:0;
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-link {
+  border: 0;
   background: transparent;
-  cursor:pointer;
+  cursor: pointer;
 
   padding: 6px 8px;
   border-radius: var(--radius-sm);
@@ -85,7 +90,7 @@
   font-weight: var(--fw-700);
 }
 
-.btn-link:hover{
+.btn-link:hover {
   background: var(--c-link-hover-bg);
 }
 
@@ -93,15 +98,15 @@
    PILLS (Mejor compra / venta) — estructura + anti-CLS
    ====================================================== */
 
-.pdh-pills{
-  display:flex;
+.pdh-pills {
+  display: flex;
   gap: var(--space-7);
   margin: 2px 0 2px;
 }
 
-.pdh-pill{
-  display:flex;
-  align-items:center;
+.pdh-pill {
+  display: flex;
+  align-items: center;
   gap: var(--space-4);
 
   padding: 8px 14px;
@@ -114,27 +119,28 @@
   border: 1px solid var(--c-border);
 }
 
-.pdh-pill__label{
+.pdh-pill__label {
   font-weight: var(--fw-600);
   color: var(--c-muted);
   white-space: nowrap;
 }
 
 /* ✅ Anti-CLS: reservar ancho fijo para que "—" → "3.357" no mueva nada */
-.pdh-pill__value{
+.pdh-pill__value {
   font-size: 1.05rem;
   font-weight: var(--fw-900);
   color: var(--c-strong);
   white-space: nowrap;
 
   display: inline-block;
-  width: 3.9ch; /* reserva para 3.357 */
+  width: 3.9ch;
+  /* reserva para 3.357 */
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
 /* ✅ Anti-CLS: reservar ancho del icono para que no cambie el layout */
-.pdh-pill__arrow{
+.pdh-pill__arrow {
   font-size: .95rem;
   opacity: .7;
   color: var(--c-muted);
@@ -148,19 +154,19 @@
    Checkbox (Ver todas / Top)
    ====================================================== */
 
-.ver-todo{
-  display:flex;
-  align-items:center;
+.ver-todo {
+  display: flex;
+  align-items: center;
   gap: var(--space-3);
 
   font-size: var(--fs-14);
   color: var(--c-text);
-  user-select:none;
+  user-select: none;
 }
 
-.ver-todo input{
-  width:16px;
-  height:16px;
+.ver-todo input {
+  width: 16px;
+  height: 16px;
   accent-color: var(--c-accent);
 }
 
@@ -168,26 +174,26 @@
    BEST DEAL — estructura (lo visual va al theme)
    ========================================================= */
 
-.best-deal{
-  display:flex;
-  flex-direction:column;
+.best-deal {
+  display: flex;
+  flex-direction: column;
 
-  position:relative;
-  overflow:hidden;
+  position: relative;
+  overflow: hidden;
 
   border-radius: var(--radius-lg);
   border: 1px solid var(--c-best-border);
 }
 
-.best-deal__head{
+.best-deal__head {
   padding: 10px 14px;
   border-bottom: 1px solid var(--c-border);
   background: var(--c-best-head-bg);
 }
 
-.best-deal__tag{
-  display:inline-flex;
-  align-items:center;
+.best-deal__tag {
+  display: inline-flex;
+  align-items: center;
   gap: var(--space-3);
 
   padding: 6px 10px;
@@ -201,52 +207,54 @@
   color: var(--c-best-tag-text);
 }
 
-.best-deal__body{
+.best-deal__body {
   padding: 14px;
 
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 
   background: var(--c-surface-1);
 }
 
-.best-deal__brand{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
+.best-deal__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: var(--space-4);
 }
 
-.best-deal__logo{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.best-deal__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.best-deal__logo img{
-  width:120px;
-  height:56px;
-  object-fit:contain;
+.best-deal__logo img {
+  width: 120px;
+  height: 56px;
+  object-fit: contain;
 }
 
-.best-deal__title{ display:none; }
+.best-deal__title {
+  display: none;
+}
 
-.best-deal__note{
+.best-deal__note {
   font-size: var(--fs-15);
   font-weight: var(--fw-800);
   color: var(--c-text);
 }
 
-.best-deal__rates{
-  display:grid;
+.best-deal__rates {
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
 
-.best-deal__rate{
-  text-align:center;
+.best-deal__rate {
+  text-align: center;
   border-radius: var(--radius-lg);
   padding: 12px 10px;
 
@@ -254,8 +262,8 @@
   border: 1px solid var(--c-border);
 }
 
-.best-deal__lbl{
-  display:block;
+.best-deal__lbl {
+  display: block;
   font-size: 0.78rem;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -264,8 +272,8 @@
   font-weight: var(--fw-800);
 }
 
-.best-deal__num{
-  display:block;
+.best-deal__num {
+  display: block;
   margin-top: 6px;
 
   font-size: 1.35rem;
@@ -273,16 +281,16 @@
   color: var(--c-strong);
 }
 
-.best-deal__cta{
+.best-deal__cta {
   padding: 14px;
 
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
 }
 
-.best-deal__fine{
-  margin:0;
+.best-deal__fine {
+  margin: 0;
   font-size: var(--fs-12);
   color: var(--c-muted);
 }
@@ -292,102 +300,102 @@
    SUNAT widget — estructura
    ========================================================= */
 
-.sunat-widget{
+.sunat-widget {
   background: var(--c-surface-1);
 }
 
-.sunat-widget__head{
+.sunat-widget__head {
   padding: 10px 14px;
   border-bottom: 1px solid var(--c-border);
 }
 
-.sunat-title{
-  display:flex;
-  align-items:center;
+.sunat-title {
+  display: flex;
+  align-items: center;
   gap: var(--space-3);
 
   font-weight: var(--fw-900);
   color: var(--c-strong);
 }
 
-.sunat-logo{
-  width:26px;
-  height:26px;
-  object-fit:contain;
+.sunat-logo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
-.sunat-sub{
+.sunat-sub {
   font-size: 0.78rem;
   font-weight: var(--fw-800);
   color: var(--c-muted);
 }
 
-.sunat-widget__body{
+.sunat-widget__body {
   padding: 12px;
 }
 
-.sunat-grid{
-  display:grid;
+.sunat-grid {
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-6);
   margin-bottom: var(--space-4);
 }
 
-.sunat-item{
+.sunat-item {
   border-radius: var(--radius-md);
   padding: 8px;
-  text-align:center;
+  text-align: center;
 
   background: var(--c-surface-2);
   border: 1px solid var(--c-border);
 }
 
-.sunat-lbl{
-  display:block;
+.sunat-lbl {
+  display: block;
   font-size: var(--fs-14);
   color: var(--c-muted);
   font-weight: var(--fw-700);
 }
 
-.sunat-val{
-  display:block;
+.sunat-val {
+  display: block;
   margin-top: 6px;
   font-size: 1.2rem;
   font-weight: var(--fw-900);
   color: var(--c-strong);
 }
 
-.sunat-mini{
+.sunat-mini {
   font-size: var(--fs-14);
   color: var(--c-muted);
   margin: 8px 0 8px;
 }
 
-.sunat-note{
+.sunat-note {
   margin: 0 0 10px;
   font-size: var(--fs-12);
   color: var(--c-muted);
   line-height: 1.25;
 }
 
-.sunat-widget__link{
-  width:100%;
-  text-align:left;
+.sunat-widget__link {
+  width: 100%;
+  text-align: left;
   padding: 10px 10px;
   border-radius: var(--radius-sm);
 
   background: var(--c-link-soft-bg);
 }
 
-.sunat-widget__link:hover{
+.sunat-widget__link:hover {
   background: var(--c-link-soft-bg-hover);
 }
 
 /* Mantener tus “ocultos” actuales */
 .sunat-badge,
 .sunat-widget__title,
-.sunat-widget__small{
-  display:none !important;
+.sunat-widget__small {
+  display: none !important;
 }
 
 
@@ -396,21 +404,22 @@
    ====================================================== */
 
 /* Intro SEO colapsable */
-.seo-intro{
+.seo-intro {
   margin: 4px 0 6px;
 }
 
-.seo-intro__details{ /* compat por si usas la clase */
+.seo-intro__details {
+  /* compat por si usas la clase */
   border-radius: var(--radius-md);
 }
 
-.seo-intro details{
+.seo-intro details {
   border-radius: var(--radius-md);
   padding: 8px 12px;
 }
 
 .seo-intro summary,
-.seo-intro__summary{
+.seo-intro__summary {
   cursor: pointer;
   list-style: none;
   font-size: .86rem;
@@ -419,12 +428,12 @@
 }
 
 .seo-intro summary::-webkit-details-marker,
-.seo-intro__summary::-webkit-details-marker{
-  display:none;
+.seo-intro__summary::-webkit-details-marker {
+  display: none;
 }
 
 .seo-intro__text,
-.seo-intro p{
+.seo-intro p {
   margin: 8px 0 0;
   font-size: .90rem;
   line-height: 1.45;
@@ -432,13 +441,13 @@
 }
 
 /* FAQ */
-.seo-faq{
+.seo-faq {
   margin-top: 14px;
   padding: 12px 14px 14px;
   border-radius: var(--radius-lg);
 }
 
-.seo-faq h2{
+.seo-faq h2 {
   margin: 0 0 10px;
   font-size: .92rem;
   font-weight: var(--fw-900);
@@ -446,24 +455,24 @@
   opacity: .85;
 }
 
-.seo-faq details{
+.seo-faq details {
   border-radius: var(--radius-md);
   padding: 10px 12px;
   margin: 10px 0;
 }
 
-.seo-faq summary{
+.seo-faq summary {
   cursor: pointer;
   list-style: none;
   font-weight: var(--fw-900);
   color: var(--c-strong);
 }
 
-.seo-faq summary::-webkit-details-marker{
-  display:none;
+.seo-faq summary::-webkit-details-marker {
+  display: none;
 }
 
-.seo-faq details p{
+.seo-faq details p {
   margin: 8px 0 0;
   color: var(--c-text);
   line-height: 1.45;
@@ -478,7 +487,7 @@
 .btn-primary:focus-visible,
 .btn-link:focus-visible,
 .sunat-widget__link:focus-visible,
-.chip:focus-visible{
+.chip:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--c-focus-ring);
   border-radius: var(--radius-sm);
@@ -489,63 +498,99 @@
    RESPONSIVE
    ========================================================= */
 
-@media (prefers-reduced-motion: reduce){
+@media (prefers-reduced-motion: reduce) {
   /* El theme/effects puede apagar animaciones decorativas */
 }
 
 /* 1100px — tablet (mantienes tu comportamiento) */
-@media (max-width:1100px) and (min-width:701px){
-  .pdh-pills{ flex-wrap: wrap; }
-  .pdh-pill{ flex: 1 1 220px; }
+@media (max-width:1100px) and (min-width:701px) {
+  .pdh-pills {
+    flex-wrap: wrap;
+  }
+
+  .pdh-pill {
+    flex: 1 1 220px;
+  }
 }
 
 /* 700px — mobile (compacto, sin “cards gigantes”) */
-@media (max-width:700px){
+@media (max-width:700px) {
 
-  .pdh-pills{
-    display:flex;
-    flex-direction:column;
+  .pdh-pills {
+    display: flex;
+    flex-direction: column;
     gap: 6px;
     margin: 6px 0 2px;
   }
 
-  .pdh-pill{
-    padding: 5px 18px; 
+  .pdh-pill {
+    padding: 6px 18px;
     background: transparent;
     border: 0;
 
-    justify-content: space-between; 
+    width: 260px;
+    margin-right: auto;
   }
 
-  .pdh-pill__label{
+  .pdh-pill__label {
     font-size: 0.78rem;
     font-weight: var(--fw-800);
     color: var(--c-muted);
-    padding-left: 2px; 
+    padding-left: 2px;
   }
 
-  .pdh-pill__value{
-    font-size: 1.12rem;
+  .pdh-pill__value {
+    font-size: 1.1rem;
     font-weight: var(--fw-900);
+    margin-left: auto;
   }
 
-  .pdh-pill__arrow{ display:none; }
+  .pdh-pill__arrow {
+    display: none;
+  }
 
   /* SUNAT en mobile: más compacto */
-  .sunat-widget__body{ padding: 10px; }
-  .sunat-grid{ gap: 10px; }
-  .sunat-item{ padding: 8px; }
-  .sunat-val{ font-size: 1.05rem; }
-  .sunat-note{ display:none; }
+  .sunat-widget__body {
+    padding: 10px;
+  }
+
+  .sunat-grid {
+    gap: 10px;
+  }
+
+  .sunat-item {
+    padding: 8px;
+  }
+
+  .sunat-val {
+    font-size: 1.05rem;
+  }
+
+  .sunat-note {
+    display: none;
+  }
 
   /* SEO: compactar un poco */
-  .seo-faq{ padding: 12px; }
-  .seo-faq details{ margin: 8px 0; }
+  .seo-faq {
+    padding: 12px;
+  }
+
+  .seo-faq details {
+    margin: 8px 0;
+  }
 }
 
 /* 360px — mobile pequeño */
-@media (max-width:360px){
-  .pdh-pill__value{ font-size: 1.06rem; }
-  .seo-intro summary{ font-size: .84rem; }
-  .seo-faq details p{ font-size: .90rem; }
+@media (max-width:360px) {
+  .pdh-pill__value {
+    font-size: 1.06rem;
+  }
+
+  .seo-intro summary {
+    font-size: .84rem;
+  }
+
+  .seo-faq details p {
+    font-size: .90rem;
+  }
 }

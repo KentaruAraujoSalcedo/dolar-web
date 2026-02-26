@@ -112,3 +112,25 @@ ol{
 body.modal-open{
   overflow: hidden;
 }
+
+
+/* ======================================================
+   Skip link (accesibilidad)
+   ====================================================== */
+   
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  z-index: 10000;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 10px;
+}

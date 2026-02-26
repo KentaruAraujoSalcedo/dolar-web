@@ -3,6 +3,10 @@
 
 <head>
 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preload" as="image" href="/IMG/logo/logo.webp" />
+
   <!-- Cookies -->
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -29,9 +33,6 @@
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-MXR4KKWH');</script>
   <!-- End Google Tag Manager -->
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Precio del dólar hoy en Perú | Casas de cambio online</title>
   <meta name="description"
@@ -95,11 +96,6 @@
     "name":"Precio Dólar Hoy",
     "url":"https://preciodolarhoy.pe/",
     "inLanguage":"es-PE",
-    "potentialAction":{
-      "@type":"SearchAction",
-      "target":"https://preciodolarhoy.pe/?q={search_term_string}",
-      "query-input":"required name=search_term_string"
-    }
   }
   </script>
 
@@ -215,7 +211,23 @@
       "name":"¿De dónde salen los datos del precio del dólar hoy?",
       "acceptedAnswer":{
         "@type":"Answer",
-        "text":"Mostramos tasas informativas de casas de cambio online y la referencia oficial de SUNAT. La finalidad es ayudar a comparar precios y entender el mercado. Las tasas pueden cambiar en segundos."
+        "text":"Mostramos tasas informativas de casas de cambio online y la referencia oficial de SUNAT. La finalidad es ayudarte a comparar y entender el mercado. Las tasas pueden cambiar durante el día."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"¿Cuál es la diferencia entre compra y venta?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Compra es el precio al que te compran dólares (si tú vendes USD). Venta es el precio al que te venden dólares (si tú compras USD). Para operar, mira la columna correcta según tu caso."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"¿SUNAT es el precio real al que voy a cambiar?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"SUNAT publica un tipo de cambio referencial. El precio real de operación depende del mercado (casa de cambio o banco), del horario y de la disponibilidad. Úsalo como contexto."
       }
     },
     {
@@ -223,23 +235,23 @@
       "name":"¿Cada cuánto se actualiza el tipo de cambio?",
       "acceptedAnswer":{
         "@type":"Answer",
-        "text":"Actualizamos durante el día y mostramos la hora de la última actualización arriba. Si estás por cambiar un monto grande, revisa nuevamente antes de confirmar la operación."
+        "text":"Actualizamos durante el día y mostramos la hora de la última actualización en la parte superior. Si vas a operar, revisa nuevamente cerca del momento de cambiar."
       }
     },
     {
       "@type":"Question",
-      "name":"¿Por qué el precio puede ser distinto al de mi banco o app?",
+      "name":"¿Qué es el “spread” y por qué importa?",
       "acceptedAnswer":{
         "@type":"Answer",
-        "text":"Cada entidad define su cotización según costos, liquidez, horario y margen. Por eso puedes ver diferencias entre bancos, casas de cambio y la referencia SUNAT."
+        "text":"El spread es la diferencia entre compra y venta. Mientras más bajo sea, normalmente mejor para el usuario. En montos grandes, pequeñas diferencias pueden notarse bastante."
       }
     },
     {
       "@type":"Question",
-      "name":"¿Qué es el spread y por qué importa?",
+      "name":"¿Esta web realiza cambios de dólares o cobra comisión?",
       "acceptedAnswer":{
         "@type":"Answer",
-        "text":"El spread es la diferencia entre compra y venta. Mientras más bajo sea, mejor suele ser para el usuario. Comparar varias casas ayuda a reducir ese costo implícito."
+        "text":"No. Precio Dólar Hoy es un sitio informativo: compara tasas y muestra referencias. No hacemos operaciones ni cobramos comisión por cambio."
       }
     }
   ]
@@ -258,6 +270,8 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
   <div class="page">
     <div class="shell">
 
@@ -273,7 +287,8 @@
         <header class="pdh-header">
           <div class="pdh-header__top">
             <div class="pdh-brand">
-              <img src="IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-logo" />
+              <img src="IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-logo" width="736" height="723"
+                decoding="async" />
 
               <div class="pdh-hero-inline">
                 <h1 class="brand-title">
@@ -295,7 +310,7 @@
           </div>
         </header>
 
-        <main class="pdh-main" aria-label="Contenido principal">
+        <main id="main" class="pdh-main" aria-label="Contenido principal">
 
           <!-- Intro SEO colapsable -->
           <section class="seo-intro" aria-label="Información sobre el tipo de cambio">
@@ -405,7 +420,7 @@
             <section class="panel casas-cambio" aria-label="Casas de cambio online">
               <header class="section-head section-head--tight">
                 <div class="table-head-left">
-                  <h2 class="section-title">Top 3 casas de cambio</h2>
+                  <h2 class="section-title">Top ahora</h2>
                 </div>
 
                 <button type="button" class="btn-link" id="btn-open-ranking" aria-controls="rankingModal">
@@ -437,7 +452,8 @@
               <div class="best-deal__body">
                 <div class="best-deal__brand">
                   <div class="best-deal__logo">
-                    <img id="best-logo" src="IMG/logo/logo.webp" alt="Mejor opción hoy" loading="lazy" />
+                    <img id="best-logo" src="IMG/logo/logo.webp" alt="Mejor opción hoy" width="736" height="723"
+                      loading="lazy" decoding="async" />
                   </div>
                   <div>
                     <div class="best-deal__title" id="best-name">ZonaDólar</div>
@@ -469,7 +485,8 @@
             <section class="panel sunat-widget" aria-label="SUNAT referencia oficial">
               <header class="sunat-widget__head">
                 <div class="sunat-title">
-                  <img src="IMG/casas/sunat.webp" alt="SUNAT" class="sunat-logo" loading="lazy" />
+                  <img src="IMG/casas/sunat.webp" alt="SUNAT" class="sunat-logo" width="69" height="69" loading="lazy"
+                    decoding="async" />
                   <span class="sunat-text">SUNAT</span>
                   <span class="sunat-sub">(referencia oficial)</span>
                 </div>
@@ -879,7 +896,8 @@
             <!-- Col 1: Marca minimal -->
             <section class="pdh-footer__brand" aria-label="Precio Dólar Hoy">
               <a class="pdh-footer__logo" href="/" aria-label="Ir al inicio">
-                <img src="IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-footer__logo-img" loading="lazy">
+                <img src="IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-footer__logo-img"
+                  width="736" height="723" loading="lazy" decoding="async">
               </a>
 
               <div class="pdh-footer__sitename">

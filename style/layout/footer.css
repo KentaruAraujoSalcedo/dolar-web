@@ -1,102 +1,223 @@
 /* =========================================================
-   LAYOUT / FOOTER.CSS
-   Footer estructural
-   ---------------------------------------------------------
-   ✅ Layout / spacing / alineación
-   ---------------------------------------------------------
-   ⚠️ NO colores hardcodeados
-   ⚠️ NO sombras
-   ⚠️ NO blur
-   ⚠️ NO efectos decorativos
+   FOOTER – layout tipo 4 columnas + barra inferior (LIGHT)
    ========================================================= */
 
-
-/* ======================================================
-   CONTENEDOR
-   ====================================================== */
-
 .pdh-footer{
-  margin-top: var(--space-5);
-  padding: var(--space-6) var(--space-7) var(--space-4);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding: 0;
 }
 
+/* Contenedor principal del footer */
+.pdh-footer__inner{
+  background: #f3f6fa;
+  border: 1px solid #e5e9f2;
+  border-radius: var(--radius-xl);
+  padding: var(--space-7);
+  color: var(--c-text);
 
-/* ======================================================
-   COPYRIGHT
-   ====================================================== */
-
-.pdh-footer .copy{
-  font-size: var(--fs-12);
-  font-weight: var(--fw-700);
-
-  color: var(--c-muted); /* viene del theme */
-}
-
-
-/* ======================================================
-   LINKS
-   ====================================================== */
-
-.footer-links{
-  display: flex;
+  display: grid;
   gap: var(--space-7);
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
-.footer-links a{
-  font-size: var(--fs-14);
-  font-weight: var(--fw-600);
+@media (min-width: 980px){
+  .pdh-footer__inner{
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    align-items: start;
+  }
+}
 
-  color: var(--c-muted);
+.pdh-footer a{
+  color: inherit;
   text-decoration: none;
 }
 
-.footer-links a:hover{
-  color: var(--c-link);
+.pdh-footer a:hover{
+  text-decoration: underline;
 }
-
 
 /* =========================================================
-   RESPONSIVE (estructura)
+   BRAND (minimal)
    ========================================================= */
 
-/* 1100px — tablet */
-@media (max-width:1100px){
-  /* No cambios estructurales necesarios */
+.pdh-footer__brand{
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centrado horizontal */
+  text-align: center;
+  align-self: center;
+  gap: 16px;
 }
 
+/* Enlace del logo */
+.pdh-footer__logo{
+  display: block;
+  text-decoration: none;
+}
 
-/* 700px — mobile */
-@media (max-width:700px){
+/* Imagen del logo (AQUÍ CONTROLAS EL TAMAÑO) */
+.pdh-footer__logo img{
+  width: 88px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 8px;
+  border: 1px solid #e6ebf4;
+}
 
-  .pdh-footer{
-    padding: var(--space-5) var(--space-5) var(--space-3);
-  }
+/* Nombre del dominio */
+.pdh-footer__sitename{
+  font-size: 1.3rem;     /* un poco más grande */
+  font-weight: var(--fw-900);
+  letter-spacing: .4px;
+  line-height: 1.1;
+}
 
-  .footer-links{
-    gap: var(--space-4);
-  }
+/* colores del nombre */
+.brand-main{ color: var(--c-strong); }
+.brand-hoy{  color: var(--c-link); }
+.brand-pe{   color: var(--c-strong); opacity: .7; }
 
-  .footer-links a{
-    font-size: var(--fs-13);
+/* (opcional) si algún día agregas frase debajo */
+.pdh-footer__mini{
+  font-size: .92rem;
+  opacity: .9;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   COLUMNAS
+   ========================================================= */
+
+.pdh-footer__title{
+  margin: 0 0 12px 0;
+  font-weight: var(--fw-900);
+  font-size: 1rem;
+  color: var(--c-strong); /* antes estaba #fff */
+}
+
+.pdh-footer__col{
+  display: grid;
+  gap: 10px;
+}
+
+.pdh-footer__col a{
+  opacity: .92;
+  font-size: .95rem;
+}
+
+.pdh-footer__col a:hover{
+  opacity: 1;
+}
+
+/* =========================================================
+   SOCIAL (icons light)
+   ========================================================= */
+
+.pdh-footer__social{
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pdh-footer__icon{
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+
+  background: #ffffff;
+  border: 1px solid #e5e9f2;
+
+  text-decoration: none;
+  transition: transform .08s ease, filter .12s ease;
+}
+
+.pdh-footer__icon svg{
+  width: 20px;
+  height: 20px;
+  color: var(--c-strong);   /* antes #fff */
+  opacity: .95;
+}
+
+.pdh-footer__icon:hover{
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.pdh-footer__icon:active{
+  transform: translateY(0);
+}
+
+/* =========================================================
+   STORE BUTTON (light)
+   ========================================================= */
+
+.pdh-footer__store{
+  display: inline-grid;
+  gap: 2px;
+
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+
+  background: #ffffff;
+  border: 1px solid #e5e9f2;
+
+  max-width: 220px;
+  transition: transform .08s ease, filter .12s ease;
+}
+
+.pdh-footer__storeTop{
+  font-size: .8rem;
+  opacity: .85;
+  color: var(--c-text);
+}
+
+.pdh-footer__storeBottom{
+  font-size: 1rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.pdh-footer__store:hover{
+  text-decoration: none;
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+}
+
+.pdh-footer__store:active{
+  transform: translateY(0);
+}
+
+/* =========================================================
+   BOTTOM BAR
+   ========================================================= */
+
+.pdh-footer__bottom{
+  margin-top: 14px;
+  padding: 14px 18px;
+  text-align: center;
+  color: var(--c-text);
+  opacity: .85;
+  font-size: .9rem;
+}
+
+.pdh-footer__dot{
+  margin: 0 10px;
+  opacity: .5;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px){
+  .pdh-footer__inner{
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
   }
 }
 
-
-/* 360px — mobile pequeño */
-@media (max-width:360px){
-
-  .footer-links{
-    gap: var(--space-3);
-  }
-
-  .pdh-footer .copy{
-    font-size: var(--fs-12);
-  }
-}

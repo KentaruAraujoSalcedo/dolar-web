@@ -3,16 +3,55 @@
 
   <url>
     <loc>https://preciodolarhoy.pe/</loc>
-    <lastmod>2026-02-03</lastmod>
+    <lastmod>2026-02-24</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- GUIAS PRINCIPALES -->
+
+  <url>
+  <loc>https://preciodolarhoy.pe/guias/</loc>
+  <lastmod>2026-02-23</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/guia-del-dolar/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/sunat-vs-mercado/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/compra-vs-venta/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+  <loc>https://preciodolarhoy.pe/guias/como-comparar/</loc>
+  <lastmod>2026-02-25</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  </url>
+
+  <!-- PAGINAS LEGALES -->
+
   <url>
     <loc>https://preciodolarhoy.pe/about.html</loc>
     <lastmod>2026-02-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 
   <url>

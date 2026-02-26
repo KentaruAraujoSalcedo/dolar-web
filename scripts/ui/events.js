@@ -18,13 +18,26 @@ export function bindEvents({ onChange }) {
   // Helper: setea monto SIEMPRE en número
   function setMontoFromInput() {
     if (!montoEl) return;
-    const v = parseFloat(montoEl.value);
+
+    const raw = String(montoEl.value ?? '')
+      .trim()
+      .replace(',', '.')
+      .replace(/[^\d.]/g, ''); // elimina cualquier cosa rara
+
+    const parts = raw.split('.');
+    const normalized =
+      parts.length > 2
+        ? parts[0] + '.' + parts.slice(1).join('') // solo un punto decimal real
+        : raw;
+
+    const v = parseFloat(normalized);
+
     setState({ monto: Number.isFinite(v) ? v : 0 });
   }
 
   // Helper: pinta la línea PRO (USD ⇄ PEN)
   function paintCurrencyLine() {
-    if (!curHave || !curWant || !selTengo || !selQuiero) return;
+    if (!curHave || !curWant || !selTengo || !selQuiero) return; F
 
     curHave.textContent = selTengo.value === 'USD' ? 'Dólares (USD)' : 'Soles (PEN)';
     curWant.textContent = selQuiero.value === 'USD' ? 'Dólares (USD)' : 'Soles (PEN)';

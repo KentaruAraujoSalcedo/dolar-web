@@ -2,8 +2,9 @@
 // File: scripts/data.js
 // ==============================
 import { state, setState } from './state.js';
+import { CONFIG } from './config.js';
 
-const API_BASE = "https://dolar-api.jaime-araujo-martech.workers.dev";
+const API_BASE = CONFIG.API_BASE;
 
 /* ============================================================
    Helpers de normalización (para logos / matching / filtros)
@@ -18,14 +19,6 @@ function slugCasa(nombre = '') {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '');
 }
-
-// Lista “baseline” de casas verificadas (ajústala a tu gusto)
-const VERIFIED_SLUGS = new Set([
-  'sunat',
-  'zonadolar',
-  'inkamoney',
-  'chaskidolar',
-]);
 
 /* ============================================================
    NUEVO: carga todo en 1 sola llamada
@@ -90,7 +83,6 @@ export async function cargarData() {
     return {
       ...c,
       slug,
-      verificada: VERIFIED_SLUGS.has(slug),
     };
   });
 

@@ -18,9 +18,9 @@ import {
 } from './tableShared.js';
 
 // ⚠️ IMPORTANTE (GitHub Pages)
-// Si tu web vive en /NOMBRE-REPO/, pon BASE_PATH = '/NOMBRE-REPO/'.
-// Si estás en dominio raíz, déjalo en ''.
-const BASE_PATH = ''; // ejemplo: '/precio-dolar-hoy/'
+import { CONFIG } from '../config.js';
+
+const BASE_PATH = CONFIG.BASE_PATH;
 
 /* ============================================================
    TABLA: render

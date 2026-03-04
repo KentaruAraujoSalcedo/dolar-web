@@ -1,0 +1,122 @@
+/* =========================================================
+   FOOTER / FOOTER-DISENO.CSS
+   Footer visual
+   ========================================================= */
+
+.pdh-footer__inner {
+  background: #f3f6fa;
+  border: 1px solid #e5e9f2;
+  color: var(--c-text);
+}
+
+.pdh-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+.pdh-footer a:hover {
+  text-decoration: underline;
+}
+
+.pdh-footer__logo img {
+  background: #ffffff;
+  padding: 8px;
+  border: 1px solid #e6ebf4;
+}
+
+.pdh-footer__brand {
+  text-align: center;
+}
+
+.pdh-footer__sitename {
+  font-weight: var(--fw-900);
+  font-size: 1.3rem;
+  line-height: 1.1;
+  letter-spacing: .4px;
+}
+
+.brand-main {
+  color: var(--c-strong);
+}
+.brand-hoy {
+  color: var(--c-link);
+}
+.brand-pe {
+  color: var(--c-strong);
+  opacity: .7;
+}
+
+.pdh-footer__mini {
+  font-size: .92rem;
+  line-height: 1.5;
+  opacity: .9;
+}
+
+.pdh-footer__title {
+  font-weight: var(--fw-900);
+  font-size: 1rem;
+  color: var(--c-strong);
+}
+
+.pdh-footer__col a {
+  font-size: .95rem;
+  opacity: .92;
+}
+.pdh-footer__col a:hover {
+  opacity: 1;
+}
+
+.pdh-footer__icon {
+  background: #ffffff;
+  border: 1px solid #e5e9f2;
+  transition: transform .08s ease, filter .12s ease;
+}
+.pdh-footer__icon:hover {
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.pdh-footer__icon:active {
+  transform: translateY(0);
+}
+
+.pdh-footer__icon svg {
+  color: var(--c-strong);
+  opacity: .95;
+}
+
+.pdh-footer__store {
+  background: #ffffff;
+  border: 1px solid #e5e9f2;
+  transition: transform .08s ease, filter .12s ease;
+}
+.pdh-footer__store:hover {
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.pdh-footer__store:active {
+  transform: translateY(0);
+}
+
+.pdh-footer__storeTop {
+  font-size: .8rem;
+  opacity: .85;
+  color: var(--c-text);
+}
+
+.pdh-footer__storeBottom {
+  font-size: 1rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.pdh-footer__bottom {
+  text-align: center;
+  font-size: .9rem;
+  color: var(--c-text);
+  opacity: .85;
+}
+
+.pdh-footer__dot {
+  opacity: .5;
+}

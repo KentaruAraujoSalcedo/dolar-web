@@ -1,0 +1,60 @@
+/* =========================================================
+   LAYOUT / HEADER-DISENO.CSS
+   Estilos visuales del header
+   ========================================================= */
+
+.brand-title {
+  font-weight: var(--fw-900);
+  font-size: 2.05rem;
+  color: var(--c-brand-primary);
+}
+
+.brand-title .accent-hoy {
+  color: var(--c-brand-accent);
+}
+
+.brand-title .accent-pe {
+  color: var(--c-brand-secondary);
+}
+
+.brand-subtitle {
+  font-size: 1rem;
+  font-weight: var(--fw-600);
+  color: var(--c-muted);
+}
+
+.pdh-updated {
+  font-size: var(--fs-12); 
+  color: var(--c-muted);
+}
+
+.pdh-updated strong {
+  color: var(--c-strong);
+}
+
+/* ======================================================
+   RESPONSIVE AJUSTES DE TIPOGRAFÍA
+   ====================================================== */
+@media (max-width:1100px) {
+  .brand-title {
+    font-size: 1.55rem;
+  }
+  .brand-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width:700px) {
+  .pdh-updated {
+    font-size: var(--fs-12); /* opcional, puedes dejarlo o quitarlo */
+  }
+}
+
+@media (max-width:360px) {
+  .brand-title {
+    font-size: 1.45rem;
+  }
+  .brand-subtitle {
+    font-size: 0.92rem;
+  }
+}

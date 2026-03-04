@@ -1,0 +1,131 @@
+/* =========================================================
+   COMPONENTS / ADS-ESTRUCTURA.CSS
+   Publicidad (estructura)
+   ========================================================= */
+
+.ads {
+  width: 100%;
+  position: sticky;
+  top: 18px;
+  max-height: calc(100vh - 36px);
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--space-7);
+}
+
+.ad-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  border-width: 1px;
+  border-style: dashed;
+}
+
+.ad-300x600 {
+  width: 100%;
+  max-width: 300px;
+  height: 600px;
+}
+
+.ad-300x250 {
+  width: 100%;
+  max-width: 300px;
+  height: 250px;
+}
+
+.ad-inline {
+  display: none;
+}
+
+.ad-slot.ad-responsive {
+  width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
+  min-height: 250px;
+  height: auto;
+}
+
+.ad-secondary {
+  display: none;
+}
+
+.ad-final {
+  display: none;
+}
+
+.ad-slot::before {
+  padding: 6px 10px;
+  border-radius: 999px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  pointer-events: none;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.ad-slot::after {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  pointer-events: none;
+  max-width: 85%;
+}
+
+.ad-slot.is-filled::before,
+.ad-slot.is-filled::after {
+  display: none;
+}
+
+@supports selector(:has(*)) {
+  .ad-slot:has(iframe)::before,
+  .ad-slot:has(iframe)::after,
+  .ad-slot:has(ins)::before,
+  .ad-slot:has(ins)::after {
+    display: none;
+  }
+}
+
+@media (max-width:1100px) {
+  .ad-inline {
+    display: block;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .ad-inline .ad-slot {
+    border-radius: var(--radius-sm);
+  }
+  .ad-secondary {
+    display: none !important;
+  }
+  .ad-final {
+    display: block;
+    margin-top: var(--space-5);
+  }
+  .ad-final .ad-slot {
+    min-height: 250px;
+    border-radius: var(--radius-md);
+  }
+}
+
+@media (max-width:700px) {
+  .ad-slot.ad-responsive {
+    min-height: 100px;
+  }
+}
+
+@media (min-width:1101px) {
+  .ad-slot.ad-responsive {
+    min-height: 90px;
+  }
+  .ad-secondary {
+    display: flex;
+    margin-top: auto;
+  }
+}

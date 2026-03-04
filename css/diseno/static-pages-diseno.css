@@ -1,0 +1,80 @@
+/* =========================================================
+   PAGES / STATIC-PAGES-DISENO.CSS
+   Páginas estáticas (visual)
+   ========================================================= */
+
+.static-page {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.static-content {
+  color: var(--c-text);
+}
+
+.static-content h1 {
+  font-size: 1.45rem;
+  font-weight: var(--fw-950);
+  color: var(--c-strong);
+  letter-spacing: -0.01em;
+}
+
+.static-content h2 {
+  font-size: 1.05rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.static-content h3 {
+  font-size: 0.98rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  opacity: 0.95;
+}
+
+.static-content p {
+  font-size: 1rem;
+  line-height: var(--lh-relaxed);
+  color: var(--c-text);
+}
+
+.static-content ul,
+.static-content ol {
+  line-height: var(--lh-relaxed);
+}
+
+.static-content a {
+  font-weight: var(--fw-700);
+  color: var(--c-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.static-content blockquote {
+  background: var(--c-quote-bg);
+  border-left-color: var(--c-quote-border);
+}
+
+.skip-link:focus {
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+  box-shadow: var(--shadow-elev-1);
+}
+
+@media (max-width:700px) {
+  .static-content h1 {
+    font-size: 1.25rem;
+  }
+  .static-content h2 {
+    font-size: 1rem;
+  }
+  .static-content p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width:360px) {
+  .static-content p {
+    font-size: 0.93rem;
+  }
+}

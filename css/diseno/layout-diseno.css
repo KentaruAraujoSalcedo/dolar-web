@@ -1,0 +1,31 @@
+/* =========================================================
+   LAYOUT / LAYOUT-DISENO.CSS
+   ========================================================= */
+/* 
+.page {
+  background: var(--c-page-bg);
+}
+*/
+.page {
+  background: url('/IMG/wallpapers/base.webp') no-repeat center center fixed;
+  background-size: cover;
+  background-color: var(--c-page-bg); 
+}
+
+/* Regla base de .center (escritorio) */
+.center {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+}
+
+/* Media query para móvil (debe ir después para prevalecer) */
+@media (max-width:1100px) {
+  .center {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.72);
+    box-shadow: var(--shadow-soft);
+  }
+}

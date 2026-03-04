@@ -1,0 +1,139 @@
+/* =========================================================
+   COMPONENTS / TABLE-DISENO.CSS
+   Tabla Casas (visual)
+   ========================================================= */
+
+.tabla-casas {
+  --tbl-header-size: 0.80rem;
+  --tbl-value-size: 0.95rem;
+  --tbl-casa-size: 1.00rem;
+  --tbl-result-size: 0.90rem;
+  font-size: 0.92rem;
+}
+
+.tabla-casas-wrapper--wide {
+  border-top-color: var(--c-border);
+}
+
+.tabla-casas-wrapper--wide::-webkit-scrollbar-thumb {
+  background: var(--c-scroll-thumb);
+  border-color: var(--c-scroll-track-border);
+}
+
+.tabla-casas-wrapper--wide::-webkit-scrollbar-track {
+  background: var(--c-scroll-track);
+}
+
+.tabla-casas thead th {
+  font-weight: var(--fw-900);
+  color: var(--c-muted);
+  background: var(--c-table-head-bg);
+  border-bottom-color: var(--c-border);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  font-size: var(--tbl-header-size);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.tabla-casas tbody td {
+  color: var(--c-text);
+  background: var(--c-table-row-bg);
+  border-bottom-color: var(--c-border-soft);
+}
+
+.tabla-casas tbody tr:hover td {
+  background: var(--c-table-row-hover-bg);
+}
+
+.tabla-casas td.casa {
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  font-size: var(--tbl-casa-size);
+}
+
+.tabla-casas td .casa-wrap {
+  color: inherit;
+}
+
+.tabla-casas td .casa-logo {
+  background: var(--c-logo-bg);
+  border-color: var(--c-border);
+}
+
+.tabla-casas td .logo-fallback {
+  font-weight: 1000;
+  font-size: 0.80rem;
+  letter-spacing: .04em;
+  color: var(--c-strong);
+}
+
+.tabla-casas td .casa-chevron {
+  color: var(--c-muted);
+  opacity: .55;
+  font-size: 14px;
+}
+
+.tabla-casas td.compra,
+.tabla-casas td.venta {
+  font-weight: var(--fw-900);
+  color: var(--c-buy); /* compra */
+  font-size: var(--tbl-value-size);
+}
+.tabla-casas td.venta {
+  color: var(--c-sell);
+}
+
+.tabla-casas td.resultado {
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  font-size: var(--tbl-result-size);
+}
+
+.tabla-casas tbody tr.winner-row td {
+  background: var(--c-winner-bg);
+  border-bottom-color: var(--c-winner-border);
+}
+
+.tabla-casas tbody tr.winner-row:hover td {
+  background: var(--c-winner-hover-bg);
+}
+
+.tabla-casas thead th.compra,
+.tabla-casas thead th.venta {
+  transition: background .2s ease, box-shadow .2s ease;
+}
+
+.tabla-casas.usa-compra thead th.compra {
+  background: var(--c-col-highlight-buy-bg);
+  box-shadow: inset 0 -3px 0 var(--c-col-highlight-buy-line);
+  font-weight: 1000;
+}
+
+.tabla-casas.usa-venta thead th.venta {
+  background: var(--c-col-highlight-sell-bg);
+  box-shadow: inset 0 -3px 0 var(--c-col-highlight-sell-line);
+  font-weight: 1000;
+}
+
+.badge {
+  background: var(--c-badge-bg);
+  border: 1px solid var(--c-badge-border);
+  color: var(--c-badge-text);
+  font-weight: var(--fw-900);
+  font-size: 0.78rem;
+}
+
+.table-footer {
+  border-top-color: var(--c-border);
+}
+
+@media (max-width:700px) {
+  .tabla-casas thead th {
+    font-size: 0.75rem;
+  }
+  .tabla-casas td.resultado {
+    font-size: 0.90rem;
+    font-weight: var(--fw-800);
+  }
+}

@@ -1,0 +1,54 @@
+/* =========================================================
+   COMPONENTS / COOKIES-DISENO.CSS
+   Cookie Banner (visual)
+   ========================================================= */
+
+#cookie-banner {
+  background: var(--c-cookie-bg);
+  color: var(--c-cookie-text);
+  box-shadow: var(--shadow-cookie);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0;
+  font-size: var(--fs-13);
+  line-height: 1.4;
+}
+
+#cookie-banner.show {
+  opacity: 1;
+}
+
+#cookie-banner a {
+  color: var(--c-cookie-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+#cookie-banner button {
+  color: var(--c-cookie-btn-text);
+  background: var(--c-cookie-btn-bg);
+  font-weight: var(--fw-600);
+  font-size: var(--fs-13);
+}
+
+#cookie-banner button:first-of-type {
+  background: var(--c-cookie-accept-bg);
+  color: var(--c-cookie-accept-text);
+}
+
+#cookie-banner button:last-of-type {
+  background: var(--c-cookie-reject-bg);
+  color: var(--c-cookie-reject-text);
+}
+
+#cookie-banner button:hover {
+  opacity: 0.92;
+}
+
+@media (max-width:360px) {
+  #cookie-banner {
+    font-size: var(--fs-12);
+  }
+  #cookie-banner button {
+    font-size: var(--fs-12);
+  }
+}

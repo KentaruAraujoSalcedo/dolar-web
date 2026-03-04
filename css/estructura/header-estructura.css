@@ -1,0 +1,87 @@
+/* =========================================================
+   LAYOUT / HEADER-ESTRUCTURA.CSS
+   Header estructural
+   ========================================================= */
+
+.pdh-header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-7);
+  padding: 0;
+}
+
+.pdh-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+  min-width: 0;
+}
+
+.pdh-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.brand-title {
+  margin: 0;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.brand-title .accent-hoy,
+.brand-title .accent-pe {
+  /* sin propiedades estructurales */
+}
+
+.brand-subtitle {
+  margin: 4px 0 0;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.pdh-top-controls {
+  display: flex;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.pdh-updated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pdh-updated strong {
+  /* sin propiedades estructurales */
+}
+
+.pdh-header__top a:focus-visible,
+.pdh-header__top button:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+@media (max-width:1100px) {
+  .pdh-header__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  .pdh-logo {
+    width: 48px;
+    height: 48px;
+  }
+  /* Los font-size de .brand-title y .brand-subtitle se han movido a header-diseno.css */
+}
+
+@media (max-width:700px) {
+  /* Los font-size de .pdh-updated se han movido a header-diseno.css */
+}
+
+@media (max-width:360px) {
+  /* Los font-size de .brand-title y .brand-subtitle se han movido a header-diseno.css */
+}

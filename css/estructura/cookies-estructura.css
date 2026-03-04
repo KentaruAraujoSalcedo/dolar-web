@@ -1,0 +1,66 @@
+/* =========================================================
+   COMPONENTS / COOKIES-ESTRUCTURA.CSS
+   Cookie Banner (estructura)
+   ========================================================= */
+
+#cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  max-width: 720px;
+  width: calc(100% - 32px);
+  padding: 10px 14px;
+  display: none;
+  z-index: var(--z-cookie);
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 999px;
+}
+
+#cookie-banner.show {
+  display: flex;
+  transform: translateX(-50%) translateY(0);
+}
+
+#cookie-banner a {
+  white-space: nowrap;
+}
+
+#cookie-banner button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+#cookie-banner button:active {
+  transform: translateY(1px);
+}
+
+#cookie-banner button:focus-visible {
+  outline: none;
+}
+
+@media (max-width:700px) {
+  #cookie-banner {
+    flex-wrap: wrap;
+    border-radius: var(--radius-md);
+    padding: 12px;
+    bottom: 14px;
+  }
+  #cookie-banner button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width:360px) {
+  #cookie-banner {
+    padding: 10px;
+  }
+  #cookie-banner button {
+    padding: 6px 10px;
+  }
+}

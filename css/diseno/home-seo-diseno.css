@@ -1,0 +1,254 @@
+/* =========================================================
+   HOME SEO – VISUAL
+   ========================================================= */
+
+.section-underline {
+  background: var(--c-link);
+  opacity: 0.9;
+}
+
+.about-site {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-xl);
+}
+
+.about-site__title {
+  font-size: 1.8rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.about-site__text {
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.9;
+  color: var(--c-text);
+}
+
+.howto {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.howto__title--big {
+  font-size: 1.6rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.howto__lead--center {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+  color: var(--c-text);
+}
+
+.howto-step__circle {
+  border-color: var(--c-strong);
+  background: radial-gradient(circle at 30% 30%, var(--c-surface-1) 55%, var(--c-surface-2) 56%);
+}
+
+.howto-step__icon {
+  color: var(--c-strong);
+  opacity: 0.95;
+}
+
+.howto-step__number {
+  background: var(--c-strong);
+  color: white;
+  font-weight: var(--fw-900);
+  font-size: 0.9rem;
+}
+
+.howto-step__title {
+  font-size: 1rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.howto-step__text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.9;
+  color: var(--c-text);
+}
+
+.choose {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.choose__title {
+  font-size: 1.6rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.choose__lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--c-text);
+  opacity: 0.9;
+}
+
+.choose-card {
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+}
+
+.choose-card__icon {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.choose-card__svg {
+  color: var(--c-strong);
+  opacity: 0.95;
+}
+
+.choose-card__title {
+  font-size: 1.05rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.choose-card__text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--c-text);
+  opacity: 0.92;
+}
+
+.guides {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.guides__title {
+  font-size: 1.6rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.guides__lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--c-text);
+  opacity: 0.9;
+}
+
+.guide-item {
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+}
+
+.guide-item__icon {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.guide-item__svg {
+  color: var(--c-strong);
+  opacity: 0.95;
+}
+
+.guide-item__title {
+  font-size: 1.05rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.guide-item__text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--c-text);
+  opacity: 0.92;
+}
+
+.guide-item__cta {
+  color: var(--c-link);
+  font-weight: var(--fw-800);
+}
+
+.faq {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+.faq__title {
+  font-size: 1.6rem;
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+.faq__accent {
+  color: var(--c-link);
+}
+
+.faq-item {
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+}
+
+.faq-item__q {
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+  font-size: 1rem; /* ajusta según producción */
+}
+
+.faq-item__q::after {
+  color: var(--c-strong);
+  opacity: 0.9;
+  font-size: 18px;
+}
+
+.faq-item[open] .faq-item__q {
+  border-bottom-color: var(--c-border);
+}
+
+.faq-item__a {
+  color: var(--c-text);
+  opacity: 0.95;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* SEO TABS (si los tienes) */
+.seo-tabs {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.28);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+.seo-tabs__title {
+  color: var(--ink-900);
+}
+.seo-tabs__arrow {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.60);
+  color: var(--ink-700);
+}
+.seo-tabs__tab {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.60);
+  color: var(--ink-700);
+}
+.seo-tabs__tab.is-active {
+  background: rgba(37,99,235,0.10);
+  border-color: rgba(37,99,235,0.35);
+  color: var(--ink-900);
+}
+
+/* Media queries para ajustes tipográficos en móvil */
+@media (max-width: 700px) {
+  .choose__title {
+    font-size: 1.35rem;
+  }
+  .guides__title {
+    font-size: 1.35rem;
+  }
+  .faq__title {
+    font-size: 1.25rem;
+  }
+}

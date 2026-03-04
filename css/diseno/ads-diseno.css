@@ -1,0 +1,25 @@
+/* =========================================================
+   COMPONENTS / ADS-DISENO.CSS
+   Publicidad (visual)
+   ========================================================= */
+
+.ad-slot {
+  background: var(--c-ad-bg);
+  border-color: var(--c-ad-border);
+}
+
+.ad-slot::before {
+  content: "Publicidad";
+  font-weight: var(--fw-800);
+  font-size: var(--fs-13);
+  color: var(--c-ad-label);
+  background: var(--c-ad-chip-bg);
+  border-color: var(--c-ad-chip-border);
+}
+
+.ad-slot::after {
+  content: "Espacio reservado";
+  font-weight: var(--fw-700);
+  font-size: var(--fs-12);
+  color: var(--c-ad-note);
+}

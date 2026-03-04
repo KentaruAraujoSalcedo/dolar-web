@@ -1,0 +1,68 @@
+/* =========================================================
+   TYPOGRAPHY / TYPOGRAPHY-DISENO.CSS
+   Tipografía global + jerarquía de texto
+   ========================================================= */
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  line-height: var(--lh-base);
+  color: var(--c-text);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: var(--lh-tight);
+  color: var(--c-strong);
+}
+
+h1 {
+  font-size: var(--fs-32);
+  font-weight: var(--fw-900);
+}
+
+h2 {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-800);
+}
+
+h3 {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-900);
+}
+
+h4 {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-800);
+}
+
+p {
+  margin: 0;
+  color: var(--c-text);
+}
+
+small {
+  font-size: var(--fs-13);
+  color: var(--c-muted);
+}
+
+strong {
+  font-weight: var(--fw-800);
+  color: inherit;
+}
+
+a {
+  color: var(--c-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+input,
+select,
+textarea {
+  color: var(--c-strong);
+}

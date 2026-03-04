@@ -1,0 +1,104 @@
+/* =========================================================
+   CORE / BASE-DISENO.CSS
+   Estilos visuales base
+   ========================================================= */
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(37,99,235,.22);
+  color: var(--ink-900);
+}
+
+.panel {
+  background: rgba(255, 255, 255, .40);
+  border: 1px solid rgba(255, 255, 255, .42);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+
+.skip-link {
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  background: var(--c-surface-1);
+  border-color: var(--c-border);
+  box-shadow: var(--shadow-elev-1);
+}
+
+/* Focus ring global (de theme-base.css) */
+.btn-primary:focus-visible,
+.btn-link:focus-visible,
+.sunat-widget__link:focus-visible,
+.chip:focus-visible,
+.seo-tabs__tab:focus-visible,
+.seo-tabs__arrow:focus-visible,
+.tabla-casas .casa-wrap:focus-visible,
+#cookie-banner button:focus-visible,
+.modal__close:focus-visible {
+  box-shadow: 0 0 0 2px var(--c-focus-ring);
+}
+
+@media (max-width:1100px) {
+  /* Eliminación de backdrop-filter para múltiples elementos (incluye .center) */
+  .center,
+  .panel,
+  .pdh-pill,
+  .seo-tabs,
+  .seo-intro details,
+  .seo-faq,
+  .quick-row .quick-amt,
+  .modo-opciones,
+  .tabla-casas thead th {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Estilos específicos para .panel en móvil */
+  .panel {
+    background: rgba(255,255,255,.72);
+    border-color: rgba(255,255,255,.75);
+    box-shadow: 0 14px 34px rgba(2,6,23,.10);
+  }
+
+  /* Ocultar decoraciones de best-deal */
+  .best-deal::before,
+  .best-deal::after {
+    display: none;
+  }
+
+  /* Eliminar sombras de pills, chips, etc. */
+  .pdh-pill,
+  .quick-row .chip,
+  .quick-row .quick-amt,
+  .radio-pill input:checked + span {
+    box-shadow: none;
+  }
+
+  /* Eliminar sombra del input prioritario */
+  .conversor-wrapper-modern .gc-monto .input-with-prefix {
+    box-shadow: none;
+  }
+
+  /* Ajustar opacidades */
+  .conversor-wrapper-modern .modo-opciones,
+  .conversor-wrapper-modern .quick-row {
+    opacity: 1;
+  }
+}

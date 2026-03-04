@@ -1,0 +1,94 @@
+/* =========================================================
+   PAGES / STATIC-PAGES-ESTRUCTURA.CSS
+   Páginas estáticas (estructura)
+   ========================================================= */
+
+.shell-simple {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.static-page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 22px 24px;
+  border-radius: var(--radius-xl);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.static-content h1 {
+  margin: 0 0 10px;
+}
+
+.static-content h2 {
+  margin: 20px 0 10px;
+}
+
+.static-content h3 {
+  margin: 16px 0 8px;
+}
+
+.static-content p {
+  margin: 0 0 14px;
+}
+
+.static-content ul,
+.static-content ol {
+  margin: 0 0 14px 18px;
+  padding: 0;
+}
+
+.static-content li {
+  margin: 6px 0;
+}
+
+.static-content blockquote {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-radius: var(--radius-md);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  z-index: var(--z-cookie);
+  border-width: 1px;
+  border-style: solid;
+}
+
+@media (max-width:1100px) {
+  .static-page {
+    padding: 20px 22px;
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width:700px) {
+  .static-page {
+    padding: 18px 16px;
+    border-radius: var(--radius-md);
+  }
+}
+
+@media (max-width:360px) {
+  .static-page {
+    padding: 16px 14px;
+  }
+}

@@ -1,0 +1,246 @@
+/* =========================================================
+   COMPONENTS / CALCULATOR-ESTRUCTURA.CSS
+   Conversor (estructura)
+   ========================================================= */
+
+.conversor-wrapper-modern {
+  padding-bottom: var(--space-4);
+}
+
+.modo-opciones {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  margin: 0 var(--space-7);
+  border-radius: var(--radius-md);
+}
+
+.radio-pill {
+  position: relative;
+  flex: 1;
+  cursor: pointer;
+}
+
+.radio-pill input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-pill span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform 0.08s ease, background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.radio-pill:active span {
+  transform: translateY(1px);
+}
+
+.modo-opciones .radio-pill:hover input:not(:checked) + span {
+  transform: translateY(-1px);
+}
+
+.modo-opciones .radio-pill:active input:not(:checked) + span {
+  transform: translateY(0);
+}
+
+.quick-row {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-7) var(--space-3);
+  flex-wrap: wrap;
+}
+
+.quick-row .quick-amt {
+  appearance: none;
+  border-radius: 999px;
+  padding: 7px 11px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.08s ease, filter 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+
+.quick-row .chip:hover,
+.quick-row .quick-amt:hover {
+  filter: brightness(1.02);
+}
+
+.quick-row .chip:active,
+.quick-row .quick-amt:active {
+  transform: translateY(1px);
+}
+
+.quick-row .quick-amt:hover {
+  transform: translateY(-1px);
+}
+
+.quick-row .quick-amt:active {
+  transform: translateY(0);
+}
+
+.fila-triple {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-7) 0;
+  align-items: end;
+}
+
+.fila-triple--pro {
+  grid-template-columns: 1.35fr 1.65fr;
+}
+
+.grupo-campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.grupo-campo label {
+  /* sin propiedades visuales */
+}
+
+.conversor-wrapper-modern .gc-monto label {
+  /* sin propiedades visuales */
+}
+
+.input-with-prefix {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+}
+
+.input-with-prefix .prefix {
+  /* sin propiedades visuales */
+}
+
+.input-with-prefix input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  width: 100%;
+}
+
+.input-with-prefix input::placeholder {
+  /* sin propiedades visuales */
+}
+
+.input-with-prefix.is-empty .prefix {
+  /* sin propiedades visuales */
+}
+
+.gc-moneda-pro > label {
+  display: none;
+}
+
+.gc-moneda-pro .currency-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.cur-pill {
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  transition: transform 0.18s ease, filter 0.12s ease;
+}
+
+.cur-pill--ghost {
+  /* sin propiedades visuales */
+}
+
+.swap {
+  height: 44px;
+  width: 44px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform 0.18s ease, filter 0.12s ease;
+}
+
+.swap:hover {
+  filter: brightness(1.02);
+}
+
+.swap:active {
+  transform: translateY(1px);
+}
+
+.currency-line.is-swap .swap {
+  transform: rotate(180deg);
+}
+
+.currency-line.is-swap .cur-pill {
+  transform: translateY(-1px);
+}
+
+.resultado-modern {
+  margin: var(--space-5) var(--space-7) 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border-width: 1px;
+  border-style: solid;
+  min-height: 41px;
+  display: flex;
+  align-items: center;
+}
+
+.resultado-modern:empty {
+  visibility: hidden;
+}
+
+.fineprint {
+  margin: var(--space-3) var(--space-7) 0;
+}
+
+@media (max-width:700px) {
+  .fila-triple--pro {
+    grid-template-columns: 1fr;
+  }
+  .gc-moneda-pro {
+    margin-top: var(--space-4);
+  }
+  .modo-opciones {
+    margin: 0 var(--space-6);
+    padding: 7px;
+  }
+  .radio-pill span {
+    height: 32px;
+    padding: 0 8px;
+  }
+  .quick-row {
+    padding: var(--space-5) var(--space-6) var(--space-3);
+  }
+  .resultado-modern {
+    margin: var(--space-5) var(--space-6) 0;
+  }
+  .fineprint {
+    margin: var(--space-3) var(--space-6) 0;
+  }
+}
+
+@media (max-width:360px) {
+  .quick-row {
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-6) var(--space-2);
+  }
+  .quick-row .quick-amt {
+    padding: 6px 10px;
+  }
+}

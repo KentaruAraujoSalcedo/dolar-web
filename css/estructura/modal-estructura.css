@@ -1,0 +1,215 @@
+/* =========================================================
+   COMPONENTS / MODAL-ESTRUCTURA.CSS
+   Modal + Chart (estructura)
+   ========================================================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: var(--z-modal);
+}
+
+.modal[aria-hidden="false"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 10px;
+}
+
+.modal__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: 12px 16px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.modal__title {
+  margin: 0;
+  /* font-size se ha movido a diseño */
+}
+
+.modal__meta {
+  margin-top: 2px;
+  /* font-size se ha movido a diseño */
+}
+
+.modal__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* font-size se ha movido a diseño */
+}
+
+.modal__close:hover {
+  /* color en diseño */
+}
+
+.modal__body {
+  padding: 14px 16px 16px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+#graficoSunat {
+  width: 100% !important;
+  height: 340px !important;
+  display: block;
+}
+
+.modal__close:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width:700px) {
+  .modal[aria-hidden="false"] {
+    padding: 10vh 10px;
+  }
+  .modal__panel {
+    border-radius: var(--radius-md);
+    max-height: 84vh;
+  }
+  #graficoSunat {
+    height: 280px !important;
+  }
+}
+
+@media (max-width:360px) {
+  #graficoSunat {
+    height: 240px !important;
+  }
+}
+
+#rankingModal .tabla-casas th,
+#rankingModal .tabla-casas td {
+  white-space: nowrap;
+}
+
+#rankingModal .tabla-casas td.compra,
+#rankingModal .tabla-casas td.venta,
+#rankingModal .tabla-casas td.resultado {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+#rankingModal #rk-col-resultado {
+  text-align: center;
+}
+
+#rankingModal .tabla-casas-wrapper {
+  margin-bottom: 14px;
+}
+
+#rankingModal .tabla-casas.rk-compra thead th.compra {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#rankingModal .tabla-casas.rk-venta thead th.venta {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#rankingModal .ranking-all {
+  margin-top: 6px;
+}
+
+#rankingModal .ranking-all__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0 10px;
+}
+
+#rankingModal .ranking-all__title {
+  margin: 0;
+  /* font-size, font-weight se han movido a diseño */
+}
+
+#rankingModal .ranking-all__meta {
+  /* font-size se ha movido a diseño */
+}
+
+#rankingModal .ranking-logos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width:1100px) {
+  #rankingModal .ranking-logos {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:700px) {
+  #rankingModal .ranking-logos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+#rankingModal .ranking-logos a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.08s ease, filter 0.12s ease; /* se mantiene por el efecto */
+  border-width: 1px;
+  border-style: solid;
+}
+
+#rankingModal .ranking-logos a:hover {
+  filter: brightness(1.03); /* diseño */
+}
+
+#rankingModal .ranking-logos a:active {
+  transform: translateY(1px);
+}
+
+#rankingModal .ranking-logos a[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+#rankingModal .ranking-logos img {
+  max-width: 92%;
+  max-height: 70%;
+  object-fit: contain;
+  display: block;
+}

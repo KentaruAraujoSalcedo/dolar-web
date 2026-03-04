@@ -1,0 +1,76 @@
+/* =========================================================
+   COMPONENTS / MODAL-DISENO.CSS
+   Modal visual
+   ========================================================= */
+
+.modal__overlay {
+  background: var(--c-modal-overlay);
+}
+
+.modal__panel {
+  background: var(--c-modal-bg);
+  box-shadow: var(--shadow-modal);
+}
+
+.modal__head {
+  background: var(--c-modal-head-bg);
+  border-bottom-color: var(--c-border);
+}
+
+.modal__title {
+  font-weight: var(--fw-950);
+  font-size: var(--fs-18);
+  color: var(--c-strong);
+}
+
+.modal__meta {
+  color: var(--c-muted);
+  font-size: var(--fs-13);
+}
+
+.modal__close {
+  color: var(--c-muted);
+  font-size: 20px;
+}
+.modal__close:hover {
+  color: var(--c-strong);
+}
+
+#rankingModal .tabla-casas.rk-compra thead th.compra {
+  background: var(--c-good-soft);
+  border-bottom-color: var(--c-good);
+}
+
+#rankingModal .tabla-casas.rk-venta thead th.venta {
+  background: var(--c-bad-soft);
+  border-bottom-color: var(--c-bad);
+}
+
+#rankingModal .ranking-all__title {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-900);
+  color: var(--c-strong);
+}
+
+#rankingModal .ranking-all__meta {
+  font-size: var(--fs-13);
+  color: var(--c-muted);
+}
+
+#rankingModal .ranking-logos a {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+}
+
+#rankingModal .ranking-logos a:hover {
+  filter: brightness(1.03); /* si no se hereda de estructura, se puede poner aquí */
+}
+
+#rankingModal .ranking-logos a[aria-disabled="true"] {
+  opacity: 0.55; /* ya está en estructura, pero se puede mantener por claridad */
+}
+
+#rankingModal .ranking-logos .logo-fallback {
+  font-weight: var(--fw-900);
+  color: var(--c-muted);
+}

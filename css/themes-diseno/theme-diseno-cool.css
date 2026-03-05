@@ -1404,15 +1404,15 @@ button, input, select, textarea{ font: inherit; }
 
 
 /* ===== Fix: white tiles / flicker en Android al hacer zoom/scroll ===== */
-@media (hover: none) and (pointer: coarse) {
-  .page::before,
-  .page::after {
-    display: none !important;
+@media (max-width:1100px) {
+  .ad-slot{
+    background:#fff !important;
+    min-height: 250px;  /* o el alto real de tu slot */
+    overflow: hidden;
+    contain: paint;
   }
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .page::after {
-    animation: none !important;
+  .ad-slot iframe{
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 }

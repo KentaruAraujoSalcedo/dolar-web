@@ -1405,31 +1405,14 @@ button, input, select, textarea{ font: inherit; }
 
 /* ===== Fix: white tiles / flicker en Android al hacer zoom/scroll ===== */
 @media (hover: none) and (pointer: coarse) {
-
-  /* 1) Apaga capas fullscreen "difíciles" */
   .page::before,
   .page::after {
-    content: none !important;
-  }
-
-  /* 2) Evita fixed background en móviles reales */
-  .page {
-    background-attachment: scroll !important;
-  }
-
-  /* 3) Quita TODOS los filtros que fuerzan composición */
-  * {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    filter: none !important;
-  }
-
-  /* 4) Ads: aislar el repaint/composición */
-  .ad-slot,
-  iframe {
-    contain: layout paint style !important;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    display: none !important;
   }
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .page::after {
+    animation: none !important;
+  }
+}

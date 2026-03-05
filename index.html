@@ -64,19 +64,29 @@
     content="Compara casas de cambio online y revisa la referencia SUNAT. Calcula tu cambio en segundos." />
   <meta name="twitter:image" content="https://preciodolarhoy.pe/IMG/og.jpg" />
 
+  <!-- Fonts (más rápido) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
 
-  <!-- Archivo de estructura (unificado) -->
-  <link rel="stylesheet" href="css/themes-estructura/theme-estructura-base.css">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+    media="print" onload="this.onload=null;this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+  </noscript>
 
-  <!-- 
-  <link rel="stylesheet" href="css/themes-diseno/theme-diseno-base.css"> 
-  -->
+  <!-- CSS (no render-blocking) -->
+  <link rel="preload" href="css/themes-estructura/theme-estructura-base.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="css/themes-estructura/theme-estructura-base.css">
+  </noscript>
 
-  <link rel="stylesheet" href="css/themes-diseno/theme-diseno-cool.css">
+  <link rel="preload" href="css/themes-diseno/theme-diseno-cool.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="css/themes-diseno/theme-diseno-cool.css">
+  </noscript>
 
   <!-- JSON-LD: WebSite -->
   <script type="application/ld+json">
@@ -278,8 +288,8 @@
         <header class="pdh-header">
           <div class="pdh-header__top">
             <div class="pdh-brand">
-              <img src="IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-logo" width="736" height="723"
-                decoding="async" />
+              <img src="/IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-logo" width="736"
+                height="723" decoding="async" fetchpriority="high">
 
               <div class="pdh-hero-inline">
                 <h1 class="brand-title">
@@ -441,7 +451,7 @@
               <div class="best-deal__body">
                 <div class="best-deal__brand">
                   <div class="best-deal__logo">
-                    <img id="best-logo" src="IMG/logo/logo.webp" alt="Mejor opción hoy" width="736" height="723"
+                    <img id="best-logo" src="/IMG/logo/logo.webp" alt="Mejor opción hoy" width="736" height="723"
                       loading="lazy" decoding="async" />
                   </div>
                   <div>
@@ -474,7 +484,7 @@
             <section class="panel sunat-widget" aria-label="SUNAT referencia oficial">
               <header class="sunat-widget__head">
                 <div class="sunat-title">
-                  <img src="IMG/casas/sunat.webp" alt="SUNAT" class="sunat-logo" width="69" height="69" loading="lazy"
+                  <img src="/IMG/casas/sunat.webp" alt="SUNAT" class="sunat-logo" width="69" height="69" loading="lazy"
                     decoding="async" />
                   <span class="sunat-text">SUNAT</span>
                   <span class="sunat-sub">(referencia oficial)</span>
@@ -885,7 +895,7 @@
             <!-- Col 1: Marca minimal -->
             <section class="pdh-footer__brand" aria-label="Precio Dólar Hoy">
               <a class="pdh-footer__logo" href="/" aria-label="Ir al inicio">
-                <img src="IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-footer__logo-img"
+                <img src="/IMG/logo/logo.webp" alt="Precio del dólar hoy en Perú" class="pdh-footer__logo-img"
                   width="736" height="723" loading="lazy" decoding="async">
               </a>
 

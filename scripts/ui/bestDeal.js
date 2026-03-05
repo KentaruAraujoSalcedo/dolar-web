@@ -145,22 +145,12 @@ export function renderBestDeal() {
     const raw = getCasaLogoSrc(winner.casa);
     const src = raw ? (BASE_PATH + raw.replace(/^\//, '')) : '';
 
-    if (src) {
-      logoEl.src = src;
-      logoEl.alt = winner.casa ? `Logo de ${winner.casa}` : 'Logo';
+    logoEl.src = src || '/IMG/ui/best-placeholder.webp';
+    logoEl.alt = winner.casa ? `Logo de ${winner.casa}` : 'Logo';
 
-      // ✅ LCP priority
-      logoEl.loading = 'eager';
-      logoEl.fetchPriority = 'high';
-      logoEl.decoding = 'async';
-    } else {
-      // fallback a placeholder (no dejes sin src)
-      logoEl.src = '/IMG/ui/best-placeholder.webp';
-      logoEl.alt = 'Mejor opción hoy';
-      logoEl.loading = 'eager';
-      logoEl.fetchPriority = 'high';
-      logoEl.decoding = 'async';
-    }
+    logoEl.loading = 'eager';
+    logoEl.fetchPriority = 'high';
+    logoEl.decoding = 'async';
 
     if (src && typeof src === "string" && src.length > 5) {
       const key = 'bestdeal-preload';
@@ -176,7 +166,6 @@ export function renderBestDeal() {
 
       link.href = src;
     }
-    logoEl.src = src || '/IMG/ui/best-placeholder.webp';
   }
 
   // Botón ir a la casa (con UTM)

@@ -143,27 +143,28 @@ export function renderBestDeal() {
   // Logo
   if (logoEl) {
     const raw = getCasaLogoSrc(winner.casa);
-    const src = raw ? (BASE_PATH + raw.replace(/^\//, '')) : '';
+    const src = raw ? (BASE_PATH + raw.replace(/^\//, "")) : "";
 
-    logoEl.src = src || '/IMG/ui/best-placeholder.webp';
-    logoEl.alt = winner.casa ? `Logo de ${winner.casa}` : 'Logo';
+    const finalSrc = src || "/IMG/ui/best-placeholder.webp";
 
-    logoEl.loading = 'eager';
-    logoEl.fetchPriority = 'high';
-    logoEl.decoding = 'async';
+    // Pintar imagen
+    logoEl.src = finalSrc;
+    logoEl.alt = winner.casa ? `Logo de ${winner.casa}` : "Mejor opción hoy";
+    logoEl.loading = "eager";
+    logoEl.fetchPriority = "high";
+    logoEl.decoding = "async";
 
-    if (src && typeof src === "string" && src.length > 5) {
-      const key = 'bestdeal-preload';
+    // Preload SOLO si es una ruta válida (evita "invalid href")
+    if (src && (src.startsWith("/") || src.startsWith("http"))) {
+      const key = "bestdeal-preload";
       let link = document.querySelector(`link[data-${key}]`);
-
       if (!link) {
-        link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.setAttribute(`data-${key}`, '1');
+        link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.setAttribute(`data-${key}`, "1");
         document.head.appendChild(link);
       }
-
       link.href = src;
     }
   }

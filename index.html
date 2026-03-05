@@ -75,13 +75,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
   </noscript>
 
-  <!-- CSS (no render-blocking) -->
-  <link rel="preload" href="css/themes-estructura/theme-estructura-base.css" as="style"
-    onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="css/themes-estructura/theme-estructura-base.css">
-  </noscript>
+  <!-- Estructura: NO diferir (evita CLS gigante) -->
+  <link rel="stylesheet" href="css/themes-estructura/theme-estructura-base.css">
 
+  <!-- Diseño: sí puedes diferir -->
   <link rel="preload" href="css/themes-diseno/theme-diseno-cool.css" as="style"
     onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
@@ -303,7 +300,8 @@
               <span class="pdh-updated">
                 Actualizado:
                 <time id="updatedAt" datetime="">
-                  <strong id="fecha">—</strong> <strong id="hora">—</strong>
+                  <strong id="fecha">88 de septiembre de 8888</strong>
+                  <strong id="hora">88:88 p. m.</strong>
                 </time>
               </span>
 

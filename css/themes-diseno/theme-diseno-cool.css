@@ -1432,3 +1432,37 @@ button, input, select, textarea{ font: inherit; }
     backface-visibility: hidden;
   }
 }
+
+
+/* ===== Fix mínimo: evitar tiles blancos en Android al zoom ===== */
+@media (hover: none) and (pointer: coarse) {
+
+  /* 1) Elimina SOLO lo más problemático del theme Metricool */
+  .page::before { 
+    mix-blend-mode: normal !important; 
+    opacity: 0.08 !important;
+  }
+  .page::after { 
+    animation: none !important; 
+    filter: none !important; 
+    opacity: 0.35 !important;
+  }
+
+  /* 2) Evita background fixed en touch */
+  .page { 
+    background-attachment: scroll !important; 
+  }
+
+  /* 3) Evita máscaras (muy problemáticas en Android) */
+  .center::before,
+  .best-deal::before {
+    content: none !important;
+  }
+
+  /* 4) Ads: fondo sólido y tamaño estable (reduce parpadeo) */
+  .ad-slot {
+    background: #fff !important;
+    min-height: 250px; /* ajusta según tu slot */
+    contain: paint;    /* solo paint, no layout/style */
+  }
+}

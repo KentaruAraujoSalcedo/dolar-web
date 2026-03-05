@@ -1403,23 +1403,32 @@ button, input, select, textarea{ font: inherit; }
 
 
 
-/* Metricool: versión segura para móviles reales */
+/* ===== Fix: white tiles / flicker en Android al hacer zoom/scroll ===== */
 @media (hover: none) and (pointer: coarse) {
+
+  /* 1) Apaga capas fullscreen "difíciles" */
   .page::before,
   .page::after {
-    position: absolute !important;   /* clave: no fixed */
-    inset: 0 !important;
-    transform: none !important;
+    content: none !important;
   }
 
-  .page::before{
-    mix-blend-mode: normal !important; /* clave: no blend */
-    opacity: 0.08 !important;          /* muy suave */
+  /* 2) Evita fixed background en móviles reales */
+  .page {
+    background-attachment: scroll !important;
   }
 
-  .page::after{
-    filter: none !important;           /* clave: no blur */
-    animation: none !important;        /* clave: no animación */
-    opacity: 0.35 !important;
+  /* 3) Quita TODOS los filtros que fuerzan composición */
+  * {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  /* 4) Ads: aislar el repaint/composición */
+  .ad-slot,
+  iframe {
+    contain: layout paint style !important;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 }

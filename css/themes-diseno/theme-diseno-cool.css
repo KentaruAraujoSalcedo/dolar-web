@@ -1401,3 +1401,25 @@ button, input, select, textarea{ font: inherit; }
   #cookie-banner button{ font-size: var(--fs-12); }
 }
 
+
+
+/* Metricool: versión segura para móviles reales */
+@media (hover: none) and (pointer: coarse) {
+  .page::before,
+  .page::after {
+    position: absolute !important;   /* clave: no fixed */
+    inset: 0 !important;
+    transform: none !important;
+  }
+
+  .page::before{
+    mix-blend-mode: normal !important; /* clave: no blend */
+    opacity: 0.08 !important;          /* muy suave */
+  }
+
+  .page::after{
+    filter: none !important;           /* clave: no blur */
+    animation: none !important;        /* clave: no animación */
+    opacity: 0.35 !important;
+  }
+}

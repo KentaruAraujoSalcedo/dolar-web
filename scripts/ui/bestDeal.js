@@ -20,13 +20,13 @@ function isSunatRow(x) {
 
 export function renderBestDeal() {
   // IDs reales de tu HTML ✅
-const els = getEls();
-const nameEl = els.bestName;
-const buyEl  = els.bestBuy;
-const sellEl = els.bestSell;
-const noteEl = els.bestNote;
-const btnEl  = els.btnIrMejor;
-const logoEl = els.bestLogo;
+  const els = getEls();
+  const nameEl = els.bestName;
+  const buyEl = els.bestBuy;
+  const sellEl = els.bestSell;
+  const noteEl = els.bestNote;
+  const btnEl = els.btnIrMejor;
+  const logoEl = els.bestLogo;
 
   if (!nameEl || !buyEl || !sellEl) return;
 
@@ -45,8 +45,11 @@ const logoEl = els.bestLogo;
       btnEl.onclick = null;
     }
     if (logoEl) {
-      logoEl.removeAttribute('src');
-      logoEl.setAttribute('alt', '');
+      logoEl.src = '/IMG/ui/best-placeholder.webp';
+      logoEl.alt = 'Mejor opción hoy';
+      logoEl.loading = 'eager';
+      logoEl.fetchPriority = 'high';
+      logoEl.decoding = 'async';
     }
     return;
   }
@@ -88,8 +91,11 @@ const logoEl = els.bestLogo;
     sellEl.textContent = '—';
     if (noteEl) noteEl.textContent = '';
     if (logoEl) {
-      logoEl.removeAttribute('src');
-      logoEl.setAttribute('alt', '');
+      logoEl.src = '/IMG/ui/best-placeholder.webp';
+      logoEl.alt = 'Mejor opción hoy';
+      logoEl.loading = 'eager';
+      logoEl.fetchPriority = 'high';
+      logoEl.decoding = 'async';
     }
     return;
   }
@@ -141,14 +147,37 @@ const logoEl = els.bestLogo;
 
     if (src) {
       logoEl.src = src;
-      logoEl.setAttribute('alt', winner.casa ? `Logo de ${winner.casa}` : 'Logo');
+      logoEl.alt = winner.casa ? `Logo de ${winner.casa}` : 'Logo';
+
+      // ✅ LCP priority
+      logoEl.loading = 'eager';
+      logoEl.fetchPriority = 'high';
+      logoEl.decoding = 'async';
     } else {
-      logoEl.removeAttribute('src');
-      logoEl.setAttribute('alt', '');
+      // fallback a placeholder (no dejes sin src)
+      logoEl.src = '/IMG/ui/best-placeholder.webp';
+      logoEl.alt = 'Mejor opción hoy';
+      logoEl.loading = 'eager';
+      logoEl.fetchPriority = 'high';
+      logoEl.decoding = 'async';
     }
+
+    if (src) {
+      const key = 'bestdeal-preload';
+      let link = document.querySelector(`link[data-${key}]`);
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.setAttribute(`data-${key}`, '1');
+        document.head.appendChild(link);
+      }
+      link.href = src;
+    }
+    logoEl.src = src || '/IMG/ui/best-placeholder.webp';
   }
 
-    // Botón ir a la casa (con UTM)
+  // Botón ir a la casa (con UTM)
   if (btnEl) {
     const hasUrl = Boolean(winner.url);
 
@@ -157,15 +186,15 @@ const logoEl = els.bestLogo;
 
     btnEl.onclick = hasUrl
       ? () => {
-          const urlConUTM = withUTM(winner.url, {
-            source: 'preciodolarhoy',
-            medium: 'referral',
-            campaign: 'clickout',
-            content: 'best_deal',
-          });
+        const urlConUTM = withUTM(winner.url, {
+          source: 'preciodolarhoy',
+          medium: 'referral',
+          campaign: 'clickout',
+          content: 'best_deal',
+        });
 
-          window.open(urlConUTM, '_blank', 'noopener');
-        }
+        window.open(urlConUTM, '_blank', 'noopener');
+      }
       : null;
   }
 

@@ -162,9 +162,10 @@ export function renderBestDeal() {
       logoEl.decoding = 'async';
     }
 
-    if (src) {
+    if (src && typeof src === "string" && src.length > 5) {
       const key = 'bestdeal-preload';
       let link = document.querySelector(`link[data-${key}]`);
+
       if (!link) {
         link = document.createElement('link');
         link.rel = 'preload';
@@ -172,6 +173,7 @@ export function renderBestDeal() {
         link.setAttribute(`data-${key}`, '1');
         document.head.appendChild(link);
       }
+
       link.href = src;
     }
     logoEl.src = src || '/IMG/ui/best-placeholder.webp';

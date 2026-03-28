@@ -1,48 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- HOME -->
   <url>
     <loc>https://preciodolarhoy.pe/</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- GUIAS PRINCIPALES -->
-
+  <!-- INDICE DE GUIAS -->
   <url>
-  <loc>https://preciodolarhoy.pe/guias/</loc>
-  <lastmod>2026-02-23</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.7</priority>
+    <loc>https://preciodolarhoy.pe/guias/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
 
+  <!-- GUIAS ACTUALES -->
   <url>
     <loc>https://preciodolarhoy.pe/guias/guia-del-dolar/</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://preciodolarhoy.pe/guias/sunat-vs-mercado/</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://preciodolarhoy.pe/guias/compra-vs-venta/</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/sunat-vs-mercado/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/como-comparar/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- NUEVAS GUIAS RECOMENDADAS -->
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/donde-cambiar-dolares-peru/</loc>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-  <loc>https://preciodolarhoy.pe/guias/como-comparar/</loc>
-  <lastmod>2026-02-25</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.7</priority>
+    <loc>https://preciodolarhoy.pe/guias/mejores-casas-de-cambio-online/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/que-afecta-el-precio-del-dolar/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/cuando-sube-el-dolar/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/tipo-de-cambio-bancos-vs-casas/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/guias/que-es-el-dolar-sunat/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- PAGINAS UTILES / LANDINGS -->
+  <url>
+    <loc>https://preciodolarhoy.pe/dolar-hoy-lima/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/dolar-hoy-ocona/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/precio-dolar-sunat/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/dolar-compra-venta/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/soles-a-dolares/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://preciodolarhoy.pe/dolares-a-soles/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- PAGINAS LEGALES -->

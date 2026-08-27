@@ -1,96 +1,246 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Prueba de Links Scotiabank</title>
+  <title>Laboratorio de Deep Links</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
       margin: 0;
-      padding: 30px 20px;
-      color: #222;
+      padding: 24px;
+      color: #1f2937;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 900px;
       margin: 0 auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
     }
 
     h1 {
       margin-top: 0;
-      font-size: 26px;
+      font-size: 28px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .info-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .label {
+      font-weight: bold;
+      margin-bottom: 5px;
     }
 
     .test {
-      margin-bottom: 30px;
-      padding-bottom: 25px;
-      border-bottom: 1px solid #ddd;
+      padding: 18px 0;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     .test:last-child {
       border-bottom: none;
     }
 
-    .title {
-      font-weight: bold;
-      margin-bottom: 8px;
+    .test-title {
       font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 7px;
     }
 
     .description {
-      margin-bottom: 15px;
+      color: #6b7280;
       font-size: 14px;
       line-height: 1.5;
+      margin-bottom: 12px;
     }
 
     .button {
       display: inline-block;
-      padding: 14px 20px;
-      background: #222;
-      color: white;
-      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      padding: 13px 18px;
       border-radius: 8px;
       font-weight: bold;
+      font-size: 14px;
+      text-decoration: none;
+      background: #111827;
+      color: #ffffff;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .button.secondary {
+      background: #4b5563;
+    }
+
+    .button.light {
+      background: #e5e7eb;
+      color: #111827;
     }
 
     .url {
       margin-top: 12px;
+      font-family: monospace;
       font-size: 12px;
+      line-height: 1.5;
       word-break: break-all;
-      background: #f1f1f1;
-      padding: 10px;
-      border-radius: 6px;
+      background: #f3f4f6;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .result {
+      margin-top: 12px;
+      padding: 12px;
+      background: #eef2ff;
+      border-radius: 8px;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .log {
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: 10px;
+      padding: 15px;
+      font-family: monospace;
+      font-size: 12px;
+      min-height: 160px;
+      max-height: 320px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.5;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>Prueba de Deep Links Scotiabank</h1>
+  <!-- CABECERA -->
+  <div class="card">
+    <h1>Laboratorio de Deep Links</h1>
 
-    <!-- PRUEBA 1 -->
+    <div class="subtitle">
+      Página de pruebas para Custom Schemes, App Links, Universal Links,
+      URLs HTTPS, embeddedURL y parámetros UTM.
+    </div>
+
+    <div class="grid">
+
+      <div class="info-box">
+        <div class="label">User Agent</div>
+        <div id="ua"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">Sistema detectado</div>
+        <div id="os"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">Navegador aproximado</div>
+        <div id="browser"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">Origen de la página</div>
+        <div id="origin"></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- PRUEBAS SCOTIABANK -->
+  <div class="card">
+
+    <h2>Pruebas Scotiabank</h2>
+
+    <!-- TEST 1 -->
     <div class="test">
 
-      <div class="title">
-        1. Deeplink directo
+      <div class="test-title">
+        1. Custom Scheme directo vía href
       </div>
 
       <div class="description">
-        Esta prueba intenta abrir directamente la app Scotiabank usando
-        scotiabankpe://
+        Prueba el esquema custom directamente desde un enlace HTML.
       </div>
 
       <a
         class="button"
+        id="deeplinkHref"
         href="scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
         Abrir Deeplink
       </a>
@@ -102,15 +252,39 @@
     </div>
 
 
-    <!-- PRUEBA 2 -->
+    <!-- TEST 2 -->
     <div class="test">
 
-      <div class="title">
-        2. HTTPS sin embeddedURL
+      <div class="test-title">
+        2. Custom Scheme vía JavaScript
       </div>
 
       <div class="description">
-        Esta prueba usa solamente el link web.
+        Ejecuta el mismo deeplink mediante window.location.href después de un clic real.
+      </div>
+
+      <button
+        class="button"
+        onclick="probarDeeplinkJS()">
+        Abrir con JavaScript
+      </button>
+
+      <div id="deeplinkStatus" class="status">
+        Sin ejecutar
+      </div>
+
+    </div>
+
+
+    <!-- TEST 3 -->
+    <div class="test">
+
+      <div class="test-title">
+        3. HTTPS sin embeddedURL
+      </div>
+
+      <div class="description">
+        Prueba solamente la URL web.
       </div>
 
       <a
@@ -126,30 +300,616 @@
     </div>
 
 
-    <!-- PRUEBA 3 -->
+    <!-- TEST 4 -->
     <div class="test">
 
-      <div class="title">
-        3. HTTPS + embeddedURL
+      <div class="test-title">
+        4. HTTPS + embeddedURL codificado
       </div>
 
       <div class="description">
-        Esta prueba usa el HTTPS y dentro lleva el deeplink codificado.
+        Prueba la URL web con el Custom Scheme dentro de embeddedURL usando URL encoding.
       </div>
 
       <a
         class="button"
         href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe%3A%2F%2F%2FwebView%3Fpath%3D%2Fu%2Finsurances%2Facquired-insurances%2Fcatalog%26utm_source%3Dmeta%26utm_medium%3Dpaid-cpa%26utm_campaign%3DTarjetaSeguraLF%26source%3Dflujo">
-        Abrir HTTPS + Deeplink
+        Abrir HTTPS + embeddedURL
       </a>
 
       <div class="url">
-        HTTPS con embeddedURL codificado
+        https://mi.scotiabank.com.pe/login?...&embeddedURL=scotiabankpe%3A%2F%2F%2FwebView...
       </div>
+
+    </div>
+
+
+    <!-- TEST 5 -->
+    <div class="test">
+
+      <div class="test-title">
+        5. HTTPS + embeddedURL sin codificar
+      </div>
+
+      <div class="description">
+        Sirve para comparar el comportamiento con la versión que no aplica URL encoding al deeplink interno.
+      </div>
+
+      <a
+        class="button"
+        href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
+        Abrir sin encoding
+      </a>
 
     </div>
 
   </div>
 
+
+  <!-- LABORATORIO PERSONALIZADO -->
+  <div class="card">
+
+    <h2>Probador personalizado</h2>
+
+    <div class="description">
+      Pega cualquier deeplink, App Link, Universal Link o URL HTTPS.
+    </div>
+
+    <textarea
+      id="customUrl"
+      placeholder="Ejemplo: scotiabankpe:///webView?path=..."></textarea>
+
+    <button
+      class="button"
+      onclick="abrirCustomHref()">
+      Abrir URL
+    </button>
+
+    <button
+      class="button secondary"
+      onclick="abrirCustomJS()">
+      Abrir con JavaScript
+    </button>
+
+    <button
+      class="button light"
+      onclick="copiarCustom()">
+      Copiar
+    </button>
+
+  </div>
+
+
+  <!-- URL ENCODER -->
+  <div class="card">
+
+    <h2>URL Encoder / Decoder</h2>
+
+    <div class="description">
+      Útil para preparar valores como embeddedURL.
+    </div>
+
+    <textarea
+      id="encoderInput"
+      placeholder="Pega aquí el deeplink que quieres codificar"></textarea>
+
+    <button
+      class="button"
+      onclick="codificar()">
+      Encode
+    </button>
+
+    <button
+      class="button secondary"
+      onclick="decodificar()">
+      Decode
+    </button>
+
+    <div class="result" id="encoderResult">
+      Resultado
+    </div>
+
+  </div>
+
+
+  <!-- CONSTRUCTOR EMBEDDED URL -->
+  <div class="card">
+
+    <h2>Constructor embeddedURL</h2>
+
+    <div class="description">
+      Genera automáticamente una URL web con el deeplink codificado dentro de embeddedURL.
+    </div>
+
+    <label>URL web base</label>
+
+    <textarea id="baseUrl">
+https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+    </textarea>
+
+    <label>Deeplink</label>
+
+    <textarea id="embeddedDeepLink">
+scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+    </textarea>
+
+    <button
+      class="button"
+      onclick="generarEmbedded()">
+      Generar URL
+    </button>
+
+    <button
+      class="button light"
+      onclick="copiarEmbedded()">
+      Copiar resultado
+    </button>
+
+    <div
+      class="result"
+      id="embeddedResult">
+      Resultado
+    </div>
+
+  </div>
+
+
+  <!-- EVENT LOG -->
+  <div class="card">
+
+    <h2>Registro de eventos</h2>
+
+    <div class="description">
+      El navegador no puede confirmar al 100% que una app se abrió,
+      pero visibilitychange y pagehide sirven como señales para diagnóstico.
+    </div>
+
+    <div class="log" id="log"></div>
+
+    <br>
+
+    <button
+      class="button light"
+      onclick="limpiarLog()">
+      Limpiar registro
+    </button>
+
+  </div>
+
+
+  <!-- NOTA -->
+  <div class="card">
+    <div class="notice">
+      <strong>Importante:</strong>
+      un navegador web no puede garantizar si una app fue abierta correctamente.
+      Los eventos visibilitychange, blur y pagehide sirven como señales,
+      pero no son confirmación absoluta. Instagram, Facebook, WhatsApp,
+      Chrome, Safari y WebViews pueden comportarse de manera distinta.
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+
+  const deeplinkScotiabank =
+    "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo";
+
+
+  function log(mensaje) {
+
+    const logBox =
+      document.getElementById("log");
+
+    const hora =
+      new Date().toLocaleTimeString();
+
+    logBox.textContent +=
+      "[" + hora + "] " + mensaje + "\n";
+
+    logBox.scrollTop =
+      logBox.scrollHeight;
+
+  }
+
+
+  function detectarSistema() {
+
+    const ua =
+      navigator.userAgent.toLowerCase();
+
+    if (/iphone|ipad|ipod/.test(ua)) {
+      return "iOS";
+    }
+
+    if (/android/.test(ua)) {
+      return "Android";
+    }
+
+    if (/windows/.test(ua)) {
+      return "Windows";
+    }
+
+    if (/macintosh|mac os x/.test(ua)) {
+      return "macOS";
+    }
+
+    return "Desconocido";
+
+  }
+
+
+  function detectarBrowser() {
+
+    const ua =
+      navigator.userAgent;
+
+    if (/Instagram/i.test(ua)) {
+      return "Instagram WebView";
+    }
+
+    if (/FBAN|FBAV/i.test(ua)) {
+      return "Facebook WebView";
+    }
+
+    if (/CriOS/i.test(ua)) {
+      return "Chrome iOS";
+    }
+
+    if (/Chrome/i.test(ua)) {
+      return "Chrome";
+    }
+
+    if (/Safari/i.test(ua)) {
+      return "Safari";
+    }
+
+    if (/Firefox/i.test(ua)) {
+      return "Firefox";
+    }
+
+    return "No identificado";
+
+  }
+
+
+  function cargarInfo() {
+
+    document.getElementById("ua").textContent =
+      navigator.userAgent;
+
+    document.getElementById("os").textContent =
+      detectarSistema();
+
+    document.getElementById("browser").textContent =
+      detectarBrowser();
+
+    document.getElementById("origin").textContent =
+      location.origin;
+
+    log("Página cargada");
+
+    log(
+      "Sistema: " +
+      detectarSistema()
+    );
+
+    log(
+      "Navegador: " +
+      detectarBrowser()
+    );
+
+  }
+
+
+  function probarDeeplinkJS() {
+
+    const status =
+      document.getElementById("deeplinkStatus");
+
+    status.textContent =
+      "Intentando abrir app...";
+
+    log(
+      "Intento de Custom Scheme vía JavaScript"
+    );
+
+    const inicio =
+      Date.now();
+
+    window.location.href =
+      deeplinkScotiabank;
+
+    setTimeout(function () {
+
+      const tiempo =
+        Date.now() - inicio;
+
+      status.textContent =
+        "Sin confirmación después de " +
+        tiempo +
+        " ms";
+
+      log(
+        "Timeout deeplink: navegador siguió activo después de " +
+        tiempo +
+        " ms"
+      );
+
+    }, 2500);
+
+  }
+
+
+  function abrirCustomHref() {
+
+    const url =
+      document.getElementById("customUrl")
+      .value
+      .trim();
+
+    if (!url) {
+      alert("Ingresa una URL");
+      return;
+    }
+
+    log(
+      "Abriendo URL personalizada: " +
+      url
+    );
+
+    window.location.href =
+      url;
+
+  }
+
+
+  function abrirCustomJS() {
+
+    const url =
+      document.getElementById("customUrl")
+      .value
+      .trim();
+
+    if (!url) {
+      alert("Ingresa una URL");
+      return;
+    }
+
+    log(
+      "Abriendo URL personalizada vía JavaScript: " +
+      url
+    );
+
+    setTimeout(function () {
+
+      window.location.href =
+        url;
+
+    }, 50);
+
+  }
+
+
+  function copiarCustom() {
+
+    const texto =
+      document.getElementById("customUrl")
+      .value;
+
+    navigator.clipboard
+      .writeText(texto);
+
+    log(
+      "URL personalizada copiada"
+    );
+
+  }
+
+
+  function codificar() {
+
+    const texto =
+      document.getElementById("encoderInput")
+      .value;
+
+    const resultado =
+      encodeURIComponent(texto);
+
+    document.getElementById("encoderResult")
+      .textContent =
+      resultado;
+
+    log(
+      "URL codificada"
+    );
+
+  }
+
+
+  function decodificar() {
+
+    const texto =
+      document.getElementById("encoderInput")
+      .value;
+
+    try {
+
+      const resultado =
+        decodeURIComponent(texto);
+
+      document.getElementById("encoderResult")
+        .textContent =
+        resultado;
+
+      log(
+        "URL decodificada"
+      );
+
+    } catch (e) {
+
+      document.getElementById("encoderResult")
+        .textContent =
+        "Error al decodificar";
+
+      log(
+        "Error decodeURIComponent"
+      );
+
+    }
+
+  }
+
+
+  function generarEmbedded() {
+
+    const base =
+      document.getElementById("baseUrl")
+      .value
+      .trim();
+
+    const deeplink =
+      document.getElementById("embeddedDeepLink")
+      .value
+      .trim();
+
+    if (!base || !deeplink) {
+
+      alert(
+        "Completa URL web y deeplink"
+      );
+
+      return;
+
+    }
+
+    const separador =
+      base.includes("?")
+      ? "&"
+      : "?";
+
+    const resultado =
+      base +
+      separador +
+      "embeddedURL=" +
+      encodeURIComponent(deeplink);
+
+    document.getElementById("embeddedResult")
+      .textContent =
+      resultado;
+
+    log(
+      "URL embedded generada"
+    );
+
+  }
+
+
+  function copiarEmbedded() {
+
+    const texto =
+      document.getElementById("embeddedResult")
+      .textContent;
+
+    navigator.clipboard
+      .writeText(texto);
+
+    log(
+      "Embedded URL copiada"
+    );
+
+  }
+
+
+  function limpiarLog() {
+
+    document.getElementById("log")
+      .textContent =
+      "";
+
+  }
+
+
+  document.addEventListener(
+    "visibilitychange",
+    function () {
+
+      log(
+        "visibilitychange → " +
+        document.visibilityState
+      );
+
+    }
+  );
+
+
+  window.addEventListener(
+    "blur",
+    function () {
+
+      log(
+        "window blur"
+      );
+
+    }
+  );
+
+
+  window.addEventListener(
+    "focus",
+    function () {
+
+      log(
+        "window focus"
+      );
+
+    }
+  );
+
+
+  window.addEventListener(
+    "pagehide",
+    function () {
+
+      log(
+        "pagehide detectado"
+      );
+
+    }
+  );
+
+
+  window.addEventListener(
+    "pageshow",
+    function () {
+
+      log(
+        "pageshow detectado"
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    "deeplinkHref"
+  ).addEventListener(
+    "click",
+    function () {
+
+      log(
+        "Clic Custom Scheme vía href"
+      );
+
+    }
+  );
+
+
+  cargarInfo();
+
+</script>
+
 </body>
 </html>
+```

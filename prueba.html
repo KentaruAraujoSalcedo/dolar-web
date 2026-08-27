@@ -21,10 +21,13 @@
       --primary: #111827;
       --primary-hover: #273244;
       --soft: #f7f8fa;
+
       --success-bg: #ecfdf3;
       --success: #087443;
+
       --warning-bg: #fff7ed;
       --warning: #9a3412;
+
       --info-bg: #eff6ff;
       --info: #1d4ed8;
     }
@@ -158,11 +161,6 @@
       box-shadow: 0 0 0 2px rgba(17, 24, 39, .06);
     }
 
-    input[readonly] {
-      background: #f8fafc;
-      color: #475467;
-    }
-
     textarea {
       resize: vertical;
       min-height: 75px;
@@ -176,16 +174,59 @@
       margin: 20px 0;
     }
 
-    .type-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: var(--info-bg);
-      color: var(--info);
+    /* =========================
+       SELECTOR WEBVIEW / NATIVO
+       ========================= */
+
+    .type-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .type-option {
+      position: relative;
+    }
+
+    .type-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .type-option label {
+      margin: 0;
+      padding: 13px 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      cursor: pointer;
+      background: white;
+      transition: .15s ease;
+    }
+
+    .type-option label strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 3px;
+      color: #172033;
+    }
+
+    .type-option label span {
+      display: block;
       font-size: 11px;
-      font-weight: bold;
-      margin-top: 7px;
+      color: #667085;
+      line-height: 1.35;
+    }
+
+    .type-option input:checked + label {
+      background: var(--info-bg);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, .08);
+    }
+
+    .type-option input:checked + label strong {
+      color: var(--info);
     }
 
     .actions {
@@ -299,7 +340,20 @@
       line-height: 1.45;
     }
 
-    /* CATÁLOGO */
+    .success-note {
+      margin-top: 12px;
+      background: #ecfdf3;
+      color: #087443;
+      border: 1px solid #bbf7d0;
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    /* =========================
+       CATÁLOGO
+       ========================= */
 
     .catalog-card {
       position: sticky;
@@ -356,7 +410,7 @@
       font-size: 9px;
       color: #667085;
       overflow-wrap: anywhere;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
     .empty {
@@ -391,7 +445,8 @@
       }
 
       .form-grid,
-      .preview-grid {
+      .preview-grid,
+      .type-selector {
         grid-template-columns: 1fr;
       }
 
@@ -406,249 +461,444 @@
   </style>
 </head>
 
+
 <body>
 
-  <div class="page">
+<div class="page">
 
-    <header class="header">
-      <h1>Generador de Links de Campaña</h1>
-      <p>
-        Genera enlaces listos para campañas digitales sin tener que construir
-        parámetros o codificar deeplinks manualmente.
-      </p>
-    </header>
+  <header class="header">
+    <h1>Generador de Links de Campaña</h1>
 
-
-    <div class="layout">
-
-      <!-- =======================
-           COLUMNA PRINCIPAL
-           ======================= -->
-
-      <main class="left">
-
-        <!-- PRODUCTO -->
-
-        <section class="card">
-
-          <h2>
-            <span class="step">1</span>
-            Selecciona el producto
-          </h2>
-
-          <p class="section-description">
-            Busca el producto que utilizará la campaña. Las rutas Web y App se
-            completarán automáticamente.
-          </p>
-
-          <div class="form-grid">
-
-            <div class="field full">
-              <label for="productSelect">Producto</label>
-
-              <select id="productSelect" onchange="seleccionarProducto(this.value)">
-                <option value="">Seleccionar producto...</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="webUrl">URL Web</label>
-
-              <input
-                id="webUrl"
-                type="text"
-                placeholder="https://..."
-              >
-
-              <span class="hint">
-                Puede modificarse manualmente si fuera necesario.
-              </span>
-            </div>
-
-            <div class="field">
-              <label for="appUrl">Deeplink App</label>
-
-              <input
-                id="appUrl"
-                type="text"
-                placeholder="scotiabankpe:///..."
-              >
-
-              <span class="hint">
-                Deeplink que abrirá la experiencia dentro del app.
-              </span>
-            </div>
-
-          </div>
-
-          <div id="productTypeBadge" class="type-badge hidden"></div>
-
-        </section>
+    <p>
+      Genera enlaces listos para Google, Meta, Email y otros canales,
+      sin construir parámetros ni codificar deeplinks manualmente.
+    </p>
+  </header>
 
 
-        <!-- CAMPAÑA -->
-
-        <section class="card">
-
-          <h2>
-            <span class="step">2</span>
-            Datos de campaña
-          </h2>
-
-          <p class="section-description">
-            Selecciona un valor recomendado o escribe uno diferente si la
-            campaña requiere una nomenclatura especial.
-          </p>
+  <div class="layout">
 
 
-          <div class="form-grid">
+    <!-- =====================================================
+         IZQUIERDA
+         ===================================================== -->
 
-            <div class="field">
-
-              <label for="utmSource">
-                utm_source
-              </label>
-
-              <input
-                id="utmSource"
-                list="sourceOptions"
-                placeholder="Ej. meta"
-              >
-
-              <datalist id="sourceOptions">
-                <option value="meta">
-                <option value="google">
-                <option value="facebook">
-                <option value="instagram">
-                <option value="masterbase">
-                <option value="email">
-                <option value="tiktok">
-                <option value="youtube">
-              </datalist>
-
-              <span class="hint">
-                Plataforma o fuente que genera el tráfico.
-              </span>
-
-            </div>
+    <main class="left">
 
 
-            <div class="field">
+      <!-- ===================================================
+           PASO 1
+           =================================================== -->
 
-              <label for="utmMedium">
-                utm_medium
-              </label>
+      <section class="card">
 
-              <input
-                id="utmMedium"
-                list="mediumOptions"
-                placeholder="Ej. paid-cpa"
-              >
+        <h2>
+          <span class="step">1</span>
+          Producto y tipo de experiencia
+        </h2>
 
-              <datalist id="mediumOptions">
-                <option value="paid-cpa">
-                <option value="paid-cpc">
-                <option value="paid-social">
-                <option value="email">
-                <option value="organic">
-                <option value="display">
-                <option value="referral">
-              </datalist>
-
-              <span class="hint">
-                Tipo de tráfico o medio de campaña.
-              </span>
-
-            </div>
+        <p class="section-description">
+          Puedes seleccionar un producto del catálogo o ingresar manualmente
+          la URL Web y el Deeplink App.
+        </p>
 
 
-            <div class="field full">
+        <div class="form-grid">
 
-              <label for="utmCampaign">
-                utm_campaign
-              </label>
+          <div class="field full">
 
-              <input
-                id="utmCampaign"
-                list="campaignOptions"
-                placeholder="Ej. TarjetaSeguraLF"
-              >
+            <label for="productSelect">
+              Producto
+            </label>
 
-              <datalist id="campaignOptions">
-                <!-- Aquí puedes agregar campañas estándar -->
-                <option value="TarjetaSeguraLF">
-                <option value="Nuevos-clientes">
-              </datalist>
+            <select
+              id="productSelect"
+              onchange="seleccionarProducto(this.value)">
 
-              <span class="hint">
-                Nombre de la campaña. Respeta la nomenclatura definida por Marketing.
-              </span>
+              <option value="">
+                Seleccionar producto...
+              </option>
 
-            </div>
+            </select>
 
           </div>
 
 
-          <!-- SOLO WEBVIEW -->
+          <div class="field">
 
-          <div id="webviewFields" class="hidden">
+            <label for="webUrl">
+              URL Web
+            </label>
 
-            <hr class="divider">
+            <input
+              id="webUrl"
+              type="text"
+              placeholder="https://mi.scotiabank.com.pe/..."
+            >
 
-            <p class="section-description">
-              Este producto utiliza WebView. Completa también los parámetros
-              internos de navegación.
-            </p>
+            <span class="hint">
+              Página web que se utilizará como destino o fallback.
+            </span>
 
-            <div class="form-grid">
-
-              <div class="field">
-
-                <label for="sourceInternal">
-                  source
-                </label>
-
-                <input
-                  id="sourceInternal"
-                  list="internalSourceOptions"
-                  placeholder="Ej. flujo"
-                >
-
-                <datalist id="internalSourceOptions">
-                  <option value="flujo">
-                  <option value="anuncio">
-                  <option value="banner">
-                  <option value="push">
-                </datalist>
-
-              </div>
+          </div>
 
 
-              <div class="field">
+          <div class="field">
 
-                <label for="detail">
-                  detail
-                  <span style="font-weight:normal;color:#98a2b3">
-                    (opcional)
-                  </span>
-                </label>
+            <label for="appUrl">
+              Deeplink App
+            </label>
 
-                <input
-                  id="detail"
-                  list="detailOptions"
-                  placeholder="Ej. anuncio"
-                >
+            <input
+              id="appUrl"
+              type="text"
+              placeholder="scotiabankpe:///..."
+            >
 
-                <datalist id="detailOptions">
-                  <option value="anuncio">
-                  <option value="banner">
-                  <option value="campaña">
-                </datalist>
+            <span class="hint">
+              Ruta que abre la experiencia dentro de la app.
+            </span>
 
-              </div>
+          </div>
+
+        </div>
+
+
+        <hr class="divider">
+
+
+        <label>
+          Tipo de experiencia
+        </label>
+
+        <span class="hint">
+          Selecciona cómo se abrirá el contenido dentro de la aplicación.
+        </span>
+
+
+        <div class="type-selector">
+
+          <div class="type-option">
+
+            <input
+              type="radio"
+              id="tipoWebview"
+              name="experienceType"
+              value="webview"
+              onchange="cambiarTipoExperiencia()"
+            >
+
+            <label for="tipoWebview">
+
+              <strong>WebView</strong>
+
+              <span>
+                Abre una experiencia web dentro de la app.
+                Utiliza source y detail.
+              </span>
+
+            </label>
+
+          </div>
+
+
+          <div class="type-option">
+
+            <input
+              type="radio"
+              id="tipoNativo"
+              name="experienceType"
+              value="nativo"
+              onchange="cambiarTipoExperiencia()"
+            >
+
+            <label for="tipoNativo">
+
+              <strong>Nativo</strong>
+
+              <span>
+                Abre una funcionalidad nativa de la app.
+                Solo requiere las UTM de campaña.
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ===================================================
+           PASO 2
+           =================================================== -->
+
+      <section class="card">
+
+        <h2>
+          <span class="step">2</span>
+          Datos de campaña
+        </h2>
+
+        <p class="section-description">
+          Selecciona un valor recomendado o escribe uno diferente
+          cuando la campaña lo requiera.
+        </p>
+
+
+        <div class="form-grid">
+
+
+          <!-- UTM SOURCE -->
+
+          <div class="field">
+
+            <label for="utmSource">
+              utm_source
+            </label>
+
+            <input
+              id="utmSource"
+              list="sourceOptions"
+              placeholder="Ej. meta"
+            >
+
+            <datalist id="sourceOptions">
+
+              <option value="meta">
+              <option value="google">
+              <option value="facebook">
+              <option value="instagram">
+              <option value="masterbase">
+              <option value="tiktok">
+              <option value="youtube">
+              <option value="email">
+
+            </datalist>
+
+            <span class="hint">
+              Fuente desde donde llega el usuario.
+            </span>
+
+          </div>
+
+
+
+          <!-- UTM MEDIUM -->
+
+          <div class="field">
+
+            <label for="utmMedium">
+              utm_medium
+            </label>
+
+            <input
+              id="utmMedium"
+              list="mediumOptions"
+              placeholder="Ej. paid-cpa"
+            >
+
+            <datalist id="mediumOptions">
+
+              <option value="paid-cpa">
+              <option value="paid-cpc">
+              <option value="paid-social">
+              <option value="email">
+              <option value="display">
+              <option value="organic">
+              <option value="referral">
+
+            </datalist>
+
+            <span class="hint">
+              Medio utilizado por la campaña.
+            </span>
+
+          </div>
+
+
+
+          <!-- UTM CAMPAIGN -->
+
+          <div class="field full">
+
+            <label for="utmCampaign">
+              utm_campaign
+            </label>
+
+            <input
+              id="utmCampaign"
+              list="campaignOptions"
+              placeholder="Ej. TarjetaSeguraLF"
+            >
+
+            <datalist id="campaignOptions">
+
+              <option value="TarjetaSeguraLF">
+              <option value="Nuevos-clientes">
+              <option value="grati-jul-26">
+
+            </datalist>
+
+            <span class="hint">
+              Nombre de campaña definido por Marketing.
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             CAMPOS SOLO WEBVIEW
+             ================================================= -->
+
+        <div
+          id="webviewFields"
+          class="hidden">
+
+          <hr class="divider">
+
+          <p class="section-description">
+            Esta experiencia es <strong>WebView</strong>.
+            Completa los parámetros internos.
+          </p>
+
+
+          <div class="form-grid">
+
+
+            <div class="field">
+
+              <label for="sourceInternal">
+                source
+              </label>
+
+              <input
+                id="sourceInternal"
+                list="internalSourceOptions"
+                placeholder="Ej. correo"
+              >
+
+              <datalist id="internalSourceOptions">
+
+                <option value="flujo">
+                <option value="correo">
+                <option value="anuncio">
+                <option value="banner">
+                <option value="push">
+
+              </datalist>
+
+              <span class="hint">
+                Identifica la puerta de entrada o contexto interno.
+              </span>
 
             </div>
 
+
+            <div class="field">
+
+              <label for="detail">
+                detail
+                <span style="font-weight:normal;color:#98a2b3">
+                  (opcional)
+                </span>
+              </label>
+
+              <input
+                id="detail"
+                list="detailOptions"
+                placeholder="Ej. anuncio"
+              >
+
+              <datalist id="detailOptions">
+
+                <option value="anuncio">
+                <option value="banner">
+                <option value="correo">
+                <option value="campaña">
+
+              </datalist>
+
+              <span class="hint">
+                Agrega mayor detalle sobre el origen cuando corresponda.
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn-primary"
+            onclick="generarLink()">
+
+            Generar link de campaña
+
+          </button>
+
+
+          <button
+            class="btn-secondary"
+            onclick="limpiarFormulario()">
+
+            Limpiar
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ===================================================
+           PASO 3
+           =================================================== -->
+
+      <section class="card">
+
+        <h2>
+          <span class="step">3</span>
+          Link generado
+        </h2>
+
+        <p class="section-description">
+          Copia este enlace y utilízalo en la plataforma de campaña.
+        </p>
+
+
+        <div
+          id="emptyResult"
+          class="warning">
+
+          Completa los pasos anteriores y presiona
+          <strong>Generar link de campaña</strong>.
+
+        </div>
+
+
+        <div
+          id="resultBox"
+          class="result-box">
+
+
+          <div class="result-title">
+            ✓ Link generado correctamente
+          </div>
+
+
+          <div
+            id="finalUrl"
+            class="result-url">
           </div>
 
 
@@ -656,394 +906,480 @@
 
             <button
               class="btn-primary"
-              onclick="generarLink()">
-              Generar link de campaña
+              onclick="copiarFinal()">
+
+              Copiar link final
+
             </button>
+
 
             <button
               class="btn-secondary"
-              onclick="limpiarFormulario()">
-              Limpiar
+              onclick="abrirFinal()">
+
+              Probar link
+
             </button>
 
           </div>
 
-        </section>
 
 
-        <!-- RESULTADO -->
-
-        <section class="card">
-
-          <h2>
-            <span class="step">3</span>
-            Link generado
-          </h2>
-
-          <p class="section-description">
-            Este es el enlace final que debe utilizarse en la plataforma de campaña.
-          </p>
-
-          <div id="emptyResult" class="warning">
-            Completa los datos anteriores y presiona
-            <strong>Generar link de campaña</strong>.
-          </div>
+          <div class="preview-grid">
 
 
-          <div id="resultBox" class="result-box">
+            <div class="preview">
 
-            <div class="result-title">
-              ✓ Link generado correctamente
-            </div>
-
-            <div
-              id="finalUrl"
-              class="result-url">
-            </div>
-
-            <div class="actions">
-
-              <button
-                class="btn-primary"
-                onclick="copiarFinal()">
-                Copiar link final
-              </button>
-
-              <button
-                class="btn-secondary"
-                onclick="abrirFinal()">
-                Probar link
-              </button>
-
-            </div>
-
-
-            <div class="preview-grid">
-
-              <div class="preview">
-
-                <div class="preview-title">
-                  URL Web parametrizada
-                </div>
-
-                <div
-                  id="webPreview"
-                  class="preview-value">
-                </div>
-
+              <div class="preview-title">
+                URL Web parametrizada
               </div>
 
-
-              <div class="preview">
-
-                <div class="preview-title">
-                  Deeplink App antes de codificar
-                </div>
-
-                <div
-                  id="appPreview"
-                  class="preview-value">
-                </div>
-
+              <div
+                id="webPreview"
+                class="preview-value">
               </div>
 
             </div>
 
 
-            <div class="warning">
-              El valor completo de <strong>embeddedURL</strong> se codifica
-              automáticamente. No es necesario editarlo manualmente.
+
+            <div class="preview">
+
+              <div class="preview-title">
+                Deeplink App antes del encoding
+              </div>
+
+              <div
+                id="appPreview"
+                class="preview-value">
+              </div>
+
             </div>
 
           </div>
 
-        </section>
 
-      </main>
+          <div class="success-note">
+
+            <strong>embeddedURL:</strong>
+
+            únicamente el deeplink App completo se codifica.
+
+            La URL Web conserva rutas como:
+
+            <strong>redirectTo=/u/campaign/VT</strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
 
 
-      <!-- =======================
-           CATÁLOGO
-           ======================= -->
 
-      <aside class="right">
+    <!-- =====================================================
+         CATÁLOGO DERECHA
+         ===================================================== -->
 
-        <section class="card catalog-card">
+    <aside class="right">
 
-          <h2>Catálogo de productos</h2>
+      <section class="card catalog-card">
 
-          <p class="section-description">
-            Consulta rápidamente las rutas disponibles. Haz clic en un producto
-            para cargarlo en el generador.
-          </p>
+        <h2>
+          Catálogo de productos
+        </h2>
 
-          <input
-            id="catalogSearch"
-            class="catalog-search"
-            type="search"
-            placeholder="Buscar producto..."
-            oninput="renderCatalog()"
-          >
+        <p class="section-description">
+          Haz clic en un producto para cargar automáticamente
+          las rutas y el tipo de experiencia.
+        </p>
 
-          <div id="catalog" class="catalog"></div>
 
-        </section>
+        <input
+          id="catalogSearch"
+          class="catalog-search"
+          type="search"
+          placeholder="Buscar producto..."
+          oninput="renderCatalog()"
+        >
 
-      </aside>
 
-    </div>
+        <div
+          id="catalog"
+          class="catalog">
+        </div>
+
+      </section>
+
+    </aside>
 
   </div>
 
-
-  <script>
-
-    /* ======================================================
-       CATÁLOGO
-
-       ESTE ES EL BLOQUE QUE TÚ IRÁS ACTUALIZANDO.
-       ====================================================== */
-
-    const PRODUCTOS = [
-
-      {
-        id: "tarjeta-segura",
-        nombre: "Tarjeta Segura",
-        tipo: "webview",
-
-        web:
-          "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
-
-        app:
-          "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
-      },
-
-      {
-        id: "apple-pay",
-        nombre: "Apple Pay",
-        tipo: "nativo",
-
-        web:
-          "https://www.scotiabank.com.pe/apple-pay",
-
-        app:
-          "scotiabankpe:///tokenization"
-      },
-
-      {
-        id: "prestabono",
-        nombre: "Prestabono",
-        tipo: "webview",
-
-        web:
-          "",
-
-        app:
-          ""
-      },
-
-      {
-        id: "libre-disponibilidad",
-        nombre: "Préstamo Libre Disponibilidad",
-        tipo: "webview",
-
-        web:
-          "",
-
-        app:
-          ""
-      },
-
-      {
-        id: "cuenta-sueldo",
-        nombre: "Cuenta Sueldo",
-        tipo: "webview",
-
-        web:
-          "",
-
-        app:
-          ""
-      },
-
-      {
-        id: "cuenta-digital",
-        nombre: "Cuenta Digital",
-        tipo: "webview",
-
-        web:
-          "",
-
-        app:
-          ""
-      }
-
-    ];
+</div>
 
 
-    let productoSeleccionado = null;
+
+<script>
+
+  /* ========================================================
+     CATÁLOGO DE PRODUCTOS
+     ======================================================== */
+
+  const PRODUCTOS = [
+
+    {
+      id: "tarjeta-segura",
+
+      nombre:
+        "Tarjeta Segura",
+
+      tipo:
+        "webview",
+
+      web:
+        "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
+
+      app:
+        "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
+    },
 
 
-    /* ======================================================
-       INICIALIZACIÓN
-       ====================================================== */
+    {
+      id: "campana-vt",
 
-    function iniciar() {
+      nombre:
+        "Campaña VT",
 
-      const select =
-        document.getElementById("productSelect");
+      tipo:
+        "webview",
 
-      PRODUCTOS.forEach(producto => {
+      web:
+        "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
 
-        const option =
-          document.createElement("option");
+      app:
+        "scotiabankpe:///webView?path=/u/campaign/VT"
+    },
 
-        option.value =
-          producto.id;
 
-        option.textContent =
-          producto.nombre;
+    {
+      id: "apple-pay",
 
-        select.appendChild(option);
+      nombre:
+        "Apple Pay",
 
-      });
+      tipo:
+        "nativo",
+
+      web:
+        "https://www.scotiabank.com.pe/apple-pay",
+
+      app:
+        "scotiabankpe:///tokenization"
+    },
+
+
+    {
+      id: "prestabono",
+
+      nombre:
+        "Prestabono",
+
+      tipo:
+        "webview",
+
+      web:
+        "",
+
+      app:
+        ""
+    },
+
+
+    {
+      id: "libre-disponibilidad",
+
+      nombre:
+        "Préstamo Libre Disponibilidad",
+
+      tipo:
+        "webview",
+
+      web:
+        "",
+
+      app:
+        ""
+    },
+
+
+    {
+      id: "cuenta-sueldo",
+
+      nombre:
+        "Cuenta Sueldo",
+
+      tipo:
+        "webview",
+
+      web:
+        "",
+
+      app:
+        ""
+    },
+
+
+    {
+      id: "cuenta-digital",
+
+      nombre:
+        "Cuenta Digital",
+
+      tipo:
+        "webview",
+
+      web:
+        "",
+
+      app:
+        ""
+    }
+
+  ];
+
+
+  let productoSeleccionado = null;
+
+
+
+  /* ========================================================
+     INICIO
+     ======================================================== */
+
+  function iniciar() {
+
+    const select =
+      document.getElementById("productSelect");
+
+
+    PRODUCTOS.forEach(producto => {
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        producto.id;
+
+      option.textContent =
+        producto.nombre;
+
+      select.appendChild(option);
+
+    });
+
+
+    renderCatalog();
+
+  }
+
+
+
+  /* ========================================================
+     PRODUCTO
+     ======================================================== */
+
+  function seleccionarProducto(id) {
+
+    const producto =
+      PRODUCTOS.find(
+        p => p.id === id
+      );
+
+
+    productoSeleccionado =
+      producto || null;
+
+
+    if (!producto) {
 
       renderCatalog();
 
-    }
-
-
-    /* ======================================================
-       SELECCIÓN DE PRODUCTO
-       ====================================================== */
-
-    function seleccionarProducto(id) {
-
-      const producto =
-        PRODUCTOS.find(p => p.id === id);
-
-      productoSeleccionado =
-        producto || null;
-
-
-      if (!producto) {
-
-        document.getElementById("webUrl").value = "";
-        document.getElementById("appUrl").value = "";
-
-        document
-          .getElementById("webviewFields")
-          .classList.add("hidden");
-
-        document
-          .getElementById("productTypeBadge")
-          .classList.add("hidden");
-
-        renderCatalog();
-
-        return;
-
-      }
-
-
-      document.getElementById("webUrl").value =
-        producto.web;
-
-      document.getElementById("appUrl").value =
-        producto.app;
-
-
-      const badge =
-        document.getElementById("productTypeBadge");
-
-      badge.classList.remove("hidden");
-
-
-      if (producto.tipo === "webview") {
-
-        badge.textContent =
-          "Experiencia: WebView";
-
-        document
-          .getElementById("webviewFields")
-          .classList.remove("hidden");
-
-      } else {
-
-        badge.textContent =
-          "Experiencia: Nativa";
-
-        document
-          .getElementById("webviewFields")
-          .classList.add("hidden");
-
-      }
-
-
-      renderCatalog();
+      return;
 
     }
 
 
-    function seleccionarDesdeCatalogo(id) {
+    document
+      .getElementById("webUrl")
+      .value =
+      producto.web;
 
-      document.getElementById("productSelect").value =
-        id;
 
-      seleccionarProducto(id);
+    document
+      .getElementById("appUrl")
+      .value =
+      producto.app;
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
+
+    if (
+      producto.tipo === "webview"
+    ) {
+
+      document
+        .getElementById("tipoWebview")
+        .checked =
+        true;
+
+    } else {
+
+      document
+        .getElementById("tipoNativo")
+        .checked =
+        true;
 
     }
 
 
-    /* ======================================================
-       CATÁLOGO
-       ====================================================== */
+    cambiarTipoExperiencia();
 
-    function renderCatalog() {
+    renderCatalog();
 
-      const catalog =
-        document.getElementById("catalog");
-
-      const search =
-        document
-          .getElementById("catalogSearch")
-          .value
-          .toLowerCase()
-          .trim();
+  }
 
 
-      const filtrados =
-        PRODUCTOS.filter(producto =>
+
+  function seleccionarDesdeCatalogo(id) {
+
+    document
+      .getElementById("productSelect")
+      .value =
+      id;
+
+
+    seleccionarProducto(id);
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+
+  /* ========================================================
+     TIPO DE EXPERIENCIA
+     ======================================================== */
+
+  function obtenerTipoExperiencia() {
+
+    const seleccionado =
+      document.querySelector(
+        'input[name="experienceType"]:checked'
+      );
+
+
+    return seleccionado
+      ? seleccionado.value
+      : "";
+
+  }
+
+
+
+  function cambiarTipoExperiencia() {
+
+    const tipo =
+      obtenerTipoExperiencia();
+
+
+    const webviewFields =
+      document.getElementById(
+        "webviewFields"
+      );
+
+
+    if (
+      tipo === "webview"
+    ) {
+
+      webviewFields
+        .classList
+        .remove("hidden");
+
+    } else {
+
+      webviewFields
+        .classList
+        .add("hidden");
+
+    }
+
+  }
+
+
+
+  /* ========================================================
+     CATÁLOGO
+     ======================================================== */
+
+  function renderCatalog() {
+
+    const catalog =
+      document.getElementById(
+        "catalog"
+      );
+
+
+    const search =
+      document
+        .getElementById(
+          "catalogSearch"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const filtrados =
+      PRODUCTOS.filter(
+        producto =>
 
           producto.nombre
             .toLowerCase()
             .includes(search)
 
-        );
+      );
 
 
-      catalog.innerHTML = "";
+    catalog.innerHTML =
+      "";
 
 
-      if (!filtrados.length) {
+    if (
+      !filtrados.length
+    ) {
 
-        catalog.innerHTML =
-          '<div class="empty">No se encontraron productos.</div>';
+      catalog.innerHTML =
+        '<div class="empty">No se encontraron productos.</div>';
 
-        return;
+      return;
 
-      }
+    }
 
 
-      filtrados.forEach(producto => {
+    filtrados.forEach(
+      producto => {
+
 
         const div =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
+
 
         div.className =
           "product";
@@ -1051,16 +1387,28 @@
 
         if (
           productoSeleccionado &&
-          productoSeleccionado.id === producto.id
+          productoSeleccionado.id ===
+          producto.id
         ) {
 
-          div.classList.add("active");
+          div.classList.add(
+            "active"
+          );
 
         }
 
 
         div.onclick =
-          () => seleccionarDesdeCatalogo(producto.id);
+          () =>
+            seleccionarDesdeCatalogo(
+              producto.id
+            );
+
+
+        const tipoTexto =
+          producto.tipo === "webview"
+            ? "WebView"
+            : "Nativo";
 
 
         div.innerHTML = `
@@ -1070,468 +1418,637 @@
           </div>
 
           <div class="product-type">
-            ${producto.tipo === "webview"
-              ? "WebView"
-              : "Nativo"}
+            ${tipoTexto}
           </div>
 
           <div class="product-path">
-            Web:
-            ${producto.web || "Pendiente de configurar"}
+            <strong>Web:</strong><br>
+            ${producto.web ||
+              "Pendiente de configurar"}
           </div>
 
           <div class="product-path">
-            App:
-            ${producto.app || "Pendiente de configurar"}
+            <strong>App:</strong><br>
+            ${producto.app ||
+              "Pendiente de configurar"}
           </div>
 
         `;
 
 
-        catalog.appendChild(div);
+        catalog.appendChild(
+          div
+        );
 
-      });
+      }
+    );
 
-    }
-
-
-    /* ======================================================
-       UTILIDADES URL
-       ====================================================== */
-
-    function agregarParametros(urlBase, parametros) {
-
-      const url =
-        new URL(urlBase);
+  }
 
 
-      Object.entries(parametros)
-        .forEach(([key, value]) => {
 
-          if (
-            value !== undefined &&
-            value !== null &&
-            String(value).trim() !== ""
-          ) {
+  /* ========================================================
+     AGREGA PARÁMETROS A WEB
+     
+     IMPORTANTE:
+     NO reconstruimos con new URL().searchParams
+     porque queremos conservar:
+     
+     redirectTo=/u/campaign/VT
+     
+     y evitar:
+     
+     redirectTo=%2Fu%2Fcampaign%2FVT
+     ======================================================== */
 
-            url.searchParams.set(
-              key,
-              String(value).trim()
-            );
+  function agregarParametrosWeb(
+    urlBase,
+    parametros
+  ) {
 
-          }
-
-        });
-
-
-      return url.toString();
-
-    }
+    let resultado =
+      urlBase.trim();
 
 
-    function agregarParametrosDeeplink(
-      deeplink,
+    const nuevosParametros =
+      [];
+
+
+    Object.entries(
       parametros
+    ).forEach(
+      ([key, value]) => {
+
+
+        if (
+          value === undefined ||
+          value === null ||
+          String(value).trim() === ""
+        ) {
+
+          return;
+
+        }
+
+
+        const valor =
+          String(value).trim();
+
+
+        nuevosParametros.push(
+          key +
+          "=" +
+          encodeURIComponent(valor)
+        );
+
+      }
+    );
+
+
+    if (
+      !nuevosParametros.length
     ) {
 
-      let resultado =
-        deeplink.trim();
-
-
-      const params =
-        new URLSearchParams();
-
-
-      Object.entries(parametros)
-        .forEach(([key, value]) => {
-
-          if (
-            value !== undefined &&
-            value !== null &&
-            String(value).trim() !== ""
-          ) {
-
-            params.append(
-              key,
-              String(value).trim()
-            );
-
-          }
-
-        });
-
-
-      const query =
-        params.toString();
-
-
-      if (!query) {
-        return resultado;
-      }
-
-
-      const separador =
-        resultado.includes("?")
-          ? "&"
-          : "?";
-
-
-      return (
-        resultado +
-        separador +
-        query
-      );
+      return resultado;
 
     }
 
 
-    /* ======================================================
-       GENERADOR
-       ====================================================== */
-
-    function generarLink() {
-
-      const webBase =
-        document
-          .getElementById("webUrl")
-          .value
-          .trim();
+    const separador =
+      resultado.includes("?")
+        ? "&"
+        : "?";
 
 
-      const appBase =
-        document
-          .getElementById("appUrl")
-          .value
-          .trim();
+    resultado +=
+      separador +
+      nuevosParametros.join("&");
 
 
-      const utmSource =
-        document
-          .getElementById("utmSource")
-          .value
-          .trim();
+    return resultado;
+
+  }
 
 
-      const utmMedium =
-        document
-          .getElementById("utmMedium")
-          .value
-          .trim();
+
+  /* ========================================================
+     AGREGA PARÁMETROS AL DEEPLINK
+     ======================================================== */
+
+  function agregarParametrosDeeplink(
+    deeplink,
+    parametros
+  ) {
+
+    let resultado =
+      deeplink.trim();
 
 
-      const utmCampaign =
-        document
-          .getElementById("utmCampaign")
-          .value
-          .trim();
+    const nuevosParametros =
+      [];
 
 
-      if (
-        !webBase ||
-        !appBase ||
-        !utmSource ||
-        !utmMedium ||
-        !utmCampaign
-      ) {
-
-        alert(
-          "Completa Producto, URL Web, Deeplink App y las tres UTM obligatorias."
-        );
-
-        return;
-
-      }
+    Object.entries(
+      parametros
+    ).forEach(
+      ([key, value]) => {
 
 
-      const parametrosCampana = {
+        if (
+          value === undefined ||
+          value === null ||
+          String(value).trim() === ""
+        ) {
 
-        utm_source:
-          utmSource,
-
-        utm_medium:
-          utmMedium,
-
-        utm_campaign:
-          utmCampaign
-
-      };
-
-
-      /*
-       * SOURCE Y DETAIL SOLO PARA WEBVIEW
-       */
-
-      if (
-        productoSeleccionado &&
-        productoSeleccionado.tipo === "webview"
-      ) {
-
-        const source =
-          document
-            .getElementById("sourceInternal")
-            .value
-            .trim();
-
-
-        const detail =
-          document
-            .getElementById("detail")
-            .value
-            .trim();
-
-
-        if (source) {
-
-          parametrosCampana.source =
-            source;
+          return;
 
         }
 
 
-        if (detail) {
+        const valor =
+          String(value).trim();
 
-          parametrosCampana.detail =
-            detail;
 
-        }
+        nuevosParametros.push(
+          key +
+          "=" +
+          encodeURIComponent(valor)
+        );
 
       }
+    );
 
 
-      /*
-       * 1. WEB PARAMETRIZADA
-       */
+    if (
+      !nuevosParametros.length
+    ) {
 
-      let webParametrizada;
-
-      try {
-
-        webParametrizada =
-          agregarParametros(
-            webBase,
-            parametrosCampana
-          );
-
-      } catch (error) {
-
-        alert(
-          "La URL Web no tiene un formato válido."
-        );
-
-        return;
-
-      }
-
-
-      /*
-       * 2. DEEPLINK APP PARAMETRIZADO
-       */
-
-      const appParametrizada =
-        agregarParametrosDeeplink(
-          appBase,
-          parametrosCampana
-        );
-
-
-      /*
-       * 3. EMBEDDED URL
-       */
-
-      const separador =
-        webParametrizada.includes("?")
-          ? "&"
-          : "?";
-
-
-      const finalUrl =
-        webParametrizada +
-        separador +
-        "embeddedURL=" +
-        encodeURIComponent(
-          appParametrizada
-        );
-
-
-      /*
-       * RESULTADOS
-       */
-
-      document
-        .getElementById("finalUrl")
-        .textContent =
-        finalUrl;
-
-
-      document
-        .getElementById("webPreview")
-        .textContent =
-        webParametrizada;
-
-
-      document
-        .getElementById("appPreview")
-        .textContent =
-        appParametrizada;
-
-
-      document
-        .getElementById("resultBox")
-        .classList.add("visible");
-
-
-      document
-        .getElementById("emptyResult")
-        .classList.add("hidden");
+      return resultado;
 
     }
 
 
-    /* ======================================================
-       COPIAR / PROBAR
-       ====================================================== */
-
-    async function copiarFinal() {
-
-      const link =
-        document
-          .getElementById("finalUrl")
-          .textContent;
+    const separador =
+      resultado.includes("?")
+        ? "&"
+        : "?";
 
 
-      if (!link) {
-        return;
-      }
+    return (
+      resultado +
+      separador +
+      nuevosParametros.join("&")
+    );
+
+  }
 
 
-      try {
 
-        await navigator.clipboard
-          .writeText(link);
+  /* ========================================================
+     GENERADOR PRINCIPAL
+     ======================================================== */
 
-        alert(
-          "Link copiado correctamente."
-        );
-
-      } catch (error) {
-
-        const textarea =
-          document.createElement("textarea");
-
-        textarea.value =
-          link;
-
-        document.body
-          .appendChild(textarea);
-
-        textarea.select();
-
-        document.execCommand("copy");
-
-        textarea.remove();
-
-        alert(
-          "Link copiado correctamente."
-        );
-
-      }
-
-    }
+  function generarLink() {
 
 
-    function abrirFinal() {
-
-      const link =
-        document
-          .getElementById("finalUrl")
-          .textContent;
+    const tipo =
+      obtenerTipoExperiencia();
 
 
-      if (!link) {
-        return;
-      }
-
-
-      window.open(
-        link,
-        "_blank"
-      );
-
-    }
-
-
-    /* ======================================================
-       LIMPIAR
-       ====================================================== */
-
-    function limpiarFormulario() {
-
-      document
-        .getElementById("productSelect")
-        .value = "";
-
+    const webBase =
       document
         .getElementById("webUrl")
-        .value = "";
+        .value
+        .trim();
 
+
+    const appBase =
       document
         .getElementById("appUrl")
-        .value = "";
+        .value
+        .trim();
 
+
+    const utmSource =
       document
         .getElementById("utmSource")
-        .value = "";
+        .value
+        .trim();
 
+
+    const utmMedium =
       document
         .getElementById("utmMedium")
-        .value = "";
+        .value
+        .trim();
 
+
+    const utmCampaign =
       document
         .getElementById("utmCampaign")
-        .value = "";
-
-      document
-        .getElementById("sourceInternal")
-        .value = "";
-
-      document
-        .getElementById("detail")
-        .value = "";
+        .value
+        .trim();
 
 
-      productoSeleccionado =
-        null;
 
+    /* VALIDACIONES */
 
-      document
-        .getElementById("webviewFields")
-        .classList.add("hidden");
+    if (!tipo) {
 
+      alert(
+        "Selecciona si la experiencia es WebView o Nativa."
+      );
 
-      document
-        .getElementById("productTypeBadge")
-        .classList.add("hidden");
-
-
-      document
-        .getElementById("resultBox")
-        .classList.remove("visible");
-
-
-      document
-        .getElementById("emptyResult")
-        .classList.remove("hidden");
-
-
-      renderCatalog();
+      return;
 
     }
 
 
-    iniciar();
+    if (
+      !webBase ||
+      !appBase
+    ) {
 
-  </script>
+      alert(
+        "Completa la URL Web y el Deeplink App."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !utmSource ||
+      !utmMedium ||
+      !utmCampaign
+    ) {
+
+      alert(
+        "Completa utm_source, utm_medium y utm_campaign."
+      );
+
+      return;
+
+    }
+
+
+
+    /* PARÁMETROS BASE */
+
+    const parametrosCampana = {
+
+      utm_source:
+        utmSource,
+
+      utm_medium:
+        utmMedium,
+
+      utm_campaign:
+        utmCampaign
+
+    };
+
+
+
+    /* SOURCE / DETAIL SOLO WEBVIEW */
+
+    if (
+      tipo === "webview"
+    ) {
+
+      const source =
+        document
+          .getElementById(
+            "sourceInternal"
+          )
+          .value
+          .trim();
+
+
+      const detail =
+        document
+          .getElementById(
+            "detail"
+          )
+          .value
+          .trim();
+
+
+      if (source) {
+
+        parametrosCampana.source =
+          source;
+
+      }
+
+
+      if (detail) {
+
+        parametrosCampana.detail =
+          detail;
+
+      }
+
+    }
+
+
+
+    /* 1. WEB */
+
+    const webParametrizada =
+      agregarParametrosWeb(
+        webBase,
+        parametrosCampana
+      );
+
+
+
+    /* 2. APP */
+
+    const appParametrizada =
+      agregarParametrosDeeplink(
+        appBase,
+        parametrosCampana
+      );
+
+
+
+    /* 3. EMBEDDED */
+
+    const separador =
+      webParametrizada.includes("?")
+        ? "&"
+        : "?";
+
+
+    const finalUrl =
+      webParametrizada +
+      separador +
+      "embeddedURL=" +
+      encodeURIComponent(
+        appParametrizada
+      );
+
+
+
+    /* RESULTADO */
+
+    document
+      .getElementById(
+        "finalUrl"
+      )
+      .textContent =
+      finalUrl;
+
+
+    document
+      .getElementById(
+        "webPreview"
+      )
+      .textContent =
+      webParametrizada;
+
+
+    document
+      .getElementById(
+        "appPreview"
+      )
+      .textContent =
+      appParametrizada;
+
+
+    document
+      .getElementById(
+        "resultBox"
+      )
+      .classList
+      .add("visible");
+
+
+    document
+      .getElementById(
+        "emptyResult"
+      )
+      .classList
+      .add("hidden");
+
+  }
+
+
+
+  /* ========================================================
+     COPIAR
+     ======================================================== */
+
+  async function copiarFinal() {
+
+    const link =
+      document
+        .getElementById(
+          "finalUrl"
+        )
+        .textContent;
+
+
+    if (!link) {
+      return;
+    }
+
+
+    try {
+
+      await navigator
+        .clipboard
+        .writeText(link);
+
+
+      alert(
+        "Link copiado correctamente."
+      );
+
+
+    } catch (error) {
+
+
+      const textarea =
+        document.createElement(
+          "textarea"
+        );
+
+
+      textarea.value =
+        link;
+
+
+      document.body
+        .appendChild(
+          textarea
+        );
+
+
+      textarea.select();
+
+
+      document.execCommand(
+        "copy"
+      );
+
+
+      textarea.remove();
+
+
+      alert(
+        "Link copiado correctamente."
+      );
+
+    }
+
+  }
+
+
+
+  /* ========================================================
+     PROBAR
+     ======================================================== */
+
+  function abrirFinal() {
+
+    const link =
+      document
+        .getElementById(
+          "finalUrl"
+        )
+        .textContent;
+
+
+    if (!link) {
+      return;
+    }
+
+
+    window.open(
+      link,
+      "_blank"
+    );
+
+  }
+
+
+
+  /* ========================================================
+     LIMPIAR
+     ======================================================== */
+
+  function limpiarFormulario() {
+
+    document
+      .getElementById(
+        "productSelect"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "webUrl"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "appUrl"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "utmSource"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "utmMedium"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "utmCampaign"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "sourceInternal"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "detail"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "tipoWebview"
+      )
+      .checked = false;
+
+
+    document
+      .getElementById(
+        "tipoNativo"
+      )
+      .checked = false;
+
+
+    document
+      .getElementById(
+        "webviewFields"
+      )
+      .classList
+      .add("hidden");
+
+
+    document
+      .getElementById(
+        "resultBox"
+      )
+      .classList
+      .remove("visible");
+
+
+    document
+      .getElementById(
+        "emptyResult"
+      )
+      .classList
+      .remove("hidden");
+
+
+    productoSeleccionado =
+      null;
+
+
+    renderCatalog();
+
+  }
+
+
+
+  iniciar();
+
+</script>
 
 </body>
-
 </html>

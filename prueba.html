@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,481 +11,765 @@
       box-sizing: border-box;
     }
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 24px;
-      color: #1f2937;
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --dark: #111827;
+      --soft: #f3f4f6;
+      --result: #eef2ff;
+      --warning: #fff7ed;
     }
 
-    .container {
-      max-width: 900px;
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      max-width: 1400px;
       margin: 0 auto;
+      padding: 18px;
     }
 
     .card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
     }
 
     h1 {
-      margin-top: 0;
-      font-size: 28px;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-
-    .subtitle {
-      color: #6b7280;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    .info-box {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 13px;
-    }
-
-    .label {
-      font-weight: bold;
+      font-size: 25px;
       margin-bottom: 5px;
     }
 
-    .test {
-      padding: 18px 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .test:last-child {
-      border-bottom: none;
-    }
-
-    .test-title {
+    h2 {
       font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
-
-    .description {
-      color: #6b7280;
-      font-size: 14px;
-      line-height: 1.5;
       margin-bottom: 12px;
     }
 
-    .button {
-      display: inline-block;
-      border: none;
-      cursor: pointer;
-      padding: 13px 18px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 14px;
-      text-decoration: none;
-      background: #111827;
-      color: #ffffff;
-      margin-right: 8px;
-      margin-bottom: 8px;
+    h3 {
+      font-size: 15px;
+      margin-bottom: 5px;
     }
 
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    /* =========================
+       CABECERA
+       ========================= */
+
+    .header {
+      margin-bottom: 14px;
+    }
+
+    .device-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .info-box {
+      min-width: 0;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fafafa;
+      font-size: 11px;
+    }
+
+    .info-label {
+      font-weight: bold;
+      margin-bottom: 3px;
+      color: #374151;
+    }
+
+    .info-value {
+      overflow-wrap: anywhere;
+      color: #4b5563;
+    }
+
+    /* =========================
+       LAYOUT PRINCIPAL
+       ========================= */
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(330px, .85fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .left-column {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .right-column {
+      min-width: 0;
+    }
+
+    /* =========================
+       PRUEBAS
+       ========================= */
+
+    .tests-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .test-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px;
+      min-width: 0;
+    }
+
+    .test-box.full {
+      grid-column: 1 / -1;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button,
+    .button {
+      border: 0;
+      cursor: pointer;
+      padding: 9px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: bold;
+      text-decoration: none;
+      background: var(--dark);
+      color: white;
+    }
+
+    button.secondary,
     .button.secondary {
       background: #4b5563;
     }
 
+    button.light,
     .button.light {
       background: #e5e7eb;
       color: #111827;
     }
 
+    button:hover,
+    .button:hover {
+      opacity: .9;
+    }
+
     .url {
-      margin-top: 12px;
-      font-family: monospace;
-      font-size: 12px;
-      line-height: 1.5;
-      word-break: break-all;
-      background: #f3f4f6;
-      padding: 12px;
-      border-radius: 8px;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .result {
-      margin-top: 12px;
-      padding: 12px;
-      background: #eef2ff;
-      border-radius: 8px;
-      font-size: 13px;
-      word-break: break-all;
-    }
-
-    .log {
-      background: #111827;
-      color: #e5e7eb;
-      border-radius: 10px;
-      padding: 15px;
-      font-family: monospace;
-      font-size: 12px;
-      min-height: 160px;
-      max-height: 320px;
+      margin-top: 9px;
+      padding: 8px;
+      border-radius: 7px;
+      background: var(--soft);
+      font-family: Consolas, monospace;
+      font-size: 10px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+      max-height: 80px;
       overflow: auto;
-      white-space: pre-wrap;
     }
 
     .status {
       display: inline-block;
-      padding: 5px 9px;
+      padding: 5px 8px;
       border-radius: 999px;
       background: #e5e7eb;
-      font-size: 12px;
+      font-size: 11px;
+    }
+
+    /* =========================
+       UTILIDADES
+       ========================= */
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tool-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px;
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      padding: 9px;
+      font-family: Consolas, monospace;
+      font-size: 11px;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 68px;
+    }
+
+    textarea.tall {
+      min-height: 92px;
+    }
+
+    .result {
       margin-top: 8px;
+      padding: 9px;
+      min-height: 36px;
+      border-radius: 7px;
+      background: var(--result);
+      font-family: Consolas, monospace;
+      font-size: 10px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+      max-height: 110px;
+      overflow: auto;
+    }
+
+    /* =========================
+       LOG
+       ========================= */
+
+    .log-card {
+      position: sticky;
+      top: 14px;
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .log-title {
+      margin: 0;
+    }
+
+    .log-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .log {
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 9px;
+      padding: 12px;
+      min-height: 430px;
+      max-height: 68vh;
+      overflow: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-family: Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .log-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .notice {
-      background: #fff7ed;
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--warning);
       border: 1px solid #fed7aa;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 13px;
-      line-height: 1.5;
+      border-radius: 8px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #7c2d12;
+    }
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+
+    @media (max-width: 1000px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .log-card {
+        position: relative;
+        top: auto;
+      }
+
+      .log {
+        min-height: 250px;
+        max-height: 350px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 10px;
+      }
+
+      .device-grid,
+      .tests-grid,
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .test-box.full {
+        grid-column: auto;
+      }
+
+      .card {
+        padding: 14px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="page">
 
-  <!-- CABECERA -->
-  <div class="card">
+  <!-- =========================
+       CABECERA
+       ========================= -->
+
+  <section class="card header">
+
     <h1>Laboratorio de Deep Links</h1>
 
     <div class="subtitle">
-      Página de pruebas para Custom Schemes, App Links, Universal Links,
-      URLs HTTPS, embeddedURL y parámetros UTM.
+      Custom Schemes · App Links · Universal Links · HTTPS · embeddedURL · UTM
     </div>
 
-    <div class="grid">
+    <div class="device-grid">
 
       <div class="info-box">
-        <div class="label">User Agent</div>
-        <div id="ua"></div>
-      </div>
-
-      <div class="info-box">
-        <div class="label">Sistema detectado</div>
-        <div id="os"></div>
+        <div class="info-label">User Agent</div>
+        <div class="info-value" id="ua"></div>
       </div>
 
       <div class="info-box">
-        <div class="label">Navegador aproximado</div>
-        <div id="browser"></div>
+        <div class="info-label">Sistema</div>
+        <div class="info-value" id="os"></div>
       </div>
 
       <div class="info-box">
-        <div class="label">Origen de la página</div>
-        <div id="origin"></div>
+        <div class="info-label">Navegador</div>
+        <div class="info-value" id="browser"></div>
       </div>
 
-    </div>
-  </div>
-
-
-  <!-- PRUEBAS SCOTIABANK -->
-  <div class="card">
-
-    <h2>Pruebas Scotiabank</h2>
-
-    <!-- TEST 1 -->
-    <div class="test">
-
-      <div class="test-title">
-        1. Custom Scheme directo vía href
-      </div>
-
-      <div class="description">
-        Prueba el esquema custom directamente desde un enlace HTML.
-      </div>
-
-      <a
-        class="button"
-        id="deeplinkHref"
-        href="scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
-        Abrir Deeplink
-      </a>
-
-      <div class="url">
-        scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+      <div class="info-box">
+        <div class="info-label">Origen</div>
+        <div class="info-value" id="origin"></div>
       </div>
 
     </div>
 
+  </section>
 
-    <!-- TEST 2 -->
-    <div class="test">
 
-      <div class="test-title">
-        2. Custom Scheme vía JavaScript
-      </div>
+  <main class="workspace">
 
-      <div class="description">
-        Ejecuta el mismo deeplink mediante window.location.href después de un clic real.
-      </div>
+    <!-- =========================
+         COLUMNA IZQUIERDA
+         ========================= -->
 
-      <button
-        class="button"
-        onclick="probarDeeplinkJS()">
-        Abrir con JavaScript
-      </button>
+    <div class="left-column">
 
-      <div id="deeplinkStatus" class="status">
-        Sin ejecutar
-      </div>
+
+      <!-- PRUEBAS PREDEFINIDAS -->
+
+      <section class="card">
+
+        <h2>Pruebas Scotiabank</h2>
+
+        <div class="tests-grid">
+
+
+          <!-- TEST 1 -->
+
+          <div class="test-box">
+
+            <h3>1. Custom Scheme · href</h3>
+
+            <div class="description">
+              Invoca directamente scotiabankpe:// desde un enlace HTML.
+            </div>
+
+            <div class="actions">
+
+              <a
+                class="button"
+                id="deeplinkHref"
+                href="scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
+                Abrir deeplink
+              </a>
+
+            </div>
+
+            <div class="url">
+              scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+            </div>
+
+          </div>
+
+
+          <!-- TEST 2 -->
+
+          <div class="test-box">
+
+            <h3>2. Custom Scheme · JavaScript</h3>
+
+            <div class="description">
+              Ejecuta el mismo custom scheme mediante window.location.href.
+            </div>
+
+            <div class="actions">
+
+              <button onclick="probarDeeplinkJS()">
+                Abrir con JavaScript
+              </button>
+
+              <span id="deeplinkStatus" class="status">
+                Sin ejecutar
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- TEST 3 -->
+
+          <div class="test-box">
+
+            <h3>3. HTTPS simple</h3>
+
+            <div class="description">
+              Web URL sin embeddedURL.
+            </div>
+
+            <div class="actions">
+
+              <a
+                class="button"
+                id="httpsSimple"
+                href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
+                Abrir HTTPS
+              </a>
+
+            </div>
+
+            <div class="url">
+              https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+            </div>
+
+          </div>
+
+
+          <!-- TEST 4 -->
+
+          <div class="test-box">
+
+            <h3>4. HTTPS + embeddedURL encoded</h3>
+
+            <div class="description">
+              embeddedURL codificado con encodeURIComponent.
+            </div>
+
+            <div class="actions">
+
+              <a
+                class="button"
+                id="httpsEncoded"
+                href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe%3A%2F%2F%2FwebView%3Fpath%3D%2Fu%2Finsurances%2Facquired-insurances%2Fcatalog%26utm_source%3Dmeta%26utm_medium%3Dpaid-cpa%26utm_campaign%3DTarjetaSeguraLF%26source%3Dflujo">
+                Abrir encoded
+              </a>
+
+            </div>
+
+            <div class="url">
+              HTTPS + embeddedURL codificado
+            </div>
+
+          </div>
+
+
+          <!-- TEST 5 -->
+
+          <div class="test-box full">
+
+            <h3>5. HTTPS + embeddedURL sin codificar</h3>
+
+            <div class="description">
+              Compara el comportamiento del formato utilizado actualmente.
+            </div>
+
+            <div class="actions">
+
+              <a
+                class="button"
+                id="httpsUnencoded"
+                href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
+                Abrir sin encoding
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- HERRAMIENTAS -->
+
+      <section class="card">
+
+        <h2>Herramientas</h2>
+
+        <div class="tools-grid">
+
+
+          <!-- PROBADOR -->
+
+          <div class="tool-box">
+
+            <h3>Probador personalizado</h3>
+
+            <div class="description">
+              Pega cualquier HTTPS, custom scheme, App Link o Universal Link.
+            </div>
+
+            <textarea
+              id="customUrl"
+              placeholder="scotiabankpe:///webView?path=..."></textarea>
+
+            <div class="actions">
+
+              <button onclick="abrirCustomHref()">
+                Abrir
+              </button>
+
+              <button
+                class="secondary"
+                onclick="abrirCustomJS()">
+                JavaScript
+              </button>
+
+              <button
+                class="light"
+                onclick="copiarCustom()">
+                Copiar
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- ENCODER -->
+
+          <div class="tool-box">
+
+            <h3>Encoder / Decoder</h3>
+
+            <div class="description">
+              Convierte deeplinks para embeddedURL.
+            </div>
+
+            <textarea
+              id="encoderInput"
+              placeholder="Pega la URL o deeplink"></textarea>
+
+            <div class="actions">
+
+              <button onclick="codificar()">
+                Encode
+              </button>
+
+              <button
+                class="secondary"
+                onclick="decodificar()">
+                Decode
+              </button>
+
+              <button
+                class="light"
+                onclick="copiarResultadoEncoder()">
+                Copiar
+              </button>
+
+            </div>
+
+            <div
+              class="result"
+              id="encoderResult">
+              Resultado
+            </div>
+
+          </div>
+
+
+          <!-- CONSTRUCTOR -->
+
+          <div class="tool-box full">
+
+            <h3>Constructor embeddedURL</h3>
+
+            <div class="description">
+              Combina una URL web con un deeplink codificado.
+            </div>
+
+            <label for="baseUrl">
+              URL web base
+            </label>
+
+            <textarea id="baseUrl">https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo</textarea>
+
+            <label for="embeddedDeepLink">
+              Deeplink
+            </label>
+
+            <textarea id="embeddedDeepLink">scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo</textarea>
+
+            <div class="actions">
+
+              <button onclick="generarEmbedded()">
+                Generar
+              </button>
+
+              <button
+                class="light"
+                onclick="copiarEmbedded()">
+                Copiar
+              </button>
+
+              <button
+                class="secondary"
+                onclick="abrirEmbeddedGenerado()">
+                Abrir resultado
+              </button>
+
+            </div>
+
+            <div
+              class="result"
+              id="embeddedResult">
+              Resultado
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
 
     </div>
 
 
-    <!-- TEST 3 -->
-    <div class="test">
+    <!-- =========================
+         COLUMNA DERECHA / LOG
+         ========================= -->
 
-      <div class="test-title">
-        3. HTTPS sin embeddedURL
-      </div>
+    <aside class="right-column">
 
-      <div class="description">
-        Prueba solamente la URL web.
-      </div>
+      <section class="card log-card">
 
-      <a
-        class="button"
-        href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
-        Abrir HTTPS
-      </a>
+        <div class="log-header">
 
-      <div class="url">
-        https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
-      </div>
+          <div>
+            <h2 class="log-title">
+              Registro
+            </h2>
 
-    </div>
+            <div class="log-meta">
+              Eventos:
+              <span id="eventCount">0</span>
+            </div>
+          </div>
 
+          <div class="actions">
 
-    <!-- TEST 4 -->
-    <div class="test">
+            <button
+              class="light"
+              onclick="copiarLog()">
+              Copiar
+            </button>
 
-      <div class="test-title">
-        4. HTTPS + embeddedURL codificado
-      </div>
+            <button
+              class="light"
+              onclick="limpiarLog()">
+              Limpiar
+            </button>
 
-      <div class="description">
-        Prueba la URL web con el Custom Scheme dentro de embeddedURL usando URL encoding.
-      </div>
+          </div>
 
-      <a
-        class="button"
-        href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe%3A%2F%2F%2FwebView%3Fpath%3D%2Fu%2Finsurances%2Facquired-insurances%2Fcatalog%26utm_source%3Dmeta%26utm_medium%3Dpaid-cpa%26utm_campaign%3DTarjetaSeguraLF%26source%3Dflujo">
-        Abrir HTTPS + embeddedURL
-      </a>
+        </div>
 
-      <div class="url">
-        https://mi.scotiabank.com.pe/login?...&embeddedURL=scotiabankpe%3A%2F%2F%2FwebView...
-      </div>
+        <div
+          class="log"
+          id="log"></div>
 
-    </div>
+        <div class="notice">
+          <strong>Lectura:</strong>
+          blur / hidden / pagehide indican que la página perdió foco o fue abandonada.
+          No prueban por sí solos que la app se haya abierto.
+        </div>
 
+      </section>
 
-    <!-- TEST 5 -->
-    <div class="test">
+    </aside>
 
-      <div class="test-title">
-        5. HTTPS + embeddedURL sin codificar
-      </div>
-
-      <div class="description">
-        Sirve para comparar el comportamiento con la versión que no aplica URL encoding al deeplink interno.
-      </div>
-
-      <a
-        class="button"
-        href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
-        Abrir sin encoding
-      </a>
-
-    </div>
-
-  </div>
-
-
-  <!-- LABORATORIO PERSONALIZADO -->
-  <div class="card">
-
-    <h2>Probador personalizado</h2>
-
-    <div class="description">
-      Pega cualquier deeplink, App Link, Universal Link o URL HTTPS.
-    </div>
-
-    <textarea
-      id="customUrl"
-      placeholder="Ejemplo: scotiabankpe:///webView?path=..."></textarea>
-
-    <button
-      class="button"
-      onclick="abrirCustomHref()">
-      Abrir URL
-    </button>
-
-    <button
-      class="button secondary"
-      onclick="abrirCustomJS()">
-      Abrir con JavaScript
-    </button>
-
-    <button
-      class="button light"
-      onclick="copiarCustom()">
-      Copiar
-    </button>
-
-  </div>
-
-
-  <!-- URL ENCODER -->
-  <div class="card">
-
-    <h2>URL Encoder / Decoder</h2>
-
-    <div class="description">
-      Útil para preparar valores como embeddedURL.
-    </div>
-
-    <textarea
-      id="encoderInput"
-      placeholder="Pega aquí el deeplink que quieres codificar"></textarea>
-
-    <button
-      class="button"
-      onclick="codificar()">
-      Encode
-    </button>
-
-    <button
-      class="button secondary"
-      onclick="decodificar()">
-      Decode
-    </button>
-
-    <div class="result" id="encoderResult">
-      Resultado
-    </div>
-
-  </div>
-
-
-  <!-- CONSTRUCTOR EMBEDDED URL -->
-  <div class="card">
-
-    <h2>Constructor embeddedURL</h2>
-
-    <div class="description">
-      Genera automáticamente una URL web con el deeplink codificado dentro de embeddedURL.
-    </div>
-
-    <label>URL web base</label>
-
-    <textarea id="baseUrl">
-https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
-    </textarea>
-
-    <label>Deeplink</label>
-
-    <textarea id="embeddedDeepLink">
-scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
-    </textarea>
-
-    <button
-      class="button"
-      onclick="generarEmbedded()">
-      Generar URL
-    </button>
-
-    <button
-      class="button light"
-      onclick="copiarEmbedded()">
-      Copiar resultado
-    </button>
-
-    <div
-      class="result"
-      id="embeddedResult">
-      Resultado
-    </div>
-
-  </div>
-
-
-  <!-- EVENT LOG -->
-  <div class="card">
-
-    <h2>Registro de eventos</h2>
-
-    <div class="description">
-      El navegador no puede confirmar al 100% que una app se abrió,
-      pero visibilitychange y pagehide sirven como señales para diagnóstico.
-    </div>
-
-    <div class="log" id="log"></div>
-
-    <br>
-
-    <button
-      class="button light"
-      onclick="limpiarLog()">
-      Limpiar registro
-    </button>
-
-  </div>
-
-
-  <!-- NOTA -->
-  <div class="card">
-    <div class="notice">
-      <strong>Importante:</strong>
-      un navegador web no puede garantizar si una app fue abierta correctamente.
-      Los eventos visibilitychange, blur y pagehide sirven como señales,
-      pero no son confirmación absoluta. Instagram, Facebook, WhatsApp,
-      Chrome, Safari y WebViews pueden comportarse de manera distinta.
-    </div>
-  </div>
+  </main>
 
 </div>
 
@@ -496,6 +779,12 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
   const deeplinkScotiabank =
     "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo";
 
+  let eventCount = 0;
+
+
+  /* =========================
+     LOG
+     ========================= */
 
   function log(mensaje) {
 
@@ -505,6 +794,11 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
     const hora =
       new Date().toLocaleTimeString();
 
+    eventCount++;
+
+    document.getElementById("eventCount")
+      .textContent = eventCount;
+
     logBox.textContent +=
       "[" + hora + "] " + mensaje + "\n";
 
@@ -513,6 +807,36 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
 
   }
 
+
+  function limpiarLog() {
+
+    document.getElementById("log")
+      .textContent = "";
+
+    eventCount = 0;
+
+    document.getElementById("eventCount")
+      .textContent = "0";
+
+  }
+
+
+  async function copiarLog() {
+
+    const texto =
+      document.getElementById("log")
+        .textContent;
+
+    await copiarTexto(texto);
+
+    log("Registro copiado");
+
+  }
+
+
+  /* =========================
+     DETECCIÓN
+     ========================= */
 
   function detectarSistema() {
 
@@ -553,6 +877,10 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
       return "Facebook WebView";
     }
 
+    if (/Edg/i.test(ua)) {
+      return "Edge";
+    }
+
     if (/CriOS/i.test(ua)) {
       return "Chrome iOS";
     }
@@ -561,12 +889,16 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
       return "Chrome";
     }
 
-    if (/Safari/i.test(ua)) {
-      return "Safari";
+    if (/FxiOS/i.test(ua)) {
+      return "Firefox iOS";
     }
 
     if (/Firefox/i.test(ua)) {
       return "Firefox";
+    }
+
+    if (/Safari/i.test(ua)) {
+      return "Safari";
     }
 
     return "No identificado";
@@ -576,16 +908,20 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
 
   function cargarInfo() {
 
-    document.getElementById("ua").textContent =
+    document.getElementById("ua")
+      .textContent =
       navigator.userAgent;
 
-    document.getElementById("os").textContent =
+    document.getElementById("os")
+      .textContent =
       detectarSistema();
 
-    document.getElementById("browser").textContent =
+    document.getElementById("browser")
+      .textContent =
       detectarBrowser();
 
-    document.getElementById("origin").textContent =
+    document.getElementById("origin")
+      .textContent =
       location.origin;
 
     log("Página cargada");
@@ -603,16 +939,20 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
   }
 
 
+  /* =========================
+     CUSTOM SCHEME
+     ========================= */
+
   function probarDeeplinkJS() {
 
     const status =
       document.getElementById("deeplinkStatus");
 
     status.textContent =
-      "Intentando abrir app...";
+      "Intentando abrir...";
 
     log(
-      "Intento de Custom Scheme vía JavaScript"
+      "Custom Scheme vía JavaScript"
     );
 
     const inicio =
@@ -626,18 +966,36 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
       const tiempo =
         Date.now() - inicio;
 
-      status.textContent =
-        "Sin confirmación después de " +
-        tiempo +
-        " ms";
+      if (
+        document.visibilityState === "visible"
+      ) {
 
-      log(
-        "Timeout deeplink: navegador siguió activo después de " +
-        tiempo +
-        " ms"
-      );
+        status.textContent =
+          "Sin confirmación";
+
+        log(
+          "Timeout Custom Scheme: página visible después de " +
+          tiempo +
+          " ms"
+        );
+
+      }
 
     }, 2500);
+
+  }
+
+
+  /* =========================
+     PROBADOR PERSONALIZADO
+     ========================= */
+
+  function obtenerCustomUrl() {
+
+    return document
+      .getElementById("customUrl")
+      .value
+      .trim();
 
   }
 
@@ -645,13 +1003,16 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
   function abrirCustomHref() {
 
     const url =
-      document.getElementById("customUrl")
-      .value
-      .trim();
+      obtenerCustomUrl();
 
     if (!url) {
-      alert("Ingresa una URL");
+
+      alert(
+        "Ingresa una URL"
+      );
+
       return;
+
     }
 
     log(
@@ -668,17 +1029,20 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
   function abrirCustomJS() {
 
     const url =
-      document.getElementById("customUrl")
-      .value
-      .trim();
+      obtenerCustomUrl();
 
     if (!url) {
-      alert("Ingresa una URL");
+
+      alert(
+        "Ingresa una URL"
+      );
+
       return;
+
     }
 
     log(
-      "Abriendo URL personalizada vía JavaScript: " +
+      "Abriendo vía JavaScript: " +
       url
     );
 
@@ -692,14 +1056,12 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
   }
 
 
-  function copiarCustom() {
+  async function copiarCustom() {
 
     const texto =
-      document.getElementById("customUrl")
-      .value;
+      obtenerCustomUrl();
 
-    navigator.clipboard
-      .writeText(texto);
+    await copiarTexto(texto);
 
     log(
       "URL personalizada copiada"
@@ -707,6 +1069,10 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
 
   }
 
+
+  /* =========================
+     ENCODER
+     ========================= */
 
   function codificar() {
 
@@ -722,7 +1088,7 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
       resultado;
 
     log(
-      "URL codificada"
+      "encodeURIComponent ejecutado"
     );
 
   }
@@ -744,23 +1110,42 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
         resultado;
 
       log(
-        "URL decodificada"
+        "decodeURIComponent ejecutado"
       );
 
-    } catch (e) {
+    } catch (error) {
 
       document.getElementById("encoderResult")
         .textContent =
-        "Error al decodificar";
+        "Error: formato no válido para decodeURIComponent";
 
       log(
-        "Error decodeURIComponent"
+        "Error al decodificar URL"
       );
 
     }
 
   }
 
+
+  async function copiarResultadoEncoder() {
+
+    const texto =
+      document.getElementById("encoderResult")
+      .textContent;
+
+    await copiarTexto(texto);
+
+    log(
+      "Resultado Encoder copiado"
+    );
+
+  }
+
+
+  /* =========================
+     CONSTRUCTOR EMBEDDED
+     ========================= */
 
   function generarEmbedded() {
 
@@ -777,7 +1162,7 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
     if (!base || !deeplink) {
 
       alert(
-        "Completa URL web y deeplink"
+        "Completa la URL web y el deeplink"
       );
 
       return;
@@ -786,8 +1171,8 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
 
     const separador =
       base.includes("?")
-      ? "&"
-      : "?";
+        ? "&"
+        : "?";
 
     const resultado =
       base +
@@ -800,36 +1185,93 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
       resultado;
 
     log(
-      "URL embedded generada"
+      "embeddedURL generado"
     );
 
   }
 
 
-  function copiarEmbedded() {
+  async function copiarEmbedded() {
 
     const texto =
       document.getElementById("embeddedResult")
       .textContent;
 
-    navigator.clipboard
-      .writeText(texto);
+    await copiarTexto(texto);
 
     log(
-      "Embedded URL copiada"
+      "embeddedURL copiado"
     );
 
   }
 
 
-  function limpiarLog() {
+  function abrirEmbeddedGenerado() {
 
-    document.getElementById("log")
-      .textContent =
-      "";
+    const texto =
+      document.getElementById("embeddedResult")
+      .textContent
+      .trim();
+
+    if (
+      !texto ||
+      texto === "Resultado"
+    ) {
+
+      alert(
+        "Primero genera una URL"
+      );
+
+      return;
+
+    }
+
+    log(
+      "Abriendo embeddedURL generado"
+    );
+
+    window.location.href =
+      texto;
 
   }
 
+
+  /* =========================
+     PORTAPAPELES
+     ========================= */
+
+  async function copiarTexto(texto) {
+
+    try {
+
+      await navigator.clipboard
+        .writeText(texto);
+
+    } catch (error) {
+
+      const temp =
+        document.createElement("textarea");
+
+      temp.value =
+        texto;
+
+      document.body
+        .appendChild(temp);
+
+      temp.select();
+
+      document.execCommand("copy");
+
+      temp.remove();
+
+    }
+
+  }
+
+
+  /* =========================
+     EVENTOS DEL NAVEGADOR
+     ========================= */
 
   document.addEventListener(
     "visibilitychange",
@@ -873,7 +1315,7 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
     function () {
 
       log(
-        "pagehide detectado"
+        "pagehide"
       );
 
     }
@@ -885,25 +1327,71 @@ scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_sourc
     function () {
 
       log(
-        "pageshow detectado"
+        "pageshow"
       );
 
     }
   );
 
 
-  document.getElementById(
-    "deeplinkHref"
-  ).addEventListener(
-    "click",
-    function () {
+  /* =========================
+     LOG DE BOTONES PREDEFINIDOS
+     ========================= */
 
-      log(
-        "Clic Custom Scheme vía href"
-      );
+  document
+    .getElementById("deeplinkHref")
+    .addEventListener(
+      "click",
+      function () {
 
-    }
-  );
+        log(
+          "TEST 1 → Custom Scheme href"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById("httpsSimple")
+    .addEventListener(
+      "click",
+      function () {
+
+        log(
+          "TEST 3 → HTTPS simple"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById("httpsEncoded")
+    .addEventListener(
+      "click",
+      function () {
+
+        log(
+          "TEST 4 → HTTPS + embeddedURL encoded"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById("httpsUnencoded")
+    .addEventListener(
+      "click",
+      function () {
+
+        log(
+          "TEST 5 → HTTPS + embeddedURL sin encoding"
+        );
+
+      }
+    );
 
 
   cargarInfo();

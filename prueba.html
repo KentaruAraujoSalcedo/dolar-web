@@ -1001,54 +1001,411 @@
 
   const PRODUCTOS = [
 
-    {
-      id: "tarjeta-segura",
-      nombre: "Tarjeta Segura",
-      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
-      app: "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
-    },
+  {
+    id: "adelanto-de-sueldo",
+    nombre: "Adelanto de Sueldo",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/loans/salary-advance/init",
+    app: "scotiabankpe:///webView?path=/u/loans/salary-advance/init"
+  },
 
-    {
-      id: "campana-vt",
-      nombre: "Campaña VT",
-      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
-      app: "scotiabankpe:///webView?path=/u/campaign/VT"
-    },
+  {
+    id: "apple-pay",
+    nombre: "Apple Pay",
+    web: "https://www.scotiabank.com.pe/apple-pay",
+    app: "scotiabankpe:///tokenization"
+  },
 
-    {
-      id: "apple-pay",
-      nombre: "Apple Pay",
-      web: "https://www.scotiabank.com.pe/apple-pay",
-      app: "scotiabankpe:///tokenization"
-    },
+  {
+    id: "apple-wallet",
+    nombre: "Apple Wallet",
+    web: "https://www.scotiabank.com.pe/apple-pay",
+    app: "scotiabankpe:///addCardToAppleWallet"
+  },
 
-    {
-      id: "prestabono",
-      nombre: "Prestabono",
-      web: "",
-      app: ""
-    },
+  {
+    id: "venta-de-tarjeta",
+    nombre: "Venta de Tarjeta",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
+    app: "scotiabankpe:///webView?path=/u/campaign/VT"
+  },
 
-    {
-      id: "libre-disponibilidad",
-      nombre: "Préstamo Libre Disponibilidad",
-      web: "",
-      app: ""
-    },
+  {
+    id: "instant-cash-primer-desembolso",
+    nombre: "Instant Cash - Primer Desembolso",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/IC",
+    app: "scotiabankpe:///webView?path=/u/campaign/IC"
+  },
 
-    {
-      id: "cuenta-sueldo",
-      nombre: "Cuenta Sueldo",
-      web: "",
-      app: ""
-    },
+  {
+    id: "instant-cash-segundo-desembolso",
+    nombre: "Instant Cash - Segundo Desembolso",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/I2",
+    app: "scotiabankpe:///webView?path=/u/campaign/I2"
+  },
 
-    {
-      id: "cuenta-digital",
-      nombre: "Cuenta Digital",
-      web: "",
-      app: ""
-    }
+  {
+    id: "instant-cash-reenganche",
+    nombre: "Instant Cash - Reenganche",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/NI",
+    app: "scotiabankpe:///webView?path=/u/campaign/NI"
+  },
+
+  {
+    id: "compra-de-deuda-extra-linea",
+    nombre: "Compra de Deuda Extra Línea",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/CD",
+    app: "scotiabankpe:///webView?path=/u/campaign/CD"
+  },
+
+  {
+    id: "incremento-de-linea",
+    nombre: "Incremento de Línea",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/IL",
+    app: "scotiabankpe:///webView?path=/u/campaign/IL"
+  },
+
+  {
+    id: "tarjeta-credito-adicional",
+    nombre: "Tarjeta de Crédito Adicional",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/TA",
+    app: "scotiabankpe:///webView?path=/u/campaign/TA"
+  },
+
+  {
+    id: "biometria",
+    nombre: "Biometría",
+    web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/seguridad/biometria-app-scotiabank",
+    app: "scotiabankpe:///biometrics"
+  },
+
+  {
+    id: "borrar-compras",
+    nombre: "Borrar Compras",
+    web: "https://www.scotiabank.com.pe/Personas/beneficios/scotia-puntos/borrar-compras",
+    app: "scotiabankpe:///purchaseEraser"
+  },
+
+  {
+    id: "pasar-a-cuotas",
+    nombre: "Pasar a Cuotas",
+    web: "https://www.scotiabank.com.pe/Personas/tarjetas/beneficios/pasar-a-cuotas",
+    app: "scotiabankpe:///installment"
+  },
+
+  {
+    id: "cambiar-dolares",
+    nombre: "Cambiar Dólares",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/money-exchange",
+    app: "scotiabankpe:///exchange"
+  },
+
+  {
+    id: "cuenta-digital-kyc",
+    nombre: "Cuenta Digital - KYC",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/199",
+    app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/199"
+  },
+
+  {
+    id: "cuenta-power-kyc",
+    nombre: "Cuenta Power - KYC",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/080",
+    app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/080"
+  },
+
+  {
+    id: "cuenta-sueldo-dependiente-kyc",
+    nombre: "Cuenta Sueldo Dependiente - KYC",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/095",
+    app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/095"
+  },
+
+  {
+    id: "dashboard-inicio",
+    nombre: "Dashboard - Inicio",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
+    app: "scotiabankpe:///products"
+  },
+
+  {
+    id: "fondo-mutuo-acciones-emergentes",
+    nombre: "Fondo Mutuo Acciones Emergentes",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/14",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/14"
+  },
+
+  {
+    id: "fondo-mutuo-acciones-europa",
+    nombre: "Fondo Mutuo Acciones Europa",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/33",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/33"
+  },
+
+  {
+    id: "fondo-mutuo-acciones-us",
+    nombre: "Fondo Mutuo Acciones US",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/15",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/15"
+  },
+
+  {
+    id: "fondo-mutuo-corto-plazo-dolares",
+    nombre: "Fondo Mutuo Corto Plazo Dólares",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/B2",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/B2"
+  },
+
+  {
+    id: "fondo-mutuo-corto-plazo-soles",
+    nombre: "Fondo Mutuo Corto Plazo Soles",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/B3",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/B3"
+  },
+
+  {
+    id: "fondo-mutuo-deuda-hy",
+    nombre: "Fondo Mutuo Deuda HY",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/35",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/35"
+  },
+
+  {
+    id: "fondo-mutuo-fondo-deuda-ig",
+    nombre: "Fondo Mutuo Fondo Deuda IG",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/34",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/34"
+  },
+
+  {
+    id: "fondo-mutuo-mediano-plazo-flex-dolares",
+    nombre: "Fondo Mutuo Mediano Plazo Flex Dólares",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/D0",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/D0"
+  },
+
+  {
+    id: "fondo-mutuo-mediano-plazo-flex-soles",
+    nombre: "Fondo Mutuo Mediano Plazo Flex Soles",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/D1",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/D1"
+  },
+
+  {
+    id: "fondos-mutuos-detalle",
+    nombre: "Fondos Mutuos - Detalle",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds"
+  },
+
+  {
+    id: "scotia-fondo-fondos-deuda-global-fmiv",
+    nombre: "Scotia Fondo de Fondos Deuda Global FMIV",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/F1",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/F1"
+  },
+
+  {
+    id: "scotia-fondo-fondos-deuda-mercados-emergentes-fmiv",
+    nombre: "Scotia Fondo de Fondos Deuda Mercados Emergentes FMIV",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/F8",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/F8"
+  },
+
+  {
+    id: "scotia-fondo-fondos-estrategia-moderada-fmiv",
+    nombre: "Scotia Fondo de Fondos Estrategia Moderada FMIV",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/G1",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/G1"
+  },
+
+  {
+    id: "scotia-fondo-fondos-estrategia-crecimiento-fmiv",
+    nombre: "Scotia Fondo de Fondos Estrategia Crecimiento FMIV",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/G3",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/G3"
+  },
+
+  {
+    id: "limites",
+    nombre: "Límites",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile/limit",
+    app: "scotiabankpe:///limits"
+  },
+
+  {
+    id: "mi-cuenta",
+    nombre: "Mi Cuenta",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile",
+    app: "scotiabankpe:///userMenu"
+  },
+
+  {
+    id: "mi-funcionario",
+    nombre: "Mi Funcionario",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/personal-assistant",
+    app: "scotiabankpe:///webView?path=/u/personal-assistant"
+  },
+
+  {
+    id: "pagar-qr",
+    nombre: "Pagar QR",
+    web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/pago-qr",
+    app: "scotiabankpe:///focusQrCode"
+  },
+
+  {
+    id: "pago-de-recargas",
+    nombre: "Pago de Recargas",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-recharge",
+    app: "scotiabankpe:///mobile-recharge"
+  },
+
+  {
+    id: "pago-de-servicios",
+    nombre: "Pago de Servicios",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/payment",
+    app: "scotiabankpe:///servicesOrInstitutions"
+  },
+
+  {
+    id: "pago-de-tc",
+    nombre: "Pago de Tarjeta de Crédito",
+    web: "https://mi.scotiabank.com.pe/u/credit-card-payment",
+    app: "scotiabankpe:///wallet"
+  },
+
+  {
+    id: "para-ti",
+    nombre: "Para Ti",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/marketplace",
+    app: "scotiabankpe:///notices"
+  },
+
+  {
+    id: "plin",
+    nombre: "Plin",
+    web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/transferencias-interbancarias-plin",
+    app: "scotiabankpe:///contacts"
+  },
+
+  {
+    id: "prestamo-ld-pa-dxp",
+    nombre: "Préstamo LD / PA DXP",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/loans/personal/init",
+    app: "scotiabankpe:///webView?path=/u/loans/personal/init"
+  },
+
+  {
+    id: "quiero-un-prestamo",
+    nombre: "Quiero un Préstamo",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/request-loan/introduction",
+    app: "scotiabankpe:///webView?path=/u/request-loan/introduction"
+  },
+
+  {
+    id: "refinanciamientos-digitales",
+    nombre: "Refinanciamientos Digitales",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/collections-solutions/refinance/init",
+    app: "scotiabankpe:///webView?path=/u/collections-solutions/refinance/init"
+  },
+
+  {
+    id: "reprogramaciones-digitales-business",
+    nombre: "Reprogramaciones Digitales - Business",
+    web: "https://mi.scotiabank.com.pe/login?redirecto=/b/collections/reschedule/init",
+    app: "scotiabankpe:///webView?path=/b/collections-solutions/reschedule/init"
+  },
+
+  {
+    id: "reprogramaciones-digitales-joy",
+    nombre: "Reprogramaciones Digitales - Joy",
+    web: "https://mi.scotiabank.com.pe/login?redirecto=/u/collections/reschedule/init",
+    app: "scotiabankpe:///webView?path=/u/collections-solutions/reschedule/init"
+  },
+
+  {
+    id: "retirar-sin-tarjeta",
+    nombre: "Retirar sin Tarjeta",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-cash",
+    app: "scotiabankpe:///withdrawal"
+  },
+
+  {
+    id: "scotia-fondo-liquidez-dolares-fmiv",
+    nombre: "Scotia Fondo Liquidez Dólares FMIV",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/98",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/98"
+  },
+
+  {
+    id: "scotia-fondo-liquidez-soles-fmiv",
+    nombre: "Scotia Fondo Liquidez Soles FMIV",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/95",
+    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/95"
+  },
+
+  {
+    id: "scotiapuntos",
+    nombre: "Scotia Puntos",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/rewards/scotia-points",
+    app: "scotiabankpe:///scotiaPointsHub"
+  },
+
+  {
+    id: "seguros-total-max-tarjeta-segura",
+    nombre: "Seguros Total Max / Tarjeta Segura",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
+    app: "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
+  },
+
+  {
+    id: "transferencias-al-exterior",
+    nombre: "Transferencias al Exterior",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/abroad",
+    app: "scotiabankpe:///webView?path=/u/transfer/abroad"
+  },
+
+  {
+    id: "transferir-a-otra-cuenta",
+    nombre: "Transferir a Otra Cuenta",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-account",
+    app: "scotiabankpe:///transfer/other-account"
+  },
+
+  {
+    id: "transferir-a-otro-banco",
+    nombre: "Transferir a Otro Banco",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-bank",
+    app: "scotiabankpe:///transfer/other-bank"
+  },
+
+  {
+    id: "transferir-entre-cuentas",
+    nombre: "Transferir entre Cuentas",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/own-account",
+    app: "scotiabankpe:///transfersOwn"
+  },
+
+  {
+    id: "activar-cuenta",
+    nombre: "Activar Cuenta",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/payroll-accounts",
+    app: "scotiabankpe:///webView?path=/u/payroll-accounts"
+  },
+
+  {
+    id: "ver-mis-productos",
+    nombre: "Ver Mis Productos",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
+    app: "scotiabankpe:///seeMyProducts"
+  },
+
+  {
+    id: "pase-a-cuotas",
+    nombre: "Pase a Cuotas",
+    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/installment",
+    app: "scotiabankpe:///installment"
+  }
 
   ];
 

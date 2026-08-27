@@ -204,12 +204,6 @@
       color: #172033;
     }
 
-    .btn-light {
-      background: #f5f6f7;
-      color: #344054;
-      border: 1px solid var(--border);
-    }
-
     .campaign-source-box {
       padding: 12px;
       background: var(--info-bg);
@@ -313,10 +307,6 @@
       font-size: 11px;
       line-height: 1.45;
     }
-
-    /* =========================
-       CATÁLOGO
-       ========================= */
 
     .catalog-card {
       position: sticky;
@@ -434,17 +424,9 @@
 
   <div class="layout">
 
-
-    <!-- =====================================================
-         COLUMNA PRINCIPAL
-         ===================================================== -->
-
     <main class="left">
 
-
-      <!-- ===================================================
-           PASO 1
-           =================================================== -->
+      <!-- PASO 1 -->
 
       <section class="card">
 
@@ -459,9 +441,7 @@
           modificarlas manualmente.
         </p>
 
-
         <div class="form-grid">
-
 
           <div class="field full">
 
@@ -473,11 +453,9 @@
               id="productSelect"
               onchange="seleccionarProducto(this.value)"
             >
-
               <option value="">
                 Seleccionar producto...
               </option>
-
             </select>
 
           </div>
@@ -526,9 +504,7 @@
 
 
 
-      <!-- ===================================================
-           PASO 2
-           =================================================== -->
+      <!-- PASO 2 -->
 
       <section class="card">
 
@@ -544,7 +520,6 @@
 
 
         <div class="form-grid">
-
 
           <!-- UTM SOURCE -->
 
@@ -562,18 +537,23 @@
             >
 
             <datalist id="sourceOptions">
-
               <option value="masterbase">
               <option value="google">
               <option value="meta">
               <option value="tiktok">
+              <option value="youtube">
+              <option value="bing">
+              <option value="linkedin">
+              <option value="spotify">
               <option value="firebase">
               <option value="web">
-              <option value="ntbcd">
-              <option value="folleto-fisico">
               <option value="whatsapp">
               <option value="sms">
-
+              <option value="ntbcd">
+              <option value="folleto-fisico">
+              <option value="linktree">
+              <option value="epsilon">
+              <option value="dv360">
             </datalist>
 
             <span class="hint">
@@ -600,18 +580,21 @@
             >
 
             <datalist id="mediumOptions">
-
               <option value="email">
               <option value="paid-cpc">
-              <option value="paid-cpv">
               <option value="paid-cpa">
               <option value="paid-cpm">
-              <option value="social-media">
+              <option value="paid-cpv">
+              <option value="paid-social">
+              <option value="display">
+              <option value="sem">
               <option value="push">
-              <option value="ntb">
               <option value="organic">
+              <option value="referral">
+              <option value="sms">
               <option value="qr">
-
+              <option value="link">
+              <option value="ntb">
             </datalist>
 
             <span class="hint">
@@ -632,13 +615,34 @@
 
             <input
               id="utmCampaign"
+              list="campaignOptions"
               type="text"
-              placeholder="Ej. TarjetaSeguraLF"
+              placeholder="Ej. Google-Search-CuentaSueldo-Ago26"
               autocomplete="off"
             >
 
+            <datalist id="campaignOptions">
+              <option value="Google-Search-">
+              <option value="Google-Display-">
+              <option value="Google-Pmax-">
+              <option value="Google-DemandGen-">
+              <option value="Google-UAC-">
+              <option value="Google-ACE-">
+              <option value="Google-YouTube-">
+              <option value="DV360-">
+              <option value="Meta-">
+              <option value="TikTok-">
+              <option value="Bing-Search-">
+              <option value="Bing-Display-">
+              <option value="LinkedIn-">
+              <option value="Spotify-">
+              <option value="Email-">
+              <option value="Push-">
+            </datalist>
+
             <span class="hint">
-              Nombre definido para identificar la campaña.
+              Formato recomendado: Canal-TipoCampaña-Producto-Periodo.
+              Puedes seleccionar una sugerencia y completar el nombre.
             </span>
 
           </div>
@@ -720,7 +724,6 @@
             Generar link de campaña
           </button>
 
-
           <button
             class="btn-secondary"
             onclick="limpiarFormulario()"
@@ -734,9 +737,7 @@
 
 
 
-      <!-- ===================================================
-           PASO 3
-           =================================================== -->
+      <!-- PASO 3 -->
 
       <section class="card">
 
@@ -755,19 +756,15 @@
           id="emptyResult"
           class="warning"
         >
-
           Completa los pasos anteriores y presiona
           <strong>Generar link de campaña</strong>.
-
         </div>
-
 
 
         <div
           id="resultBox"
           class="result-box"
         >
-
 
           <div class="result-title">
             ✓ Link generado correctamente
@@ -789,7 +786,6 @@
               Copiar link final
             </button>
 
-
             <button
               class="btn-secondary"
               onclick="abrirFinal()"
@@ -800,9 +796,7 @@
           </div>
 
 
-
           <div class="preview-grid">
-
 
             <div class="preview">
 
@@ -816,7 +810,6 @@
               ></div>
 
             </div>
-
 
 
             <div class="preview">
@@ -868,9 +861,7 @@
 
 
 
-    <!-- =====================================================
-         CATÁLOGO
-         ===================================================== -->
+    <!-- CATÁLOGO -->
 
     <aside class="right">
 
@@ -885,7 +876,6 @@
           Web y App.
         </p>
 
-
         <input
           id="catalogSearch"
           class="catalog-search"
@@ -893,7 +883,6 @@
           placeholder="Buscar producto..."
           oninput="renderCatalog()"
         >
-
 
         <div
           id="catalog"
@@ -909,126 +898,64 @@
 </div>
 
 
-
 <script>
 
   /* ========================================================
-     CONFIGURACIÓN GENERAL
+     CONFIGURACIÓN
      ======================================================== */
 
   const SOURCE_CAMPAIGN = "campaign";
 
 
-  /*
-   * Catálogo de productos.
-   *
-   * Solo necesitas mantener:
-   *
-   * id
-   * nombre
-   * web
-   * app
-   *
-   * Ya no existe tipo WebView / Nativo.
-   */
-
   const PRODUCTOS = [
 
     {
       id: "tarjeta-segura",
-
-      nombre:
-        "Tarjeta Segura",
-
-      web:
-        "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
-
-      app:
-        "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
+      nombre: "Tarjeta Segura",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
+      app: "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
     },
-
 
     {
       id: "campana-vt",
-
-      nombre:
-        "Campaña VT",
-
-      web:
-        "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
-
-      app:
-        "scotiabankpe:///webView?path=/u/campaign/VT"
+      nombre: "Campaña VT",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
+      app: "scotiabankpe:///webView?path=/u/campaign/VT"
     },
-
 
     {
       id: "apple-pay",
-
-      nombre:
-        "Apple Pay",
-
-      web:
-        "https://www.scotiabank.com.pe/apple-pay",
-
-      app:
-        "scotiabankpe:///tokenization"
+      nombre: "Apple Pay",
+      web: "https://www.scotiabank.com.pe/apple-pay",
+      app: "scotiabankpe:///tokenization"
     },
-
 
     {
       id: "prestabono",
-
-      nombre:
-        "Prestabono",
-
-      web:
-        "",
-
-      app:
-        ""
+      nombre: "Prestabono",
+      web: "",
+      app: ""
     },
-
 
     {
       id: "libre-disponibilidad",
-
-      nombre:
-        "Préstamo Libre Disponibilidad",
-
-      web:
-        "",
-
-      app:
-        ""
+      nombre: "Préstamo Libre Disponibilidad",
+      web: "",
+      app: ""
     },
-
 
     {
       id: "cuenta-sueldo",
-
-      nombre:
-        "Cuenta Sueldo",
-
-      web:
-        "",
-
-      app:
-        ""
+      nombre: "Cuenta Sueldo",
+      web: "",
+      app: ""
     },
-
 
     {
       id: "cuenta-digital",
-
-      nombre:
-        "Cuenta Digital",
-
-      web:
-        "",
-
-      app:
-        ""
+      nombre: "Cuenta Digital",
+      web: "",
+      app: ""
     }
 
   ];
@@ -1053,14 +980,11 @@
       const option =
         document.createElement("option");
 
-
       option.value =
         producto.id;
 
-
       option.textContent =
         producto.nombre;
-
 
       select.appendChild(option);
 
@@ -1078,7 +1002,7 @@
 
 
   /* ========================================================
-     SELECCIÓN DE PRODUCTO
+     PRODUCTO
      ======================================================== */
 
   function seleccionarProducto(id) {
@@ -1101,6 +1025,8 @@
       document.getElementById("appUrl").value =
         "";
 
+      ocultarResultado();
+
       renderCatalog();
 
       return;
@@ -1117,7 +1043,6 @@
 
 
     ocultarResultado();
-
 
     renderCatalog();
 
@@ -1200,18 +1125,13 @@
         productoSeleccionado.id === producto.id
       ) {
 
-        div.classList.add(
-          "active"
-        );
+        div.classList.add("active");
 
       }
 
 
       div.onclick =
-        () =>
-          seleccionarDesdeCatalogo(
-            producto.id
-          );
+        () => seleccionarDesdeCatalogo(producto.id);
 
 
       div.innerHTML = `
@@ -1233,9 +1153,7 @@
       `;
 
 
-      catalog.appendChild(
-        div
-      );
+      catalog.appendChild(div);
 
     });
 
@@ -1291,18 +1209,7 @@
 
 
   /* ========================================================
-     MANEJO DE QUERY STRING
-
-     Esta función modifica parámetros sin reconstruir
-     completamente la URL.
-
-     Eso permite conservar:
-
-     redirectTo=/u/campaign/VT
-
-     en vez de:
-
-     redirectTo=%2Fu%2Fcampaign%2FVT
+     MANEJO DE PARÁMETROS
      ======================================================== */
 
   function establecerParametros(
@@ -1314,10 +1221,6 @@
     let original =
       limpiarValor(urlBase);
 
-
-    /*
-     * Conserva fragmentos #...
-     */
 
     let hash =
       "";
@@ -1332,19 +1235,11 @@
       hash =
         original.substring(hashIndex);
 
-
       original =
-        original.substring(
-          0,
-          hashIndex
-        );
+        original.substring(0, hashIndex);
 
     }
 
-
-    /*
-     * Separa base y query existente
-     */
 
     const queryIndex =
       original.indexOf("?");
@@ -1353,24 +1248,14 @@
     const base =
       queryIndex === -1
         ? original
-        : original.substring(
-            0,
-            queryIndex
-          );
+        : original.substring(0, queryIndex);
 
 
     const queryOriginal =
       queryIndex === -1
         ? ""
-        : original.substring(
-            queryIndex + 1
-          );
+        : original.substring(queryIndex + 1);
 
-
-    /*
-     * Convierte parámetros existentes
-     * en una estructura manipulable.
-     */
 
     const pares =
       queryOriginal
@@ -1399,39 +1284,34 @@
 
       if (index === -1) {
 
-        key =
-          par;
-
-        value =
-          "";
+        key = par;
+        value = "";
 
       } else {
 
         key =
-          par.substring(
-            0,
-            index
-          );
+          par.substring(0, index);
 
         value =
-          par.substring(
-            index + 1
-          );
+          par.substring(index + 1);
 
       }
 
 
-      const keyNormalizada =
-        decodeURIComponent(
-          key
-        );
+      let keyNormalizada;
 
+      try {
 
-      /*
-       * Conservamos exactamente el valor
-       * original de los parámetros que no
-       * estamos modificando.
-       */
+        keyNormalizada =
+          decodeURIComponent(key);
+
+      } catch {
+
+        keyNormalizada =
+          key;
+
+      }
+
 
       mapa.set(
         keyNormalizada,
@@ -1444,22 +1324,12 @@
     });
 
 
-    /*
-     * Elimina parámetros que no deben
-     * sobrevivir.
-     */
-
     parametrosAEliminar.forEach(key => {
 
       mapa.delete(key);
 
     });
 
-
-    /*
-     * Agrega o reemplaza los parámetros
-     * definidos por el generador.
-     */
 
     Object.entries(parametros)
       .forEach(([key, value]) => {
@@ -1489,34 +1359,25 @@
       });
 
 
-    /*
-     * Reconstruye query conservando
-     * parámetros originales.
-     */
-
     const nuevaQuery =
-      Array.from(
-        mapa.values()
-      )
-      .map(item => {
+      Array.from(mapa.values())
+        .map(item => {
 
-        if (
-          item.valueOriginal === ""
-        ) {
+          if (item.valueOriginal === "") {
 
-          return item.keyOriginal;
+            return item.keyOriginal;
 
-        }
+          }
 
 
-        return (
-          item.keyOriginal +
-          "=" +
-          item.valueOriginal
-        );
+          return (
+            item.keyOriginal +
+            "=" +
+            item.valueOriginal
+          );
 
-      })
-      .join("&");
+        })
+        .join("&");
 
 
     return (
@@ -1575,17 +1436,9 @@
       );
 
 
-
-    /* ======================================================
-       VALIDACIONES
-       ====================================================== */
-
     if (!webBase) {
 
-      alert(
-        "Completa la URL Web."
-      );
-
+      alert("Completa la URL Web.");
       return;
 
     }
@@ -1604,10 +1457,7 @@
 
     if (!appBase) {
 
-      alert(
-        "Completa el Deeplink App."
-      );
-
+      alert("Completa el Deeplink App.");
       return;
 
     }
@@ -1639,14 +1489,6 @@
     }
 
 
-
-    /* ======================================================
-       PARÁMETROS ESTANDARIZADOS
-
-       source siempre es campaign
-       detail es opcional
-       ====================================================== */
-
     const parametrosCampana = {
 
       utm_source:
@@ -1672,49 +1514,20 @@
     }
 
 
-
-    /* ======================================================
-       1. URL WEB PARAMETRIZADA
-
-       Si la URL ya tenía embeddedURL,
-       se elimina para construir uno nuevo.
-       ====================================================== */
-
     const webParametrizada =
       establecerParametros(
-
         webBase,
-
         parametrosCampana,
-
-        [
-          "embeddedURL"
-        ]
-
+        ["embeddedURL"]
       );
 
-
-
-    /* ======================================================
-       2. DEEPLINK APP PARAMETRIZADO
-       ====================================================== */
 
     const appParametrizada =
       establecerParametros(
-
         appBase,
-
         parametrosCampana
-
       );
 
-
-
-    /* ======================================================
-       3. EMBEDDEDURL
-
-       Aquí sí se codifica TODO el deeplink.
-       ====================================================== */
 
     const separador =
       webParametrizada.includes("?")
@@ -1731,26 +1544,15 @@
       );
 
 
-
-    /* ======================================================
-       RESULTADOS
-       ====================================================== */
-
-    document
-      .getElementById("finalUrl")
-      .textContent =
+    document.getElementById("finalUrl").textContent =
       finalUrl;
 
 
-    document
-      .getElementById("webPreview")
-      .textContent =
+    document.getElementById("webPreview").textContent =
       webParametrizada;
 
 
-    document
-      .getElementById("appPreview")
-      .textContent =
+    document.getElementById("appPreview").textContent =
       appParametrizada;
 
 
@@ -1765,11 +1567,6 @@
       .classList
       .add("hidden");
 
-
-    /*
-     * Reflejamos valores normalizados
-     * en pantalla.
-     */
 
     document.getElementById("utmSource").value =
       utmSource;
@@ -1816,49 +1613,33 @@
 
 
     if (!link) {
-
       return;
-
     }
 
 
     try {
 
-      await navigator
-        .clipboard
-        .writeText(link);
-
+      await navigator.clipboard.writeText(link);
 
       alert(
         "Link copiado correctamente."
       );
 
-
     } catch (error) {
 
       const textarea =
-        document.createElement(
-          "textarea"
-        );
+        document.createElement("textarea");
 
 
       textarea.value =
         link;
 
 
-      document.body
-        .appendChild(
-          textarea
-        );
-
+      document.body.appendChild(textarea);
 
       textarea.select();
 
-
-      document.execCommand(
-        "copy"
-      );
-
+      document.execCommand("copy");
 
       textarea.remove();
 
@@ -1886,9 +1667,7 @@
 
 
     if (!link) {
-
       return;
-
     }
 
 
@@ -1954,5 +1733,4 @@
 </script>
 
 </body>
-
 </html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Prueba de Links Scotiabank</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 30px 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    .test {
+      margin-bottom: 30px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .test:last-child {
+      border-bottom: none;
+    }
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .description {
+      margin-bottom: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 20px;
+      background: #222;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .url {
+      margin-top: 12px;
+      font-size: 12px;
+      word-break: break-all;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Prueba de Deep Links Scotiabank</h1>
+
+    <!-- PRUEBA 1 -->
+    <div class="test">
+
+      <div class="title">
+        1. Deeplink directo
+      </div>
+
+      <div class="description">
+        Esta prueba intenta abrir directamente la app Scotiabank usando
+        scotiabankpe://
+      </div>
+
+      <a
+        class="button"
+        href="scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
+        Abrir Deeplink
+      </a>
+
+      <div class="url">
+        scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+      </div>
+
+    </div>
+
+
+    <!-- PRUEBA 2 -->
+    <div class="test">
+
+      <div class="title">
+        2. HTTPS sin embeddedURL
+      </div>
+
+      <div class="description">
+        Esta prueba usa solamente el link web.
+      </div>
+
+      <a
+        class="button"
+        href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
+        Abrir HTTPS
+      </a>
+
+      <div class="url">
+        https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+      </div>
+
+    </div>
+
+
+    <!-- PRUEBA 3 -->
+    <div class="test">
+
+      <div class="title">
+        3. HTTPS + embeddedURL
+      </div>
+
+      <div class="description">
+        Esta prueba usa el HTTPS y dentro lleva el deeplink codificado.
+      </div>
+
+      <a
+        class="button"
+        href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe%3A%2F%2F%2FwebView%3Fpath%3D%2Fu%2Finsurances%2Facquired-insurances%2Fcatalog%26utm_source%3Dmeta%26utm_medium%3Dpaid-cpa%26utm_campaign%3DTarjetaSeguraLF%26source%3Dflujo">
+        Abrir HTTPS + Deeplink
+      </a>
+
+      <div class="url">
+        HTTPS con embeddedURL codificado
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

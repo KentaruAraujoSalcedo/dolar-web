@@ -924,24 +924,14 @@
           </div>
 
 
-          <div class="success-note">
+           <div class="success-note">
 
-            <strong>Formato aplicado:</strong><br><br>
+              <strong>Link listo para usar</strong><br><br>
 
-            Web y App reciben:
+                Copia el enlace final y úsalo en tu campaña.
 
-            <strong>
-              utm_source + utm_medium + utm_campaign + source=campaign
-            </strong>
-
-            y, si se completa,
-
-            <strong>detail</strong>.
-
-            <br><br>
-
-            Solo el Deeplink App completo se codifica dentro de
-            <strong>embeddedURL</strong>.
+                Para validar la apertura en la app, pruébalo desde WhatsApp,
+                email o desde la plataforma de campaña.
 
           </div>
 
@@ -2168,27 +2158,20 @@
      PROBAR
      ======================================================== */
 
-  function abrirFinal() {
+function abrirFinal() {
 
-    const link =
-      document
-        .getElementById("finalUrl")
-        .textContent;
+  const link =
+    document
+      .getElementById("finalUrl")
+      .textContent;
 
-
-    if (!link) {
-      return;
-    }
-
-
-    window.open(
-      link,
-      "_blank",
-      "noopener"
-    );
-
+  if (!link) {
+    return;
   }
 
+  window.location.href = link;
+
+}
 
 
   /* ========================================================

@@ -167,6 +167,10 @@
       cursor: not-allowed;
     }
 
+    .manual-input {
+      margin-top: 8px;
+    }
+
     textarea {
       resize: vertical;
       min-height: 75px;
@@ -410,7 +414,6 @@
 <div class="page">
 
   <header class="header">
-
     <h1>Generador de Links de Campaña</h1>
 
     <p>
@@ -418,7 +421,6 @@
       Las UTM y parámetros de navegación se agregan automáticamente
       tanto a Web como a App.
     </p>
-
   </header>
 
 
@@ -444,28 +446,19 @@
         <div class="form-grid">
 
           <div class="field full">
-
-            <label for="productSelect">
-              Producto
-            </label>
+            <label for="productSelect">Producto</label>
 
             <select
               id="productSelect"
               onchange="seleccionarProducto(this.value)"
             >
-              <option value="">
-                Seleccionar producto...
-              </option>
+              <option value="">Seleccionar producto...</option>
             </select>
-
           </div>
 
 
           <div class="field">
-
-            <label for="webUrl">
-              URL Web
-            </label>
+            <label for="webUrl">URL Web</label>
 
             <input
               id="webUrl"
@@ -476,15 +469,11 @@
             <span class="hint">
               URL utilizada como destino Web o fallback.
             </span>
-
           </div>
 
 
           <div class="field">
-
-            <label for="appUrl">
-              Deeplink App
-            </label>
+            <label for="appUrl">Deeplink App</label>
 
             <input
               id="appUrl"
@@ -495,7 +484,6 @@
             <span class="hint">
               Ruta utilizada para abrir la experiencia dentro de la app.
             </span>
-
           </div>
 
         </div>
@@ -514,8 +502,8 @@
         </h2>
 
         <p class="section-description">
-          Utiliza los valores estandarizados disponibles.
-          También puedes escribir un valor diferente cuando sea necesario.
+          Selecciona los valores estandarizados. Si no encuentras el valor
+          necesario, elige “Otro” y escríbelo manualmente.
         </p>
 
 
@@ -529,37 +517,98 @@
               utm_source
             </label>
 
-            <input
+            <select
               id="utmSource"
-              list="sourceOptions"
-              placeholder="Ej. meta"
+              onchange="manejarOtroSource()"
+            >
+              <option value="">
+                Seleccionar fuente...
+              </option>
+
+              <option value="masterbase">
+                masterbase — Campañas de email
+              </option>
+
+              <option value="google">
+                google — Google Ads
+              </option>
+
+              <option value="meta">
+                meta — Facebook e Instagram Ads
+              </option>
+
+              <option value="tiktok">
+                tiktok — TikTok Ads
+              </option>
+
+              <option value="youtube">
+                youtube — Campañas de YouTube
+              </option>
+
+              <option value="bing">
+                bing — Microsoft / Bing Ads
+              </option>
+
+              <option value="linkedin">
+                linkedin — LinkedIn Ads
+              </option>
+
+              <option value="spotify">
+                spotify — Campañas en Spotify
+              </option>
+
+              <option value="firebase">
+                firebase — Notificaciones Push
+              </option>
+
+              <option value="web">
+                web — Tráfico desde sitios propios
+              </option>
+
+              <option value="whatsapp">
+                whatsapp — Campañas por WhatsApp
+              </option>
+
+              <option value="sms">
+                sms — Campañas por SMS
+              </option>
+
+              <option value="ntbcd">
+                ntbcd — Canal interno NTBCD
+              </option>
+
+              <option value="folleto-fisico">
+                folleto-fisico — Material físico / QR
+              </option>
+
+              <option value="linktree">
+                linktree — Tráfico desde Linktree
+              </option>
+
+              <option value="epsilon">
+                epsilon — Campañas vía Epsilon
+              </option>
+
+              <option value="dv360">
+                dv360 — Display & Video 360
+              </option>
+
+              <option value="__otro__">
+                Otro — Escribir manualmente
+              </option>
+            </select>
+
+            <input
+              id="utmSourceOtro"
+              class="manual-input hidden"
+              type="text"
+              placeholder="Escribe la fuente"
               autocomplete="off"
             >
 
-            <datalist id="sourceOptions">
-              <option value="masterbase">
-              <option value="google">
-              <option value="meta">
-              <option value="tiktok">
-              <option value="youtube">
-              <option value="bing">
-              <option value="linkedin">
-              <option value="spotify">
-              <option value="firebase">
-              <option value="web">
-              <option value="whatsapp">
-              <option value="sms">
-              <option value="ntbcd">
-              <option value="folleto-fisico">
-              <option value="linktree">
-              <option value="epsilon">
-              <option value="dv360">
-            </datalist>
-
             <span class="hint">
-              Identifica la plataforma, sistema o fuente que origina el tráfico.
+              Plataforma, sistema o fuente que origina el tráfico.
             </span>
-
           </div>
 
 
@@ -572,35 +621,90 @@
               utm_medium
             </label>
 
-            <input
+            <select
               id="utmMedium"
-              list="mediumOptions"
-              placeholder="Ej. paid-cpa"
+              onchange="manejarOtroMedium()"
+            >
+              <option value="">
+                Seleccionar medio...
+              </option>
+
+              <option value="email">
+                email — Email marketing
+              </option>
+
+              <option value="paid-cpc">
+                paid-cpc — Pago por clic
+              </option>
+
+              <option value="paid-cpa">
+                paid-cpa — Pago por adquisición
+              </option>
+
+              <option value="paid-cpm">
+                paid-cpm — Pago por mil impresiones
+              </option>
+
+              <option value="paid-cpv">
+                paid-cpv — Pago por visualización
+              </option>
+
+              <option value="paid-social">
+                paid-social — Publicidad pagada en redes sociales
+              </option>
+
+              <option value="display">
+                display — Publicidad display / banners
+              </option>
+
+              <option value="sem">
+                sem — Search Engine Marketing
+              </option>
+
+              <option value="push">
+                push — Notificaciones Push
+              </option>
+
+              <option value="organic">
+                organic — Tráfico orgánico
+              </option>
+
+              <option value="referral">
+                referral — Tráfico desde otra web
+              </option>
+
+              <option value="sms">
+                sms — Mensajería SMS
+              </option>
+
+              <option value="qr">
+                qr — Código QR
+              </option>
+
+              <option value="link">
+                link — Enlace genérico / interno
+              </option>
+
+              <option value="ntb">
+                ntb — Canal interno NTB
+              </option>
+
+              <option value="__otro__">
+                Otro — Escribir manualmente
+              </option>
+            </select>
+
+            <input
+              id="utmMediumOtro"
+              class="manual-input hidden"
+              type="text"
+              placeholder="Escribe el medio"
               autocomplete="off"
             >
 
-            <datalist id="mediumOptions">
-              <option value="email">
-              <option value="paid-cpc">
-              <option value="paid-cpa">
-              <option value="paid-cpm">
-              <option value="paid-cpv">
-              <option value="paid-social">
-              <option value="display">
-              <option value="sem">
-              <option value="push">
-              <option value="organic">
-              <option value="referral">
-              <option value="sms">
-              <option value="qr">
-              <option value="link">
-              <option value="ntb">
-            </datalist>
-
             <span class="hint">
-              Identifica el medio o mecanismo utilizado por la campaña.
+              Medio o mecanismo utilizado por la campaña.
             </span>
-
           </div>
 
 
@@ -642,9 +746,7 @@
 
             <span class="hint">
               Formato recomendado: Canal-TipoCampaña-Producto-Periodo.
-              Puedes seleccionar una sugerencia y completar el nombre.
             </span>
-
           </div>
 
 
@@ -665,9 +767,8 @@
             >
 
             <span class="hint">
-              Valor estandarizado para identificar campañas como puerta de entrada.
+              Puerta de entrada estandarizada para campañas.
             </span>
-
           </div>
 
 
@@ -691,9 +792,8 @@
             >
 
             <span class="hint">
-              Úsalo solo cuando sea necesario agregar un nivel adicional de detalle.
+              Úsalo solo si necesitas un nivel adicional de detalle.
             </span>
-
           </div>
 
         </div>
@@ -709,9 +809,7 @@
             El generador agrega automáticamente
             <strong>source=campaign</strong>
             tanto a la URL Web como al Deeplink App.
-            Marketing no necesita modificar este valor.
           </p>
-
         </div>
 
 
@@ -808,7 +906,6 @@
                 id="webPreview"
                 class="preview-value"
               ></div>
-
             </div>
 
 
@@ -822,7 +919,6 @@
                 id="appPreview"
                 class="preview-value"
               ></div>
-
             </div>
 
           </div>
@@ -838,18 +934,14 @@
               utm_source + utm_medium + utm_campaign + source=campaign
             </strong>
 
-            y, cuando se completa,
+            y, si se completa,
 
             <strong>detail</strong>.
 
             <br><br>
 
-            Únicamente el Deeplink App completo se codifica dentro de
+            Solo el Deeplink App completo se codifica dentro de
             <strong>embeddedURL</strong>.
-
-            La URL Web conserva valores como:
-
-            <strong>redirectTo=/u/campaign/VT</strong>.
 
           </div>
 
@@ -872,8 +964,8 @@
         </h2>
 
         <p class="section-description">
-          Haz clic en un producto para cargar automáticamente sus rutas
-          Web y App.
+          Haz clic en un producto para cargar automáticamente
+          sus rutas Web y App.
         </p>
 
         <input
@@ -996,6 +1088,59 @@
 
 
     renderCatalog();
+
+  }
+
+
+
+  /* ========================================================
+     SOURCE / MEDIUM MANUAL
+     ======================================================== */
+
+  function manejarOtroSource() {
+
+    const select =
+      document.getElementById("utmSource");
+
+    const inputOtro =
+      document.getElementById("utmSourceOtro");
+
+
+    if (select.value === "__otro__") {
+
+      inputOtro.classList.remove("hidden");
+      inputOtro.focus();
+
+    } else {
+
+      inputOtro.classList.add("hidden");
+      inputOtro.value = "";
+
+    }
+
+  }
+
+
+  function manejarOtroMedium() {
+
+    const select =
+      document.getElementById("utmMedium");
+
+    const inputOtro =
+      document.getElementById("utmMediumOtro");
+
+
+    if (select.value === "__otro__") {
+
+      inputOtro.classList.remove("hidden");
+      inputOtro.focus();
+
+    } else {
+
+      inputOtro.classList.add("hidden");
+      inputOtro.value = "";
+
+    }
 
   }
 
@@ -1412,15 +1557,27 @@
       );
 
 
+    const sourceSeleccionado =
+      document.getElementById("utmSource").value;
+
+
     const utmSource =
       normalizarTaxonomia(
-        document.getElementById("utmSource").value
+        sourceSeleccionado === "__otro__"
+          ? document.getElementById("utmSourceOtro").value
+          : sourceSeleccionado
       );
+
+
+    const mediumSeleccionado =
+      document.getElementById("utmMedium").value;
 
 
     const utmMedium =
       normalizarTaxonomia(
-        document.getElementById("utmMedium").value
+        mediumSeleccionado === "__otro__"
+          ? document.getElementById("utmMediumOtro").value
+          : mediumSeleccionado
       );
 
 
@@ -1434,6 +1591,7 @@
       limpiarValor(
         document.getElementById("detail").value
       );
+
 
 
     if (!webBase) {
@@ -1489,6 +1647,7 @@
     }
 
 
+
     const parametrosCampana = {
 
       utm_source:
@@ -1512,6 +1671,7 @@
         detail;
 
     }
+
 
 
     const webParametrizada =
@@ -1544,6 +1704,7 @@
       );
 
 
+
     document.getElementById("finalUrl").textContent =
       finalUrl;
 
@@ -1566,14 +1727,6 @@
       .getElementById("emptyResult")
       .classList
       .add("hidden");
-
-
-    document.getElementById("utmSource").value =
-      utmSource;
-
-
-    document.getElementById("utmMedium").value =
-      utmMedium;
 
   }
 
@@ -1699,8 +1852,26 @@
     document.getElementById("utmSource").value =
       "";
 
+    document.getElementById("utmSourceOtro").value =
+      "";
+
+    document
+      .getElementById("utmSourceOtro")
+      .classList
+      .add("hidden");
+
+
     document.getElementById("utmMedium").value =
       "";
+
+    document.getElementById("utmMediumOtro").value =
+      "";
+
+    document
+      .getElementById("utmMediumOtro")
+      .classList
+      .add("hidden");
+
 
     document.getElementById("utmCampaign").value =
       "";

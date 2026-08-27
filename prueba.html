@@ -161,72 +161,17 @@
       box-shadow: 0 0 0 2px rgba(17, 24, 39, .06);
     }
 
+    input[readonly] {
+      background: #f8fafc;
+      color: #475467;
+      cursor: not-allowed;
+    }
+
     textarea {
       resize: vertical;
       min-height: 75px;
       font-family: Consolas, monospace;
       font-size: 12px;
-    }
-
-    .divider {
-      border: 0;
-      border-top: 1px solid var(--border);
-      margin: 20px 0;
-    }
-
-    /* =========================
-       SELECTOR WEBVIEW / NATIVO
-       ========================= */
-
-    .type-selector {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .type-option {
-      position: relative;
-    }
-
-    .type-option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .type-option label {
-      margin: 0;
-      padding: 13px 14px;
-      border: 1px solid #d0d5dd;
-      border-radius: 10px;
-      cursor: pointer;
-      background: white;
-      transition: .15s ease;
-    }
-
-    .type-option label strong {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 3px;
-      color: #172033;
-    }
-
-    .type-option label span {
-      display: block;
-      font-size: 11px;
-      color: #667085;
-      line-height: 1.35;
-    }
-
-    .type-option input:checked + label {
-      background: var(--info-bg);
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, .08);
-    }
-
-    .type-option input:checked + label strong {
-      color: var(--info);
     }
 
     .actions {
@@ -265,6 +210,24 @@
       border: 1px solid var(--border);
     }
 
+    .campaign-source-box {
+      padding: 12px;
+      background: var(--info-bg);
+      border: 1px solid #bfdbfe;
+      border-radius: 9px;
+    }
+
+    .campaign-source-box strong {
+      color: var(--info);
+    }
+
+    .campaign-source-box p {
+      margin: 4px 0 0;
+      font-size: 11px;
+      color: #475467;
+      line-height: 1.45;
+    }
+
     .result-box {
       margin-top: 16px;
       padding: 14px;
@@ -294,7 +257,7 @@
       font-size: 11px;
       line-height: 1.45;
       overflow-wrap: anywhere;
-      max-height: 150px;
+      max-height: 170px;
       overflow: auto;
     }
 
@@ -325,7 +288,7 @@
       font-size: 10px;
       line-height: 1.45;
       overflow-wrap: anywhere;
-      max-height: 110px;
+      max-height: 120px;
       overflow: auto;
     }
 
@@ -392,17 +355,7 @@
     .product-name {
       font-size: 13px;
       font-weight: bold;
-      margin-bottom: 4px;
-    }
-
-    .product-type {
-      display: inline-block;
       margin-bottom: 7px;
-      border-radius: 999px;
-      background: #eef2f6;
-      padding: 3px 7px;
-      font-size: 10px;
-      color: #475467;
     }
 
     .product-path {
@@ -411,6 +364,7 @@
       color: #667085;
       overflow-wrap: anywhere;
       margin-top: 5px;
+      line-height: 1.4;
     }
 
     .empty {
@@ -445,8 +399,7 @@
       }
 
       .form-grid,
-      .preview-grid,
-      .type-selector {
+      .preview-grid {
         grid-template-columns: 1fr;
       }
 
@@ -467,12 +420,15 @@
 <div class="page">
 
   <header class="header">
+
     <h1>Generador de Links de Campaña</h1>
 
     <p>
-      Genera enlaces listos para Google, Meta, Email y otros canales,
-      sin construir parámetros ni codificar deeplinks manualmente.
+      Genera enlaces estandarizados para campañas digitales.
+      Las UTM y parámetros de navegación se agregan automáticamente
+      tanto a Web como a App.
     </p>
+
   </header>
 
 
@@ -480,7 +436,7 @@
 
 
     <!-- =====================================================
-         IZQUIERDA
+         COLUMNA PRINCIPAL
          ===================================================== -->
 
     <main class="left">
@@ -494,16 +450,18 @@
 
         <h2>
           <span class="step">1</span>
-          Producto y tipo de experiencia
+          Selecciona el producto
         </h2>
 
         <p class="section-description">
-          Puedes seleccionar un producto del catálogo o ingresar manualmente
-          la URL Web y el Deeplink App.
+          Selecciona un producto del catálogo. Las rutas Web y App se
+          completarán automáticamente. Si es necesario, también puedes
+          modificarlas manualmente.
         </p>
 
 
         <div class="form-grid">
+
 
           <div class="field full">
 
@@ -513,7 +471,8 @@
 
             <select
               id="productSelect"
-              onchange="seleccionarProducto(this.value)">
+              onchange="seleccionarProducto(this.value)"
+            >
 
               <option value="">
                 Seleccionar producto...
@@ -537,7 +496,7 @@
             >
 
             <span class="hint">
-              Página web que se utilizará como destino o fallback.
+              URL utilizada como destino Web o fallback.
             </span>
 
           </div>
@@ -556,72 +515,8 @@
             >
 
             <span class="hint">
-              Ruta que abre la experiencia dentro de la app.
+              Ruta utilizada para abrir la experiencia dentro de la app.
             </span>
-
-          </div>
-
-        </div>
-
-
-        <hr class="divider">
-
-
-        <label>
-          Tipo de experiencia
-        </label>
-
-        <span class="hint">
-          Selecciona cómo se abrirá el contenido dentro de la aplicación.
-        </span>
-
-
-        <div class="type-selector">
-
-          <div class="type-option">
-
-            <input
-              type="radio"
-              id="tipoWebview"
-              name="experienceType"
-              value="webview"
-              onchange="cambiarTipoExperiencia()"
-            >
-
-            <label for="tipoWebview">
-
-              <strong>WebView</strong>
-
-              <span>
-                Abre una experiencia web dentro de la app.
-                Utiliza source y detail.
-              </span>
-
-            </label>
-
-          </div>
-
-
-          <div class="type-option">
-
-            <input
-              type="radio"
-              id="tipoNativo"
-              name="experienceType"
-              value="nativo"
-              onchange="cambiarTipoExperiencia()"
-            >
-
-            <label for="tipoNativo">
-
-              <strong>Nativo</strong>
-
-              <span>
-                Abre una funcionalidad nativa de la app.
-                Solo requiere las UTM de campaña.
-              </span>
-
-            </label>
 
           </div>
 
@@ -643,8 +538,8 @@
         </h2>
 
         <p class="section-description">
-          Selecciona un valor recomendado o escribe uno diferente
-          cuando la campaña lo requiera.
+          Utiliza los valores estandarizados disponibles.
+          También puedes escribir un valor diferente cuando sea necesario.
         </p>
 
 
@@ -663,23 +558,26 @@
               id="utmSource"
               list="sourceOptions"
               placeholder="Ej. meta"
+              autocomplete="off"
             >
 
             <datalist id="sourceOptions">
 
-              <option value="meta">
-              <option value="google">
-              <option value="facebook">
-              <option value="instagram">
               <option value="masterbase">
+              <option value="google">
+              <option value="meta">
               <option value="tiktok">
-              <option value="youtube">
-              <option value="email">
+              <option value="firebase">
+              <option value="web">
+              <option value="ntbcd">
+              <option value="folleto-fisico">
+              <option value="whatsapp">
+              <option value="sms">
 
             </datalist>
 
             <span class="hint">
-              Fuente desde donde llega el usuario.
+              Identifica la plataforma, sistema o fuente que origina el tráfico.
             </span>
 
           </div>
@@ -698,22 +596,26 @@
               id="utmMedium"
               list="mediumOptions"
               placeholder="Ej. paid-cpa"
+              autocomplete="off"
             >
 
             <datalist id="mediumOptions">
 
-              <option value="paid-cpa">
-              <option value="paid-cpc">
-              <option value="paid-social">
               <option value="email">
-              <option value="display">
+              <option value="paid-cpc">
+              <option value="paid-cpv">
+              <option value="paid-cpa">
+              <option value="paid-cpm">
+              <option value="social-media">
+              <option value="push">
+              <option value="ntb">
               <option value="organic">
-              <option value="referral">
+              <option value="qr">
 
             </datalist>
 
             <span class="hint">
-              Medio utilizado por la campaña.
+              Identifica el medio o mecanismo utilizado por la campaña.
             </span>
 
           </div>
@@ -730,20 +632,62 @@
 
             <input
               id="utmCampaign"
-              list="campaignOptions"
+              type="text"
               placeholder="Ej. TarjetaSeguraLF"
+              autocomplete="off"
             >
 
-            <datalist id="campaignOptions">
+            <span class="hint">
+              Nombre definido para identificar la campaña.
+            </span>
 
-              <option value="TarjetaSeguraLF">
-              <option value="Nuevos-clientes">
-              <option value="grati-jul-26">
+          </div>
 
-            </datalist>
+
+
+          <!-- SOURCE FIJO -->
+
+          <div class="field">
+
+            <label for="sourceInternal">
+              source
+            </label>
+
+            <input
+              id="sourceInternal"
+              type="text"
+              value="campaign"
+              readonly
+            >
 
             <span class="hint">
-              Nombre de campaña definido por Marketing.
+              Valor estandarizado para identificar campañas como puerta de entrada.
+            </span>
+
+          </div>
+
+
+
+          <!-- DETAIL -->
+
+          <div class="field">
+
+            <label for="detail">
+              detail
+              <span style="font-weight:normal;color:#98a2b3">
+                (opcional)
+              </span>
+            </label>
+
+            <input
+              id="detail"
+              type="text"
+              placeholder="Ej. banner-seguros"
+              autocomplete="off"
+            >
+
+            <span class="hint">
+              Úsalo solo cuando sea necesario agregar un nivel adicional de detalle.
             </span>
 
           </div>
@@ -751,86 +695,18 @@
         </div>
 
 
+        <div class="campaign-source-box" style="margin-top:16px;">
 
-        <!-- =================================================
-             CAMPOS SOLO WEBVIEW
-             ================================================= -->
+          <strong>
+            Puerta de entrada estandarizada: campaign
+          </strong>
 
-        <div
-          id="webviewFields"
-          class="hidden">
-
-          <hr class="divider">
-
-          <p class="section-description">
-            Esta experiencia es <strong>WebView</strong>.
-            Completa los parámetros internos.
+          <p>
+            El generador agrega automáticamente
+            <strong>source=campaign</strong>
+            tanto a la URL Web como al Deeplink App.
+            Marketing no necesita modificar este valor.
           </p>
-
-
-          <div class="form-grid">
-
-
-            <div class="field">
-
-              <label for="sourceInternal">
-                source
-              </label>
-
-              <input
-                id="sourceInternal"
-                list="internalSourceOptions"
-                placeholder="Ej. correo"
-              >
-
-              <datalist id="internalSourceOptions">
-
-                <option value="flujo">
-                <option value="correo">
-                <option value="anuncio">
-                <option value="banner">
-                <option value="push">
-
-              </datalist>
-
-              <span class="hint">
-                Identifica la puerta de entrada o contexto interno.
-              </span>
-
-            </div>
-
-
-            <div class="field">
-
-              <label for="detail">
-                detail
-                <span style="font-weight:normal;color:#98a2b3">
-                  (opcional)
-                </span>
-              </label>
-
-              <input
-                id="detail"
-                list="detailOptions"
-                placeholder="Ej. anuncio"
-              >
-
-              <datalist id="detailOptions">
-
-                <option value="anuncio">
-                <option value="banner">
-                <option value="correo">
-                <option value="campaña">
-
-              </datalist>
-
-              <span class="hint">
-                Agrega mayor detalle sobre el origen cuando corresponda.
-              </span>
-
-            </div>
-
-          </div>
 
         </div>
 
@@ -839,19 +715,17 @@
 
           <button
             class="btn-primary"
-            onclick="generarLink()">
-
+            onclick="generarLink()"
+          >
             Generar link de campaña
-
           </button>
 
 
           <button
             class="btn-secondary"
-            onclick="limpiarFormulario()">
-
+            onclick="limpiarFormulario()"
+          >
             Limpiar
-
           </button>
 
         </div>
@@ -872,13 +746,15 @@
         </h2>
 
         <p class="section-description">
-          Copia este enlace y utilízalo en la plataforma de campaña.
+          Este es el enlace final listo para utilizar en la plataforma
+          de campañas.
         </p>
 
 
         <div
           id="emptyResult"
-          class="warning">
+          class="warning"
+        >
 
           Completa los pasos anteriores y presiona
           <strong>Generar link de campaña</strong>.
@@ -886,9 +762,11 @@
         </div>
 
 
+
         <div
           id="resultBox"
-          class="result-box">
+          class="result-box"
+        >
 
 
           <div class="result-title">
@@ -898,27 +776,25 @@
 
           <div
             id="finalUrl"
-            class="result-url">
-          </div>
+            class="result-url"
+          ></div>
 
 
           <div class="actions">
 
             <button
               class="btn-primary"
-              onclick="copiarFinal()">
-
+              onclick="copiarFinal()"
+            >
               Copiar link final
-
             </button>
 
 
             <button
               class="btn-secondary"
-              onclick="abrirFinal()">
-
+              onclick="abrirFinal()"
+            >
               Probar link
-
             </button>
 
           </div>
@@ -936,8 +812,8 @@
 
               <div
                 id="webPreview"
-                class="preview-value">
-              </div>
+                class="preview-value"
+              ></div>
 
             </div>
 
@@ -951,8 +827,8 @@
 
               <div
                 id="appPreview"
-                class="preview-value">
-              </div>
+                class="preview-value"
+              ></div>
 
             </div>
 
@@ -961,13 +837,26 @@
 
           <div class="success-note">
 
-            <strong>embeddedURL:</strong>
+            <strong>Formato aplicado:</strong><br><br>
 
-            únicamente el deeplink App completo se codifica.
+            Web y App reciben:
 
-            La URL Web conserva rutas como:
+            <strong>
+              utm_source + utm_medium + utm_campaign + source=campaign
+            </strong>
 
-            <strong>redirectTo=/u/campaign/VT</strong>
+            y, cuando se completa,
+
+            <strong>detail</strong>.
+
+            <br><br>
+
+            Únicamente el Deeplink App completo se codifica dentro de
+            <strong>embeddedURL</strong>.
+
+            La URL Web conserva valores como:
+
+            <strong>redirectTo=/u/campaign/VT</strong>.
 
           </div>
 
@@ -980,7 +869,7 @@
 
 
     <!-- =====================================================
-         CATÁLOGO DERECHA
+         CATÁLOGO
          ===================================================== -->
 
     <aside class="right">
@@ -992,8 +881,8 @@
         </h2>
 
         <p class="section-description">
-          Haz clic en un producto para cargar automáticamente
-          las rutas y el tipo de experiencia.
+          Haz clic en un producto para cargar automáticamente sus rutas
+          Web y App.
         </p>
 
 
@@ -1008,8 +897,8 @@
 
         <div
           id="catalog"
-          class="catalog">
-        </div>
+          class="catalog"
+        ></div>
 
       </section>
 
@@ -1024,8 +913,24 @@
 <script>
 
   /* ========================================================
-     CATÁLOGO DE PRODUCTOS
+     CONFIGURACIÓN GENERAL
      ======================================================== */
+
+  const SOURCE_CAMPAIGN = "campaign";
+
+
+  /*
+   * Catálogo de productos.
+   *
+   * Solo necesitas mantener:
+   *
+   * id
+   * nombre
+   * web
+   * app
+   *
+   * Ya no existe tipo WebView / Nativo.
+   */
 
   const PRODUCTOS = [
 
@@ -1034,9 +939,6 @@
 
       nombre:
         "Tarjeta Segura",
-
-      tipo:
-        "webview",
 
       web:
         "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
@@ -1052,9 +954,6 @@
       nombre:
         "Campaña VT",
 
-      tipo:
-        "webview",
-
       web:
         "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
 
@@ -1068,9 +967,6 @@
 
       nombre:
         "Apple Pay",
-
-      tipo:
-        "nativo",
 
       web:
         "https://www.scotiabank.com.pe/apple-pay",
@@ -1086,9 +982,6 @@
       nombre:
         "Prestabono",
 
-      tipo:
-        "webview",
-
       web:
         "",
 
@@ -1102,9 +995,6 @@
 
       nombre:
         "Préstamo Libre Disponibilidad",
-
-      tipo:
-        "webview",
 
       web:
         "",
@@ -1120,9 +1010,6 @@
       nombre:
         "Cuenta Sueldo",
 
-      tipo:
-        "webview",
-
       web:
         "",
 
@@ -1136,9 +1023,6 @@
 
       nombre:
         "Cuenta Digital",
-
-      tipo:
-        "webview",
 
       web:
         "",
@@ -1169,15 +1053,22 @@
       const option =
         document.createElement("option");
 
+
       option.value =
         producto.id;
+
 
       option.textContent =
         producto.nombre;
 
+
       select.appendChild(option);
 
     });
+
+
+    document.getElementById("sourceInternal").value =
+      SOURCE_CAMPAIGN;
 
 
     renderCatalog();
@@ -1187,14 +1078,14 @@
 
 
   /* ========================================================
-     PRODUCTO
+     SELECCIÓN DE PRODUCTO
      ======================================================== */
 
   function seleccionarProducto(id) {
 
     const producto =
       PRODUCTOS.find(
-        p => p.id === id
+        producto => producto.id === id
       );
 
 
@@ -1204,6 +1095,12 @@
 
     if (!producto) {
 
+      document.getElementById("webUrl").value =
+        "";
+
+      document.getElementById("appUrl").value =
+        "";
+
       renderCatalog();
 
       return;
@@ -1211,38 +1108,16 @@
     }
 
 
-    document
-      .getElementById("webUrl")
-      .value =
+    document.getElementById("webUrl").value =
       producto.web;
 
 
-    document
-      .getElementById("appUrl")
-      .value =
+    document.getElementById("appUrl").value =
       producto.app;
 
 
-    if (
-      producto.tipo === "webview"
-    ) {
+    ocultarResultado();
 
-      document
-        .getElementById("tipoWebview")
-        .checked =
-        true;
-
-    } else {
-
-      document
-        .getElementById("tipoNativo")
-        .checked =
-        true;
-
-    }
-
-
-    cambiarTipoExperiencia();
 
     renderCatalog();
 
@@ -1252,9 +1127,7 @@
 
   function seleccionarDesdeCatalogo(id) {
 
-    document
-      .getElementById("productSelect")
-      .value =
+    document.getElementById("productSelect").value =
       id;
 
 
@@ -1271,86 +1144,29 @@
 
 
   /* ========================================================
-     TIPO DE EXPERIENCIA
-     ======================================================== */
-
-  function obtenerTipoExperiencia() {
-
-    const seleccionado =
-      document.querySelector(
-        'input[name="experienceType"]:checked'
-      );
-
-
-    return seleccionado
-      ? seleccionado.value
-      : "";
-
-  }
-
-
-
-  function cambiarTipoExperiencia() {
-
-    const tipo =
-      obtenerTipoExperiencia();
-
-
-    const webviewFields =
-      document.getElementById(
-        "webviewFields"
-      );
-
-
-    if (
-      tipo === "webview"
-    ) {
-
-      webviewFields
-        .classList
-        .remove("hidden");
-
-    } else {
-
-      webviewFields
-        .classList
-        .add("hidden");
-
-    }
-
-  }
-
-
-
-  /* ========================================================
      CATÁLOGO
      ======================================================== */
 
   function renderCatalog() {
 
     const catalog =
-      document.getElementById(
-        "catalog"
-      );
+      document.getElementById("catalog");
 
 
     const search =
       document
-        .getElementById(
-          "catalogSearch"
-        )
+        .getElementById("catalogSearch")
         .value
         .toLowerCase()
         .trim();
 
 
     const filtrados =
-      PRODUCTOS.filter(
-        producto =>
+      PRODUCTOS.filter(producto =>
 
-          producto.nombre
-            .toLowerCase()
-            .includes(search)
+        producto.nombre
+          .toLowerCase()
+          .includes(search)
 
       );
 
@@ -1359,9 +1175,7 @@
       "";
 
 
-    if (
-      !filtrados.length
-    ) {
+    if (!filtrados.length) {
 
       catalog.innerHTML =
         '<div class="empty">No se encontraron productos.</div>';
@@ -1371,76 +1185,105 @@
     }
 
 
-    filtrados.forEach(
-      producto => {
+    filtrados.forEach(producto => {
+
+      const div =
+        document.createElement("div");
 
 
-        const div =
-          document.createElement(
-            "div"
-          );
+      div.className =
+        "product";
 
 
-        div.className =
-          "product";
+      if (
+        productoSeleccionado &&
+        productoSeleccionado.id === producto.id
+      ) {
 
-
-        if (
-          productoSeleccionado &&
-          productoSeleccionado.id ===
-          producto.id
-        ) {
-
-          div.classList.add(
-            "active"
-          );
-
-        }
-
-
-        div.onclick =
-          () =>
-            seleccionarDesdeCatalogo(
-              producto.id
-            );
-
-
-        const tipoTexto =
-          producto.tipo === "webview"
-            ? "WebView"
-            : "Nativo";
-
-
-        div.innerHTML = `
-
-          <div class="product-name">
-            ${producto.nombre}
-          </div>
-
-          <div class="product-type">
-            ${tipoTexto}
-          </div>
-
-          <div class="product-path">
-            <strong>Web:</strong><br>
-            ${producto.web ||
-              "Pendiente de configurar"}
-          </div>
-
-          <div class="product-path">
-            <strong>App:</strong><br>
-            ${producto.app ||
-              "Pendiente de configurar"}
-          </div>
-
-        `;
-
-
-        catalog.appendChild(
-          div
+        div.classList.add(
+          "active"
         );
 
       }
+
+
+      div.onclick =
+        () =>
+          seleccionarDesdeCatalogo(
+            producto.id
+          );
+
+
+      div.innerHTML = `
+
+        <div class="product-name">
+          ${producto.nombre}
+        </div>
+
+        <div class="product-path">
+          <strong>Web:</strong><br>
+          ${producto.web || "Pendiente de configurar"}
+        </div>
+
+        <div class="product-path">
+          <strong>App:</strong><br>
+          ${producto.app || "Pendiente de configurar"}
+        </div>
+
+      `;
+
+
+      catalog.appendChild(
+        div
+      );
+
+    });
+
+  }
+
+
+
+  /* ========================================================
+     NORMALIZACIÓN
+     ======================================================== */
+
+  function limpiarValor(valor) {
+
+    return String(
+      valor ?? ""
+    ).trim();
+
+  }
+
+
+  function normalizarTaxonomia(valor) {
+
+    return limpiarValor(valor)
+      .toLowerCase();
+
+  }
+
+
+
+  /* ========================================================
+     VALIDACIONES
+     ======================================================== */
+
+  function esUrlWebValida(url) {
+
+    return (
+      url.startsWith("https://") ||
+      url.startsWith("http://")
+    );
+
+  }
+
+
+  function esDeeplinkValido(deeplink) {
+
+    return (
+      deeplink.includes("://") &&
+      !deeplink.includes(" ")
     );
 
   }
@@ -1448,156 +1291,242 @@
 
 
   /* ========================================================
-     AGREGA PARÁMETROS A WEB
-     
-     IMPORTANTE:
-     NO reconstruimos con new URL().searchParams
-     porque queremos conservar:
-     
+     MANEJO DE QUERY STRING
+
+     Esta función modifica parámetros sin reconstruir
+     completamente la URL.
+
+     Eso permite conservar:
+
      redirectTo=/u/campaign/VT
-     
-     y evitar:
-     
+
+     en vez de:
+
      redirectTo=%2Fu%2Fcampaign%2FVT
      ======================================================== */
 
-  function agregarParametrosWeb(
+  function establecerParametros(
     urlBase,
-    parametros
+    parametros,
+    parametrosAEliminar = []
   ) {
 
-    let resultado =
-      urlBase.trim();
+    let original =
+      limpiarValor(urlBase);
 
 
-    const nuevosParametros =
-      [];
+    /*
+     * Conserva fragmentos #...
+     */
+
+    let hash =
+      "";
 
 
-    Object.entries(
-      parametros
-    ).forEach(
-      ([key, value]) => {
+    const hashIndex =
+      original.indexOf("#");
 
 
-        if (
-          value === undefined ||
-          value === null ||
-          String(value).trim() === ""
-        ) {
+    if (hashIndex !== -1) {
+
+      hash =
+        original.substring(hashIndex);
+
+
+      original =
+        original.substring(
+          0,
+          hashIndex
+        );
+
+    }
+
+
+    /*
+     * Separa base y query existente
+     */
+
+    const queryIndex =
+      original.indexOf("?");
+
+
+    const base =
+      queryIndex === -1
+        ? original
+        : original.substring(
+            0,
+            queryIndex
+          );
+
+
+    const queryOriginal =
+      queryIndex === -1
+        ? ""
+        : original.substring(
+            queryIndex + 1
+          );
+
+
+    /*
+     * Convierte parámetros existentes
+     * en una estructura manipulable.
+     */
+
+    const pares =
+      queryOriginal
+        ? queryOriginal.split("&")
+        : [];
+
+
+    const mapa =
+      new Map();
+
+
+    pares.forEach(par => {
+
+      if (!par) {
+        return;
+      }
+
+
+      const index =
+        par.indexOf("=");
+
+
+      let key;
+      let value;
+
+
+      if (index === -1) {
+
+        key =
+          par;
+
+        value =
+          "";
+
+      } else {
+
+        key =
+          par.substring(
+            0,
+            index
+          );
+
+        value =
+          par.substring(
+            index + 1
+          );
+
+      }
+
+
+      const keyNormalizada =
+        decodeURIComponent(
+          key
+        );
+
+
+      /*
+       * Conservamos exactamente el valor
+       * original de los parámetros que no
+       * estamos modificando.
+       */
+
+      mapa.set(
+        keyNormalizada,
+        {
+          keyOriginal: key,
+          valueOriginal: value
+        }
+      );
+
+    });
+
+
+    /*
+     * Elimina parámetros que no deben
+     * sobrevivir.
+     */
+
+    parametrosAEliminar.forEach(key => {
+
+      mapa.delete(key);
+
+    });
+
+
+    /*
+     * Agrega o reemplaza los parámetros
+     * definidos por el generador.
+     */
+
+    Object.entries(parametros)
+      .forEach(([key, value]) => {
+
+        const limpio =
+          limpiarValor(value);
+
+
+        if (!limpio) {
+
+          mapa.delete(key);
 
           return;
 
         }
 
 
-        const valor =
-          String(value).trim();
-
-
-        nuevosParametros.push(
-          key +
-          "=" +
-          encodeURIComponent(valor)
+        mapa.set(
+          key,
+          {
+            keyOriginal: key,
+            valueOriginal:
+              encodeURIComponent(limpio)
+          }
         );
 
-      }
-    );
+      });
 
 
-    if (
-      !nuevosParametros.length
-    ) {
+    /*
+     * Reconstruye query conservando
+     * parámetros originales.
+     */
 
-      return resultado;
-
-    }
-
-
-    const separador =
-      resultado.includes("?")
-        ? "&"
-        : "?";
-
-
-    resultado +=
-      separador +
-      nuevosParametros.join("&");
-
-
-    return resultado;
-
-  }
-
-
-
-  /* ========================================================
-     AGREGA PARÁMETROS AL DEEPLINK
-     ======================================================== */
-
-  function agregarParametrosDeeplink(
-    deeplink,
-    parametros
-  ) {
-
-    let resultado =
-      deeplink.trim();
-
-
-    const nuevosParametros =
-      [];
-
-
-    Object.entries(
-      parametros
-    ).forEach(
-      ([key, value]) => {
-
+    const nuevaQuery =
+      Array.from(
+        mapa.values()
+      )
+      .map(item => {
 
         if (
-          value === undefined ||
-          value === null ||
-          String(value).trim() === ""
+          item.valueOriginal === ""
         ) {
 
-          return;
+          return item.keyOriginal;
 
         }
 
 
-        const valor =
-          String(value).trim();
-
-
-        nuevosParametros.push(
-          key +
+        return (
+          item.keyOriginal +
           "=" +
-          encodeURIComponent(valor)
+          item.valueOriginal
         );
 
-      }
-    );
-
-
-    if (
-      !nuevosParametros.length
-    ) {
-
-      return resultado;
-
-    }
-
-
-    const separador =
-      resultado.includes("?")
-        ? "&"
-        : "?";
+      })
+      .join("&");
 
 
     return (
-      resultado +
-      separador +
-      nuevosParametros.join("&")
+      base +
+      (
+        nuevaQuery
+          ? "?" + nuevaQuery
+          : ""
+      ) +
+      hash
     );
 
   }
@@ -1605,58 +1534,56 @@
 
 
   /* ========================================================
-     GENERADOR PRINCIPAL
+     GENERADOR
      ======================================================== */
 
   function generarLink() {
 
-
-    const tipo =
-      obtenerTipoExperiencia();
-
-
     const webBase =
-      document
-        .getElementById("webUrl")
-        .value
-        .trim();
+      limpiarValor(
+        document.getElementById("webUrl").value
+      );
 
 
     const appBase =
-      document
-        .getElementById("appUrl")
-        .value
-        .trim();
+      limpiarValor(
+        document.getElementById("appUrl").value
+      );
 
 
     const utmSource =
-      document
-        .getElementById("utmSource")
-        .value
-        .trim();
+      normalizarTaxonomia(
+        document.getElementById("utmSource").value
+      );
 
 
     const utmMedium =
-      document
-        .getElementById("utmMedium")
-        .value
-        .trim();
+      normalizarTaxonomia(
+        document.getElementById("utmMedium").value
+      );
 
 
     const utmCampaign =
-      document
-        .getElementById("utmCampaign")
-        .value
-        .trim();
+      limpiarValor(
+        document.getElementById("utmCampaign").value
+      );
+
+
+    const detail =
+      limpiarValor(
+        document.getElementById("detail").value
+      );
 
 
 
-    /* VALIDACIONES */
+    /* ======================================================
+       VALIDACIONES
+       ====================================================== */
 
-    if (!tipo) {
+    if (!webBase) {
 
       alert(
-        "Selecciona si la experiencia es WebView o Nativa."
+        "Completa la URL Web."
       );
 
       return;
@@ -1664,13 +1591,32 @@
     }
 
 
-    if (
-      !webBase ||
-      !appBase
-    ) {
+    if (!esUrlWebValida(webBase)) {
 
       alert(
-        "Completa la URL Web y el Deeplink App."
+        "La URL Web debe comenzar con http:// o https://."
+      );
+
+      return;
+
+    }
+
+
+    if (!appBase) {
+
+      alert(
+        "Completa el Deeplink App."
+      );
+
+      return;
+
+    }
+
+
+    if (!esDeeplinkValido(appBase)) {
+
+      alert(
+        "El Deeplink App no parece tener un formato válido."
       );
 
       return;
@@ -1694,7 +1640,12 @@
 
 
 
-    /* PARÁMETROS BASE */
+    /* ======================================================
+       PARÁMETROS ESTANDARIZADOS
+
+       source siempre es campaign
+       detail es opcional
+       ====================================================== */
 
     const parametrosCampana = {
 
@@ -1705,76 +1656,65 @@
         utmMedium,
 
       utm_campaign:
-        utmCampaign
+        utmCampaign,
+
+      source:
+        SOURCE_CAMPAIGN
 
     };
 
 
+    if (detail) {
 
-    /* SOURCE / DETAIL SOLO WEBVIEW */
-
-    if (
-      tipo === "webview"
-    ) {
-
-      const source =
-        document
-          .getElementById(
-            "sourceInternal"
-          )
-          .value
-          .trim();
-
-
-      const detail =
-        document
-          .getElementById(
-            "detail"
-          )
-          .value
-          .trim();
-
-
-      if (source) {
-
-        parametrosCampana.source =
-          source;
-
-      }
-
-
-      if (detail) {
-
-        parametrosCampana.detail =
-          detail;
-
-      }
+      parametrosCampana.detail =
+        detail;
 
     }
 
 
 
-    /* 1. WEB */
+    /* ======================================================
+       1. URL WEB PARAMETRIZADA
+
+       Si la URL ya tenía embeddedURL,
+       se elimina para construir uno nuevo.
+       ====================================================== */
 
     const webParametrizada =
-      agregarParametrosWeb(
+      establecerParametros(
+
         webBase,
-        parametrosCampana
+
+        parametrosCampana,
+
+        [
+          "embeddedURL"
+        ]
+
       );
 
 
 
-    /* 2. APP */
+    /* ======================================================
+       2. DEEPLINK APP PARAMETRIZADO
+       ====================================================== */
 
     const appParametrizada =
-      agregarParametrosDeeplink(
+      establecerParametros(
+
         appBase,
+
         parametrosCampana
+
       );
 
 
 
-    /* 3. EMBEDDED */
+    /* ======================================================
+       3. EMBEDDEDURL
+
+       Aquí sí se codifica TODO el deeplink.
+       ====================================================== */
 
     const separador =
       webParametrizada.includes("?")
@@ -1792,46 +1732,72 @@
 
 
 
-    /* RESULTADO */
+    /* ======================================================
+       RESULTADOS
+       ====================================================== */
 
     document
-      .getElementById(
-        "finalUrl"
-      )
+      .getElementById("finalUrl")
       .textContent =
       finalUrl;
 
 
     document
-      .getElementById(
-        "webPreview"
-      )
+      .getElementById("webPreview")
       .textContent =
       webParametrizada;
 
 
     document
-      .getElementById(
-        "appPreview"
-      )
+      .getElementById("appPreview")
       .textContent =
       appParametrizada;
 
 
     document
-      .getElementById(
-        "resultBox"
-      )
+      .getElementById("resultBox")
       .classList
       .add("visible");
 
 
     document
-      .getElementById(
-        "emptyResult"
-      )
+      .getElementById("emptyResult")
       .classList
       .add("hidden");
+
+
+    /*
+     * Reflejamos valores normalizados
+     * en pantalla.
+     */
+
+    document.getElementById("utmSource").value =
+      utmSource;
+
+
+    document.getElementById("utmMedium").value =
+      utmMedium;
+
+  }
+
+
+
+  /* ========================================================
+     RESULTADO
+     ======================================================== */
+
+  function ocultarResultado() {
+
+    document
+      .getElementById("resultBox")
+      .classList
+      .remove("visible");
+
+
+    document
+      .getElementById("emptyResult")
+      .classList
+      .remove("hidden");
 
   }
 
@@ -1845,14 +1811,14 @@
 
     const link =
       document
-        .getElementById(
-          "finalUrl"
-        )
+        .getElementById("finalUrl")
         .textContent;
 
 
     if (!link) {
+
       return;
+
     }
 
 
@@ -1869,7 +1835,6 @@
 
 
     } catch (error) {
-
 
       const textarea =
         document.createElement(
@@ -1916,20 +1881,21 @@
 
     const link =
       document
-        .getElementById(
-          "finalUrl"
-        )
+        .getElementById("finalUrl")
         .textContent;
 
 
     if (!link) {
+
       return;
+
     }
 
 
     window.open(
       link,
-      "_blank"
+      "_blank",
+      "noopener"
     );
 
   }
@@ -1942,103 +1908,36 @@
 
   function limpiarFormulario() {
 
-    document
-      .getElementById(
-        "productSelect"
-      )
-      .value = "";
+    document.getElementById("productSelect").value =
+      "";
 
+    document.getElementById("webUrl").value =
+      "";
 
-    document
-      .getElementById(
-        "webUrl"
-      )
-      .value = "";
+    document.getElementById("appUrl").value =
+      "";
 
+    document.getElementById("utmSource").value =
+      "";
 
-    document
-      .getElementById(
-        "appUrl"
-      )
-      .value = "";
+    document.getElementById("utmMedium").value =
+      "";
 
+    document.getElementById("utmCampaign").value =
+      "";
 
-    document
-      .getElementById(
-        "utmSource"
-      )
-      .value = "";
+    document.getElementById("sourceInternal").value =
+      SOURCE_CAMPAIGN;
 
-
-    document
-      .getElementById(
-        "utmMedium"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "utmCampaign"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "sourceInternal"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "detail"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "tipoWebview"
-      )
-      .checked = false;
-
-
-    document
-      .getElementById(
-        "tipoNativo"
-      )
-      .checked = false;
-
-
-    document
-      .getElementById(
-        "webviewFields"
-      )
-      .classList
-      .add("hidden");
-
-
-    document
-      .getElementById(
-        "resultBox"
-      )
-      .classList
-      .remove("visible");
-
-
-    document
-      .getElementById(
-        "emptyResult"
-      )
-      .classList
-      .remove("hidden");
+    document.getElementById("detail").value =
+      "";
 
 
     productoSeleccionado =
       null;
 
+
+    ocultarResultado();
 
     renderCatalog();
 
@@ -2046,9 +1945,14 @@
 
 
 
+  /* ========================================================
+     ARRANQUE
+     ======================================================== */
+
   iniciar();
 
 </script>
 
 </body>
+
 </html>

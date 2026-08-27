@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Laboratorio de Deep Links</title>
+  <title>Generador de Links de Campaña</title>
 
   <style>
     * {
@@ -14,359 +15,392 @@
     :root {
       --bg: #f4f6f8;
       --card: #ffffff;
-      --border: #e5e7eb;
-      --text: #111827;
-      --muted: #6b7280;
-      --dark: #111827;
-      --soft: #f3f4f6;
-      --result: #eef2ff;
-      --warning: #fff7ed;
+      --border: #e3e7ed;
+      --text: #172033;
+      --muted: #697386;
+      --primary: #111827;
+      --primary-hover: #273244;
+      --soft: #f7f8fa;
+      --success-bg: #ecfdf3;
+      --success: #087443;
+      --warning-bg: #fff7ed;
+      --warning: #9a3412;
+      --info-bg: #eff6ff;
+      --info: #1d4ed8;
     }
 
     body {
       margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
     }
 
     .page {
-      max-width: 1400px;
+      max-width: 1450px;
       margin: 0 auto;
-      padding: 18px;
+      padding: 20px;
+    }
+
+    .header {
+      margin-bottom: 16px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+    }
+
+    .header h1 {
+      margin: 0 0 5px;
+      font-size: 26px;
+    }
+
+    .header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(340px, .75fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .left {
+      display: grid;
+      gap: 16px;
+    }
+
+    .right {
+      min-width: 0;
     }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
     }
 
-    h1,
-    h2,
-    h3 {
-      margin-top: 0;
-    }
-
-    h1 {
-      font-size: 25px;
-      margin-bottom: 5px;
-    }
-
-    h2 {
+    .card h2 {
+      margin: 0 0 6px;
       font-size: 18px;
-      margin-bottom: 12px;
     }
 
-    h3 {
-      font-size: 15px;
-      margin-bottom: 5px;
-    }
-
-    .subtitle {
+    .section-description {
+      margin: 0 0 18px;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
-    /* =========================
-       CABECERA
-       ========================= */
-
-    .header {
-      margin-bottom: 14px;
-    }
-
-    .device-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .info-box {
-      min-width: 0;
-      padding: 9px 10px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fafafa;
-      font-size: 11px;
-    }
-
-    .info-label {
+    .step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
       font-weight: bold;
-      margin-bottom: 3px;
-      color: #374151;
+      margin-right: 7px;
     }
 
-    .info-value {
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #344054;
+    }
+
+    .hint {
+      display: block;
+      margin-top: 4px;
+      color: #98a2b3;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      padding: 10px 11px;
+      font-size: 13px;
+      color: var(--text);
+      background: white;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #667085;
+      box-shadow: 0 0 0 2px rgba(17, 24, 39, .06);
+    }
+
+    input[readonly] {
+      background: #f8fafc;
+      color: #475467;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 75px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .divider {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--info-bg);
+      color: var(--info);
+      font-size: 11px;
+      font-weight: bold;
+      margin-top: 7px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #e9edf2;
+      color: #172033;
+    }
+
+    .btn-light {
+      background: #f5f6f7;
+      color: #344054;
+      border: 1px solid var(--border);
+    }
+
+    .result-box {
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid #bbf7d0;
+      background: var(--success-bg);
+      border-radius: 10px;
+      display: none;
+    }
+
+    .result-box.visible {
+      display: block;
+    }
+
+    .result-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .result-url {
+      padding: 11px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid #d1fadf;
+      font-family: Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.45;
       overflow-wrap: anywhere;
-      color: #4b5563;
+      max-height: 150px;
+      overflow: auto;
     }
 
-    /* =========================
-       LAYOUT PRINCIPAL
-       ========================= */
-
-    .workspace {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(330px, .85fr);
-      gap: 14px;
-      align-items: start;
-    }
-
-    .left-column {
-      display: grid;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .right-column {
-      min-width: 0;
-    }
-
-    /* =========================
-       PRUEBAS
-       ========================= */
-
-    .tests-grid {
+    .preview-grid {
+      margin-top: 14px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
 
-    .test-box {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px;
-      min-width: 0;
-    }
-
-    .test-box.full {
-      grid-column: 1 / -1;
-    }
-
-    .description {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.4;
-      margin-bottom: 10px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    button,
-    .button {
-      border: 0;
-      cursor: pointer;
-      padding: 9px 12px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: bold;
-      text-decoration: none;
-      background: var(--dark);
-      color: white;
-    }
-
-    button.secondary,
-    .button.secondary {
-      background: #4b5563;
-    }
-
-    button.light,
-    .button.light {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    button:hover,
-    .button:hover {
-      opacity: .9;
-    }
-
-    .url {
-      margin-top: 9px;
-      padding: 8px;
-      border-radius: 7px;
+    .preview {
+      padding: 11px;
       background: var(--soft);
-      font-family: Consolas, monospace;
-      font-size: 10px;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-      max-height: 80px;
-      overflow: auto;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      font-size: 11px;
-    }
-
-    /* =========================
-       UTILIDADES
-       ========================= */
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .tool-box {
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px;
+      border-radius: 9px;
       min-width: 0;
     }
 
-    label {
-      display: block;
-      margin-bottom: 5px;
+    .preview-title {
+      margin-bottom: 7px;
       font-size: 11px;
       font-weight: bold;
-      color: #374151;
+      color: #475467;
     }
 
-    textarea,
-    input {
-      width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 7px;
-      padding: 9px;
-      font-family: Consolas, monospace;
-      font-size: 11px;
-      margin-bottom: 8px;
-      resize: vertical;
-    }
-
-    textarea {
-      min-height: 68px;
-    }
-
-    textarea.tall {
-      min-height: 92px;
-    }
-
-    .result {
-      margin-top: 8px;
-      padding: 9px;
-      min-height: 36px;
-      border-radius: 7px;
-      background: var(--result);
+    .preview-value {
       font-family: Consolas, monospace;
       font-size: 10px;
-      line-height: 1.4;
+      line-height: 1.45;
       overflow-wrap: anywhere;
       max-height: 110px;
       overflow: auto;
     }
 
-    /* =========================
-       LOG
-       ========================= */
-
-    .log-card {
-      position: sticky;
-      top: 14px;
-    }
-
-    .log-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .log-title {
-      margin: 0;
-    }
-
-    .log-meta {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .log {
-      background: #0f172a;
-      color: #e5e7eb;
+    .warning {
+      margin-top: 12px;
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid #fed7aa;
       border-radius: 9px;
-      padding: 12px;
-      min-height: 430px;
-      max-height: 68vh;
-      overflow: auto;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-family: Consolas, monospace;
+      padding: 10px;
       font-size: 11px;
       line-height: 1.45;
     }
 
-    .log-actions {
-      display: flex;
-      gap: 7px;
-      margin-top: 10px;
-      flex-wrap: wrap;
+    /* CATÁLOGO */
+
+    .catalog-card {
+      position: sticky;
+      top: 16px;
     }
 
-    .notice {
-      margin-top: 10px;
-      padding: 10px;
-      background: var(--warning);
-      border: 1px solid #fed7aa;
-      border-radius: 8px;
-      font-size: 11px;
-      line-height: 1.4;
-      color: #7c2d12;
+    .catalog-search {
+      margin: 12px 0;
     }
 
-    /* =========================
-       RESPONSIVE
-       ========================= */
+    .catalog {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 3px;
+    }
+
+    .product {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .product:hover {
+      border-color: #98a2b3;
+      background: #fafbfc;
+    }
+
+    .product.active {
+      border-color: #344054;
+      background: #f8fafc;
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .product-type {
+      display: inline-block;
+      margin-bottom: 7px;
+      border-radius: 999px;
+      background: #eef2f6;
+      padding: 3px 7px;
+      font-size: 10px;
+      color: #475467;
+    }
+
+    .product-path {
+      font-family: Consolas, monospace;
+      font-size: 9px;
+      color: #667085;
+      overflow-wrap: anywhere;
+      margin-top: 4px;
+    }
+
+    .empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
 
     @media (max-width: 1000px) {
-      .workspace {
+      .layout {
         grid-template-columns: 1fr;
       }
 
-      .log-card {
+      .catalog-card {
         position: relative;
         top: auto;
       }
 
-      .log {
-        min-height: 250px;
-        max-height: 350px;
+      .catalog {
+        max-height: 420px;
       }
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 650px) {
       .page {
         padding: 10px;
       }
 
-      .device-grid,
-      .tests-grid,
-      .tools-grid {
+      .form-grid,
+      .preview-grid {
         grid-template-columns: 1fr;
       }
 
-      .test-box.full {
+      .field.full {
         grid-column: auto;
       }
 
       .card {
-        padding: 14px;
+        padding: 15px;
       }
     }
   </style>
@@ -374,111 +408,180 @@
 
 <body>
 
-<div class="page">
+  <div class="page">
 
-  <!-- =========================
-       CABECERA
-       ========================= -->
-
-  <section class="card header">
-
-    <h1>Laboratorio de Deep Links</h1>
-
-    <div class="subtitle">
-      Custom Schemes · App Links · Universal Links · HTTPS · embeddedURL · UTM
-    </div>
-
-    <div class="device-grid">
-
-      <div class="info-box">
-        <div class="info-label">User Agent</div>
-        <div class="info-value" id="ua"></div>
-      </div>
-
-      <div class="info-box">
-        <div class="info-label">Sistema</div>
-        <div class="info-value" id="os"></div>
-      </div>
-
-      <div class="info-box">
-        <div class="info-label">Navegador</div>
-        <div class="info-value" id="browser"></div>
-      </div>
-
-      <div class="info-box">
-        <div class="info-label">Origen</div>
-        <div class="info-value" id="origin"></div>
-      </div>
-
-    </div>
-
-  </section>
+    <header class="header">
+      <h1>Generador de Links de Campaña</h1>
+      <p>
+        Genera enlaces listos para campañas digitales sin tener que construir
+        parámetros o codificar deeplinks manualmente.
+      </p>
+    </header>
 
 
-  <main class="workspace">
+    <div class="layout">
 
-    <!-- =========================
-         COLUMNA IZQUIERDA
-         ========================= -->
+      <!-- =======================
+           COLUMNA PRINCIPAL
+           ======================= -->
 
-    <div class="left-column">
+      <main class="left">
 
+        <!-- PRODUCTO -->
 
-      <!-- PRUEBAS PREDEFINIDAS -->
+        <section class="card">
 
-      <section class="card">
+          <h2>
+            <span class="step">1</span>
+            Selecciona el producto
+          </h2>
 
-        <h2>Pruebas Scotiabank</h2>
+          <p class="section-description">
+            Busca el producto que utilizará la campaña. Las rutas Web y App se
+            completarán automáticamente.
+          </p>
 
-        <div class="tests-grid">
+          <div class="form-grid">
 
+            <div class="field full">
+              <label for="productSelect">Producto</label>
 
-          <!-- TEST 1 -->
-
-          <div class="test-box">
-
-            <h3>1. Custom Scheme · href</h3>
-
-            <div class="description">
-              Invoca directamente scotiabankpe:// desde un enlace HTML.
+              <select id="productSelect" onchange="seleccionarProducto(this.value)">
+                <option value="">Seleccionar producto...</option>
+              </select>
             </div>
 
-            <div class="actions">
+            <div class="field">
+              <label for="webUrl">URL Web</label>
 
-              <a
-                class="button"
-                id="deeplinkHref"
-                href="scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
-                Abrir deeplink
-              </a>
+              <input
+                id="webUrl"
+                type="text"
+                placeholder="https://..."
+              >
 
+              <span class="hint">
+                Puede modificarse manualmente si fuera necesario.
+              </span>
             </div>
 
-            <div class="url">
-              scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
+            <div class="field">
+              <label for="appUrl">Deeplink App</label>
+
+              <input
+                id="appUrl"
+                type="text"
+                placeholder="scotiabankpe:///..."
+              >
+
+              <span class="hint">
+                Deeplink que abrirá la experiencia dentro del app.
+              </span>
             </div>
 
           </div>
 
+          <div id="productTypeBadge" class="type-badge hidden"></div>
 
-          <!-- TEST 2 -->
+        </section>
 
-          <div class="test-box">
 
-            <h3>2. Custom Scheme · JavaScript</h3>
+        <!-- CAMPAÑA -->
 
-            <div class="description">
-              Ejecuta el mismo custom scheme mediante window.location.href.
+        <section class="card">
+
+          <h2>
+            <span class="step">2</span>
+            Datos de campaña
+          </h2>
+
+          <p class="section-description">
+            Selecciona un valor recomendado o escribe uno diferente si la
+            campaña requiere una nomenclatura especial.
+          </p>
+
+
+          <div class="form-grid">
+
+            <div class="field">
+
+              <label for="utmSource">
+                utm_source
+              </label>
+
+              <input
+                id="utmSource"
+                list="sourceOptions"
+                placeholder="Ej. meta"
+              >
+
+              <datalist id="sourceOptions">
+                <option value="meta">
+                <option value="google">
+                <option value="facebook">
+                <option value="instagram">
+                <option value="masterbase">
+                <option value="email">
+                <option value="tiktok">
+                <option value="youtube">
+              </datalist>
+
+              <span class="hint">
+                Plataforma o fuente que genera el tráfico.
+              </span>
+
             </div>
 
-            <div class="actions">
 
-              <button onclick="probarDeeplinkJS()">
-                Abrir con JavaScript
-              </button>
+            <div class="field">
 
-              <span id="deeplinkStatus" class="status">
-                Sin ejecutar
+              <label for="utmMedium">
+                utm_medium
+              </label>
+
+              <input
+                id="utmMedium"
+                list="mediumOptions"
+                placeholder="Ej. paid-cpa"
+              >
+
+              <datalist id="mediumOptions">
+                <option value="paid-cpa">
+                <option value="paid-cpc">
+                <option value="paid-social">
+                <option value="email">
+                <option value="organic">
+                <option value="display">
+                <option value="referral">
+              </datalist>
+
+              <span class="hint">
+                Tipo de tráfico o medio de campaña.
+              </span>
+
+            </div>
+
+
+            <div class="field full">
+
+              <label for="utmCampaign">
+                utm_campaign
+              </label>
+
+              <input
+                id="utmCampaign"
+                list="campaignOptions"
+                placeholder="Ej. TarjetaSeguraLF"
+              >
+
+              <datalist id="campaignOptions">
+                <!-- Aquí puedes agregar campañas estándar -->
+                <option value="TarjetaSeguraLF">
+                <option value="Nuevos-clientes">
+              </datalist>
+
+              <span class="hint">
+                Nombre de la campaña. Respeta la nomenclatura definida por Marketing.
               </span>
 
             </div>
@@ -486,917 +589,949 @@
           </div>
 
 
-          <!-- TEST 3 -->
+          <!-- SOLO WEBVIEW -->
 
-          <div class="test-box">
+          <div id="webviewFields" class="hidden">
 
-            <h3>3. HTTPS simple</h3>
+            <hr class="divider">
 
-            <div class="description">
-              Web URL sin embeddedURL.
-            </div>
+            <p class="section-description">
+              Este producto utiliza WebView. Completa también los parámetros
+              internos de navegación.
+            </p>
 
-            <div class="actions">
+            <div class="form-grid">
 
-              <a
-                class="button"
-                id="httpsSimple"
-                href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
-                Abrir HTTPS
-              </a>
+              <div class="field">
 
-            </div>
+                <label for="sourceInternal">
+                  source
+                </label>
 
-            <div class="url">
-              https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo
-            </div>
+                <input
+                  id="sourceInternal"
+                  list="internalSourceOptions"
+                  placeholder="Ej. flujo"
+                >
 
-          </div>
+                <datalist id="internalSourceOptions">
+                  <option value="flujo">
+                  <option value="anuncio">
+                  <option value="banner">
+                  <option value="push">
+                </datalist>
 
-
-          <!-- TEST 4 -->
-
-          <div class="test-box">
-
-            <h3>4. HTTPS + embeddedURL encoded</h3>
-
-            <div class="description">
-              embeddedURL codificado con encodeURIComponent.
-            </div>
-
-            <div class="actions">
-
-              <a
-                class="button"
-                id="httpsEncoded"
-                href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe%3A%2F%2F%2FwebView%3Fpath%3D%2Fu%2Finsurances%2Facquired-insurances%2Fcatalog%26utm_source%3Dmeta%26utm_medium%3Dpaid-cpa%26utm_campaign%3DTarjetaSeguraLF%26source%3Dflujo">
-                Abrir encoded
-              </a>
-
-            </div>
-
-            <div class="url">
-              HTTPS + embeddedURL codificado
-            </div>
-
-          </div>
+              </div>
 
 
-          <!-- TEST 5 -->
+              <div class="field">
 
-          <div class="test-box full">
+                <label for="detail">
+                  detail
+                  <span style="font-weight:normal;color:#98a2b3">
+                    (opcional)
+                  </span>
+                </label>
 
-            <h3>5. HTTPS + embeddedURL sin codificar</h3>
+                <input
+                  id="detail"
+                  list="detailOptions"
+                  placeholder="Ej. anuncio"
+                >
 
-            <div class="description">
-              Compara el comportamiento del formato utilizado actualmente.
-            </div>
+                <datalist id="detailOptions">
+                  <option value="anuncio">
+                  <option value="banner">
+                  <option value="campaña">
+                </datalist>
 
-            <div class="actions">
-
-              <a
-                class="button"
-                id="httpsUnencoded"
-                href="https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo&amp;embeddedURL=scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&amp;utm_source=meta&amp;utm_medium=paid-cpa&amp;utm_campaign=TarjetaSeguraLF&amp;source=flujo">
-                Abrir sin encoding
-              </a>
+              </div>
 
             </div>
 
           </div>
 
-        </div>
-
-      </section>
-
-
-      <!-- HERRAMIENTAS -->
-
-      <section class="card">
-
-        <h2>Herramientas</h2>
-
-        <div class="tools-grid">
-
-
-          <!-- PROBADOR -->
-
-          <div class="tool-box">
-
-            <h3>Probador personalizado</h3>
-
-            <div class="description">
-              Pega cualquier HTTPS, custom scheme, App Link o Universal Link.
-            </div>
-
-            <textarea
-              id="customUrl"
-              placeholder="scotiabankpe:///webView?path=..."></textarea>
-
-            <div class="actions">
-
-              <button onclick="abrirCustomHref()">
-                Abrir
-              </button>
-
-              <button
-                class="secondary"
-                onclick="abrirCustomJS()">
-                JavaScript
-              </button>
-
-              <button
-                class="light"
-                onclick="copiarCustom()">
-                Copiar
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <!-- ENCODER -->
-
-          <div class="tool-box">
-
-            <h3>Encoder / Decoder</h3>
-
-            <div class="description">
-              Convierte deeplinks para embeddedURL.
-            </div>
-
-            <textarea
-              id="encoderInput"
-              placeholder="Pega la URL o deeplink"></textarea>
-
-            <div class="actions">
-
-              <button onclick="codificar()">
-                Encode
-              </button>
-
-              <button
-                class="secondary"
-                onclick="decodificar()">
-                Decode
-              </button>
-
-              <button
-                class="light"
-                onclick="copiarResultadoEncoder()">
-                Copiar
-              </button>
-
-            </div>
-
-            <div
-              class="result"
-              id="encoderResult">
-              Resultado
-            </div>
-
-          </div>
-
-
-          <!-- CONSTRUCTOR -->
-
-          <div class="tool-box full">
-
-            <h3>Constructor embeddedURL</h3>
-
-            <div class="description">
-              Combina una URL web con un deeplink codificado.
-            </div>
-
-            <label for="baseUrl">
-              URL web base
-            </label>
-
-            <textarea id="baseUrl">https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo</textarea>
-
-            <label for="embeddedDeepLink">
-              Deeplink
-            </label>
-
-            <textarea id="embeddedDeepLink">scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo</textarea>
-
-            <div class="actions">
-
-              <button onclick="generarEmbedded()">
-                Generar
-              </button>
-
-              <button
-                class="light"
-                onclick="copiarEmbedded()">
-                Copiar
-              </button>
-
-              <button
-                class="secondary"
-                onclick="abrirEmbeddedGenerado()">
-                Abrir resultado
-              </button>
-
-            </div>
-
-            <div
-              class="result"
-              id="embeddedResult">
-              Resultado
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </div>
-
-
-    <!-- =========================
-         COLUMNA DERECHA / LOG
-         ========================= -->
-
-    <aside class="right-column">
-
-      <section class="card log-card">
-
-        <div class="log-header">
-
-          <div>
-            <h2 class="log-title">
-              Registro
-            </h2>
-
-            <div class="log-meta">
-              Eventos:
-              <span id="eventCount">0</span>
-            </div>
-          </div>
 
           <div class="actions">
 
             <button
-              class="light"
-              onclick="copiarLog()">
-              Copiar
+              class="btn-primary"
+              onclick="generarLink()">
+              Generar link de campaña
             </button>
 
             <button
-              class="light"
-              onclick="limpiarLog()">
+              class="btn-secondary"
+              onclick="limpiarFormulario()">
               Limpiar
             </button>
 
           </div>
 
-        </div>
-
-        <div
-          class="log"
-          id="log"></div>
-
-        <div class="notice">
-          <strong>Lectura:</strong>
-          blur / hidden / pagehide indican que la página perdió foco o fue abandonada.
-          No prueban por sí solos que la app se haya abierto.
-        </div>
-
-      </section>
-
-    </aside>
-
-  </main>
-
-</div>
+        </section>
 
 
-<script>
+        <!-- RESULTADO -->
 
-  const deeplinkScotiabank =
-    "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog&utm_source=meta&utm_medium=paid-cpa&utm_campaign=TarjetaSeguraLF&source=flujo";
+        <section class="card">
 
-  let eventCount = 0;
+          <h2>
+            <span class="step">3</span>
+            Link generado
+          </h2>
 
+          <p class="section-description">
+            Este es el enlace final que debe utilizarse en la plataforma de campaña.
+          </p>
 
-  /* =========================
-     LOG
-     ========================= */
-
-  function log(mensaje) {
-
-    const logBox =
-      document.getElementById("log");
-
-    const hora =
-      new Date().toLocaleTimeString();
-
-    eventCount++;
-
-    document.getElementById("eventCount")
-      .textContent = eventCount;
-
-    logBox.textContent +=
-      "[" + hora + "] " + mensaje + "\n";
-
-    logBox.scrollTop =
-      logBox.scrollHeight;
-
-  }
+          <div id="emptyResult" class="warning">
+            Completa los datos anteriores y presiona
+            <strong>Generar link de campaña</strong>.
+          </div>
 
 
-  function limpiarLog() {
+          <div id="resultBox" class="result-box">
 
-    document.getElementById("log")
-      .textContent = "";
+            <div class="result-title">
+              ✓ Link generado correctamente
+            </div>
 
-    eventCount = 0;
+            <div
+              id="finalUrl"
+              class="result-url">
+            </div>
 
-    document.getElementById("eventCount")
-      .textContent = "0";
+            <div class="actions">
 
-  }
+              <button
+                class="btn-primary"
+                onclick="copiarFinal()">
+                Copiar link final
+              </button>
 
+              <button
+                class="btn-secondary"
+                onclick="abrirFinal()">
+                Probar link
+              </button>
 
-  async function copiarLog() {
-
-    const texto =
-      document.getElementById("log")
-        .textContent;
-
-    await copiarTexto(texto);
-
-    log("Registro copiado");
-
-  }
+            </div>
 
 
-  /* =========================
-     DETECCIÓN
-     ========================= */
+            <div class="preview-grid">
 
-  function detectarSistema() {
+              <div class="preview">
 
-    const ua =
-      navigator.userAgent.toLowerCase();
+                <div class="preview-title">
+                  URL Web parametrizada
+                </div>
 
-    if (/iphone|ipad|ipod/.test(ua)) {
-      return "iOS";
+                <div
+                  id="webPreview"
+                  class="preview-value">
+                </div>
+
+              </div>
+
+
+              <div class="preview">
+
+                <div class="preview-title">
+                  Deeplink App antes de codificar
+                </div>
+
+                <div
+                  id="appPreview"
+                  class="preview-value">
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="warning">
+              El valor completo de <strong>embeddedURL</strong> se codifica
+              automáticamente. No es necesario editarlo manualmente.
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      <!-- =======================
+           CATÁLOGO
+           ======================= -->
+
+      <aside class="right">
+
+        <section class="card catalog-card">
+
+          <h2>Catálogo de productos</h2>
+
+          <p class="section-description">
+            Consulta rápidamente las rutas disponibles. Haz clic en un producto
+            para cargarlo en el generador.
+          </p>
+
+          <input
+            id="catalogSearch"
+            class="catalog-search"
+            type="search"
+            placeholder="Buscar producto..."
+            oninput="renderCatalog()"
+          >
+
+          <div id="catalog" class="catalog"></div>
+
+        </section>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /* ======================================================
+       CATÁLOGO
+
+       ESTE ES EL BLOQUE QUE TÚ IRÁS ACTUALIZANDO.
+       ====================================================== */
+
+    const PRODUCTOS = [
+
+      {
+        id: "tarjeta-segura",
+        nombre: "Tarjeta Segura",
+        tipo: "webview",
+
+        web:
+          "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
+
+        app:
+          "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
+      },
+
+      {
+        id: "apple-pay",
+        nombre: "Apple Pay",
+        tipo: "nativo",
+
+        web:
+          "https://www.scotiabank.com.pe/apple-pay",
+
+        app:
+          "scotiabankpe:///tokenization"
+      },
+
+      {
+        id: "prestabono",
+        nombre: "Prestabono",
+        tipo: "webview",
+
+        web:
+          "",
+
+        app:
+          ""
+      },
+
+      {
+        id: "libre-disponibilidad",
+        nombre: "Préstamo Libre Disponibilidad",
+        tipo: "webview",
+
+        web:
+          "",
+
+        app:
+          ""
+      },
+
+      {
+        id: "cuenta-sueldo",
+        nombre: "Cuenta Sueldo",
+        tipo: "webview",
+
+        web:
+          "",
+
+        app:
+          ""
+      },
+
+      {
+        id: "cuenta-digital",
+        nombre: "Cuenta Digital",
+        tipo: "webview",
+
+        web:
+          "",
+
+        app:
+          ""
+      }
+
+    ];
+
+
+    let productoSeleccionado = null;
+
+
+    /* ======================================================
+       INICIALIZACIÓN
+       ====================================================== */
+
+    function iniciar() {
+
+      const select =
+        document.getElementById("productSelect");
+
+      PRODUCTOS.forEach(producto => {
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          producto.id;
+
+        option.textContent =
+          producto.nombre;
+
+        select.appendChild(option);
+
+      });
+
+      renderCatalog();
+
     }
 
-    if (/android/.test(ua)) {
-      return "Android";
-    }
 
-    if (/windows/.test(ua)) {
-      return "Windows";
-    }
+    /* ======================================================
+       SELECCIÓN DE PRODUCTO
+       ====================================================== */
 
-    if (/macintosh|mac os x/.test(ua)) {
-      return "macOS";
-    }
+    function seleccionarProducto(id) {
 
-    return "Desconocido";
+      const producto =
+        PRODUCTOS.find(p => p.id === id);
 
-  }
+      productoSeleccionado =
+        producto || null;
 
 
-  function detectarBrowser() {
+      if (!producto) {
 
-    const ua =
-      navigator.userAgent;
+        document.getElementById("webUrl").value = "";
+        document.getElementById("appUrl").value = "";
 
-    if (/Instagram/i.test(ua)) {
-      return "Instagram WebView";
-    }
+        document
+          .getElementById("webviewFields")
+          .classList.add("hidden");
 
-    if (/FBAN|FBAV/i.test(ua)) {
-      return "Facebook WebView";
-    }
+        document
+          .getElementById("productTypeBadge")
+          .classList.add("hidden");
 
-    if (/Edg/i.test(ua)) {
-      return "Edge";
-    }
+        renderCatalog();
 
-    if (/CriOS/i.test(ua)) {
-      return "Chrome iOS";
-    }
-
-    if (/Chrome/i.test(ua)) {
-      return "Chrome";
-    }
-
-    if (/FxiOS/i.test(ua)) {
-      return "Firefox iOS";
-    }
-
-    if (/Firefox/i.test(ua)) {
-      return "Firefox";
-    }
-
-    if (/Safari/i.test(ua)) {
-      return "Safari";
-    }
-
-    return "No identificado";
-
-  }
-
-
-  function cargarInfo() {
-
-    document.getElementById("ua")
-      .textContent =
-      navigator.userAgent;
-
-    document.getElementById("os")
-      .textContent =
-      detectarSistema();
-
-    document.getElementById("browser")
-      .textContent =
-      detectarBrowser();
-
-    document.getElementById("origin")
-      .textContent =
-      location.origin;
-
-    log("Página cargada");
-
-    log(
-      "Sistema: " +
-      detectarSistema()
-    );
-
-    log(
-      "Navegador: " +
-      detectarBrowser()
-    );
-
-  }
-
-
-  /* =========================
-     CUSTOM SCHEME
-     ========================= */
-
-  function probarDeeplinkJS() {
-
-    const status =
-      document.getElementById("deeplinkStatus");
-
-    status.textContent =
-      "Intentando abrir...";
-
-    log(
-      "Custom Scheme vía JavaScript"
-    );
-
-    const inicio =
-      Date.now();
-
-    window.location.href =
-      deeplinkScotiabank;
-
-    setTimeout(function () {
-
-      const tiempo =
-        Date.now() - inicio;
-
-      if (
-        document.visibilityState === "visible"
-      ) {
-
-        status.textContent =
-          "Sin confirmación";
-
-        log(
-          "Timeout Custom Scheme: página visible después de " +
-          tiempo +
-          " ms"
-        );
+        return;
 
       }
 
-    }, 2500);
 
-  }
+      document.getElementById("webUrl").value =
+        producto.web;
 
-
-  /* =========================
-     PROBADOR PERSONALIZADO
-     ========================= */
-
-  function obtenerCustomUrl() {
-
-    return document
-      .getElementById("customUrl")
-      .value
-      .trim();
-
-  }
+      document.getElementById("appUrl").value =
+        producto.app;
 
 
-  function abrirCustomHref() {
+      const badge =
+        document.getElementById("productTypeBadge");
 
-    const url =
-      obtenerCustomUrl();
-
-    if (!url) {
-
-      alert(
-        "Ingresa una URL"
-      );
-
-      return;
-
-    }
-
-    log(
-      "Abriendo URL personalizada: " +
-      url
-    );
-
-    window.location.href =
-      url;
-
-  }
+      badge.classList.remove("hidden");
 
 
-  function abrirCustomJS() {
+      if (producto.tipo === "webview") {
 
-    const url =
-      obtenerCustomUrl();
+        badge.textContent =
+          "Experiencia: WebView";
 
-    if (!url) {
+        document
+          .getElementById("webviewFields")
+          .classList.remove("hidden");
 
-      alert(
-        "Ingresa una URL"
-      );
+      } else {
 
-      return;
+        badge.textContent =
+          "Experiencia: Nativa";
+
+        document
+          .getElementById("webviewFields")
+          .classList.add("hidden");
+
+      }
+
+
+      renderCatalog();
 
     }
 
-    log(
-      "Abriendo vía JavaScript: " +
-      url
-    );
 
-    setTimeout(function () {
+    function seleccionarDesdeCatalogo(id) {
 
-      window.location.href =
-        url;
+      document.getElementById("productSelect").value =
+        id;
 
-    }, 50);
+      seleccionarProducto(id);
 
-  }
-
-
-  async function copiarCustom() {
-
-    const texto =
-      obtenerCustomUrl();
-
-    await copiarTexto(texto);
-
-    log(
-      "URL personalizada copiada"
-    );
-
-  }
-
-
-  /* =========================
-     ENCODER
-     ========================= */
-
-  function codificar() {
-
-    const texto =
-      document.getElementById("encoderInput")
-      .value;
-
-    const resultado =
-      encodeURIComponent(texto);
-
-    document.getElementById("encoderResult")
-      .textContent =
-      resultado;
-
-    log(
-      "encodeURIComponent ejecutado"
-    );
-
-  }
-
-
-  function decodificar() {
-
-    const texto =
-      document.getElementById("encoderInput")
-      .value;
-
-    try {
-
-      const resultado =
-        decodeURIComponent(texto);
-
-      document.getElementById("encoderResult")
-        .textContent =
-        resultado;
-
-      log(
-        "decodeURIComponent ejecutado"
-      );
-
-    } catch (error) {
-
-      document.getElementById("encoderResult")
-        .textContent =
-        "Error: formato no válido para decodeURIComponent";
-
-      log(
-        "Error al decodificar URL"
-      );
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
 
     }
 
-  }
+
+    /* ======================================================
+       CATÁLOGO
+       ====================================================== */
+
+    function renderCatalog() {
+
+      const catalog =
+        document.getElementById("catalog");
+
+      const search =
+        document
+          .getElementById("catalogSearch")
+          .value
+          .toLowerCase()
+          .trim();
 
 
-  async function copiarResultadoEncoder() {
+      const filtrados =
+        PRODUCTOS.filter(producto =>
 
-    const texto =
-      document.getElementById("encoderResult")
-      .textContent;
+          producto.nombre
+            .toLowerCase()
+            .includes(search)
 
-    await copiarTexto(texto);
-
-    log(
-      "Resultado Encoder copiado"
-    );
-
-  }
+        );
 
 
-  /* =========================
-     CONSTRUCTOR EMBEDDED
-     ========================= */
+      catalog.innerHTML = "";
 
-  function generarEmbedded() {
 
-    const base =
-      document.getElementById("baseUrl")
-      .value
-      .trim();
+      if (!filtrados.length) {
 
-    const deeplink =
-      document.getElementById("embeddedDeepLink")
-      .value
-      .trim();
+        catalog.innerHTML =
+          '<div class="empty">No se encontraron productos.</div>';
 
-    if (!base || !deeplink) {
+        return;
 
-      alert(
-        "Completa la URL web y el deeplink"
-      );
+      }
 
-      return;
+
+      filtrados.forEach(producto => {
+
+        const div =
+          document.createElement("div");
+
+        div.className =
+          "product";
+
+
+        if (
+          productoSeleccionado &&
+          productoSeleccionado.id === producto.id
+        ) {
+
+          div.classList.add("active");
+
+        }
+
+
+        div.onclick =
+          () => seleccionarDesdeCatalogo(producto.id);
+
+
+        div.innerHTML = `
+
+          <div class="product-name">
+            ${producto.nombre}
+          </div>
+
+          <div class="product-type">
+            ${producto.tipo === "webview"
+              ? "WebView"
+              : "Nativo"}
+          </div>
+
+          <div class="product-path">
+            Web:
+            ${producto.web || "Pendiente de configurar"}
+          </div>
+
+          <div class="product-path">
+            App:
+            ${producto.app || "Pendiente de configurar"}
+          </div>
+
+        `;
+
+
+        catalog.appendChild(div);
+
+      });
 
     }
 
-    const separador =
-      base.includes("?")
-        ? "&"
-        : "?";
 
-    const resultado =
-      base +
-      separador +
-      "embeddedURL=" +
-      encodeURIComponent(deeplink);
+    /* ======================================================
+       UTILIDADES URL
+       ====================================================== */
 
-    document.getElementById("embeddedResult")
-      .textContent =
-      resultado;
+    function agregarParametros(urlBase, parametros) {
 
-    log(
-      "embeddedURL generado"
-    );
-
-  }
+      const url =
+        new URL(urlBase);
 
 
-  async function copiarEmbedded() {
+      Object.entries(parametros)
+        .forEach(([key, value]) => {
 
-    const texto =
-      document.getElementById("embeddedResult")
-      .textContent;
+          if (
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== ""
+          ) {
 
-    await copiarTexto(texto);
+            url.searchParams.set(
+              key,
+              String(value).trim()
+            );
 
-    log(
-      "embeddedURL copiado"
-    );
+          }
 
-  }
+        });
 
 
-  function abrirEmbeddedGenerado() {
+      return url.toString();
 
-    const texto =
-      document.getElementById("embeddedResult")
-      .textContent
-      .trim();
+    }
 
-    if (
-      !texto ||
-      texto === "Resultado"
+
+    function agregarParametrosDeeplink(
+      deeplink,
+      parametros
     ) {
 
-      alert(
-        "Primero genera una URL"
-      );
-
-      return;
-
-    }
-
-    log(
-      "Abriendo embeddedURL generado"
-    );
-
-    window.location.href =
-      texto;
-
-  }
+      let resultado =
+        deeplink.trim();
 
 
-  /* =========================
-     PORTAPAPELES
-     ========================= */
-
-  async function copiarTexto(texto) {
-
-    try {
-
-      await navigator.clipboard
-        .writeText(texto);
-
-    } catch (error) {
-
-      const temp =
-        document.createElement("textarea");
-
-      temp.value =
-        texto;
-
-      document.body
-        .appendChild(temp);
-
-      temp.select();
-
-      document.execCommand("copy");
-
-      temp.remove();
-
-    }
-
-  }
+      const params =
+        new URLSearchParams();
 
 
-  /* =========================
-     EVENTOS DEL NAVEGADOR
-     ========================= */
+      Object.entries(parametros)
+        .forEach(([key, value]) => {
 
-  document.addEventListener(
-    "visibilitychange",
-    function () {
+          if (
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== ""
+          ) {
 
-      log(
-        "visibilitychange → " +
-        document.visibilityState
+            params.append(
+              key,
+              String(value).trim()
+            );
+
+          }
+
+        });
+
+
+      const query =
+        params.toString();
+
+
+      if (!query) {
+        return resultado;
+      }
+
+
+      const separador =
+        resultado.includes("?")
+          ? "&"
+          : "?";
+
+
+      return (
+        resultado +
+        separador +
+        query
       );
 
     }
-  );
 
 
-  window.addEventListener(
-    "blur",
-    function () {
+    /* ======================================================
+       GENERADOR
+       ====================================================== */
 
-      log(
-        "window blur"
-      );
+    function generarLink() {
+
+      const webBase =
+        document
+          .getElementById("webUrl")
+          .value
+          .trim();
+
+
+      const appBase =
+        document
+          .getElementById("appUrl")
+          .value
+          .trim();
+
+
+      const utmSource =
+        document
+          .getElementById("utmSource")
+          .value
+          .trim();
+
+
+      const utmMedium =
+        document
+          .getElementById("utmMedium")
+          .value
+          .trim();
+
+
+      const utmCampaign =
+        document
+          .getElementById("utmCampaign")
+          .value
+          .trim();
+
+
+      if (
+        !webBase ||
+        !appBase ||
+        !utmSource ||
+        !utmMedium ||
+        !utmCampaign
+      ) {
+
+        alert(
+          "Completa Producto, URL Web, Deeplink App y las tres UTM obligatorias."
+        );
+
+        return;
+
+      }
+
+
+      const parametrosCampana = {
+
+        utm_source:
+          utmSource,
+
+        utm_medium:
+          utmMedium,
+
+        utm_campaign:
+          utmCampaign
+
+      };
+
+
+      /*
+       * SOURCE Y DETAIL SOLO PARA WEBVIEW
+       */
+
+      if (
+        productoSeleccionado &&
+        productoSeleccionado.tipo === "webview"
+      ) {
+
+        const source =
+          document
+            .getElementById("sourceInternal")
+            .value
+            .trim();
+
+
+        const detail =
+          document
+            .getElementById("detail")
+            .value
+            .trim();
+
+
+        if (source) {
+
+          parametrosCampana.source =
+            source;
+
+        }
+
+
+        if (detail) {
+
+          parametrosCampana.detail =
+            detail;
+
+        }
+
+      }
+
+
+      /*
+       * 1. WEB PARAMETRIZADA
+       */
+
+      let webParametrizada;
+
+      try {
+
+        webParametrizada =
+          agregarParametros(
+            webBase,
+            parametrosCampana
+          );
+
+      } catch (error) {
+
+        alert(
+          "La URL Web no tiene un formato válido."
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * 2. DEEPLINK APP PARAMETRIZADO
+       */
+
+      const appParametrizada =
+        agregarParametrosDeeplink(
+          appBase,
+          parametrosCampana
+        );
+
+
+      /*
+       * 3. EMBEDDED URL
+       */
+
+      const separador =
+        webParametrizada.includes("?")
+          ? "&"
+          : "?";
+
+
+      const finalUrl =
+        webParametrizada +
+        separador +
+        "embeddedURL=" +
+        encodeURIComponent(
+          appParametrizada
+        );
+
+
+      /*
+       * RESULTADOS
+       */
+
+      document
+        .getElementById("finalUrl")
+        .textContent =
+        finalUrl;
+
+
+      document
+        .getElementById("webPreview")
+        .textContent =
+        webParametrizada;
+
+
+      document
+        .getElementById("appPreview")
+        .textContent =
+        appParametrizada;
+
+
+      document
+        .getElementById("resultBox")
+        .classList.add("visible");
+
+
+      document
+        .getElementById("emptyResult")
+        .classList.add("hidden");
 
     }
-  );
 
 
-  window.addEventListener(
-    "focus",
-    function () {
+    /* ======================================================
+       COPIAR / PROBAR
+       ====================================================== */
 
-      log(
-        "window focus"
-      );
+    async function copiarFinal() {
 
-    }
-  );
-
-
-  window.addEventListener(
-    "pagehide",
-    function () {
-
-      log(
-        "pagehide"
-      );
-
-    }
-  );
+      const link =
+        document
+          .getElementById("finalUrl")
+          .textContent;
 
 
-  window.addEventListener(
-    "pageshow",
-    function () {
-
-      log(
-        "pageshow"
-      );
-
-    }
-  );
+      if (!link) {
+        return;
+      }
 
 
-  /* =========================
-     LOG DE BOTONES PREDEFINIDOS
-     ========================= */
+      try {
 
-  document
-    .getElementById("deeplinkHref")
-    .addEventListener(
-      "click",
-      function () {
+        await navigator.clipboard
+          .writeText(link);
 
-        log(
-          "TEST 1 → Custom Scheme href"
+        alert(
+          "Link copiado correctamente."
+        );
+
+      } catch (error) {
+
+        const textarea =
+          document.createElement("textarea");
+
+        textarea.value =
+          link;
+
+        document.body
+          .appendChild(textarea);
+
+        textarea.select();
+
+        document.execCommand("copy");
+
+        textarea.remove();
+
+        alert(
+          "Link copiado correctamente."
         );
 
       }
-    );
+
+    }
 
 
-  document
-    .getElementById("httpsSimple")
-    .addEventListener(
-      "click",
-      function () {
+    function abrirFinal() {
 
-        log(
-          "TEST 3 → HTTPS simple"
-        );
+      const link =
+        document
+          .getElementById("finalUrl")
+          .textContent;
 
+
+      if (!link) {
+        return;
       }
-    );
 
 
-  document
-    .getElementById("httpsEncoded")
-    .addEventListener(
-      "click",
-      function () {
+      window.open(
+        link,
+        "_blank"
+      );
 
-        log(
-          "TEST 4 → HTTPS + embeddedURL encoded"
-        );
-
-      }
-    );
+    }
 
 
-  document
-    .getElementById("httpsUnencoded")
-    .addEventListener(
-      "click",
-      function () {
+    /* ======================================================
+       LIMPIAR
+       ====================================================== */
 
-        log(
-          "TEST 5 → HTTPS + embeddedURL sin encoding"
-        );
+    function limpiarFormulario() {
 
-      }
-    );
+      document
+        .getElementById("productSelect")
+        .value = "";
+
+      document
+        .getElementById("webUrl")
+        .value = "";
+
+      document
+        .getElementById("appUrl")
+        .value = "";
+
+      document
+        .getElementById("utmSource")
+        .value = "";
+
+      document
+        .getElementById("utmMedium")
+        .value = "";
+
+      document
+        .getElementById("utmCampaign")
+        .value = "";
+
+      document
+        .getElementById("sourceInternal")
+        .value = "";
+
+      document
+        .getElementById("detail")
+        .value = "";
 
 
-  cargarInfo();
+      productoSeleccionado =
+        null;
 
-</script>
+
+      document
+        .getElementById("webviewFields")
+        .classList.add("hidden");
+
+
+      document
+        .getElementById("productTypeBadge")
+        .classList.add("hidden");
+
+
+      document
+        .getElementById("resultBox")
+        .classList.remove("visible");
+
+
+      document
+        .getElementById("emptyResult")
+        .classList.remove("hidden");
+
+
+      renderCatalog();
+
+    }
+
+
+    iniciar();
+
+  </script>
 
 </body>
+
 </html>

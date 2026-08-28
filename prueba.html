@@ -939,9 +939,62 @@
 
       </section>
 
+            <!-- PROBAR LINK EXISTENTE -->
+
+      <section class="card">
+
+        <h2>
+          Probar link existente
+        </h2>
+
+        <p class="section-description">
+          Pega un link antiguo o un enlace ya generado para validar
+          si todavía abre correctamente.
+        </p>
+
+
+        <div class="field">
+
+          <label for="testExistingLink">
+            Link a probar
+          </label>
+
+          <input
+            id="testExistingLink"
+            type="text"
+            placeholder="Pega aquí el link completo..."
+            autocomplete="off"
+          >
+
+          <span class="hint">
+            Puedes probar links antiguos de Meta, Google, email,
+            WhatsApp u otras campañas.
+          </span>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="btn-primary"
+            onclick="probarLinkExistente()"
+          >
+            Probar link
+          </button>
+
+
+          <button
+            class="btn-secondary"
+            onclick="limpiarLinkExistente()"
+          >
+            Limpiar
+          </button>
+
+        </div>
+
+      </section>
+      
     </main>
-
-
 
     <!-- CATÁLOGO -->
 
@@ -2173,7 +2226,58 @@ function abrirFinal() {
 
 }
 
+/* ========================================================
+   PROBAR LINK EXISTENTE
+   ======================================================== */
 
+function probarLinkExistente() {
+
+  const link =
+    document
+      .getElementById("testExistingLink")
+      .value
+      .trim();
+
+
+  if (!link) {
+
+    alert(
+      "Pega un link para probar."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !link.startsWith("http://") &&
+    !link.startsWith("https://")
+  ) {
+
+    alert(
+      "El link debe comenzar con http:// o https://."
+    );
+
+    return;
+
+  }
+
+
+  window.location.href = link;
+
+}
+
+
+
+function limpiarLinkExistente() {
+
+  document
+    .getElementById("testExistingLink")
+    .value = "";
+
+}
+  
   /* ========================================================
      LIMPIAR
      ======================================================== */

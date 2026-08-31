@@ -188,6 +188,29 @@
       color: #172033;
     }
 
+    a.btn-secondary,
+    a.btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a.btn-secondary {
+      background: #e9edf2;
+      color: #172033;
+    }
+
+    a.btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
     .campaign-source-box {
       padding: 12px;
       background: var(--info-bg);
@@ -628,24 +651,40 @@
 
           <div class="field">
             <label for="testAppLink">Deeplink App</label>
-            <input id="testAppLink" type="text" placeholder="scotiabankpe:///..." autocomplete="off">
+            <input
+              id="testAppLink"
+              type="text"
+              placeholder="scotiabankpe:///..."
+              autocomplete="off"
+              oninput="actualizarEnlaceApp()"
+            >
 
             <span class="hint">
-              El navegador puede bloquear esquemas directos como scotiabankpe://.
-              El diagnóstico de abajo ayuda a distinguir un intento de apertura
-              de un posible bloqueo del navegador.
+              “Abrir Deeplink App” es un enlace HTML real que apunta directamente
+              al esquema scotiabankpe://. Esto permite probar el deeplink mediante
+              un clic real del usuario, sin usar window.location.href.
             </span>
 
             <div class="actions">
-              <button class="btn-secondary" onclick="probarLinkApp()">Probar App</button>
-              <button class="btn-secondary" onclick="copiarDeeplinkApp()">Copiar Deeplink App</button>
+              <a
+                id="testAppAnchor"
+                class="btn-secondary"
+                href="#"
+                onclick="registrarIntentoDeeplink()"
+              >
+                Abrir Deeplink App
+              </a>
+
+              <button class="btn-secondary" onclick="copiarDeeplinkApp()">
+                Copiar Deeplink App
+              </button>
             </div>
           </div>
         </div>
 
         <div id="testConsole" class="test-console">
           <strong>Diagnóstico del Deeplink App</strong><br>
-          Selecciona un producto y presiona <strong>Probar App</strong>.
+          Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.
         </div>
 
         <div class="actions">
@@ -1271,6 +1310,8 @@
     document.getElementById("testAppLink").value =
       producto.app || "";
 
+    actualizarEnlaceApp();
+
     if (producto.web && producto.app) {
       document.getElementById("testFinalLink").value =
         construirLinkPrueba(producto.web, producto.app);
@@ -1280,7 +1321,7 @@
 
     document.getElementById("testConsole").innerHTML =
       "<strong>Diagnóstico del Deeplink App</strong><br>" +
-      "Deeplink cargado. Presiona <strong>Probar App</strong> para ejecutar la prueba.";
+      "Deeplink cargado. Presiona <strong>Abrir Deeplink App</strong> para probarlo mediante un enlace HTML real.";
   }
 
   function generarLink() {
@@ -1434,65 +1475,72 @@
     window.location.href = link;
   }
 
-  function probarLinkApp() {
+  function actualizarEnlaceApp() {
+    const link = limpiarValor(document.getElementById("testAppLink").value);
+    const enlace = document.getElementById("testAppAnchor");
+
+    if (!enlace) return;
+
+    if (link.startsWith("scotiabankpe://")) {
+      enlace.href = link;
+      enlace.setAttribute("aria-disabled", "false");
+    } else {
+      enlace.href = "#";
+      enlace.setAttribute("aria-disabled", "true");
+    }
+  }
+
+  function registrarIntentoDeeplink() {
     const link = limpiarValor(document.getElementById("testAppLink").value);
     const consola = document.getElementById("testConsole");
+    const enlace = document.getElementById("testAppAnchor");
 
     if (!link) {
       alert("Selecciona un producto o pega un Deeplink App.");
-      return;
+      enlace.href = "#";
+      return false;
     }
 
     if (!link.startsWith("scotiabankpe://")) {
       alert("El Deeplink App debe comenzar con scotiabankpe:///.");
-      return;
+      enlace.href = "#";
+      return false;
     }
 
+    // Importante: no usamos preventDefault().
+    // El clic continuará normalmente hacia el href real del <a>.
+    enlace.href = link;
+
     let paginaOculta = false;
-    let cambioDetectado = false;
 
     consola.innerHTML = `
       <strong>Diagnóstico del Deeplink App</strong><br><br>
-      <span class="info">Intentando abrir:</span><br>
-      ${link}<br><br>
-      <span class="info">Estado:</span> solicitud enviada al navegador...
+      <span class="info">Enlace HTML real:</span><br>
+      &lt;a href="${link}"&gt;Abrir Deeplink App&lt;/a&gt;<br><br>
+      <span class="info">Estado:</span>
+      clic del usuario enviado directamente al esquema...
     `;
 
-    console.log("[DEEPLINK TEST] Intentando abrir:", link);
+    console.log("[DEEPLINK ANCHOR TEST] href:", link);
 
     const detectarCambio = () => {
-      if (document.hidden && !cambioDetectado) {
+      if (document.hidden && !paginaOculta) {
         paginaOculta = true;
-        cambioDetectado = true;
 
         consola.innerHTML += `
           <br><br>
           <span class="ok">
             ✓ La página pasó a segundo plano.
-            Esto es compatible con que el sistema haya abierto la app
-            o mostrado un selector externo.
+            Es una señal compatible con que Android haya entregado
+            el deeplink a la app o a un selector externo.
           </span>
         `;
 
-        console.log("[DEEPLINK TEST] La página pasó a segundo plano.");
+        console.log("[DEEPLINK ANCHOR TEST] La página pasó a segundo plano.");
       }
     };
 
     document.addEventListener("visibilitychange", detectarCambio);
-
-    try {
-      window.location.href = link;
-    } catch (error) {
-      consola.innerHTML += `
-        <br><br>
-        <span class="warn">
-          ⚠ JavaScript reportó un error al intentar abrir el Deeplink:
-          ${error.message}
-        </span>
-      `;
-
-      console.error("[DEEPLINK TEST] Error:", error);
-    }
 
     setTimeout(() => {
       document.removeEventListener("visibilitychange", detectarCambio);
@@ -1502,22 +1550,25 @@
           <br><br>
           <span class="warn">
             ⚠ La página siguió visible.
-            Chrome puede haber ignorado o bloqueado el esquema directo.
-            Esto NO demuestra que el Deeplink esté mal construido.
+            El navegador o el sistema no abrió una aplicación con este esquema
+            en esta prueba.
           </span>
           <br><br>
           <span class="info">
-            Para validar el Deeplink funcionalmente, cópialo y pruébalo
-            desde WhatsApp, email o el entorno real de Meta.
+            En PC esto es normal si no existe una aplicación registrada para
+            scotiabankpe://. En Android, si la app está instalada y aun así no abre,
+            conviene validar el registro del esquema/deeplink en la app o probarlo
+            directamente en el entorno de Meta.
           </span>
         `;
 
         console.warn(
-          "[DEEPLINK TEST] La página siguió visible. " +
-          "El navegador puede haber bloqueado o ignorado el esquema."
+          "[DEEPLINK ANCHOR TEST] La página siguió visible."
         );
       }
     }, 1800);
+
+    return true;
   }
 
   async function copiarDeeplinkApp() {
@@ -1549,10 +1600,11 @@
     document.getElementById("testFinalLink").value = "";
     document.getElementById("testWebLink").value = "";
     document.getElementById("testAppLink").value = "";
+    actualizarEnlaceApp();
 
     document.getElementById("testConsole").innerHTML =
       "<strong>Diagnóstico del Deeplink App</strong><br>" +
-      "Selecciona un producto y presiona <strong>Probar App</strong>.";
+      "Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.";
   }
 
   function limpiarFormulario() {

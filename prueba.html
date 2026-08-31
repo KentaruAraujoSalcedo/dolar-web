@@ -974,7 +974,6 @@
         </div>
 
         <div class="actions">
-
           <button
             class="btn-primary"
             onclick="probarLinkExistente()"
@@ -982,6 +981,19 @@
             Probar link
           </button>
 
+          <button
+            class="btn-primary"
+            onclick="probarLinkWeb()"
+          >
+            Probar Web
+          </button>
+
+          <button
+            class="btn-primary"
+            onclick="probarLinkApp()"
+          >
+            Probar App
+          </button>
 
           <button
             class="btn-secondary"
@@ -2230,25 +2242,28 @@ function abrirFinal() {
    PROBAR LINK EXISTENTE
    ======================================================== */
 
+function obtenerLinkExistente() {
+
+  return document
+    .getElementById("testExistingLink")
+    .value
+    .trim();
+
+}
+
+
+/* Probar link final de campaña */
 function probarLinkExistente() {
 
   const link =
-    document
-      .getElementById("testExistingLink")
-      .value
-      .trim();
-
+    obtenerLinkExistente();
 
   if (!link) {
 
-    alert(
-      "Pega un link para probar."
-    );
-
+    alert("Pega un link para probar.");
     return;
 
   }
-
 
   if (
     !link.startsWith("http://") &&
@@ -2256,18 +2271,80 @@ function probarLinkExistente() {
   ) {
 
     alert(
-      "El link debe comenzar con http:// o https://."
+      "El link final debe comenzar con http:// o https://."
     );
 
     return;
 
   }
 
-
-  window.location.href = link;
+  window.location.href =
+    link;
 
 }
 
+
+/* Probar solamente la URL Web */
+function probarLinkWeb() {
+
+  const link =
+    obtenerLinkExistente();
+
+  if (!link) {
+
+    alert("Pega una URL Web para probar.");
+    return;
+
+  }
+
+  if (
+    !link.startsWith("http://") &&
+    !link.startsWith("https://")
+  ) {
+
+    alert(
+      "La URL Web debe comenzar con http:// o https://."
+    );
+
+    return;
+
+  }
+
+  window.location.href =
+    link;
+
+}
+
+
+/* Probar solamente el Deeplink App */
+function probarLinkApp() {
+
+  const link =
+    obtenerLinkExistente();
+
+  if (!link) {
+
+    alert("Pega un Deeplink App para probar.");
+    return;
+
+  }
+
+  if (
+    !link.startsWith("scotiabankpe://")
+  ) {
+
+    alert(
+      "El Deeplink App debe comenzar con scotiabankpe:///"
+    );
+
+    return;
+
+  }
+
+  window.location.href =
+    link;
+
+}
 
 
 function limpiarLinkExistente() {

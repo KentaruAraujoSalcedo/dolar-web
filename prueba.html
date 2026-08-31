@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Generador de Links de Campaña</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     :root {
       --bg: #f4f6f8;
@@ -21,13 +17,10 @@
       --primary: #111827;
       --primary-hover: #273244;
       --soft: #f7f8fa;
-
       --success-bg: #ecfdf3;
       --success: #087443;
-
       --warning-bg: #fff7ed;
       --warning: #9a3412;
-
       --info-bg: #eff6ff;
       --info: #1d4ed8;
     }
@@ -77,9 +70,7 @@
       gap: 16px;
     }
 
-    .right {
-      min-width: 0;
-    }
+    .right { min-width: 0; }
 
     .card {
       background: var(--card);
@@ -121,9 +112,7 @@
       gap: 14px;
     }
 
-    .field.full {
-      grid-column: 1 / -1;
-    }
+    .field.full { grid-column: 1 / -1; }
 
     label {
       display: block;
@@ -141,9 +130,7 @@
       line-height: 1.35;
     }
 
-    input,
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
       border: 1px solid #d0d5dd;
       border-radius: 8px;
@@ -154,9 +141,7 @@
       outline: none;
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: #667085;
       box-shadow: 0 0 0 2px rgba(17, 24, 39, .06);
     }
@@ -164,12 +149,9 @@
     input[readonly] {
       background: #f8fafc;
       color: #475467;
-      cursor: not-allowed;
     }
 
-    .manual-input {
-      margin-top: 8px;
-    }
+    .manual-input { margin-top: 8px; }
 
     textarea {
       resize: vertical;
@@ -199,9 +181,7 @@
       color: white;
     }
 
-    .btn-primary:hover {
-      background: var(--primary-hover);
-    }
+    .btn-primary:hover { background: var(--primary-hover); }
 
     .btn-secondary {
       background: #e9edf2;
@@ -215,9 +195,7 @@
       border-radius: 9px;
     }
 
-    .campaign-source-box strong {
-      color: var(--info);
-    }
+    .campaign-source-box strong { color: var(--info); }
 
     .campaign-source-box p {
       margin: 4px 0 0;
@@ -235,9 +213,7 @@
       display: none;
     }
 
-    .result-box.visible {
-      display: block;
-    }
+    .result-box.visible { display: block; }
 
     .result-title {
       font-size: 12px;
@@ -312,14 +288,27 @@
       line-height: 1.45;
     }
 
+    .test-box {
+      margin-top: 14px;
+      padding: 14px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .test-product-name {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--info);
+      margin-bottom: 12px;
+    }
+
     .catalog-card {
       position: sticky;
       top: 16px;
     }
 
-    .catalog-search {
-      margin: 12px 0;
-    }
+    .catalog-search { margin: 12px 0; }
 
     .catalog {
       max-height: 70vh;
@@ -368,54 +357,28 @@
       font-size: 12px;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     @media (max-width: 1000px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .catalog-card {
-        position: relative;
-        top: auto;
-      }
-
-      .catalog {
-        max-height: 420px;
-      }
+      .layout { grid-template-columns: 1fr; }
+      .catalog-card { position: relative; top: auto; }
+      .catalog { max-height: 420px; }
     }
 
     @media (max-width: 650px) {
-      .page {
-        padding: 10px;
-      }
-
-      .form-grid,
-      .preview-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .field.full {
-        grid-column: auto;
-      }
-
-      .card {
-        padding: 15px;
-      }
+      .page { padding: 10px; }
+      .form-grid, .preview-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .card { padding: 15px; }
     }
   </style>
 </head>
 
-
 <body>
-
 <div class="page">
 
   <header class="header">
     <h1>Generador de Links de Campaña</h1>
-
     <p>
       Genera enlaces estandarizados para campañas digitales.
       Las UTM y parámetros de navegación se agregan automáticamente
@@ -423,308 +386,102 @@
     </p>
   </header>
 
-
   <div class="layout">
-
     <main class="left">
 
-      <!-- PASO 1 -->
-
       <section class="card">
-
-        <h2>
-          <span class="step">1</span>
-          Selecciona el producto
-        </h2>
-
+        <h2><span class="step">1</span>Selecciona el producto</h2>
         <p class="section-description">
           Selecciona un producto del catálogo. Las rutas Web y App se
-          completarán automáticamente. Si es necesario, también puedes
-          modificarlas manualmente.
+          completarán automáticamente. El probador también se cargará
+          automáticamente sin UTMs.
         </p>
 
         <div class="form-grid">
-
           <div class="field full">
             <label for="productSelect">Producto</label>
-
-            <select
-              id="productSelect"
-              onchange="seleccionarProducto(this.value)"
-            >
+            <select id="productSelect" onchange="seleccionarProducto(this.value)">
               <option value="">Seleccionar producto...</option>
             </select>
           </div>
 
-
           <div class="field">
             <label for="webUrl">URL Web</label>
-
-            <input
-              id="webUrl"
-              type="text"
-              placeholder="https://mi.scotiabank.com.pe/..."
-            >
-
-            <span class="hint">
-              URL utilizada como destino Web o fallback.
-            </span>
+            <input id="webUrl" type="text" placeholder="https://mi.scotiabank.com.pe/...">
+            <span class="hint">URL utilizada como destino Web o fallback.</span>
           </div>
-
 
           <div class="field">
             <label for="appUrl">Deeplink App</label>
-
-            <input
-              id="appUrl"
-              type="text"
-              placeholder="scotiabankpe:///..."
-            >
-
-            <span class="hint">
-              Ruta utilizada para abrir la experiencia dentro de la app.
-            </span>
+            <input id="appUrl" type="text" placeholder="scotiabankpe:///...">
+            <span class="hint">Ruta utilizada para abrir la experiencia dentro de la app.</span>
           </div>
-
         </div>
-
       </section>
 
-
-
-      <!-- PASO 2 -->
-
       <section class="card">
-
-        <h2>
-          <span class="step">2</span>
-          Datos de campaña
-        </h2>
-
+        <h2><span class="step">2</span>Datos de campaña</h2>
         <p class="section-description">
           Selecciona los valores estandarizados. Si no encuentras el valor
           necesario, elige “Otro” y escríbelo manualmente.
         </p>
 
-
         <div class="form-grid">
-
-          <!-- UTM SOURCE -->
-
           <div class="field">
-
-            <label for="utmSource">
-              utm_source
-            </label>
-
-            <select
-              id="utmSource"
-              onchange="manejarOtroSource()"
-            >
-              <option value="">
-                Seleccionar fuente...
-              </option>
-
-              <option value="masterbase">
-                masterbase — Campañas de email
-              </option>
-
-              <option value="google">
-                google — Google Ads
-              </option>
-
-              <option value="meta">
-                meta — Facebook e Instagram Ads
-              </option>
-
-              <option value="tiktok">
-                tiktok — TikTok Ads
-              </option>
-
-              <option value="youtube">
-                youtube — Campañas de YouTube
-              </option>
-
-              <option value="bing">
-                bing — Microsoft / Bing Ads
-              </option>
-
-              <option value="linkedin">
-                linkedin — LinkedIn Ads
-              </option>
-
-              <option value="spotify">
-                spotify — Campañas en Spotify
-              </option>
-
-              <option value="firebase">
-                firebase — Notificaciones Push
-              </option>
-
-              <option value="web">
-                web — Tráfico desde sitios propios
-              </option>
-
-              <option value="whatsapp">
-                whatsapp — Campañas por WhatsApp
-              </option>
-
-              <option value="sms">
-                sms — Campañas por SMS
-              </option>
-
-              <option value="ntbcd">
-                ntbcd — Canal interno NTBCD
-              </option>
-
-              <option value="folleto-fisico">
-                folleto-fisico — Material físico / QR
-              </option>
-
-              <option value="linktree">
-                linktree — Tráfico desde Linktree
-              </option>
-
-              <option value="epsilon">
-                epsilon — Campañas vía Epsilon
-              </option>
-
-              <option value="dv360">
-                dv360 — Display & Video 360
-              </option>
-
-              <option value="__otro__">
-                Otro — Escribir manualmente
-              </option>
+            <label for="utmSource">utm_source</label>
+            <select id="utmSource" onchange="manejarOtroSource()">
+              <option value="">Seleccionar fuente...</option>
+              <option value="masterbase">masterbase — Campañas de email</option>
+              <option value="google">google — Google Ads</option>
+              <option value="meta">meta — Facebook e Instagram Ads</option>
+              <option value="tiktok">tiktok — TikTok Ads</option>
+              <option value="youtube">youtube — Campañas de YouTube</option>
+              <option value="bing">bing — Microsoft / Bing Ads</option>
+              <option value="linkedin">linkedin — LinkedIn Ads</option>
+              <option value="spotify">spotify — Campañas en Spotify</option>
+              <option value="firebase">firebase — Notificaciones Push</option>
+              <option value="web">web — Tráfico desde sitios propios</option>
+              <option value="whatsapp">whatsapp — Campañas por WhatsApp</option>
+              <option value="sms">sms — Campañas por SMS</option>
+              <option value="ntbcd">ntbcd — Canal interno NTBCD</option>
+              <option value="folleto-fisico">folleto-fisico — Material físico / QR</option>
+              <option value="linktree">linktree — Tráfico desde Linktree</option>
+              <option value="epsilon">epsilon — Campañas vía Epsilon</option>
+              <option value="dv360">dv360 — Display & Video 360</option>
+              <option value="__otro__">Otro — Escribir manualmente</option>
             </select>
-
-            <input
-              id="utmSourceOtro"
-              class="manual-input hidden"
-              type="text"
-              placeholder="Escribe la fuente"
-              autocomplete="off"
-            >
-
-            <span class="hint">
-              Plataforma, sistema o fuente que origina el tráfico.
-            </span>
+            <input id="utmSourceOtro" class="manual-input hidden" type="text" placeholder="Escribe la fuente" autocomplete="off">
+            <span class="hint">Plataforma, sistema o fuente que origina el tráfico.</span>
           </div>
 
-
-
-          <!-- UTM MEDIUM -->
-
           <div class="field">
-
-            <label for="utmMedium">
-              utm_medium
-            </label>
-
-            <select
-              id="utmMedium"
-              onchange="manejarOtroMedium()"
-            >
-              <option value="">
-                Seleccionar medio...
-              </option>
-
-              <option value="email">
-                email — Email marketing
-              </option>
-
-              <option value="paid-cpc">
-                paid-cpc — Pago por clic
-              </option>
-
-              <option value="paid-cpa">
-                paid-cpa — Pago por adquisición
-              </option>
-
-              <option value="paid-cpm">
-                paid-cpm — Pago por mil impresiones
-              </option>
-
-              <option value="paid-cpv">
-                paid-cpv — Pago por visualización
-              </option>
-
-              <option value="paid-social">
-                paid-social — Publicidad pagada en redes sociales
-              </option>
-
-              <option value="display">
-                display — Publicidad display / banners
-              </option>
-
-              <option value="sem">
-                sem — Search Engine Marketing
-              </option>
-
-              <option value="push">
-                push — Notificaciones Push
-              </option>
-
-              <option value="organic">
-                organic — Tráfico orgánico
-              </option>
-
-              <option value="referral">
-                referral — Tráfico desde otra web
-              </option>
-
-              <option value="sms">
-                sms — Mensajería SMS
-              </option>
-
-              <option value="qr">
-                qr — Código QR
-              </option>
-
-              <option value="link">
-                link — Enlace genérico / interno
-              </option>
-
-              <option value="ntb">
-                ntb — Canal interno NTB
-              </option>
-
-              <option value="__otro__">
-                Otro — Escribir manualmente
-              </option>
+            <label for="utmMedium">utm_medium</label>
+            <select id="utmMedium" onchange="manejarOtroMedium()">
+              <option value="">Seleccionar medio...</option>
+              <option value="email">email — Email marketing</option>
+              <option value="paid-cpc">paid-cpc — Pago por clic</option>
+              <option value="paid-cpa">paid-cpa — Pago por adquisición</option>
+              <option value="paid-cpm">paid-cpm — Pago por mil impresiones</option>
+              <option value="paid-cpv">paid-cpv — Pago por visualización</option>
+              <option value="paid-social">paid-social — Publicidad pagada en redes sociales</option>
+              <option value="display">display — Publicidad display / banners</option>
+              <option value="sem">sem — Search Engine Marketing</option>
+              <option value="push">push — Notificaciones Push</option>
+              <option value="organic">organic — Tráfico orgánico</option>
+              <option value="referral">referral — Tráfico desde otra web</option>
+              <option value="sms">sms — Mensajería SMS</option>
+              <option value="qr">qr — Código QR</option>
+              <option value="link">link — Enlace genérico / interno</option>
+              <option value="ntb">ntb — Canal interno NTB</option>
+              <option value="__otro__">Otro — Escribir manualmente</option>
             </select>
-
-            <input
-              id="utmMediumOtro"
-              class="manual-input hidden"
-              type="text"
-              placeholder="Escribe el medio"
-              autocomplete="off"
-            >
-
-            <span class="hint">
-              Medio o mecanismo utilizado por la campaña.
-            </span>
+            <input id="utmMediumOtro" class="manual-input hidden" type="text" placeholder="Escribe el medio" autocomplete="off">
+            <span class="hint">Medio o mecanismo utilizado por la campaña.</span>
           </div>
-
-
-
-          <!-- UTM CAMPAIGN -->
 
           <div class="field full">
-
-            <label for="utmCampaign">
-              utm_campaign
-            </label>
-
-            <input
-              id="utmCampaign"
-              list="campaignOptions"
-              type="text"
-              placeholder="Ej. Google-Search-CuentaSueldo-Ago26"
-              autocomplete="off"
-            >
-
+            <label for="utmCampaign">utm_campaign</label>
+            <input id="utmCampaign" list="campaignOptions" type="text" placeholder="Ej. Google-Search-CuentaSueldo-Ago26" autocomplete="off">
             <datalist id="campaignOptions">
               <option value="Google-Search-">
               <option value="Google-Display-">
@@ -743,959 +500,600 @@
               <option value="Email-">
               <option value="Push-">
             </datalist>
-
-            <span class="hint">
-              Formato recomendado: Canal-TipoCampaña-Producto-Periodo.
-            </span>
+            <span class="hint">Formato recomendado: Canal-TipoCampaña-Producto-Periodo.</span>
           </div>
-
-
-
-          <!-- SOURCE FIJO -->
 
           <div class="field">
-
-            <label for="sourceInternal">
-              source
-            </label>
-
-            <input
-              id="sourceInternal"
-              type="text"
-              value="campaign"
-              readonly
-            >
-
-            <span class="hint">
-              Puerta de entrada estandarizada para campañas.
-            </span>
+            <label for="sourceInternal">source</label>
+            <input id="sourceInternal" type="text" value="campaign" readonly>
+            <span class="hint">Puerta de entrada estandarizada para campañas.</span>
           </div>
-
-
-
-          <!-- DETAIL -->
 
           <div class="field">
-
-            <label for="detail">
-              detail
-              <span style="font-weight:normal;color:#98a2b3">
-                (opcional)
-              </span>
-            </label>
-
-            <input
-              id="detail"
-              type="text"
-              placeholder="Ej. banner-seguros"
-              autocomplete="off"
-            >
-
-            <span class="hint">
-              Úsalo solo si necesitas un nivel adicional de detalle.
-            </span>
+            <label for="detail">detail <span style="font-weight:normal;color:#98a2b3">(opcional)</span></label>
+            <input id="detail" type="text" placeholder="Ej. banner-seguros" autocomplete="off">
+            <span class="hint">Úsalo solo si necesitas un nivel adicional de detalle.</span>
           </div>
-
         </div>
-
 
         <div class="campaign-source-box" style="margin-top:16px;">
-
-          <strong>
-            Puerta de entrada estandarizada: campaign
-          </strong>
-
-          <p>
-            El generador agrega automáticamente
-            <strong>source=campaign</strong>
-            tanto a la URL Web como al Deeplink App.
-          </p>
+          <strong>Puerta de entrada estandarizada: campaign</strong>
+          <p>El generador agrega automáticamente <strong>source=campaign</strong> tanto a la URL Web como al Deeplink App.</p>
         </div>
-
 
         <div class="actions">
-
-          <button
-            class="btn-primary"
-            onclick="generarLink()"
-          >
-            Generar link de campaña
-          </button>
-
-          <button
-            class="btn-secondary"
-            onclick="limpiarFormulario()"
-          >
-            Limpiar
-          </button>
-
+          <button class="btn-primary" onclick="generarLink()">Generar link de campaña</button>
+          <button class="btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
         </div>
-
       </section>
 
-
-
-      <!-- PASO 3 -->
-
       <section class="card">
+        <h2><span class="step">3</span>Link generado</h2>
+        <p class="section-description">Este es el enlace final listo para utilizar en la plataforma de campañas.</p>
 
-        <h2>
-          <span class="step">3</span>
-          Link generado
-        </h2>
-
-        <p class="section-description">
-          Este es el enlace final listo para utilizar en la plataforma
-          de campañas.
-        </p>
-
-
-        <div
-          id="emptyResult"
-          class="warning"
-        >
-          Completa los pasos anteriores y presiona
-          <strong>Generar link de campaña</strong>.
+        <div id="emptyResult" class="warning">
+          Completa los pasos anteriores y presiona <strong>Generar link de campaña</strong>.
         </div>
 
-
-        <div
-          id="resultBox"
-          class="result-box"
-        >
-
-          <div class="result-title">
-            ✓ Link generado correctamente
-          </div>
-
-
-          <div
-            id="finalUrl"
-            class="result-url"
-          ></div>
-
+        <div id="resultBox" class="result-box">
+          <div class="result-title">✓ Link generado correctamente</div>
+          <div id="finalUrl" class="result-url"></div>
 
           <div class="actions">
-
-            <button
-              class="btn-primary"
-              onclick="copiarFinal()"
-            >
-              Copiar link final
-            </button>
-
-            <button
-              class="btn-secondary"
-              onclick="abrirFinal()"
-            >
-              Probar link
-            </button>
-
+            <button class="btn-primary" onclick="copiarFinal()">Copiar link final</button>
+            <button class="btn-secondary" onclick="abrirFinal()">Probar link</button>
           </div>
-
 
           <div class="preview-grid">
-
             <div class="preview">
-
-              <div class="preview-title">
-                URL Web parametrizada
-              </div>
-
-              <div
-                id="webPreview"
-                class="preview-value"
-              ></div>
+              <div class="preview-title">URL Web parametrizada</div>
+              <div id="webPreview" class="preview-value"></div>
             </div>
-
-
             <div class="preview">
-
-              <div class="preview-title">
-                Deeplink App antes del encoding
-              </div>
-
-              <div
-                id="appPreview"
-                class="preview-value"
-              ></div>
+              <div class="preview-title">Deeplink App antes del encoding</div>
+              <div id="appPreview" class="preview-value"></div>
             </div>
-
           </div>
 
-
-           <div class="success-note">
-
-              <strong>Link listo para usar</strong><br><br>
-
-                Copia el enlace final y úsalo en tu campaña.
-
-                Para validar la apertura en la app, pruébalo desde WhatsApp,
-                email o desde la plataforma de campaña.
-
+          <div class="success-note">
+            <strong>Link listo para usar</strong><br><br>
+            Copia el enlace final y úsalo en tu campaña.
+            Para validar la apertura en la app, pruébalo desde WhatsApp,
+            email o desde la plataforma de campaña.
           </div>
-
         </div>
-
       </section>
 
-            <!-- PROBAR LINK EXISTENTE -->
-
       <section class="card">
-
-        <h2>
-          Probar link existente
-        </h2>
-
+        <h2>Probador de producto</h2>
         <p class="section-description">
-          Pega un link antiguo o un enlace ya generado para validar
-          si todavía abre correctamente.
+          Al seleccionar un producto del catálogo se cargan automáticamente
+          el link combinado, la URL Web y el Deeplink App, sin UTMs.
+          También puedes editar cualquiera de los campos manualmente.
         </p>
 
+        <div id="testProductName" class="test-product-name">
+          Selecciona un producto para comenzar.
+        </div>
 
-        <div class="field">
+        <div class="test-box">
+          <div class="field">
+            <label for="testFinalLink">Link combinado</label>
+            <input id="testFinalLink" type="text" placeholder="Se generará automáticamente..." autocomplete="off">
+            <span class="hint">Web + embeddedURL con el Deeplink App, sin parámetros de campaña.</span>
+          </div>
 
-          <label for="testExistingLink">
-            Link a probar
-          </label>
+          <div class="actions">
+            <button class="btn-primary" onclick="probarLinkExistente()">Probar link</button>
+          </div>
+        </div>
 
-          <input
-            id="testExistingLink"
-            type="text"
-            placeholder="Pega aquí el link completo..."
-            autocomplete="off"
-          >
+        <div class="form-grid" style="margin-top:14px;">
+          <div class="field">
+            <label for="testWebLink">URL Web</label>
+            <input id="testWebLink" type="text" placeholder="URL Web..." autocomplete="off">
+            <div class="actions">
+              <button class="btn-secondary" onclick="probarLinkWeb()">Probar Web</button>
+            </div>
+          </div>
 
-          <span class="hint">
-            Puedes probar links antiguos de Meta, Google, email,
-            WhatsApp u otras campañas.
-          </span>
-
+          <div class="field">
+            <label for="testAppLink">Deeplink App</label>
+            <input id="testAppLink" type="text" placeholder="scotiabankpe:///..." autocomplete="off">
+            <div class="actions">
+              <button class="btn-secondary" onclick="probarLinkApp()">Probar App</button>
+            </div>
+          </div>
         </div>
 
         <div class="actions">
-          <button
-            class="btn-primary"
-            onclick="probarLinkExistente()"
-          >
-            Probar link
-          </button>
-
-          <button
-            class="btn-primary"
-            onclick="probarLinkWeb()"
-          >
-            Probar Web
-          </button>
-
-          <button
-            class="btn-primary"
-            onclick="probarLinkApp()"
-          >
-            Probar App
-          </button>
-
-          <button
-            class="btn-secondary"
-            onclick="limpiarLinkExistente()"
-          >
-            Limpiar
-          </button>
-
+          <button class="btn-secondary" onclick="limpiarProbador()">Limpiar probador</button>
         </div>
-
       </section>
-      
+
     </main>
 
-    <!-- CATÁLOGO -->
-
     <aside class="right">
-
       <section class="card catalog-card">
-
-        <h2>
-          Catálogo de productos
-        </h2>
-
+        <h2>Catálogo de productos</h2>
         <p class="section-description">
-          Haz clic en un producto para cargar automáticamente
-          sus rutas Web y App.
+          Haz clic en un producto para cargar automáticamente sus rutas
+          en el generador y en el probador.
         </p>
 
-        <input
-          id="catalogSearch"
-          class="catalog-search"
-          type="search"
-          placeholder="Buscar producto..."
-          oninput="renderCatalog()"
-        >
-
-        <div
-          id="catalog"
-          class="catalog"
-        ></div>
-
+        <input id="catalogSearch" class="catalog-search" type="search" placeholder="Buscar producto, ruta o deeplink..." oninput="renderCatalog()">
+        <div id="catalog" class="catalog"></div>
       </section>
-
     </aside>
-
   </div>
-
 </div>
 
-
 <script>
-
-  /* ========================================================
-     CONFIGURACIÓN
-     ======================================================== */
-
   const SOURCE_CAMPAIGN = "campaign";
 
-
   const PRODUCTOS = [
-
-  {
-    id: "adelanto-de-sueldo",
-    nombre: "Adelanto de Sueldo",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/loans/salary-advance/init",
-    app: "scotiabankpe:///webView?path=/u/loans/salary-advance/init"
-  },
-
-  {
-    id: "apple-pay",
-    nombre: "Apple Pay",
-    web: "https://www.scotiabank.com.pe/apple-pay",
-    app: "scotiabankpe:///tokenization"
-  },
-
-  {
-    id: "apple-wallet",
-    nombre: "Apple Wallet",
-    web: "https://www.scotiabank.com.pe/apple-pay",
-    app: "scotiabankpe:///addCardToAppleWallet"
-  },
-
-  {
-    id: "venta-de-tarjeta",
-    nombre: "Venta de Tarjeta",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
-    app: "scotiabankpe:///webView?path=/u/campaign/VT"
-  },
-
-  {
-    id: "instant-cash-primer-desembolso",
-    nombre: "Instant Cash - Primer Desembolso",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/IC",
-    app: "scotiabankpe:///webView?path=/u/campaign/IC"
-  },
-
-  {
-    id: "instant-cash-segundo-desembolso",
-    nombre: "Instant Cash - Segundo Desembolso",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/I2",
-    app: "scotiabankpe:///webView?path=/u/campaign/I2"
-  },
-
-  {
-    id: "instant-cash-reenganche",
-    nombre: "Instant Cash - Reenganche",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/NI",
-    app: "scotiabankpe:///webView?path=/u/campaign/NI"
-  },
-
-  {
-    id: "compra-de-deuda-extra-linea",
-    nombre: "Compra de Deuda Extra Línea",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/CD",
-    app: "scotiabankpe:///webView?path=/u/campaign/CD"
-  },
-
-  {
-    id: "incremento-de-linea",
-    nombre: "Incremento de Línea",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/IL",
-    app: "scotiabankpe:///webView?path=/u/campaign/IL"
-  },
-
-  {
-    id: "tarjeta-credito-adicional",
-    nombre: "Tarjeta de Crédito Adicional",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/TA",
-    app: "scotiabankpe:///webView?path=/u/campaign/TA"
-  },
-
-  {
-    id: "biometria",
-    nombre: "Biometría",
-    web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/seguridad/biometria-app-scotiabank",
-    app: "scotiabankpe:///biometrics"
-  },
-
-  {
-    id: "borrar-compras",
-    nombre: "Borrar Compras",
-    web: "https://www.scotiabank.com.pe/Personas/beneficios/scotia-puntos/borrar-compras",
-    app: "scotiabankpe:///purchaseEraser"
-  },
-
-  {
-    id: "pasar-a-cuotas",
-    nombre: "Pasar a Cuotas",
-    web: "https://www.scotiabank.com.pe/Personas/tarjetas/beneficios/pasar-a-cuotas",
-    app: "scotiabankpe:///installment"
-  },
-
-  {
-    id: "cambiar-dolares",
-    nombre: "Cambiar Dólares",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/money-exchange",
-    app: "scotiabankpe:///exchange"
-  },
-
-  {
-    id: "cuenta-digital-kyc",
-    nombre: "Cuenta Digital - KYC",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/199",
-    app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/199"
-  },
-
-  {
-    id: "cuenta-power-kyc",
-    nombre: "Cuenta Power - KYC",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/080",
-    app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/080"
-  },
-
-  {
-    id: "cuenta-sueldo-dependiente-kyc",
-    nombre: "Cuenta Sueldo Dependiente - KYC",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/095",
-    app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/095"
-  },
-
-  {
-    id: "dashboard-inicio",
-    nombre: "Dashboard - Inicio",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
-    app: "scotiabankpe:///products"
-  },
-
-  {
-    id: "fondo-mutuo-acciones-emergentes",
-    nombre: "Fondo Mutuo Acciones Emergentes",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/14",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/14"
-  },
-
-  {
-    id: "fondo-mutuo-acciones-europa",
-    nombre: "Fondo Mutuo Acciones Europa",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/33",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/33"
-  },
-
-  {
-    id: "fondo-mutuo-acciones-us",
-    nombre: "Fondo Mutuo Acciones US",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/15",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/15"
-  },
-
-  {
-    id: "fondo-mutuo-corto-plazo-dolares",
-    nombre: "Fondo Mutuo Corto Plazo Dólares",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/B2",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/B2"
-  },
-
-  {
-    id: "fondo-mutuo-corto-plazo-soles",
-    nombre: "Fondo Mutuo Corto Plazo Soles",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/B3",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/B3"
-  },
-
-  {
-    id: "fondo-mutuo-deuda-hy",
-    nombre: "Fondo Mutuo Deuda HY",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/35",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/35"
-  },
-
-  {
-    id: "fondo-mutuo-fondo-deuda-ig",
-    nombre: "Fondo Mutuo Fondo Deuda IG",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/34",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/34"
-  },
-
-  {
-    id: "fondo-mutuo-mediano-plazo-flex-dolares",
-    nombre: "Fondo Mutuo Mediano Plazo Flex Dólares",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/D0",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/D0"
-  },
-
-  {
-    id: "fondo-mutuo-mediano-plazo-flex-soles",
-    nombre: "Fondo Mutuo Mediano Plazo Flex Soles",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/D1",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/D1"
-  },
-
-  {
-    id: "fondos-mutuos-detalle",
-    nombre: "Fondos Mutuos - Detalle",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds"
-  },
-
-  {
-    id: "scotia-fondo-fondos-deuda-global-fmiv",
-    nombre: "Scotia Fondo de Fondos Deuda Global FMIV",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/F1",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/F1"
-  },
-
-  {
-    id: "scotia-fondo-fondos-deuda-mercados-emergentes-fmiv",
-    nombre: "Scotia Fondo de Fondos Deuda Mercados Emergentes FMIV",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/F8",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/F8"
-  },
-
-  {
-    id: "scotia-fondo-fondos-estrategia-moderada-fmiv",
-    nombre: "Scotia Fondo de Fondos Estrategia Moderada FMIV",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/G1",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/G1"
-  },
-
-  {
-    id: "scotia-fondo-fondos-estrategia-crecimiento-fmiv",
-    nombre: "Scotia Fondo de Fondos Estrategia Crecimiento FMIV",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/G3",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/G3"
-  },
-
-  {
-    id: "limites",
-    nombre: "Límites",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile/limit",
-    app: "scotiabankpe:///limits"
-  },
-
-  {
-    id: "mi-cuenta",
-    nombre: "Mi Cuenta",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile",
-    app: "scotiabankpe:///userMenu"
-  },
-
-  {
-    id: "mi-funcionario",
-    nombre: "Mi Funcionario",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/personal-assistant",
-    app: "scotiabankpe:///webView?path=/u/personal-assistant"
-  },
-
-  {
-    id: "pagar-qr",
-    nombre: "Pagar QR",
-    web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/pago-qr",
-    app: "scotiabankpe:///focusQrCode"
-  },
-
-  {
-    id: "pago-de-recargas",
-    nombre: "Pago de Recargas",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-recharge",
-    app: "scotiabankpe:///mobile-recharge"
-  },
-
-  {
-    id: "pago-de-servicios",
-    nombre: "Pago de Servicios",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/payment",
-    app: "scotiabankpe:///servicesOrInstitutions"
-  },
-
-  {
-    id: "pago-de-tc",
-    nombre: "Pago de Tarjeta de Crédito",
-    web: "https://mi.scotiabank.com.pe/u/credit-card-payment",
-    app: "scotiabankpe:///wallet"
-  },
-
-  {
-    id: "para-ti",
-    nombre: "Para Ti",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/marketplace",
-    app: "scotiabankpe:///notices"
-  },
-
-  {
-    id: "plin",
-    nombre: "Plin",
-    web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/transferencias-interbancarias-plin",
-    app: "scotiabankpe:///contacts"
-  },
-
-  {
-    id: "prestamo-ld-pa-dxp",
-    nombre: "Préstamo LD / PA DXP",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/loans/personal/init",
-    app: "scotiabankpe:///webView?path=/u/loans/personal/init"
-  },
-
-  {
-    id: "quiero-un-prestamo",
-    nombre: "Quiero un Préstamo",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/request-loan/introduction",
-    app: "scotiabankpe:///webView?path=/u/request-loan/introduction"
-  },
-
-  {
-    id: "refinanciamientos-digitales",
-    nombre: "Refinanciamientos Digitales",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/collections-solutions/refinance/init",
-    app: "scotiabankpe:///webView?path=/u/collections-solutions/refinance/init"
-  },
-
-  {
-    id: "reprogramaciones-digitales-business",
-    nombre: "Reprogramaciones Digitales - Business",
-    web: "https://mi.scotiabank.com.pe/login?redirecto=/b/collections/reschedule/init",
-    app: "scotiabankpe:///webView?path=/b/collections-solutions/reschedule/init"
-  },
-
-  {
-    id: "reprogramaciones-digitales-joy",
-    nombre: "Reprogramaciones Digitales - Joy",
-    web: "https://mi.scotiabank.com.pe/login?redirecto=/u/collections/reschedule/init",
-    app: "scotiabankpe:///webView?path=/u/collections-solutions/reschedule/init"
-  },
-
-  {
-    id: "retirar-sin-tarjeta",
-    nombre: "Retirar sin Tarjeta",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-cash",
-    app: "scotiabankpe:///withdrawal"
-  },
-
-  {
-    id: "scotia-fondo-liquidez-dolares-fmiv",
-    nombre: "Scotia Fondo Liquidez Dólares FMIV",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/98",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/98"
-  },
-
-  {
-    id: "scotia-fondo-liquidez-soles-fmiv",
-    nombre: "Scotia Fondo Liquidez Soles FMIV",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/95",
-    app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/95"
-  },
-
-  {
-    id: "scotiapuntos",
-    nombre: "Scotia Puntos",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/rewards/scotia-points",
-    app: "scotiabankpe:///scotiaPointsHub"
-  },
-
-  {
-    id: "seguros-total-max-tarjeta-segura",
-    nombre: "Seguros Total Max / Tarjeta Segura",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
-    app: "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
-  },
-
-  {
-    id: "transferencias-al-exterior",
-    nombre: "Transferencias al Exterior",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/abroad",
-    app: "scotiabankpe:///webView?path=/u/transfer/abroad"
-  },
-
-  {
-    id: "transferir-a-otra-cuenta",
-    nombre: "Transferir a Otra Cuenta",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-account",
-    app: "scotiabankpe:///transfer/other-account"
-  },
-
-  {
-    id: "transferir-a-otro-banco",
-    nombre: "Transferir a Otro Banco",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-bank",
-    app: "scotiabankpe:///transfer/other-bank"
-  },
-
-  {
-    id: "transferir-entre-cuentas",
-    nombre: "Transferir entre Cuentas",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/own-account",
-    app: "scotiabankpe:///transfersOwn"
-  },
-
-  {
-    id: "activar-cuenta",
-    nombre: "Activar Cuenta",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/payroll-accounts",
-    app: "scotiabankpe:///webView?path=/u/payroll-accounts"
-  },
-
-  {
-    id: "ver-mis-productos",
-    nombre: "Ver Mis Productos",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
-    app: "scotiabankpe:///seeMyProducts"
-  },
-
-  {
-    id: "pase-a-cuotas",
-    nombre: "Pase a Cuotas",
-    web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/installment",
-    app: "scotiabankpe:///installment"
-  }
-
+    {
+      id: "adelanto-de-sueldo",
+      nombre: "Adelanto de Sueldo",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/loans/salary-advance/init",
+      app: "scotiabankpe:///webView?path=/u/loans/salary-advance/init"
+    },
+    {
+      id: "apple-pay",
+      nombre: "Apple Pay",
+      web: "https://www.scotiabank.com.pe/apple-pay",
+      app: "scotiabankpe:///tokenization"
+    },
+    {
+      id: "apple-wallet",
+      nombre: "Apple Wallet",
+      web: "https://www.scotiabank.com.pe/apple-pay",
+      app: "scotiabankpe:///addCardToAppleWallet"
+    },
+    {
+      id: "venta-de-tarjeta",
+      nombre: "Venta de Tarjeta",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/VT",
+      app: "scotiabankpe:///webView?path=/u/campaign/VT"
+    },
+    {
+      id: "instant-cash-primer-desembolso",
+      nombre: "Instant Cash - Primer Desembolso",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/IC",
+      app: "scotiabankpe:///webView?path=/u/campaign/IC"
+    },
+    {
+      id: "instant-cash-segundo-desembolso",
+      nombre: "Instant Cash - Segundo Desembolso",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/I2",
+      app: "scotiabankpe:///webView?path=/u/campaign/I2"
+    },
+    {
+      id: "instant-cash-reenganche",
+      nombre: "Instant Cash - Reenganche",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/NI",
+      app: "scotiabankpe:///webView?path=/u/campaign/NI"
+    },
+    {
+      id: "compra-de-deuda-extra-linea",
+      nombre: "Compra de Deuda Extra Línea",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/CD",
+      app: "scotiabankpe:///webView?path=/u/campaign/CD"
+    },
+    {
+      id: "incremento-de-linea",
+      nombre: "Incremento de Línea",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/IL",
+      app: "scotiabankpe:///webView?path=/u/campaign/IL"
+    },
+    {
+      id: "tarjeta-credito-adicional",
+      nombre: "Tarjeta de Crédito Adicional",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/campaign/TA",
+      app: "scotiabankpe:///webView?path=/u/campaign/TA"
+    },
+    {
+      id: "biometria",
+      nombre: "Biometría",
+      web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/seguridad/biometria-app-scotiabank",
+      app: "scotiabankpe:///biometrics"
+    },
+    {
+      id: "borrar-compras",
+      nombre: "Borrar Compras",
+      web: "https://www.scotiabank.com.pe/Personas/beneficios/scotia-puntos/borrar-compras",
+      app: "scotiabankpe:///purchaseEraser"
+    },
+    {
+      id: "pasar-a-cuotas",
+      nombre: "Pasar a Cuotas",
+      web: "https://www.scotiabank.com.pe/Personas/tarjetas/beneficios/pasar-a-cuotas",
+      app: "scotiabankpe:///installment"
+    },
+    {
+      id: "cambiar-dolares",
+      nombre: "Cambiar Dólares",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/money-exchange",
+      app: "scotiabankpe:///exchange"
+    },
+    {
+      id: "cuenta-digital-kyc",
+      nombre: "Cuenta Digital - KYC",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/199",
+      app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/199"
+    },
+    {
+      id: "cuenta-power-kyc",
+      nombre: "Cuenta Power - KYC",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/080",
+      app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/080"
+    },
+    {
+      id: "cuenta-sueldo-dependiente-kyc",
+      nombre: "Cuenta Sueldo Dependiente - KYC",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/accounts/savings/confirm/095",
+      app: "scotiabankpe:///webView?path=/u/accounts/savings/m/kyc/095"
+    },
+    {
+      id: "dashboard-inicio",
+      nombre: "Dashboard - Inicio",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
+      app: "scotiabankpe:///products"
+    },
+    {
+      id: "fondo-mutuo-acciones-emergentes",
+      nombre: "Fondo Mutuo Acciones Emergentes",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/14",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/14"
+    },
+    {
+      id: "fondo-mutuo-acciones-europa",
+      nombre: "Fondo Mutuo Acciones Europa",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/33",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/33"
+    },
+    {
+      id: "fondo-mutuo-acciones-us",
+      nombre: "Fondo Mutuo Acciones US",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/15",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/15"
+    },
+    {
+      id: "fondo-mutuo-corto-plazo-dolares",
+      nombre: "Fondo Mutuo Corto Plazo Dólares",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/B2",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/B2"
+    },
+    {
+      id: "fondo-mutuo-corto-plazo-soles",
+      nombre: "Fondo Mutuo Corto Plazo Soles",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/B3",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/B3"
+    },
+    {
+      id: "fondo-mutuo-deuda-hy",
+      nombre: "Fondo Mutuo Deuda HY",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/35",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/35"
+    },
+    {
+      id: "fondo-mutuo-fondo-deuda-ig",
+      nombre: "Fondo Mutuo Fondo Deuda IG",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/34",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/34"
+    },
+    {
+      id: "fondo-mutuo-mediano-plazo-flex-dolares",
+      nombre: "Fondo Mutuo Mediano Plazo Flex Dólares",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/D0",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/D0"
+    },
+    {
+      id: "fondo-mutuo-mediano-plazo-flex-soles",
+      nombre: "Fondo Mutuo Mediano Plazo Flex Soles",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/D1",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/D1"
+    },
+    {
+      id: "fondos-mutuos-detalle",
+      nombre: "Fondos Mutuos - Detalle",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds"
+    },
+    {
+      id: "scotia-fondo-fondos-deuda-global-fmiv",
+      nombre: "Scotia Fondo de Fondos Deuda Global FMIV",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/F1",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/F1"
+    },
+    {
+      id: "scotia-fondo-fondos-deuda-mercados-emergentes-fmiv",
+      nombre: "Scotia Fondo de Fondos Deuda Mercados Emergentes FMIV",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/F8",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/F8"
+    },
+    {
+      id: "scotia-fondo-fondos-estrategia-moderada-fmiv",
+      nombre: "Scotia Fondo de Fondos Estrategia Moderada FMIV",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/G1",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/G1"
+    },
+    {
+      id: "scotia-fondo-fondos-estrategia-crecimiento-fmiv",
+      nombre: "Scotia Fondo de Fondos Estrategia Crecimiento FMIV",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/G3",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/G3"
+    },
+    {
+      id: "limites",
+      nombre: "Límites",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile/limit",
+      app: "scotiabankpe:///limits"
+    },
+    {
+      id: "mi-cuenta",
+      nombre: "Mi Cuenta",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile",
+      app: "scotiabankpe:///userMenu"
+    },
+    {
+      id: "mi-funcionario",
+      nombre: "Mi Funcionario",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/personal-assistant",
+      app: "scotiabankpe:///webView?path=/u/personal-assistant"
+    },
+    {
+      id: "pagar-qr",
+      nombre: "Pagar QR",
+      web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/pago-qr",
+      app: "scotiabankpe:///focusQrCode"
+    },
+    {
+      id: "pago-de-recargas",
+      nombre: "Pago de Recargas",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-recharge",
+      app: "scotiabankpe:///mobile-recharge"
+    },
+    {
+      id: "pago-de-servicios",
+      nombre: "Pago de Servicios",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/payment",
+      app: "scotiabankpe:///servicesOrInstitutions"
+    },
+    {
+      id: "pago-de-tc",
+      nombre: "Pago de Tarjeta de Crédito",
+      web: "https://mi.scotiabank.com.pe/u/credit-card-payment",
+      app: "scotiabankpe:///wallet"
+    },
+    {
+      id: "para-ti",
+      nombre: "Para Ti",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/marketplace",
+      app: "scotiabankpe:///notices"
+    },
+    {
+      id: "plin",
+      nombre: "Plin",
+      web: "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/transferencias-interbancarias-plin",
+      app: "scotiabankpe:///contacts"
+    },
+    {
+      id: "prestamo-ld-pa-dxp",
+      nombre: "Préstamo LD / PA DXP",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/loans/personal/init",
+      app: "scotiabankpe:///webView?path=/u/loans/personal/init"
+    },
+    {
+      id: "quiero-un-prestamo",
+      nombre: "Quiero un Préstamo",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/request-loan/introduction",
+      app: "scotiabankpe:///webView?path=/u/request-loan/introduction"
+    },
+    {
+      id: "refinanciamientos-digitales",
+      nombre: "Refinanciamientos Digitales",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/collections-solutions/refinance/init",
+      app: "scotiabankpe:///webView?path=/u/collections-solutions/refinance/init"
+    },
+    {
+      id: "reprogramaciones-digitales-business",
+      nombre: "Reprogramaciones Digitales - Business",
+      web: "https://mi.scotiabank.com.pe/login?redirecto=/b/collections/reschedule/init",
+      app: "scotiabankpe:///webView?path=/b/collections-solutions/reschedule/init"
+    },
+    {
+      id: "reprogramaciones-digitales-joy",
+      nombre: "Reprogramaciones Digitales - Joy",
+      web: "https://mi.scotiabank.com.pe/login?redirecto=/u/collections/reschedule/init",
+      app: "scotiabankpe:///webView?path=/u/collections-solutions/reschedule/init"
+    },
+    {
+      id: "retirar-sin-tarjeta",
+      nombre: "Retirar sin Tarjeta",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-cash",
+      app: "scotiabankpe:///withdrawal"
+    },
+    {
+      id: "scotia-fondo-liquidez-dolares-fmiv",
+      nombre: "Scotia Fondo Liquidez Dólares FMIV",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/98",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/98"
+    },
+    {
+      id: "scotia-fondo-liquidez-soles-fmiv",
+      nombre: "Scotia Fondo Liquidez Soles FMIV",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/scotia-funds/acquisition/product/95",
+      app: "scotiabankpe:///webView?path=/u/scotia-funds/acquisition/product/95"
+    },
+    {
+      id: "scotiapuntos",
+      nombre: "Scotia Puntos",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/rewards/scotia-points",
+      app: "scotiabankpe:///scotiaPointsHub"
+    },
+    {
+      id: "seguros-total-max-tarjeta-segura",
+      nombre: "Seguros Total Max / Tarjeta Segura",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/insurances/acquired-insurances/catalog",
+      app: "scotiabankpe:///webView?path=/u/insurances/acquired-insurances/catalog"
+    },
+    {
+      id: "transferencias-al-exterior",
+      nombre: "Transferencias al Exterior",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/abroad",
+      app: "scotiabankpe:///webView?path=/u/transfer/abroad"
+    },
+    {
+      id: "transferir-a-otra-cuenta",
+      nombre: "Transferir a Otra Cuenta",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-account",
+      app: "scotiabankpe:///transfer/other-account"
+    },
+    {
+      id: "transferir-a-otro-banco",
+      nombre: "Transferir a Otro Banco",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-bank",
+      app: "scotiabankpe:///transfer/other-bank"
+    },
+    {
+      id: "transferir-entre-cuentas",
+      nombre: "Transferir entre Cuentas",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/own-account",
+      app: "scotiabankpe:///transfersOwn"
+    },
+    {
+      id: "activar-cuenta",
+      nombre: "Activar Cuenta",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/payroll-accounts",
+      app: "scotiabankpe:///webView?path=/u/payroll-accounts"
+    },
+    {
+      id: "ver-mis-productos",
+      nombre: "Ver Mis Productos",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
+      app: "scotiabankpe:///seeMyProducts"
+    },
+    {
+      id: "pase-a-cuotas",
+      nombre: "Pase a Cuotas",
+      web: "https://mi.scotiabank.com.pe/login?redirectTo=/u/installment",
+      app: "scotiabankpe:///installment"
+    }
   ];
-
 
   let productoSeleccionado = null;
 
-
-
-  /* ========================================================
-     INICIO
-     ======================================================== */
-
   function iniciar() {
-
-    const select =
-      document.getElementById("productSelect");
-
+    const select = document.getElementById("productSelect");
 
     PRODUCTOS.forEach(producto => {
-
-      const option =
-        document.createElement("option");
-
-      option.value =
-        producto.id;
-
-      option.textContent =
-        producto.nombre;
-
+      const option = document.createElement("option");
+      option.value = producto.id;
+      option.textContent = producto.nombre;
       select.appendChild(option);
-
     });
 
-
-    document.getElementById("sourceInternal").value =
-      SOURCE_CAMPAIGN;
-
-
+    document.getElementById("sourceInternal").value = SOURCE_CAMPAIGN;
     renderCatalog();
-
   }
-
-
-
-  /* ========================================================
-     SOURCE / MEDIUM MANUAL
-     ======================================================== */
 
   function manejarOtroSource() {
-
-    const select =
-      document.getElementById("utmSource");
-
-    const inputOtro =
-      document.getElementById("utmSourceOtro");
-
+    const select = document.getElementById("utmSource");
+    const inputOtro = document.getElementById("utmSourceOtro");
 
     if (select.value === "__otro__") {
-
       inputOtro.classList.remove("hidden");
       inputOtro.focus();
-
     } else {
-
       inputOtro.classList.add("hidden");
       inputOtro.value = "";
-
     }
-
   }
-
 
   function manejarOtroMedium() {
-
-    const select =
-      document.getElementById("utmMedium");
-
-    const inputOtro =
-      document.getElementById("utmMediumOtro");
-
+    const select = document.getElementById("utmMedium");
+    const inputOtro = document.getElementById("utmMediumOtro");
 
     if (select.value === "__otro__") {
-
       inputOtro.classList.remove("hidden");
       inputOtro.focus();
-
     } else {
-
       inputOtro.classList.add("hidden");
       inputOtro.value = "";
-
     }
-
   }
-
-
-
-  /* ========================================================
-     PRODUCTO
-     ======================================================== */
 
   function seleccionarProducto(id) {
-
-    const producto =
-      PRODUCTOS.find(
-        producto => producto.id === id
-      );
-
-
-    productoSeleccionado =
-      producto || null;
-
+    const producto = PRODUCTOS.find(producto => producto.id === id);
+    productoSeleccionado = producto || null;
 
     if (!producto) {
-
-      document.getElementById("webUrl").value =
-        "";
-
-      document.getElementById("appUrl").value =
-        "";
-
+      document.getElementById("webUrl").value = "";
+      document.getElementById("appUrl").value = "";
+      limpiarProbador();
       ocultarResultado();
-
       renderCatalog();
-
       return;
-
     }
 
+    document.getElementById("webUrl").value = producto.web;
+    document.getElementById("appUrl").value = producto.app;
 
-    document.getElementById("webUrl").value =
-      producto.web;
-
-
-    document.getElementById("appUrl").value =
-      producto.app;
-
+    cargarProbador(producto);
 
     ocultarResultado();
-
     renderCatalog();
-
   }
 
-
-
   function seleccionarDesdeCatalogo(id) {
-
-    document.getElementById("productSelect").value =
-      id;
-
-
+    document.getElementById("productSelect").value = id;
     seleccionarProducto(id);
-
 
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
-
   }
 
-
-
-  /* ========================================================
-     CATÁLOGO
-     ======================================================== */
-
   function renderCatalog() {
+    const catalog = document.getElementById("catalog");
+    const search = document
+      .getElementById("catalogSearch")
+      .value
+      .toLowerCase()
+      .trim();
 
-    const catalog =
-      document.getElementById("catalog");
+    const filtrados = PRODUCTOS.filter(producto => {
+      const texto = (
+        producto.nombre + " " +
+        producto.id + " " +
+        producto.web + " " +
+        producto.app
+      ).toLowerCase();
 
+      return texto.includes(search);
+    });
 
-    const search =
-      document
-        .getElementById("catalogSearch")
-        .value
-        .toLowerCase()
-        .trim();
-
-
-    const filtrados =
-      PRODUCTOS.filter(producto =>
-
-        producto.nombre
-          .toLowerCase()
-          .includes(search)
-
-      );
-
-
-    catalog.innerHTML =
-      "";
-
+    catalog.innerHTML = "";
 
     if (!filtrados.length) {
-
-      catalog.innerHTML =
-        '<div class="empty">No se encontraron productos.</div>';
-
+      catalog.innerHTML = '<div class="empty">No se encontraron productos.</div>';
       return;
-
     }
 
-
     filtrados.forEach(producto => {
+      const div = document.createElement("div");
+      div.className = "product";
 
-      const div =
-        document.createElement("div");
-
-
-      div.className =
-        "product";
-
-
-      if (
-        productoSeleccionado &&
-        productoSeleccionado.id === producto.id
-      ) {
-
+      if (productoSeleccionado && productoSeleccionado.id === producto.id) {
         div.classList.add("active");
-
       }
 
-
-      div.onclick =
-        () => seleccionarDesdeCatalogo(producto.id);
-
+      div.onclick = () => seleccionarDesdeCatalogo(producto.id);
 
       div.innerHTML = `
-
-        <div class="product-name">
-          ${producto.nombre}
-        </div>
+        <div class="product-name">${producto.nombre}</div>
 
         <div class="product-path">
           <strong>Web:</strong><br>
@@ -1706,385 +1104,195 @@
           <strong>App:</strong><br>
           ${producto.app || "Pendiente de configurar"}
         </div>
-
       `;
 
-
       catalog.appendChild(div);
-
     });
-
   }
-
-
-
-  /* ========================================================
-     NORMALIZACIÓN
-     ======================================================== */
 
   function limpiarValor(valor) {
-
-    return String(
-      valor ?? ""
-    ).trim();
-
+    return String(valor ?? "").trim();
   }
-
 
   function normalizarTaxonomia(valor) {
-
-    return limpiarValor(valor)
-      .toLowerCase();
-
+    return limpiarValor(valor).toLowerCase();
   }
-
-
-
-  /* ========================================================
-     VALIDACIONES
-     ======================================================== */
 
   function esUrlWebValida(url) {
-
-    return (
-      url.startsWith("https://") ||
-      url.startsWith("http://")
-    );
-
+    return url.startsWith("https://") || url.startsWith("http://");
   }
-
 
   function esDeeplinkValido(deeplink) {
-
-    return (
-      deeplink.includes("://") &&
-      !deeplink.includes(" ")
-    );
-
+    return deeplink.includes("://") && !deeplink.includes(" ");
   }
 
+  function establecerParametros(urlBase, parametros, parametrosAEliminar = []) {
+    let original = limpiarValor(urlBase);
+    let hash = "";
 
-
-  /* ========================================================
-     MANEJO DE PARÁMETROS
-     ======================================================== */
-
-  function establecerParametros(
-    urlBase,
-    parametros,
-    parametrosAEliminar = []
-  ) {
-
-    let original =
-      limpiarValor(urlBase);
-
-
-    let hash =
-      "";
-
-
-    const hashIndex =
-      original.indexOf("#");
-
+    const hashIndex = original.indexOf("#");
 
     if (hashIndex !== -1) {
-
-      hash =
-        original.substring(hashIndex);
-
-      original =
-        original.substring(0, hashIndex);
-
+      hash = original.substring(hashIndex);
+      original = original.substring(0, hashIndex);
     }
 
-
-    const queryIndex =
-      original.indexOf("?");
-
+    const queryIndex = original.indexOf("?");
 
     const base =
       queryIndex === -1
         ? original
         : original.substring(0, queryIndex);
 
-
     const queryOriginal =
       queryIndex === -1
         ? ""
         : original.substring(queryIndex + 1);
 
-
-    const pares =
-      queryOriginal
-        ? queryOriginal.split("&")
-        : [];
-
-
-    const mapa =
-      new Map();
-
+    const pares = queryOriginal ? queryOriginal.split("&") : [];
+    const mapa = new Map();
 
     pares.forEach(par => {
+      if (!par) return;
 
-      if (!par) {
-        return;
-      }
-
-
-      const index =
-        par.indexOf("=");
-
-
+      const index = par.indexOf("=");
       let key;
       let value;
 
-
       if (index === -1) {
-
         key = par;
         value = "";
-
       } else {
-
-        key =
-          par.substring(0, index);
-
-        value =
-          par.substring(index + 1);
-
+        key = par.substring(0, index);
+        value = par.substring(index + 1);
       }
-
 
       let keyNormalizada;
 
       try {
-
-        keyNormalizada =
-          decodeURIComponent(key);
-
+        keyNormalizada = decodeURIComponent(key);
       } catch {
-
-        keyNormalizada =
-          key;
-
+        keyNormalizada = key;
       }
 
-
-      mapa.set(
-        keyNormalizada,
-        {
-          keyOriginal: key,
-          valueOriginal: value
-        }
-      );
-
-    });
-
-
-    parametrosAEliminar.forEach(key => {
-
-      mapa.delete(key);
-
-    });
-
-
-    Object.entries(parametros)
-      .forEach(([key, value]) => {
-
-        const limpio =
-          limpiarValor(value);
-
-
-        if (!limpio) {
-
-          mapa.delete(key);
-
-          return;
-
-        }
-
-
-        mapa.set(
-          key,
-          {
-            keyOriginal: key,
-            valueOriginal:
-              encodeURIComponent(limpio)
-          }
-        );
-
+      mapa.set(keyNormalizada, {
+        keyOriginal: key,
+        valueOriginal: value
       });
+    });
 
+    parametrosAEliminar.forEach(key => mapa.delete(key));
 
-    const nuevaQuery =
-      Array.from(mapa.values())
-        .map(item => {
+    Object.entries(parametros).forEach(([key, value]) => {
+      const limpio = limpiarValor(value);
 
-          if (item.valueOriginal === "") {
+      if (!limpio) {
+        mapa.delete(key);
+        return;
+      }
 
-            return item.keyOriginal;
+      mapa.set(key, {
+        keyOriginal: key,
+        valueOriginal: encodeURIComponent(limpio)
+      });
+    });
 
-          }
+    const nuevaQuery = Array.from(mapa.values())
+      .map(item => {
+        if (item.valueOriginal === "") return item.keyOriginal;
+        return item.keyOriginal + "=" + item.valueOriginal;
+      })
+      .join("&");
 
-
-          return (
-            item.keyOriginal +
-            "=" +
-            item.valueOriginal
-          );
-
-        })
-        .join("&");
-
-
-    return (
-      base +
-      (
-        nuevaQuery
-          ? "?" + nuevaQuery
-          : ""
-      ) +
-      hash
-    );
-
+    return base + (nuevaQuery ? "?" + nuevaQuery : "") + hash;
   }
 
+  function construirLinkPrueba(webBase, appBase) {
+    const webLimpia = establecerParametros(webBase, {}, ["embeddedURL"]);
+    const separador = webLimpia.includes("?") ? "&" : "?";
 
+    return (
+      webLimpia +
+      separador +
+      "embeddedURL=" +
+      encodeURIComponent(appBase)
+    );
+  }
 
-  /* ========================================================
-     GENERADOR
-     ======================================================== */
+  function cargarProbador(producto) {
+    document.getElementById("testProductName").textContent =
+      "Producto seleccionado: " + producto.nombre;
+
+    document.getElementById("testWebLink").value =
+      producto.web || "";
+
+    document.getElementById("testAppLink").value =
+      producto.app || "";
+
+    if (producto.web && producto.app) {
+      document.getElementById("testFinalLink").value =
+        construirLinkPrueba(producto.web, producto.app);
+    } else {
+      document.getElementById("testFinalLink").value = "";
+    }
+  }
 
   function generarLink() {
+    const webBase = limpiarValor(document.getElementById("webUrl").value);
+    const appBase = limpiarValor(document.getElementById("appUrl").value);
 
-    const webBase =
-      limpiarValor(
-        document.getElementById("webUrl").value
-      );
+    const sourceSeleccionado = document.getElementById("utmSource").value;
+    const utmSource = normalizarTaxonomia(
+      sourceSeleccionado === "__otro__"
+        ? document.getElementById("utmSourceOtro").value
+        : sourceSeleccionado
+    );
 
+    const mediumSeleccionado = document.getElementById("utmMedium").value;
+    const utmMedium = normalizarTaxonomia(
+      mediumSeleccionado === "__otro__"
+        ? document.getElementById("utmMediumOtro").value
+        : mediumSeleccionado
+    );
 
-    const appBase =
-      limpiarValor(
-        document.getElementById("appUrl").value
-      );
-
-
-    const sourceSeleccionado =
-      document.getElementById("utmSource").value;
-
-
-    const utmSource =
-      normalizarTaxonomia(
-        sourceSeleccionado === "__otro__"
-          ? document.getElementById("utmSourceOtro").value
-          : sourceSeleccionado
-      );
-
-
-    const mediumSeleccionado =
-      document.getElementById("utmMedium").value;
-
-
-    const utmMedium =
-      normalizarTaxonomia(
-        mediumSeleccionado === "__otro__"
-          ? document.getElementById("utmMediumOtro").value
-          : mediumSeleccionado
-      );
-
-
-    const utmCampaign =
-      limpiarValor(
-        document.getElementById("utmCampaign").value
-      );
-
-
-    const detail =
-      limpiarValor(
-        document.getElementById("detail").value
-      );
-
-
+    const utmCampaign = limpiarValor(document.getElementById("utmCampaign").value);
+    const detail = limpiarValor(document.getElementById("detail").value);
 
     if (!webBase) {
-
       alert("Completa la URL Web.");
       return;
-
     }
-
 
     if (!esUrlWebValida(webBase)) {
-
-      alert(
-        "La URL Web debe comenzar con http:// o https://."
-      );
-
+      alert("La URL Web debe comenzar con http:// o https://.");
       return;
-
     }
-
 
     if (!appBase) {
-
       alert("Completa el Deeplink App.");
       return;
-
     }
-
 
     if (!esDeeplinkValido(appBase)) {
-
-      alert(
-        "El Deeplink App no parece tener un formato válido."
-      );
-
+      alert("El Deeplink App no parece tener un formato válido.");
       return;
-
     }
 
-
-    if (
-      !utmSource ||
-      !utmMedium ||
-      !utmCampaign
-    ) {
-
-      alert(
-        "Completa utm_source, utm_medium y utm_campaign."
-      );
-
+    if (!utmSource || !utmMedium || !utmCampaign) {
+      alert("Completa utm_source, utm_medium y utm_campaign.");
       return;
-
     }
-
-
 
     const parametrosCampana = {
-
-      utm_source:
-        utmSource,
-
-      utm_medium:
-        utmMedium,
-
-      utm_campaign:
-        utmCampaign,
-
-      source:
-        SOURCE_CAMPAIGN
-
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      source: SOURCE_CAMPAIGN
     };
 
-
     if (detail) {
-
-      parametrosCampana.detail =
-        detail;
-
+      parametrosCampana.detail = detail;
     }
-
-
 
     const webParametrizada =
       establecerParametros(
@@ -2093,336 +1301,143 @@
         ["embeddedURL"]
       );
 
-
     const appParametrizada =
       establecerParametros(
         appBase,
         parametrosCampana
       );
 
-
     const separador =
       webParametrizada.includes("?")
         ? "&"
         : "?";
 
-
     const finalUrl =
       webParametrizada +
       separador +
       "embeddedURL=" +
-      encodeURIComponent(
-        appParametrizada
-      );
+      encodeURIComponent(appParametrizada);
 
+    document.getElementById("finalUrl").textContent = finalUrl;
+    document.getElementById("webPreview").textContent = webParametrizada;
+    document.getElementById("appPreview").textContent = appParametrizada;
 
-
-    document.getElementById("finalUrl").textContent =
-      finalUrl;
-
-
-    document.getElementById("webPreview").textContent =
-      webParametrizada;
-
-
-    document.getElementById("appPreview").textContent =
-      appParametrizada;
-
-
-    document
-      .getElementById("resultBox")
-      .classList
-      .add("visible");
-
-
-    document
-      .getElementById("emptyResult")
-      .classList
-      .add("hidden");
-
+    document.getElementById("resultBox").classList.add("visible");
+    document.getElementById("emptyResult").classList.add("hidden");
   }
-
-
-
-  /* ========================================================
-     RESULTADO
-     ======================================================== */
 
   function ocultarResultado() {
-
-    document
-      .getElementById("resultBox")
-      .classList
-      .remove("visible");
-
-
-    document
-      .getElementById("emptyResult")
-      .classList
-      .remove("hidden");
-
+    document.getElementById("resultBox").classList.remove("visible");
+    document.getElementById("emptyResult").classList.remove("hidden");
   }
 
-
-
-  /* ========================================================
-     COPIAR
-     ======================================================== */
-
   async function copiarFinal() {
+    const link = document.getElementById("finalUrl").textContent;
 
-    const link =
-      document
-        .getElementById("finalUrl")
-        .textContent;
+    if (!link) return;
 
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Link copiado correctamente.");
+    } catch (error) {
+      const textarea = document.createElement("textarea");
+      textarea.value = link;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+      alert("Link copiado correctamente.");
+    }
+  }
+
+  function abrirFinal() {
+    const link = document.getElementById("finalUrl").textContent;
+    if (!link) return;
+    window.location.href = link;
+  }
+
+  function probarLinkExistente() {
+    const link = limpiarValor(document.getElementById("testFinalLink").value);
 
     if (!link) {
+      alert("Selecciona un producto o pega un link combinado.");
       return;
     }
 
-
-    try {
-
-      await navigator.clipboard.writeText(link);
-
-      alert(
-        "Link copiado correctamente."
-      );
-
-    } catch (error) {
-
-      const textarea =
-        document.createElement("textarea");
-
-
-      textarea.value =
-        link;
-
-
-      document.body.appendChild(textarea);
-
-      textarea.select();
-
-      document.execCommand("copy");
-
-      textarea.remove();
-
-
-      alert(
-        "Link copiado correctamente."
-      );
-
+    if (!esUrlWebValida(link)) {
+      alert("El link combinado debe comenzar con http:// o https://.");
+      return;
     }
 
+    window.location.href = link;
   }
 
+  function probarLinkWeb() {
+    const link = limpiarValor(document.getElementById("testWebLink").value);
 
+    if (!link) {
+      alert("Selecciona un producto o pega una URL Web.");
+      return;
+    }
 
-  /* ========================================================
-     PROBAR
-     ======================================================== */
+    if (!esUrlWebValida(link)) {
+      alert("La URL Web debe comenzar con http:// o https://.");
+      return;
+    }
 
-function abrirFinal() {
-
-  const link =
-    document
-      .getElementById("finalUrl")
-      .textContent;
-
-  if (!link) {
-    return;
+    window.location.href = link;
   }
 
-  window.location.href = link;
+  function probarLinkApp() {
+    const link = limpiarValor(document.getElementById("testAppLink").value);
 
-}
+    if (!link) {
+      alert("Selecciona un producto o pega un Deeplink App.");
+      return;
+    }
 
-/* ========================================================
-   PROBAR LINK EXISTENTE
-   ======================================================== */
+    if (!link.startsWith("scotiabankpe://")) {
+      alert("El Deeplink App debe comenzar con scotiabankpe:///.");
+      return;
+    }
 
-function obtenerLinkExistente() {
-
-  return document
-    .getElementById("testExistingLink")
-    .value
-    .trim();
-
-}
-
-
-/* Probar link final de campaña */
-function probarLinkExistente() {
-
-  const link =
-    obtenerLinkExistente();
-
-  if (!link) {
-
-    alert("Pega un link para probar.");
-    return;
-
+    window.location.href = link;
   }
 
-  if (
-    !link.startsWith("http://") &&
-    !link.startsWith("https://")
-  ) {
+  function limpiarProbador() {
+    document.getElementById("testProductName").textContent =
+      "Selecciona un producto para comenzar.";
 
-    alert(
-      "El link final debe comenzar con http:// o https://."
-    );
-
-    return;
-
+    document.getElementById("testFinalLink").value = "";
+    document.getElementById("testWebLink").value = "";
+    document.getElementById("testAppLink").value = "";
   }
-
-  window.location.href =
-    link;
-
-}
-
-
-/* Probar solamente la URL Web */
-function probarLinkWeb() {
-
-  const link =
-    obtenerLinkExistente();
-
-  if (!link) {
-
-    alert("Pega una URL Web para probar.");
-    return;
-
-  }
-
-  if (
-    !link.startsWith("http://") &&
-    !link.startsWith("https://")
-  ) {
-
-    alert(
-      "La URL Web debe comenzar con http:// o https://."
-    );
-
-    return;
-
-  }
-
-  window.location.href =
-    link;
-
-}
-
-
-/* Probar solamente el Deeplink App */
-function probarLinkApp() {
-
-  const link =
-    obtenerLinkExistente();
-
-  if (!link) {
-
-    alert("Pega un Deeplink App para probar.");
-    return;
-
-  }
-
-  if (
-    !link.startsWith("scotiabankpe://")
-  ) {
-
-    alert(
-      "El Deeplink App debe comenzar con scotiabankpe:///"
-    );
-
-    return;
-
-  }
-
-  window.location.href =
-    link;
-
-}
-
-
-function limpiarLinkExistente() {
-
-  document
-    .getElementById("testExistingLink")
-    .value = "";
-
-}
-  
-  /* ========================================================
-     LIMPIAR
-     ======================================================== */
 
   function limpiarFormulario() {
+    document.getElementById("productSelect").value = "";
+    document.getElementById("webUrl").value = "";
+    document.getElementById("appUrl").value = "";
 
-    document.getElementById("productSelect").value =
-      "";
+    document.getElementById("utmSource").value = "";
+    document.getElementById("utmSourceOtro").value = "";
+    document.getElementById("utmSourceOtro").classList.add("hidden");
 
-    document.getElementById("webUrl").value =
-      "";
+    document.getElementById("utmMedium").value = "";
+    document.getElementById("utmMediumOtro").value = "";
+    document.getElementById("utmMediumOtro").classList.add("hidden");
 
-    document.getElementById("appUrl").value =
-      "";
+    document.getElementById("utmCampaign").value = "";
+    document.getElementById("sourceInternal").value = SOURCE_CAMPAIGN;
+    document.getElementById("detail").value = "";
 
-    document.getElementById("utmSource").value =
-      "";
+    productoSeleccionado = null;
 
-    document.getElementById("utmSourceOtro").value =
-      "";
-
-    document
-      .getElementById("utmSourceOtro")
-      .classList
-      .add("hidden");
-
-
-    document.getElementById("utmMedium").value =
-      "";
-
-    document.getElementById("utmMediumOtro").value =
-      "";
-
-    document
-      .getElementById("utmMediumOtro")
-      .classList
-      .add("hidden");
-
-
-    document.getElementById("utmCampaign").value =
-      "";
-
-    document.getElementById("sourceInternal").value =
-      SOURCE_CAMPAIGN;
-
-    document.getElementById("detail").value =
-      "";
-
-
-    productoSeleccionado =
-      null;
-
-
+    limpiarProbador();
     ocultarResultado();
-
     renderCatalog();
-
   }
 
-
-
-  /* ========================================================
-     ARRANQUE
-     ======================================================== */
-
   iniciar();
-
 </script>
-
 </body>
 </html>

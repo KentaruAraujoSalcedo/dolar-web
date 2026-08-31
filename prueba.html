@@ -303,6 +303,35 @@
       margin-bottom: 12px;
     }
 
+    .test-console {
+      margin-top: 14px;
+      padding: 12px;
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      min-height: 48px;
+    }
+
+    .test-console strong {
+      color: #ffffff;
+    }
+
+    .test-console .ok {
+      color: #86efac;
+    }
+
+    .test-console .warn {
+      color: #fdba74;
+    }
+
+    .test-console .info {
+      color: #93c5fd;
+    }
+
     .catalog-card {
       position: sticky;
       top: 16px;
@@ -600,10 +629,23 @@
           <div class="field">
             <label for="testAppLink">Deeplink App</label>
             <input id="testAppLink" type="text" placeholder="scotiabankpe:///..." autocomplete="off">
+
+            <span class="hint">
+              El navegador puede bloquear esquemas directos como scotiabankpe://.
+              El diagnóstico de abajo ayuda a distinguir un intento de apertura
+              de un posible bloqueo del navegador.
+            </span>
+
             <div class="actions">
               <button class="btn-secondary" onclick="probarLinkApp()">Probar App</button>
+              <button class="btn-secondary" onclick="copiarDeeplinkApp()">Copiar Deeplink App</button>
             </div>
           </div>
+        </div>
+
+        <div id="testConsole" class="test-console">
+          <strong>Diagnóstico del Deeplink App</strong><br>
+          Selecciona un producto y presiona <strong>Probar App</strong>.
         </div>
 
         <div class="actions">
@@ -1235,6 +1277,10 @@
     } else {
       document.getElementById("testFinalLink").value = "";
     }
+
+    document.getElementById("testConsole").innerHTML =
+      "<strong>Diagnóstico del Deeplink App</strong><br>" +
+      "Deeplink cargado. Presiona <strong>Probar App</strong> para ejecutar la prueba.";
   }
 
   function generarLink() {
@@ -1390,6 +1436,7 @@
 
   function probarLinkApp() {
     const link = limpiarValor(document.getElementById("testAppLink").value);
+    const consola = document.getElementById("testConsole");
 
     if (!link) {
       alert("Selecciona un producto o pega un Deeplink App.");
@@ -1401,7 +1448,98 @@
       return;
     }
 
-    window.location.href = link;
+    let paginaOculta = false;
+    let cambioDetectado = false;
+
+    consola.innerHTML = `
+      <strong>Diagnóstico del Deeplink App</strong><br><br>
+      <span class="info">Intentando abrir:</span><br>
+      ${link}<br><br>
+      <span class="info">Estado:</span> solicitud enviada al navegador...
+    `;
+
+    console.log("[DEEPLINK TEST] Intentando abrir:", link);
+
+    const detectarCambio = () => {
+      if (document.hidden && !cambioDetectado) {
+        paginaOculta = true;
+        cambioDetectado = true;
+
+        consola.innerHTML += `
+          <br><br>
+          <span class="ok">
+            ✓ La página pasó a segundo plano.
+            Esto es compatible con que el sistema haya abierto la app
+            o mostrado un selector externo.
+          </span>
+        `;
+
+        console.log("[DEEPLINK TEST] La página pasó a segundo plano.");
+      }
+    };
+
+    document.addEventListener("visibilitychange", detectarCambio);
+
+    try {
+      window.location.href = link;
+    } catch (error) {
+      consola.innerHTML += `
+        <br><br>
+        <span class="warn">
+          ⚠ JavaScript reportó un error al intentar abrir el Deeplink:
+          ${error.message}
+        </span>
+      `;
+
+      console.error("[DEEPLINK TEST] Error:", error);
+    }
+
+    setTimeout(() => {
+      document.removeEventListener("visibilitychange", detectarCambio);
+
+      if (!paginaOculta) {
+        consola.innerHTML += `
+          <br><br>
+          <span class="warn">
+            ⚠ La página siguió visible.
+            Chrome puede haber ignorado o bloqueado el esquema directo.
+            Esto NO demuestra que el Deeplink esté mal construido.
+          </span>
+          <br><br>
+          <span class="info">
+            Para validar el Deeplink funcionalmente, cópialo y pruébalo
+            desde WhatsApp, email o el entorno real de Meta.
+          </span>
+        `;
+
+        console.warn(
+          "[DEEPLINK TEST] La página siguió visible. " +
+          "El navegador puede haber bloqueado o ignorado el esquema."
+        );
+      }
+    }, 1800);
+  }
+
+  async function copiarDeeplinkApp() {
+    const link = limpiarValor(document.getElementById("testAppLink").value);
+
+    if (!link) {
+      alert("No hay Deeplink App para copiar.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Deeplink App copiado correctamente.");
+    } catch (error) {
+      const textarea = document.createElement("textarea");
+      textarea.value = link;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+      alert("Deeplink App copiado correctamente.");
+    }
   }
 
   function limpiarProbador() {
@@ -1411,6 +1549,10 @@
     document.getElementById("testFinalLink").value = "";
     document.getElementById("testWebLink").value = "";
     document.getElementById("testAppLink").value = "";
+
+    document.getElementById("testConsole").innerHTML =
+      "<strong>Diagnóstico del Deeplink App</strong><br>" +
+      "Selecciona un producto y presiona <strong>Probar App</strong>.";
   }
 
   function limpiarFormulario() {

@@ -409,6 +409,58 @@
     .checkbox-row input { width: auto; margin-top: 2px; }
     .checkbox-row label { margin: 0; font-weight: normal; line-height: 1.4; }
 
+    .subtype-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .subtype-option {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .subtype-option input { width: auto; margin-right: 6px; }
+    .subtype-option strong { font-size: 12px; }
+
+    .subtype-option span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    .mode-note {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-radius: 9px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .mode-note.verified {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .mode-note.experimental {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid #fed7aa;
+    }
+
+    .mini-code {
+      font-family: Consolas, monospace;
+      font-size: 10px;
+      overflow-wrap: anywhere;
+    }
+
     .catalog-card {
       position: sticky;
       top: 16px;
@@ -501,7 +553,7 @@
 
     @media (max-width: 650px) {
       .page { padding: 10px; }
-      .form-grid, .preview-grid, .type-grid { grid-template-columns: 1fr; }
+      .form-grid, .preview-grid, .type-grid, .subtype-grid { grid-template-columns: 1fr; }
       .field.full { grid-column: auto; }
       .card { padding: 15px; }
     }
@@ -524,7 +576,7 @@
       <section class="card">
         <h2><span class="step">1</span>Destino del producto</h2>
         <p class="section-description">
-          Selecciona un producto existente o genera las rutas desde cero. En WebView una misma ruta construye el destino Web y App. En Nativo eliges una funcionalidad de la App y defines por separado el destino Web que se usará como fallback.
+          Selecciona un producto existente o genera las rutas desde cero. En WebView una misma ruta construye el destino Web y App. En Nativo eliges la funcionalidad de la App y luego defines cómo será el destino Web: una ruta interna que pasa por <strong>/login</strong> o una landing/URL directa que requerirá validar la apertura de App con GTM.
         </p>
 
         <div class="form-grid">
@@ -550,7 +602,7 @@
             </label>
             <label class="type-option">
               <div><input type="radio" name="destinationType" value="native" onchange="cambiarTipoDestino()"><strong>Nativo</strong></div>
-              <span>Funcionalidad nativa de App + destino Web independiente.</span>
+              <span>Funcionalidad nativa de App + fallback Web vía /login o landing directa.</span>
             </label>
           </div>
 
@@ -579,41 +631,75 @@
           </div>
 
           <div id="nativePanel" class="hidden">
-            <div class="form-grid">
+            <div class="field">
+              <label for="nativeAppDestination">Destino App nativo</label>
+              <select id="nativeAppDestination" onchange="previsualizarRutasGeneradas()">
+                <option value="">Seleccionar funcionalidad nativa...</option>
+              </select>
+              <span class="hint">
+                Selecciona la funcionalidad de la App. El generador construye automáticamente
+                <strong>scotiabankpe:///...</strong>.
+              </span>
+            </div>
+
+            <div class="subtype-grid">
+              <label class="subtype-option">
+                <div>
+                  <input type="radio" name="nativeWebMode" value="login" checked onchange="cambiarModoWebNativo()">
+                  <strong>Ruta interna vía /login</strong>
+                </div>
+                <span>
+                  Para rutas como /u/payment. Usa mi.scotiabank.com.pe/login y es el mecanismo
+                  que ya comprobamos que procesa embeddedURL.
+                </span>
+              </label>
+
+              <label class="subtype-option">
+                <div>
+                  <input type="radio" name="nativeWebMode" value="landing" onchange="cambiarModoWebNativo()">
+                  <strong>Landing / URL directa</strong>
+                </div>
+                <span>
+                  Para páginas de www.scotiabank.com.pe, openmarket u otras URLs HTTPS.
+                  La URL se genera, pero la apertura de App debe validarse con GTM.
+                </span>
+              </label>
+            </div>
+
+            <div id="nativeLoginPanel">
               <div class="field">
-                <label for="nativeAppDestination">Destino App nativo</label>
-                <select id="nativeAppDestination" onchange="previsualizarRutasGeneradas()">
-                  <option value="">Seleccionar funcionalidad nativa...</option>
-                </select>
+                <label for="nativeLoginPath">Ruta Web interna de fallback</label>
+                <input id="nativeLoginPath" type="text" placeholder="/u/payment" autocomplete="off" oninput="previsualizarRutasGeneradas()">
                 <span class="hint">
-                  Selecciona la funcionalidad de la App. La lista se carga desde <strong>links.json</strong>
-                  y el generador construye automáticamente <strong>scotiabankpe:///...</strong>.
+                  Ejemplo: <strong>/u/payment</strong>. Se construirá
+                  <strong>https://mi.scotiabank.com.pe/login?redirectTo=/u/payment</strong>.
                 </span>
               </div>
 
-              <div class="field">
-                <label for="nativeWebRoute">Destino Web si no abre App</label>
-                <input
-                  id="nativeWebRoute"
-                  type="text"
-                  placeholder="https://www.scotiabank.com.pe/..."
-                  autocomplete="off"
-                  oninput="previsualizarRutasGeneradas()"
-                >
-                <span class="hint">
-                  Puede ser una landing pública, una URL WebView o cualquier URL web válida.
-                  También puedes ingresar una ruta como <strong>/u/payment</strong> y el generador
-                  la convertirá en una URL de mi.scotiabank.com.pe.
-                </span>
+              <div class="mode-note verified">
+                <strong>Modo actualmente validado</strong><br>
+                El wrapper <span class="mini-code">/login?redirectTo=...</span> sí ha demostrado
+                procesar <span class="mini-code">embeddedURL</span> y abrir la App en las pruebas.
               </div>
             </div>
 
-            <div class="campaign-source-box" style="margin-top:14px;">
-              <strong>¿Cómo funciona el destino Nativo?</strong>
-              <p>
-                Si la experiencia abre la App, se usa la funcionalidad nativa seleccionada.
-                Si no abre App, se utiliza el destino Web definido como fallback.
-              </p>
+            <div id="nativeLandingPanel" class="hidden">
+              <div class="field">
+                <label for="nativeLandingUrl">Landing / URL Web de fallback</label>
+                <input id="nativeLandingUrl" type="text" placeholder="https://www.scotiabank.com.pe/Personas/Ahorros/Cuentas-Bancarias/cuenta-meta" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+                <span class="hint">
+                  Ingresa una URL HTTPS completa. Puede ser de <strong>www.scotiabank.com.pe</strong>,
+                  <strong>mi.scotiabank.com.pe</strong> u otro destino Web autorizado.
+                </span>
+              </div>
+
+              <div class="mode-note experimental">
+                <strong>Requiere validación con GTM</strong><br>
+                Una landing directa no abre la App solo por recibir <span class="mini-code">embeddedURL</span>.
+                Este modo genera correctamente la URL y el deeplink, pero para intentar abrir la App
+                tendremos que implementar/probar la lectura de <span class="mini-code">embeddedURL</span>
+                en GTM sobre esas páginas.
+              </div>
             </div>
           </div>
 
@@ -766,6 +852,8 @@
             <button class="btn-secondary" onclick="abrirFinal()">Probar link</button>
           </div>
 
+          <div id="generationModeNote" class="mode-note hidden"></div>
+
           <div class="preview-grid">
             <div class="preview">
               <div class="preview-title">Destino Web parametrizado</div>
@@ -907,6 +995,24 @@
     previsualizarRutasGeneradas();
   }
 
+  function getModoWebNativo() {
+    const seleccionado = document.querySelector('input[name="nativeWebMode"]:checked');
+    return seleccionado ? seleccionado.value : "login";
+  }
+
+  function setModoWebNativo(modo) {
+    const radio = document.querySelector(`input[name="nativeWebMode"][value="${modo}"]`);
+    if (radio) radio.checked = true;
+    cambiarModoWebNativo();
+  }
+
+  function cambiarModoWebNativo() {
+    const modo = getModoWebNativo();
+    document.getElementById("nativeLoginPanel").classList.toggle("hidden", modo !== "login");
+    document.getElementById("nativeLandingPanel").classList.toggle("hidden", modo !== "landing");
+    previsualizarRutasGeneradas();
+  }
+
   function manejarRutasDiferentes() {
     const checked = document.getElementById("differentRoutes").checked;
     document.getElementById("sameRouteBlock").classList.toggle("hidden", checked);
@@ -959,11 +1065,14 @@
     return app.startsWith(APP_WEBVIEW_BASE) ? "webview" : "native";
   }
 
-  function normalizarWebNativa(valor) {
-    const limpia = limpiarValor(valor);
-    if (!limpia) return "";
-    if (esUrlWebValida(limpia)) return limpia;
-    return WEB_LOGIN_BASE + normalizarRuta(limpia);
+  function construirWebNativaLogin(ruta) {
+    const limpia = normalizarRuta(ruta);
+    return limpia ? WEB_LOGIN_BASE + limpia : "";
+  }
+
+  function construirWebNativaLanding(url) {
+    const limpia = limpiarValor(url);
+    return esUrlWebValida(limpia) ? limpia : "";
   }
 
   function normalizarDestinoAppNativo(valor) {
@@ -989,8 +1098,10 @@
     document.getElementById("webviewAppPath").value = "";
     document.getElementById("differentRoutes").checked = false;
 
-    document.getElementById("nativeWebRoute").value = "";
+    document.getElementById("nativeLoginPath").value = "";
+    document.getElementById("nativeLandingUrl").value = "";
     document.getElementById("nativeAppDestination").value = "";
+    setModoWebNativo("login");
 
     document.getElementById("sameRouteBlock").classList.remove("hidden");
     document.getElementById("differentRoutesBlock").classList.add("hidden");
@@ -1057,23 +1168,33 @@
         document.getElementById("webviewPath").value = rutaApp || rutaWeb || "";
       }
     } else {
-      document.getElementById("nativeWebRoute").value = producto.web || "";
+      const webProducto = limpiarValor(producto.web || "");
+      const rutaLogin =
+        extraerParametro(webProducto, "redirectTo") ||
+        extraerParametro(webProducto, "redirecto");
+
+      if (webProducto.startsWith("https://mi.scotiabank.com.pe/login") && rutaLogin) {
+        setModoWebNativo("login");
+        document.getElementById("nativeLoginPath").value = rutaLogin;
+        document.getElementById("nativeLandingUrl").value = "";
+      } else {
+        setModoWebNativo("landing");
+        document.getElementById("nativeLandingUrl").value = webProducto;
+        document.getElementById("nativeLoginPath").value = "";
+      }
 
       const appBase = extraerBaseDeeplinkNativo(producto.app || "");
       const normalizedPath = appBase ? "/" + appBase.replace(/^\/+/, "") : "";
       const select = document.getElementById("nativeAppDestination");
 
       if (normalizedPath) {
-        const existe = Array.from(select.options)
-          .some(option => option.value === normalizedPath);
-
+        const existe = Array.from(select.options).some(option => option.value === normalizedPath);
         if (!existe) {
           const option = document.createElement("option");
           option.value = normalizedPath;
           option.textContent = normalizedPath + " — valor del catálogo";
           select.appendChild(option);
         }
-
         select.value = normalizedPath;
       }
     }
@@ -1106,32 +1227,49 @@
       };
     }
 
-    const web = normalizarWebNativa(
-      document.getElementById("nativeWebRoute").value
-    );
+    const modoWeb = getModoWebNativo();
+
+    const web =
+      modoWeb === "login"
+        ? construirWebNativaLogin(document.getElementById("nativeLoginPath").value)
+        : construirWebNativaLanding(document.getElementById("nativeLandingUrl").value);
 
     const app = normalizarDestinoAppNativo(
       document.getElementById("nativeAppDestination").value
     );
 
-    return { tipo, web, app };
+    return { tipo, modoWeb, web, app };
   }
 
   function previsualizarRutasGeneradas() {
     const rutas = obtenerRutasDesdeConstructor();
     const nombre = rutas.tipo === "webview" ? "WebView" : "Nativo";
 
+    let detalleModo = "";
+
+    if (rutas.tipo === "native") {
+      detalleModo =
+        rutas.modoWeb === "login"
+          ? "<br><br><strong>Modo Web:</strong> Ruta interna vía /login (validado)"
+          : "<br><br><strong>Modo Web:</strong> Landing / URL directa (requiere prueba GTM)";
+    }
+
     document.getElementById("routePreviewBox").innerHTML =
       `<strong>Vista previa — ${nombre}</strong><br><br>` +
       `<strong>Web:</strong><br>${rutas.web || "Pendiente"}<br><br>` +
-      `<strong>App:</strong><br>${rutas.app || "Pendiente"}`;
+      `<strong>App:</strong><br>${rutas.app || "Pendiente"}` +
+      detalleModo;
   }
 
   function generarRutasDestino() {
     const rutas = obtenerRutasDesdeConstructor();
 
     if (!rutas.web) {
-      alert("Completa el destino Web si no abre App.");
+      if (rutas.tipo === "native" && rutas.modoWeb === "landing") {
+        alert("Completa una URL HTTPS para la landing / fallback.");
+      } else {
+        alert("Completa la ruta Web de fallback.");
+      }
       return;
     }
 
@@ -1247,6 +1385,7 @@
   async function iniciar() {
     document.getElementById("sourceInternal").value = SOURCE_CAMPAIGN;
     cambiarTipoDestino();
+    cambiarModoWebNativo();
     renderCatalog();
     await cargarConfiguracion();
   }
@@ -1580,6 +1719,26 @@
     document.getElementById("webPreview").textContent = webParametrizada;
     document.getElementById("appPreview").textContent = appParametrizada;
 
+    const modeNote = document.getElementById("generationModeNote");
+    const rutasActuales = obtenerRutasDesdeConstructor();
+
+    if (rutasActuales.tipo === "native" && rutasActuales.modoWeb === "landing") {
+      modeNote.className = "mode-note experimental";
+      modeNote.innerHTML =
+        "<strong>Landing directa / modo de prueba</strong><br>" +
+        "El link fue generado con embeddedURL, pero esta landing no necesariamente abrirá la App por sí sola. " +
+        "La siguiente etapa es probar en GTM la lectura de embeddedURL y el intento de apertura del deeplink.";
+    } else if (rutasActuales.tipo === "native" && rutasActuales.modoWeb === "login") {
+      modeNote.className = "mode-note verified";
+      modeNote.innerHTML =
+        "<strong>Wrapper /login</strong><br>" +
+        "Este modo usa la estructura que ya comprobamos que procesa embeddedURL.";
+    } else {
+      modeNote.className = "mode-note verified";
+      modeNote.innerHTML =
+        "<strong>WebView</strong><br>" +
+        "Se usa /login como wrapper y webView?path=... como Deeplink App.";
+    }
 
     document.getElementById("resultBox").classList.add("visible");
     document.getElementById("emptyResult").classList.add("hidden");
@@ -1589,6 +1748,11 @@
     document.getElementById("resultBox").classList.remove("visible");
     document.getElementById("emptyResult").classList.remove("hidden");
 
+    const modeNote = document.getElementById("generationModeNote");
+    if (modeNote) {
+      modeNote.className = "mode-note hidden";
+      modeNote.innerHTML = "";
+    }
   }
 
   async function copiarFinal() {

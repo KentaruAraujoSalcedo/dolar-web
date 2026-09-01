@@ -355,6 +355,60 @@
       color: #93c5fd;
     }
 
+    .builder-box {
+      margin-top: 14px;
+      padding: 14px;
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+    }
+
+    .builder-title {
+      color: #6d28d9;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .type-option {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .type-option input { width: auto; margin-right: 6px; }
+    .type-option strong { font-size: 12px; }
+    .type-option span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .checkbox-row input { width: auto; margin-top: 2px; }
+    .checkbox-row label { margin: 0; font-weight: normal; line-height: 1.4; }
+
     .catalog-card {
       position: sticky;
       top: 16px;
@@ -419,7 +473,7 @@
 
     @media (max-width: 650px) {
       .page { padding: 10px; }
-      .form-grid, .preview-grid { grid-template-columns: 1fr; }
+      .form-grid, .preview-grid, .type-grid { grid-template-columns: 1fr; }
       .field.full { grid-column: auto; }
       .card { padding: 15px; }
     }
@@ -442,32 +496,111 @@
     <main class="left">
 
       <section class="card">
-        <h2><span class="step">1</span>Selecciona el producto</h2>
+        <h2><span class="step">1</span>Destino del producto</h2>
         <p class="section-description">
-          Selecciona un producto del catálogo. Las rutas Web y App se
-          completarán automáticamente. El probador también se cargará
-          automáticamente sin UTMs.
+          Selecciona un producto del catálogo o genera nuevas rutas Web y App.
+          Para WebView normalmente basta con ingresar una sola ruta.
         </p>
 
         <div class="form-grid">
           <div class="field full">
-            <label for="productSelect">Producto</label>
+            <label for="productSelect">Producto del catálogo</label>
             <select id="productSelect" onchange="seleccionarProducto(this.value)">
-              <option value="">Seleccionar producto...</option>
+              <option value="">Nuevo destino / seleccionar producto...</option>
             </select>
+            <span class="hint">Al elegir un producto, el tipo de destino y las rutas se detectan automáticamente.</span>
+          </div>
+        </div>
+
+        <div class="builder-box">
+          <div class="builder-title">Generador de rutas Web / App</div>
+
+          <div class="type-grid">
+            <label class="type-option">
+              <div><input type="radio" name="destinationType" value="webview" checked onchange="cambiarTipoDestino()"><strong>WebView</strong></div>
+              <span>Una ruta genera automáticamente Web + App.</span>
+            </label>
+            <label class="type-option">
+              <div><input type="radio" name="destinationType" value="landing" onchange="cambiarTipoDestino()"><strong>Landing</strong></div>
+              <span>URL Web completa y Deeplink App opcional/manual.</span>
+            </label>
+            <label class="type-option">
+              <div><input type="radio" name="destinationType" value="native" onchange="cambiarTipoDestino()"><strong>Nativo</strong></div>
+              <span>Deeplink App nativo y URL Web/fallback manual.</span>
+            </label>
           </div>
 
+          <div id="webviewPanel">
+            <div id="sameRouteBlock" class="field">
+              <label for="webviewPath">Ruta WebView</label>
+              <input id="webviewPath" type="text" placeholder="/u/insurances/acquired-insurances/catalog" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              <span class="hint">Ejemplo: /u/insurances/acquired-insurances/catalog</span>
+            </div>
+
+            <div class="checkbox-row">
+              <input id="differentRoutes" type="checkbox" onchange="manejarRutasDiferentes()">
+              <label for="differentRoutes"><strong>La ruta Web y App son diferentes</strong><br>Úsalo solo para excepciones reales.</label>
+            </div>
+
+            <div id="differentRoutesBlock" class="form-grid hidden" style="margin-top:14px;">
+              <div class="field">
+                <label for="webviewWebPath">Ruta Web</label>
+                <input id="webviewWebPath" type="text" placeholder="/u/accounts/savings/confirm/199" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              </div>
+              <div class="field">
+                <label for="webviewAppPath">Ruta App</label>
+                <input id="webviewAppPath" type="text" placeholder="/u/accounts/savings/m/kyc/199" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              </div>
+            </div>
+          </div>
+
+          <div id="landingPanel" class="hidden">
+            <div class="form-grid">
+              <div class="field">
+                <label for="landingWebUrl">URL Landing</label>
+                <input id="landingWebUrl" type="text" placeholder="https://www.scotiabank.com.pe/..." autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              </div>
+              <div class="field">
+                <label for="landingAppUrl">Deeplink App <span style="font-weight:normal;color:#98a2b3">(opcional)</span></label>
+                <input id="landingAppUrl" type="text" placeholder="scotiabankpe:///..." autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              </div>
+            </div>
+          </div>
+
+          <div id="nativePanel" class="hidden">
+            <div class="form-grid">
+              <div class="field">
+                <label for="nativeAppUrl">Deeplink App nativo</label>
+                <input id="nativeAppUrl" type="text" placeholder="scotiabankpe:///wallet" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              </div>
+              <div class="field">
+                <label for="nativeWebUrl">URL Web / fallback</label>
+                <input id="nativeWebUrl" type="text" placeholder="https://mi.scotiabank.com.pe/..." autocomplete="off" oninput="previsualizarRutasGeneradas()">
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" onclick="generarRutasDestino()">Generar rutas Web y App</button>
+            <button class="btn-secondary" onclick="limpiarConstructor()">Limpiar generador de rutas</button>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-top:14px;">
           <div class="field">
-            <label for="webUrl">URL Web</label>
+            <label for="webUrl">URL Web resultante</label>
             <input id="webUrl" type="text" placeholder="https://mi.scotiabank.com.pe/...">
-            <span class="hint">URL utilizada como destino Web o fallback.</span>
+            <span class="hint">Se completa desde el catálogo o el generador. También puedes editarla manualmente.</span>
           </div>
-
           <div class="field">
-            <label for="appUrl">Deeplink App</label>
+            <label for="appUrl">Deeplink App resultante</label>
             <input id="appUrl" type="text" placeholder="scotiabankpe:///...">
-            <span class="hint">Ruta utilizada para abrir la experiencia dentro de la app.</span>
+            <span class="hint">Se completa desde el catálogo o el generador. También puedes editarlo manualmente.</span>
           </div>
+        </div>
+
+        <div id="routePreviewBox" class="success-note">
+          <strong>Vista previa</strong><br><br>Elige un tipo de destino y completa sus datos.
         </div>
       </section>
 
@@ -711,6 +844,8 @@
 
 <script>
   const SOURCE_CAMPAIGN = "campaign";
+  const WEB_LOGIN_BASE = "https://mi.scotiabank.com.pe/login?redirectTo=";
+  const APP_WEBVIEW_BASE = "scotiabankpe:///webView?path=";
 
   const PRODUCTOS = [
     {
@@ -1065,6 +1200,176 @@
 
   let productoSeleccionado = null;
 
+  function getTipoDestino() {
+    return document.querySelector('input[name="destinationType"]:checked').value;
+  }
+
+  function setTipoDestino(tipo) {
+    const radio = document.querySelector(`input[name="destinationType"][value="${tipo}"]`);
+    if (radio) {
+      radio.checked = true;
+      cambiarTipoDestino();
+    }
+  }
+
+  function cambiarTipoDestino() {
+    const tipo = getTipoDestino();
+    document.getElementById("webviewPanel").classList.toggle("hidden", tipo !== "webview");
+    document.getElementById("landingPanel").classList.toggle("hidden", tipo !== "landing");
+    document.getElementById("nativePanel").classList.toggle("hidden", tipo !== "native");
+    previsualizarRutasGeneradas();
+  }
+
+  function manejarRutasDiferentes() {
+    const checked = document.getElementById("differentRoutes").checked;
+    document.getElementById("sameRouteBlock").classList.toggle("hidden", checked);
+    document.getElementById("differentRoutesBlock").classList.toggle("hidden", !checked);
+
+    if (checked) {
+      const comun = limpiarValor(document.getElementById("webviewPath").value);
+      if (comun) {
+        if (!document.getElementById("webviewWebPath").value) document.getElementById("webviewWebPath").value = comun;
+        if (!document.getElementById("webviewAppPath").value) document.getElementById("webviewAppPath").value = comun;
+      }
+    }
+    previsualizarRutasGeneradas();
+  }
+
+  function normalizarRuta(ruta) {
+    const limpia = limpiarValor(ruta);
+    if (!limpia) return "";
+    return limpia.startsWith("/") ? limpia : "/" + limpia;
+  }
+
+  function extraerParametro(url, nombre) {
+    const limpia = limpiarValor(url);
+    const q = limpia.indexOf("?");
+    if (q === -1) return "";
+    for (const par of limpia.substring(q + 1).split("&")) {
+      const eq = par.indexOf("=");
+      if (eq === -1) continue;
+      const key = par.substring(0, eq);
+      const value = par.substring(eq + 1);
+      if (key === nombre) {
+        try { return decodeURIComponent(value); } catch { return value; }
+      }
+    }
+    return "";
+  }
+
+  function extraerPathWebViewApp(appUrl) {
+    if (!appUrl.startsWith(APP_WEBVIEW_BASE)) return "";
+    const resto = appUrl.substring(APP_WEBVIEW_BASE.length);
+    const amp = resto.indexOf("&");
+    return amp === -1 ? resto : resto.substring(0, amp);
+  }
+
+  function detectarTipoProducto(producto) {
+    const web = limpiarValor(producto.web);
+    const app = limpiarValor(producto.app);
+    if (app.startsWith(APP_WEBVIEW_BASE)) return "webview";
+    if (web.startsWith("https://www.scotiabank.com.pe/")) return "landing";
+    return "native";
+  }
+
+  function limpiarCamposConstructor(resetTipo = true) {
+    document.getElementById("webviewPath").value = "";
+    document.getElementById("webviewWebPath").value = "";
+    document.getElementById("webviewAppPath").value = "";
+    document.getElementById("differentRoutes").checked = false;
+    document.getElementById("landingWebUrl").value = "";
+    document.getElementById("landingAppUrl").value = "";
+    document.getElementById("nativeAppUrl").value = "";
+    document.getElementById("nativeWebUrl").value = "";
+    document.getElementById("sameRouteBlock").classList.remove("hidden");
+    document.getElementById("differentRoutesBlock").classList.add("hidden");
+    if (resetTipo) setTipoDestino("webview");
+    previsualizarRutasGeneradas();
+  }
+
+  function cargarConstructorDesdeProducto(producto) {
+    limpiarCamposConstructor(false);
+    const tipo = detectarTipoProducto(producto);
+    setTipoDestino(tipo);
+
+    if (tipo === "webview") {
+      const rutaApp = extraerPathWebViewApp(producto.app);
+      const rutaWeb = extraerParametro(producto.web, "redirectTo") || extraerParametro(producto.web, "redirecto");
+      if (rutaWeb && rutaApp && rutaWeb !== rutaApp) {
+        document.getElementById("differentRoutes").checked = true;
+        manejarRutasDiferentes();
+        document.getElementById("webviewWebPath").value = rutaWeb;
+        document.getElementById("webviewAppPath").value = rutaApp;
+      } else {
+        document.getElementById("differentRoutes").checked = false;
+        manejarRutasDiferentes();
+        document.getElementById("webviewPath").value = rutaApp || rutaWeb || "";
+      }
+    } else if (tipo === "landing") {
+      document.getElementById("landingWebUrl").value = producto.web || "";
+      document.getElementById("landingAppUrl").value = producto.app || "";
+    } else {
+      document.getElementById("nativeAppUrl").value = producto.app || "";
+      document.getElementById("nativeWebUrl").value = producto.web || "";
+    }
+    previsualizarRutasGeneradas();
+  }
+
+  function obtenerRutasDesdeConstructor() {
+    const tipo = getTipoDestino();
+    if (tipo === "webview") {
+      const diferentes = document.getElementById("differentRoutes").checked;
+      let rutaWeb = "";
+      let rutaApp = "";
+      if (diferentes) {
+        rutaWeb = normalizarRuta(document.getElementById("webviewWebPath").value);
+        rutaApp = normalizarRuta(document.getElementById("webviewAppPath").value);
+      } else {
+        const ruta = normalizarRuta(document.getElementById("webviewPath").value);
+        rutaWeb = ruta;
+        rutaApp = ruta;
+      }
+      return { tipo, web: rutaWeb ? WEB_LOGIN_BASE + rutaWeb : "", app: rutaApp ? APP_WEBVIEW_BASE + rutaApp : "" };
+    }
+    if (tipo === "landing") {
+      return { tipo, web: limpiarValor(document.getElementById("landingWebUrl").value), app: limpiarValor(document.getElementById("landingAppUrl").value) };
+    }
+    return { tipo, web: limpiarValor(document.getElementById("nativeWebUrl").value), app: limpiarValor(document.getElementById("nativeAppUrl").value) };
+  }
+
+  function previsualizarRutasGeneradas() {
+    const rutas = obtenerRutasDesdeConstructor();
+    const nombres = { webview: "WebView", landing: "Landing", native: "Nativo" };
+    document.getElementById("routePreviewBox").innerHTML =
+      `<strong>Vista previa — ${nombres[rutas.tipo]}</strong><br><br>` +
+      `<strong>Web:</strong><br>${rutas.web || "Pendiente"}<br><br>` +
+      `<strong>App:</strong><br>${rutas.app || "Pendiente"}`;
+  }
+
+  function generarRutasDestino() {
+    const rutas = obtenerRutasDesdeConstructor();
+    if (!rutas.web) { alert("Completa la URL o ruta Web."); return; }
+    if (!esUrlWebValida(rutas.web)) { alert("La URL Web generada no parece válida."); return; }
+    if (!rutas.app && rutas.tipo !== "landing") { alert("Completa el Deeplink App o la ruta App."); return; }
+    if (rutas.app && !esDeeplinkValido(rutas.app)) { alert("El Deeplink App generado no parece válido."); return; }
+
+    document.getElementById("webUrl").value = rutas.web;
+    document.getElementById("appUrl").value = rutas.app;
+    cargarProbadorRutas(rutas.web, rutas.app, productoSeleccionado ? productoSeleccionado.nombre : "Destino nuevo");
+    ocultarResultado();
+  }
+
+  function limpiarConstructor() {
+    document.getElementById("productSelect").value = "";
+    productoSeleccionado = null;
+    limpiarCamposConstructor(true);
+    document.getElementById("webUrl").value = "";
+    document.getElementById("appUrl").value = "";
+    limpiarProbador();
+    ocultarResultado();
+    renderCatalog();
+  }
+
   function iniciar() {
     const select = document.getElementById("productSelect");
 
@@ -1076,6 +1381,7 @@
     });
 
     document.getElementById("sourceInternal").value = SOURCE_CAMPAIGN;
+    cambiarTipoDestino();
     renderCatalog();
   }
 
@@ -1112,6 +1418,7 @@
     if (!producto) {
       document.getElementById("webUrl").value = "";
       document.getElementById("appUrl").value = "";
+      limpiarCamposConstructor(true);
       limpiarProbador();
       ocultarResultado();
       renderCatalog();
@@ -1121,6 +1428,7 @@
     document.getElementById("webUrl").value = producto.web;
     document.getElementById("appUrl").value = producto.app;
 
+    cargarConstructorDesdeProducto(producto);
     cargarProbador(producto);
 
     ocultarResultado();
@@ -1290,6 +1598,11 @@
 
   function construirLinkPrueba(webBase, appBase) {
     const webLimpia = establecerParametros(webBase, {}, ["embeddedURL"]);
+
+    if (!appBase) {
+      return webLimpia;
+    }
+
     const separador = webLimpia.includes("?") ? "&" : "?";
 
     return (
@@ -1298,6 +1611,17 @@
       "embeddedURL=" +
       encodeURIComponent(appBase)
     );
+  }
+
+  function cargarProbadorRutas(web, app, nombre = "Destino actual") {
+    document.getElementById("testProductName").textContent = "Probando: " + nombre;
+    document.getElementById("testWebLink").value = web || "";
+    document.getElementById("testAppLink").value = app || "";
+    actualizarEnlaceApp();
+    document.getElementById("testFinalLink").value = web ? construirLinkPrueba(web, app) : "";
+    document.getElementById("testConsole").innerHTML =
+      "<strong>Diagnóstico del Deeplink App</strong><br>" +
+      (app ? "Deeplink cargado. Presiona <strong>Abrir Deeplink App</strong> para probarlo." : "Este destino no tiene Deeplink App configurado.");
   }
 
   function cargarProbador(producto) {
@@ -1625,6 +1949,7 @@
     document.getElementById("detail").value = "";
 
     productoSeleccionado = null;
+    limpiarCamposConstructor(true);
 
     limpiarProbador();
     ocultarResultado();

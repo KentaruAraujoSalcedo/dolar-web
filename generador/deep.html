@@ -524,7 +524,7 @@
       <section class="card">
         <h2><span class="step">1</span>Destino del producto</h2>
         <p class="section-description">
-          Selecciona un producto existente o genera las rutas desde cero. Para WebView normalmente basta con una sola ruta; para Nativo necesitas una ruta Web/fallback y un destino propio de App.
+          Selecciona un producto existente o genera las rutas desde cero. En WebView una misma ruta construye el destino Web y App. En Nativo eliges una funcionalidad de la App y defines por separado el destino Web que se usará como fallback.
         </p>
 
         <div class="form-grid">
@@ -546,11 +546,11 @@
           <div class="type-grid">
             <label class="type-option">
               <div><input type="radio" name="destinationType" value="webview" checked onchange="cambiarTipoDestino()"><strong>WebView</strong></div>
-              <span>Una ruta genera automáticamente Web + App.</span>
+              <span>Una misma ruta construye automáticamente el destino Web y el Deeplink App.</span>
             </label>
             <label class="type-option">
               <div><input type="radio" name="destinationType" value="native" onchange="cambiarTipoDestino()"><strong>Nativo</strong></div>
-              <span>Ruta Web/fallback + destino nativo de App.</span>
+              <span>Funcionalidad nativa de App + destino Web independiente.</span>
             </label>
           </div>
 
@@ -558,7 +558,7 @@
             <div id="sameRouteBlock" class="field">
               <label for="webviewPath">Ruta WebView</label>
               <input id="webviewPath" type="text" placeholder="/u/insurances/acquired-insurances/catalog" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-              <span class="hint">Ejemplo: /u/insurances/acquired-insurances/catalog</span>
+              <span class="hint">Ejemplo: /u/insurances/acquired-insurances/catalog. La misma ruta se usa para construir Web y App.</span>
             </div>
 
             <div class="checkbox-row">
@@ -581,28 +581,39 @@
           <div id="nativePanel" class="hidden">
             <div class="form-grid">
               <div class="field">
-                <label for="nativeWebRoute">Ruta Web / fallback</label>
-                <input id="nativeWebRoute" type="text" placeholder="/u/payment" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-                <span class="hint">Puedes ingresar una ruta como /u/payment o una URL Web completa.</span>
-              </div>
-
-              <div class="field">
                 <label for="nativeAppDestination">Destino App nativo</label>
                 <select id="nativeAppDestination" onchange="previsualizarRutasGeneradas()">
                   <option value="">Seleccionar funcionalidad nativa...</option>
                 </select>
-                <span class="hint">La lista de funcionalidades nativas se carga desde <strong>links.json</strong>.</span>
+                <span class="hint">
+                  Selecciona la funcionalidad de la App. La lista se carga desde <strong>links.json</strong>
+                  y el generador construye automáticamente <strong>scotiabankpe:///...</strong>.
+                </span>
               </div>
 
-              <div class="field full">
-                <label for="nativeOwnParams">Parámetros propios del Deeplink App <span style="font-weight:normal;color:#98a2b3">(opcional)</span></label>
-                <input id="nativeOwnParams" type="text" placeholder="Ej. source=LANDING&detail=DETALLE" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-                <span class="hint">Úsalo solo si el equipo confirma que el destino nativo necesita parámetros funcionales propios. Las UTMs se agregan después automáticamente.</span>
+              <div class="field">
+                <label for="nativeWebRoute">Destino Web si no abre App</label>
+                <input
+                  id="nativeWebRoute"
+                  type="text"
+                  placeholder="https://www.scotiabank.com.pe/..."
+                  autocomplete="off"
+                  oninput="previsualizarRutasGeneradas()"
+                >
+                <span class="hint">
+                  Puede ser una landing pública, una URL WebView o cualquier URL web válida.
+                  También puedes ingresar una ruta como <strong>/u/payment</strong> y el generador
+                  la convertirá en una URL de mi.scotiabank.com.pe.
+                </span>
               </div>
             </div>
 
-            <div class="warning">
-              <strong>Importante:</strong> si el Deeplink App ya contiene <strong>source=...</strong>, el generador lo conserva y no lo reemplaza por source=campaign dentro del App. En Web se mantiene source=campaign.
+            <div class="campaign-source-box" style="margin-top:14px;">
+              <strong>¿Cómo funciona el destino Nativo?</strong>
+              <p>
+                Si la experiencia abre la App, se usa la funcionalidad nativa seleccionada.
+                Si no abre App, se utiliza el destino Web definido como fallback.
+              </p>
             </div>
           </div>
 
@@ -614,7 +625,7 @@
 
         <div class="form-grid" style="margin-top:14px;">
           <div class="field">
-            <label for="webUrl">URL Web resultante</label>
+            <label for="webUrl">Destino Web resultante</label>
             <input id="webUrl" type="text" placeholder="https://mi.scotiabank.com.pe/...">
             <span class="hint">Se completa desde el catálogo o el generador. También puedes editarla manualmente.</span>
           </div>
@@ -729,7 +740,7 @@
 
         <div class="campaign-source-box" style="margin-top:16px;">
           <strong>Puerta de entrada estandarizada: campaign</strong>
-          <p>En Web se agrega siempre <strong>source=campaign</strong>. En App también, salvo que un Deeplink Nativo ya contenga un source propio confirmado.</p>
+          <p>El generador agrega <strong>source=campaign</strong> tanto al destino Web como al Deeplink App. <strong>detail</strong> se agrega solo cuando se completa.</p>
         </div>
 
         <div class="actions">
@@ -757,7 +768,7 @@
 
           <div class="preview-grid">
             <div class="preview">
-              <div class="preview-title">URL Web parametrizada</div>
+              <div class="preview-title">Destino Web parametrizado</div>
               <div id="webPreview" class="preview-value"></div>
             </div>
             <div class="preview">
@@ -765,10 +776,7 @@
               <div id="appPreview" class="preview-value"></div>
             </div>
           </div>
-
-          <div id="appSourceNote" class="success-note hidden"></div>
-
-          <div class="success-note">
+<div class="success-note">
             <strong>Link listo para usar</strong><br><br>
             Copia el enlace final y úsalo en tu campaña.
             Para validar la apertura en la app, pruébalo desde WhatsApp,
@@ -965,13 +973,6 @@
     return APP_SCHEME_BASE + limpia.replace(/^\/+/, "");
   }
 
-  function agregarParametrosCrudos(urlBase, rawParams) {
-    const base = limpiarValor(urlBase);
-    const raw = limpiarValor(rawParams).replace(/^\?/, "");
-    if (!raw) return base;
-    const separador = base.includes("?") ? "&" : "?";
-    return base + separador + raw;
-  }
 
   function extraerBaseDeeplinkNativo(appUrl) {
     const app = limpiarValor(appUrl);
@@ -981,21 +982,6 @@
     return q === -1 ? sinScheme : sinScheme.substring(0, q);
   }
 
-  function extraerParametrosPropiosNativo(appUrl) {
-    const app = limpiarValor(appUrl);
-    const q = app.indexOf("?");
-    if (q === -1) return "";
-
-    return app
-      .substring(q + 1)
-      .split("&")
-      .filter(Boolean)
-      .filter(par => {
-        const key = par.split("=")[0];
-        return !["utm_source", "utm_medium", "utm_campaign"].includes(key);
-      })
-      .join("&");
-  }
 
   function limpiarCamposConstructor(resetTipo = true) {
     document.getElementById("webviewPath").value = "";
@@ -1005,7 +991,6 @@
 
     document.getElementById("nativeWebRoute").value = "";
     document.getElementById("nativeAppDestination").value = "";
-    document.getElementById("nativeOwnParams").value = "";
 
     document.getElementById("sameRouteBlock").classList.remove("hidden");
     document.getElementById("differentRoutesBlock").classList.add("hidden");
@@ -1091,9 +1076,6 @@
 
         select.value = normalizedPath;
       }
-
-      document.getElementById("nativeOwnParams").value =
-        extraerParametrosPropiosNativo(producto.app || "");
     }
 
     previsualizarRutasGeneradas();
@@ -1128,13 +1110,8 @@
       document.getElementById("nativeWebRoute").value
     );
 
-    const appBase = normalizarDestinoAppNativo(
+    const app = normalizarDestinoAppNativo(
       document.getElementById("nativeAppDestination").value
-    );
-
-    const app = agregarParametrosCrudos(
-      appBase,
-      document.getElementById("nativeOwnParams").value
     );
 
     return { tipo, web, app };
@@ -1154,7 +1131,7 @@
     const rutas = obtenerRutasDesdeConstructor();
 
     if (!rutas.web) {
-      alert("Completa la ruta Web / fallback.");
+      alert("Completa el destino Web si no abre App.");
       return;
     }
 
@@ -1164,7 +1141,7 @@
     }
 
     if (!rutas.app) {
-      alert("Completa la ruta o destino App.");
+      alert("Selecciona el destino App nativo.");
       return;
     }
 
@@ -1406,8 +1383,7 @@
   function establecerParametros(
     urlBase,
     parametros,
-    parametrosAEliminar = [],
-    parametrosAConservar = []
+    parametrosAEliminar = []
   ) {
     let original = limpiarValor(urlBase);
     let hash = "";
@@ -1473,9 +1449,6 @@
         return;
       }
 
-      if (parametrosAConservar.includes(key) && mapa.has(key)) {
-        return;
-      }
 
       mapa.set(key, {
         keyOriginal: key,
@@ -1586,14 +1559,10 @@
         ["embeddedURL"]
       );
 
-    const appTieneSource = Boolean(extraerParametro(appBase, "source"));
-
     const appParametrizada =
       establecerParametros(
         appBase,
-        parametrosCampana,
-        [],
-        appTieneSource ? ["source"] : []
+        parametrosCampana
       );
 
     const separador =
@@ -1611,20 +1580,6 @@
     document.getElementById("webPreview").textContent = webParametrizada;
     document.getElementById("appPreview").textContent = appParametrizada;
 
-    const appSourceNote = document.getElementById("appSourceNote");
-
-    if (appTieneSource) {
-      appSourceNote.classList.remove("hidden");
-      appSourceNote.innerHTML =
-        "<strong>Source propio del App conservado</strong><br><br>" +
-        "El Deeplink App ya contenía source=" +
-        extraerParametro(appBase, "source") +
-        ", por lo que no se reemplazó por source=campaign. " +
-        "La URL Web sí mantiene source=campaign.";
-    } else {
-      appSourceNote.classList.add("hidden");
-      appSourceNote.innerHTML = "";
-    }
 
     document.getElementById("resultBox").classList.add("visible");
     document.getElementById("emptyResult").classList.add("hidden");
@@ -1634,11 +1589,6 @@
     document.getElementById("resultBox").classList.remove("visible");
     document.getElementById("emptyResult").classList.remove("hidden");
 
-    const note = document.getElementById("appSourceNote");
-    if (note) {
-      note.classList.add("hidden");
-      note.innerHTML = "";
-    }
   }
 
   async function copiarFinal() {

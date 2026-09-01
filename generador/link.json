@@ -1,1 +1,475 @@
 
+{
+  "deeplinksNativos": [
+    {
+      "nombre": "Editar productos",
+      "path": "/productsEdit"
+    },
+    {
+      "nombre": "Productos",
+      "path": "/products"
+    },
+    {
+      "nombre": "Borrar compras",
+      "path": "/purchaseEraser"
+    },
+    {
+      "nombre": "Categoría de transferencias",
+      "path": "/transferCategory"
+    },
+    {
+      "nombre": "Transferir entre mis cuentas",
+      "path": "/transfersOwn"
+    },
+    {
+      "nombre": "Pago de servicios / instituciones",
+      "path": "/servicesOrInstitutions"
+    },
+    {
+      "nombre": "Wallet",
+      "path": "/wallet"
+    },
+    {
+      "nombre": "Cambio de moneda",
+      "path": "/exchange"
+    },
+    {
+      "nombre": "Retiro sin tarjeta",
+      "path": "/withdrawal"
+    },
+    {
+      "nombre": "Metas / PFM",
+      "path": "/pfm"
+    },
+    {
+      "nombre": "Mi lista",
+      "path": "/myList"
+    },
+    {
+      "nombre": "Plin / Contactos",
+      "path": "/contacts"
+    },
+    {
+      "nombre": "Mi cuenta",
+      "path": "/userMenu"
+    },
+    {
+      "nombre": "Mi asesor",
+      "path": "/yourAdvisor"
+    },
+    {
+      "nombre": "Configuración de tarjeta",
+      "path": "/cardConfiguration"
+    },
+    {
+      "nombre": "Límites",
+      "path": "/limits"
+    },
+    {
+      "nombre": "Configuración de notificaciones",
+      "path": "/pushNotificationsSettings"
+    },
+    {
+      "nombre": "Biometría",
+      "path": "/biometrics"
+    },
+    {
+      "nombre": "Para Ti / Notices",
+      "path": "/notices"
+    },
+    {
+      "nombre": "Pase a cuotas",
+      "path": "/installment"
+    },
+    {
+      "nombre": "Scotia Puntos",
+      "path": "/scotiaPointsHub"
+    },
+    {
+      "nombre": "Hub de tarjetas",
+      "path": "/cardHub"
+    },
+    {
+      "nombre": "Ver todos mis productos",
+      "path": "/seeMyProducts"
+    }
+  ],
+  "productos": [
+    {
+      "id": "adelanto-de-sueldo",
+      "nombre": "Adelanto de Sueldo",
+      "tipo": "webview",
+      "ruta": "/u/loans/salary-advance/init"
+    },
+    {
+      "id": "apple-pay",
+      "nombre": "Apple Pay",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/apple-pay",
+      "appPath": "/tokenization"
+    },
+    {
+      "id": "apple-wallet",
+      "nombre": "Apple Wallet",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/apple-pay",
+      "appPath": "/addCardToAppleWallet"
+    },
+    {
+      "id": "venta-de-tarjeta",
+      "nombre": "Venta de Tarjeta",
+      "tipo": "webview",
+      "ruta": "/u/campaign/VT"
+    },
+    {
+      "id": "instant-cash-primer-desembolso",
+      "nombre": "Instant Cash - Primer Desembolso",
+      "tipo": "webview",
+      "ruta": "/u/campaign/IC"
+    },
+    {
+      "id": "instant-cash-segundo-desembolso",
+      "nombre": "Instant Cash - Segundo Desembolso",
+      "tipo": "webview",
+      "ruta": "/u/campaign/I2"
+    },
+    {
+      "id": "instant-cash-reenganche",
+      "nombre": "Instant Cash - Reenganche",
+      "tipo": "webview",
+      "ruta": "/u/campaign/NI"
+    },
+    {
+      "id": "compra-de-deuda-extra-linea",
+      "nombre": "Compra de Deuda Extra Línea",
+      "tipo": "webview",
+      "ruta": "/u/campaign/CD"
+    },
+    {
+      "id": "incremento-de-linea",
+      "nombre": "Incremento de Línea",
+      "tipo": "webview",
+      "ruta": "/u/campaign/IL"
+    },
+    {
+      "id": "tarjeta-credito-adicional",
+      "nombre": "Tarjeta de Crédito Adicional",
+      "tipo": "webview",
+      "ruta": "/u/campaign/TA"
+    },
+    {
+      "id": "biometria",
+      "nombre": "Biometría",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/Personas/Canales-digitales/seguridad/biometria-app-scotiabank",
+      "appPath": "/biometrics"
+    },
+    {
+      "id": "borrar-compras",
+      "nombre": "Borrar Compras",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/Personas/beneficios/scotia-puntos/borrar-compras",
+      "appPath": "/purchaseEraser"
+    },
+    {
+      "id": "pasar-a-cuotas",
+      "nombre": "Pasar a Cuotas",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/Personas/tarjetas/beneficios/pasar-a-cuotas",
+      "appPath": "/installment"
+    },
+    {
+      "id": "cambiar-dolares",
+      "nombre": "Cambiar Dólares",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/money-exchange",
+      "appPath": "/exchange"
+    },
+    {
+      "id": "cuenta-digital-kyc",
+      "nombre": "Cuenta Digital - KYC",
+      "tipo": "webview",
+      "rutaWeb": "/u/accounts/savings/confirm/199",
+      "rutaApp": "/u/accounts/savings/m/kyc/199"
+    },
+    {
+      "id": "cuenta-power-kyc",
+      "nombre": "Cuenta Power - KYC",
+      "tipo": "webview",
+      "rutaWeb": "/u/accounts/savings/confirm/080",
+      "rutaApp": "/u/accounts/savings/m/kyc/080"
+    },
+    {
+      "id": "cuenta-sueldo-dependiente-kyc",
+      "nombre": "Cuenta Sueldo Dependiente - KYC",
+      "tipo": "webview",
+      "rutaWeb": "/u/accounts/savings/confirm/095",
+      "rutaApp": "/u/accounts/savings/m/kyc/095"
+    },
+    {
+      "id": "dashboard-inicio",
+      "nombre": "Dashboard - Inicio",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
+      "appPath": "/products"
+    },
+    {
+      "id": "fondo-mutuo-acciones-emergentes",
+      "nombre": "Fondo Mutuo Acciones Emergentes",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/14"
+    },
+    {
+      "id": "fondo-mutuo-acciones-europa",
+      "nombre": "Fondo Mutuo Acciones Europa",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/33"
+    },
+    {
+      "id": "fondo-mutuo-acciones-us",
+      "nombre": "Fondo Mutuo Acciones US",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/15"
+    },
+    {
+      "id": "fondo-mutuo-corto-plazo-dolares",
+      "nombre": "Fondo Mutuo Corto Plazo Dólares",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/B2"
+    },
+    {
+      "id": "fondo-mutuo-corto-plazo-soles",
+      "nombre": "Fondo Mutuo Corto Plazo Soles",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/B3"
+    },
+    {
+      "id": "fondo-mutuo-deuda-hy",
+      "nombre": "Fondo Mutuo Deuda HY",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/35"
+    },
+    {
+      "id": "fondo-mutuo-fondo-deuda-ig",
+      "nombre": "Fondo Mutuo Fondo Deuda IG",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/34"
+    },
+    {
+      "id": "fondo-mutuo-mediano-plazo-flex-dolares",
+      "nombre": "Fondo Mutuo Mediano Plazo Flex Dólares",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/D0"
+    },
+    {
+      "id": "fondo-mutuo-mediano-plazo-flex-soles",
+      "nombre": "Fondo Mutuo Mediano Plazo Flex Soles",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/D1"
+    },
+    {
+      "id": "fondos-mutuos-detalle",
+      "nombre": "Fondos Mutuos - Detalle",
+      "tipo": "webview",
+      "rutaWeb": "/u/scotia",
+      "rutaApp": "/u/scotia-funds"
+    },
+    {
+      "id": "scotia-fondo-fondos-deuda-global-fmiv",
+      "nombre": "Scotia Fondo de Fondos Deuda Global FMIV",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/F1"
+    },
+    {
+      "id": "scotia-fondo-fondos-deuda-mercados-emergentes-fmiv",
+      "nombre": "Scotia Fondo de Fondos Deuda Mercados Emergentes FMIV",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/F8"
+    },
+    {
+      "id": "scotia-fondo-fondos-estrategia-moderada-fmiv",
+      "nombre": "Scotia Fondo de Fondos Estrategia Moderada FMIV",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/G1"
+    },
+    {
+      "id": "scotia-fondo-fondos-estrategia-crecimiento-fmiv",
+      "nombre": "Scotia Fondo de Fondos Estrategia Crecimiento FMIV",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/G3"
+    },
+    {
+      "id": "limites",
+      "nombre": "Límites",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile/limit",
+      "appPath": "/limits"
+    },
+    {
+      "id": "mi-cuenta",
+      "nombre": "Mi Cuenta",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/profile",
+      "appPath": "/userMenu"
+    },
+    {
+      "id": "mi-funcionario",
+      "nombre": "Mi Funcionario",
+      "tipo": "webview",
+      "ruta": "/u/personal-assistant"
+    },
+    {
+      "id": "pagar-qr",
+      "nombre": "Pagar QR",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/pago-qr",
+      "appPath": "/focusQrCode"
+    },
+    {
+      "id": "pago-de-recargas",
+      "nombre": "Pago de Recargas",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-recharge",
+      "appPath": "/mobile-recharge"
+    },
+    {
+      "id": "pago-de-servicios",
+      "nombre": "Pago de Servicios",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/payment",
+      "appPath": "/servicesOrInstitutions"
+    },
+    {
+      "id": "pago-de-tc",
+      "nombre": "Pago de Tarjeta de Crédito",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/u/credit-card-payment",
+      "appPath": "/wallet"
+    },
+    {
+      "id": "para-ti",
+      "nombre": "Para Ti",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/marketplace",
+      "appPath": "/notices"
+    },
+    {
+      "id": "plin",
+      "nombre": "Plin",
+      "tipo": "nativo",
+      "webFallback": "https://www.scotiabank.com.pe/Personas/Canales-digitales/pagos/transferencias-interbancarias-plin",
+      "appPath": "/contacts"
+    },
+    {
+      "id": "prestamo-ld-pa-dxp",
+      "nombre": "Préstamo LD / PA DXP",
+      "tipo": "webview",
+      "ruta": "/u/loans/personal/init"
+    },
+    {
+      "id": "quiero-un-prestamo",
+      "nombre": "Quiero un Préstamo",
+      "tipo": "webview",
+      "ruta": "/u/request-loan/introduction"
+    },
+    {
+      "id": "refinanciamientos-digitales",
+      "nombre": "Refinanciamientos Digitales",
+      "tipo": "webview",
+      "ruta": "/u/collections-solutions/refinance/init"
+    },
+    {
+      "id": "reprogramaciones-digitales-business",
+      "nombre": "Reprogramaciones Digitales - Business",
+      "tipo": "webview",
+      "web": "https://mi.scotiabank.com.pe/login?redirecto=/b/collections/reschedule/init",
+      "rutaApp": "/b/collections-solutions/reschedule/init"
+    },
+    {
+      "id": "reprogramaciones-digitales-joy",
+      "nombre": "Reprogramaciones Digitales - Joy",
+      "tipo": "webview",
+      "web": "https://mi.scotiabank.com.pe/login?redirecto=/u/collections/reschedule/init",
+      "rutaApp": "/u/collections-solutions/reschedule/init"
+    },
+    {
+      "id": "retirar-sin-tarjeta",
+      "nombre": "Retirar sin Tarjeta",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/mobile-cash",
+      "appPath": "/withdrawal"
+    },
+    {
+      "id": "scotia-fondo-liquidez-dolares-fmiv",
+      "nombre": "Scotia Fondo Liquidez Dólares FMIV",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/98"
+    },
+    {
+      "id": "scotia-fondo-liquidez-soles-fmiv",
+      "nombre": "Scotia Fondo Liquidez Soles FMIV",
+      "tipo": "webview",
+      "ruta": "/u/scotia-funds/acquisition/product/95"
+    },
+    {
+      "id": "scotiapuntos",
+      "nombre": "Scotia Puntos",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/rewards/scotia-points",
+      "appPath": "/scotiaPointsHub"
+    },
+    {
+      "id": "seguros-total-max-tarjeta-segura",
+      "nombre": "Seguros Total Max / Tarjeta Segura",
+      "tipo": "webview",
+      "ruta": "/u/insurances/acquired-insurances/catalog"
+    },
+    {
+      "id": "transferencias-al-exterior",
+      "nombre": "Transferencias al Exterior",
+      "tipo": "webview",
+      "ruta": "/u/transfer/abroad"
+    },
+    {
+      "id": "transferir-a-otra-cuenta",
+      "nombre": "Transferir a Otra Cuenta",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-account",
+      "appPath": "/transfer/other-account"
+    },
+    {
+      "id": "transferir-a-otro-banco",
+      "nombre": "Transferir a Otro Banco",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/other-bank",
+      "appPath": "/transfer/other-bank"
+    },
+    {
+      "id": "transferir-entre-cuentas",
+      "nombre": "Transferir entre Cuentas",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/transfer/own-account",
+      "appPath": "/transfersOwn"
+    },
+    {
+      "id": "activar-cuenta",
+      "nombre": "Activar Cuenta",
+      "tipo": "webview",
+      "ruta": "/u/payroll-accounts"
+    },
+    {
+      "id": "ver-mis-productos",
+      "nombre": "Ver Mis Productos",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/dashboard",
+      "appPath": "/seeMyProducts"
+    },
+    {
+      "id": "pase-a-cuotas",
+      "nombre": "Pase a Cuotas",
+      "tipo": "nativo",
+      "webFallback": "https://mi.scotiabank.com.pe/login?redirectTo=/u/installment",
+      "appPath": "/installment"
+    }
+  ]
+}

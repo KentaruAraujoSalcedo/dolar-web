@@ -1148,5 +1148,272 @@
       "Perfil / Servicios"
     ],
     "nota": "Cada path está clasificado una sola vez. Campañas se mantiene agrupado como un único bloque. Se añadieron rutas históricas presentes en productos para validación de vigencia con Desarrollo."
+  },
+  "nativo": {
+    "Productos": [
+      {
+        "grupo": "Productos / Portafolio",
+        "cantidad": 3,
+        "pantallas": [
+          {
+            "nombre": "Editar productos",
+            "path": "/productsEdit"
+          },
+          {
+            "nombre": "Productos",
+            "path": "/products"
+          },
+          {
+            "nombre": "Ver todos mis productos",
+            "path": "/seeMyProducts"
+          }
+        ]
+      },
+      {
+        "grupo": "Metas",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Metas / PFM",
+            "path": "/pfm"
+          }
+        ]
+      },
+      {
+        "grupo": "Apple Pay / Wallet",
+        "cantidad": 2,
+        "pantallas": [
+          {
+            "nombre": "Apple Pay / Tokenización",
+            "path": "/tokenization"
+          },
+          {
+            "nombre": "Apple Wallet",
+            "path": "/addCardToAppleWallet"
+          }
+        ]
+      },
+      {
+        "grupo": "Scotia Puntos",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Scotia Puntos",
+            "path": "/scotiaPointsHub"
+          }
+        ]
+      }
+    ],
+    "Funcionalidades": [
+      {
+        "grupo": "Borrar compras",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Borrar compras",
+            "path": "/purchaseEraser"
+          }
+        ]
+      },
+      {
+        "grupo": "Transferencias",
+        "cantidad": 4,
+        "pantallas": [
+          {
+            "nombre": "Categoría de transferencias",
+            "path": "/transferCategory"
+          },
+          {
+            "nombre": "Transferir entre mis cuentas",
+            "path": "/transfersOwn"
+          },
+          {
+            "nombre": "Transferir a otra cuenta",
+            "path": "/transfer/other-account"
+          },
+          {
+            "nombre": "Transferir a otro banco",
+            "path": "/transfer/other-bank"
+          }
+        ]
+      },
+      {
+        "grupo": "Pago de servicios",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Pago de servicios / instituciones",
+            "path": "/servicesOrInstitutions"
+          }
+        ]
+      },
+      {
+        "grupo": "Pago de tarjeta / Wallet",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Wallet",
+            "path": "/wallet"
+          }
+        ]
+      },
+      {
+        "grupo": "Cambio de moneda",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Cambio de moneda",
+            "path": "/exchange"
+          }
+        ]
+      },
+      {
+        "grupo": "Retiro sin tarjeta",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Retiro sin tarjeta",
+            "path": "/withdrawal"
+          }
+        ]
+      },
+      {
+        "grupo": "Plin / Contactos",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Plin / Contactos",
+            "path": "/contacts"
+          }
+        ]
+      },
+      {
+        "grupo": "Configuración de tarjeta",
+        "cantidad": 2,
+        "pantallas": [
+          {
+            "nombre": "Configuración de tarjeta",
+            "path": "/cardConfiguration"
+          },
+          {
+            "nombre": "Hub de tarjetas",
+            "path": "/cardHub"
+          }
+        ]
+      },
+      {
+        "grupo": "Límites",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Límites",
+            "path": "/limits"
+          }
+        ]
+      },
+      {
+        "grupo": "Pase a cuotas",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Pase a cuotas",
+            "path": "/installment"
+          }
+        ]
+      },
+      {
+        "grupo": "Pagar QR",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Pagar QR",
+            "path": "/focusQrCode"
+          }
+        ]
+      },
+      {
+        "grupo": "Recargas",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Pago de recargas",
+            "path": "/mobile-recharge"
+          }
+        ]
+      }
+    ],
+    "Perfil / Servicios": [
+      {
+        "grupo": "Mi lista",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Mi lista",
+            "path": "/myList"
+          }
+        ]
+      },
+      {
+        "grupo": "Mi cuenta",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Mi cuenta",
+            "path": "/userMenu"
+          }
+        ]
+      },
+      {
+        "grupo": "Mi asesor",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Mi asesor",
+            "path": "/yourAdvisor"
+          }
+        ]
+      },
+      {
+        "grupo": "Notificaciones",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Configuración de notificaciones",
+            "path": "/pushNotificationsSettings"
+          }
+        ]
+      },
+      {
+        "grupo": "Biometría",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Biometría",
+            "path": "/biometrics"
+          }
+        ]
+      },
+      {
+        "grupo": "Para Ti",
+        "cantidad": 1,
+        "pantallas": [
+          {
+            "nombre": "Para Ti / Notices",
+            "path": "/notices"
+          }
+        ]
+      }
+    ]
+  },
+  "metadataNativo": {
+    "total_deeplinks_nativos": 29,
+    "total_deeplinks_clasificados": 29,
+    "control_integridad_ok": true,
+    "estructura": [
+      "Productos",
+      "Funcionalidades",
+      "Perfil / Servicios"
+    ],
+    "nota": "Se mantiene deeplinksNativos por compatibilidad con versiones anteriores del HTML. El nuevo campo nativo permite navegar Tipo → Grupo → Pantalla."
   }
 }

@@ -543,6 +543,51 @@
       color: var(--warning);
     }
 
+
+    .webview-catalog-box {
+      margin-bottom: 12px;
+      padding: 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .webview-catalog-title {
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #344054;
+    }
+
+    .selected-route {
+      margin-top: 10px;
+      padding: 10px 11px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #475467;
+      overflow-wrap: anywhere;
+    }
+
+    .selected-route strong {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #344054;
+    }
+
+    .webview-warning {
+      margin-top: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      font-size: 10px;
+      line-height: 1.45;
+    }
+
     .hidden { display: none !important; }
 
     @media (max-width: 1000px) {
@@ -566,7 +611,7 @@
   <header class="header">
     <h1>Generador de Links de Campaña</h1>
     <p>
-      Genera rutas Web, Deeplinks App y links finales de campaña para destinos WebView y Nativos.
+      Genera rutas Web, Deeplinks App y links finales de campaña. Usa productos ya configurados o explora el catálogo completo de WebView y funcionalidades nativas.
     </p>
   </header>
 
@@ -581,11 +626,11 @@
 
         <div class="form-grid">
           <div class="field full">
-            <label for="productSelect">Producto del catálogo</label>
+            <label for="productSelect">Producto ya configurado (acceso rápido)</label>
             <select id="productSelect" onchange="seleccionarProducto(this.value)">
               <option value="">Nuevo destino / seleccionar producto...</option>
             </select>
-            <span class="hint">Los productos se cargan desde links.json. Al elegir uno, el tipo de destino y las rutas se detectan automáticamente.</span>
+            <span class="hint">Los productos ya creados se cargan desde links.json. Úsalos como acceso rápido; si necesitas otra pantalla, usa el catálogo WebView de abajo.</span>
             <div id="dataStatus" class="data-status">
               Cargando catálogo desde <strong>./links.json</strong>...
             </div>
@@ -607,25 +652,63 @@
           </div>
 
           <div id="webviewPanel">
-            <div id="sameRouteBlock" class="field">
-              <label for="webviewPath">Ruta WebView</label>
-              <input id="webviewPath" type="text" placeholder="/u/insurances/acquired-insurances/catalog" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-              <span class="hint">Ejemplo: /u/insurances/acquired-insurances/catalog. La misma ruta se usa para construir Web y App.</span>
+            <div id="sameRouteBlock">
+              <div class="webview-catalog-box">
+                <div class="webview-catalog-title">Seleccionar pantalla desde catálogo WebView</div>
+
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="webviewCategory">Tipo</label>
+                    <select id="webviewCategory" onchange="cargarGruposWebview()">
+                      <option value="">Seleccionar tipo...</option>
+                    </select>
+                    <span class="hint">Productos, Funcionalidades o Perfil / Servicios.</span>
+                  </div>
+
+                  <div class="field">
+                    <label for="webviewGroup">Grupo</label>
+                    <select id="webviewGroup" onchange="cargarPantallasWebview()" disabled>
+                      <option value="">Seleccionar grupo...</option>
+                    </select>
+                    <span class="hint">Ej. Apertura de cuentas, Campañas, Transferencias, Seguros.</span>
+                  </div>
+
+                  <div class="field full">
+                    <label for="webviewScreen">Pantalla / path</label>
+                    <select id="webviewScreen" onchange="seleccionarPantallaWebview()" disabled>
+                      <option value="">Seleccionar pantalla...</option>
+                    </select>
+                    <span class="hint">Puedes elegir cualquier pantalla del inventario. Algunas pantallas intermedias pueden requerir estado previo del flujo.</span>
+                  </div>
+                </div>
+
+                <div id="webviewSelectedPathBox" class="selected-route">
+                  <strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.
+                </div>
+
+                <div id="webviewManualBlock" class="field hidden" style="margin-top:12px;">
+                  <label for="webviewPath">Ruta WebView manual</label>
+                  <input id="webviewPath" type="text" placeholder="/u/insurances/acquired-insurances/catalog" autocomplete="off" oninput="actualizarRutaManualWebview()">
+                  <span class="hint">Úsalo cuando la ruta no aparezca en el catálogo.</span>
+                </div>
+              </div>
             </div>
 
             <div class="checkbox-row">
               <input id="differentRoutes" type="checkbox" onchange="manejarRutasDiferentes()">
-              <label for="differentRoutes"><strong>La ruta Web y App son diferentes</strong><br>Úsalo solo para excepciones reales.</label>
+              <label for="differentRoutes"><strong>La ruta Web y App son diferentes</strong><br>Úsalo solo para excepciones reales, por ejemplo KYC.</label>
             </div>
 
             <div id="differentRoutesBlock" class="form-grid hidden" style="margin-top:14px;">
               <div class="field">
                 <label for="webviewWebPath">Ruta Web</label>
                 <input id="webviewWebPath" type="text" placeholder="/u/accounts/savings/confirm/199" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+                <span class="hint">Ruta utilizada en redirectTo del destino Web.</span>
               </div>
               <div class="field">
                 <label for="webviewAppPath">Ruta App</label>
                 <input id="webviewAppPath" type="text" placeholder="/u/accounts/savings/m/kyc/199" autocomplete="off" oninput="previsualizarRutasGeneradas()">
+                <span class="hint">Ruta utilizada dentro de scotiabankpe:///webView?path=...</span>
               </div>
             </div>
           </div>
@@ -953,9 +1036,9 @@
 
     <aside class="right">
       <section class="card catalog-card">
-        <h2>Catálogo de productos</h2>
+        <h2>Productos ya configurados</h2>
         <p class="section-description">
-          Haz clic en un producto para cargar automáticamente sus rutas y clasificarlo como WebView o Nativo.
+          Haz clic en un producto ya creado para cargar automáticamente sus rutas Web y App.
         </p>
 
         <input id="catalogSearch" class="catalog-search" type="search" placeholder="Buscar producto, ruta o deeplink..." oninput="renderCatalog()">
@@ -973,6 +1056,8 @@
 
   let PRODUCTOS = [];
   let DEEPLINKS_NATIVOS = [];
+  let WEBVIEW_CATALOG = {};
+  let POR_REVISAR_WEBVIEW = [];
 
   let productoSeleccionado = null;
 
@@ -993,6 +1078,215 @@
     document.getElementById("webviewPanel").classList.toggle("hidden", tipo !== "webview");
     document.getElementById("nativePanel").classList.toggle("hidden", tipo !== "native");
     previsualizarRutasGeneradas();
+  }
+
+
+  function contarPathsWebview() {
+    let total = 0;
+    Object.values(WEBVIEW_CATALOG || {}).forEach(grupos => {
+      if (!Array.isArray(grupos)) return;
+      grupos.forEach(grupo => {
+        if (Array.isArray(grupo.paths)) total += grupo.paths.length;
+      });
+    });
+    return total;
+  }
+
+  function cargarSelectCategoriasWebview() {
+    const categoria = document.getElementById("webviewCategory");
+    const grupo = document.getElementById("webviewGroup");
+    const pantalla = document.getElementById("webviewScreen");
+
+    if (!categoria || !grupo || !pantalla) return;
+
+    categoria.innerHTML = '<option value="">Seleccionar tipo...</option>';
+
+    Object.keys(WEBVIEW_CATALOG || {}).forEach(nombre => {
+      const option = document.createElement("option");
+      option.value = nombre;
+      option.textContent = nombre;
+      categoria.appendChild(option);
+    });
+
+    const manual = document.createElement("option");
+    manual.value = "__manual__";
+    manual.textContent = "Otro / escribir ruta manualmente";
+    categoria.appendChild(manual);
+
+    grupo.innerHTML = '<option value="">Seleccionar grupo...</option>';
+    grupo.disabled = true;
+    pantalla.innerHTML = '<option value="">Seleccionar pantalla...</option>';
+    pantalla.disabled = true;
+
+    document.getElementById("webviewManualBlock").classList.add("hidden");
+    document.getElementById("webviewSelectedPathBox").innerHTML =
+      '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+  }
+
+  function cargarGruposWebview() {
+    const categoria = document.getElementById("webviewCategory").value;
+    const grupo = document.getElementById("webviewGroup");
+    const pantalla = document.getElementById("webviewScreen");
+    const manualBlock = document.getElementById("webviewManualBlock");
+
+    grupo.innerHTML = '<option value="">Seleccionar grupo...</option>';
+    pantalla.innerHTML = '<option value="">Seleccionar pantalla...</option>';
+    pantalla.disabled = true;
+
+    if (categoria === "__manual__") {
+      grupo.disabled = true;
+      manualBlock.classList.remove("hidden");
+      document.getElementById("webviewPath").value = "";
+      document.getElementById("webviewSelectedPathBox").innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
+      previsualizarRutasGeneradas();
+      setTimeout(() => document.getElementById("webviewPath").focus(), 0);
+      return;
+    }
+
+    manualBlock.classList.add("hidden");
+    document.getElementById("webviewPath").value = "";
+
+    const grupos = WEBVIEW_CATALOG[categoria];
+    if (!categoria || !Array.isArray(grupos)) {
+      grupo.disabled = true;
+      document.getElementById("webviewSelectedPathBox").innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+      previsualizarRutasGeneradas();
+      return;
+    }
+
+    grupos.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = item.grupo + (item.cantidad ? ` (${item.cantidad})` : "");
+      grupo.appendChild(option);
+    });
+
+    grupo.disabled = false;
+    document.getElementById("webviewSelectedPathBox").innerHTML =
+      '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
+    previsualizarRutasGeneradas();
+  }
+
+  function cargarPantallasWebview() {
+    const categoria = document.getElementById("webviewCategory").value;
+    const grupoIndex = document.getElementById("webviewGroup").value;
+    const pantalla = document.getElementById("webviewScreen");
+
+    pantalla.innerHTML = '<option value="">Seleccionar pantalla...</option>';
+    document.getElementById("webviewPath").value = "";
+    document.getElementById("webviewManualBlock").classList.add("hidden");
+
+    if (!categoria || grupoIndex === "") {
+      pantalla.disabled = true;
+      document.getElementById("webviewSelectedPathBox").innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
+      previsualizarRutasGeneradas();
+      return;
+    }
+
+    const grupos = WEBVIEW_CATALOG[categoria] || [];
+    const grupo = grupos[Number(grupoIndex)];
+
+    if (!grupo || !Array.isArray(grupo.paths)) {
+      pantalla.disabled = true;
+      previsualizarRutasGeneradas();
+      return;
+    }
+
+    grupo.paths.forEach(path => {
+      const option = document.createElement("option");
+      option.value = path;
+      option.textContent = path;
+      pantalla.appendChild(option);
+    });
+
+    const manual = document.createElement("option");
+    manual.value = "__manual__";
+    manual.textContent = "Otro / escribir ruta manualmente";
+    pantalla.appendChild(manual);
+
+    pantalla.disabled = false;
+    document.getElementById("webviewSelectedPathBox").innerHTML =
+      `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
+    previsualizarRutasGeneradas();
+  }
+
+  function seleccionarPantallaWebview() {
+    const pantalla = document.getElementById("webviewScreen").value;
+    const manualBlock = document.getElementById("webviewManualBlock");
+    const pathInput = document.getElementById("webviewPath");
+
+    if (pantalla === "__manual__") {
+      pathInput.value = "";
+      manualBlock.classList.remove("hidden");
+      document.getElementById("webviewSelectedPathBox").innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
+      previsualizarRutasGeneradas();
+      setTimeout(() => pathInput.focus(), 0);
+      return;
+    }
+
+    manualBlock.classList.add("hidden");
+    pathInput.value = pantalla || "";
+
+    document.getElementById("webviewSelectedPathBox").innerHTML = pantalla
+      ? `<strong>Ruta seleccionada:</strong><br>${pantalla}`
+      : '<strong>Ruta seleccionada:</strong><br>Selecciona una pantalla.';
+
+    previsualizarRutasGeneradas();
+  }
+
+  function actualizarRutaManualWebview() {
+    const ruta = limpiarValor(document.getElementById("webviewPath").value);
+    document.getElementById("webviewSelectedPathBox").innerHTML = ruta
+      ? `<strong>Ruta manual:</strong><br>${ruta}`
+      : '<strong>Ruta seleccionada:</strong><br>Escribe una ruta WebView.';
+    previsualizarRutasGeneradas();
+  }
+
+  function buscarRutaEnCatalogoWebview(ruta) {
+    const buscada = normalizarRuta(ruta);
+    if (!buscada) return null;
+
+    for (const [categoria, grupos] of Object.entries(WEBVIEW_CATALOG || {})) {
+      if (!Array.isArray(grupos)) continue;
+
+      for (let i = 0; i < grupos.length; i++) {
+        const grupo = grupos[i];
+        if (Array.isArray(grupo.paths) && grupo.paths.includes(buscada)) {
+          return { categoria, grupoIndex: i, grupo: grupo.grupo, path: buscada };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function seleccionarRutaWebviewEnCatalogo(ruta) {
+    const buscada = normalizarRuta(ruta);
+    const encontrada = buscarRutaEnCatalogoWebview(buscada);
+    const categoriaSelect = document.getElementById("webviewCategory");
+    const grupoSelect = document.getElementById("webviewGroup");
+    const pantallaSelect = document.getElementById("webviewScreen");
+    const pathInput = document.getElementById("webviewPath");
+
+    if (encontrada) {
+      categoriaSelect.value = encontrada.categoria;
+      cargarGruposWebview();
+      grupoSelect.value = String(encontrada.grupoIndex);
+      cargarPantallasWebview();
+      pantallaSelect.value = encontrada.path;
+      seleccionarPantallaWebview();
+      return true;
+    }
+
+    categoriaSelect.value = "__manual__";
+    cargarGruposWebview();
+    pathInput.value = buscada;
+    actualizarRutaManualWebview();
+    return false;
   }
 
   function getModoWebNativo() {
@@ -1098,6 +1392,8 @@
     document.getElementById("webviewAppPath").value = "";
     document.getElementById("differentRoutes").checked = false;
 
+    cargarSelectCategoriasWebview();
+
     document.getElementById("nativeLoginPath").value = "";
     document.getElementById("nativeLandingUrl").value = "";
     document.getElementById("nativeAppDestination").value = "";
@@ -1165,7 +1461,7 @@
       } else {
         document.getElementById("differentRoutes").checked = false;
         manejarRutasDiferentes();
-        document.getElementById("webviewPath").value = rutaApp || rutaWeb || "";
+        seleccionarRutaWebviewEnCatalogo(rutaApp || rutaWeb || "");
       }
     } else {
       const webProducto = limpiarValor(producto.web || "");
@@ -1327,32 +1623,46 @@
       DEEPLINKS_NATIVOS = Array.isArray(data.deeplinksNativos)
         ? data.deeplinksNativos
         : [];
+      WEBVIEW_CATALOG = data.webview && typeof data.webview === "object"
+        ? data.webview
+        : {};
+      POR_REVISAR_WEBVIEW = Array.isArray(data.porRevisarWebview)
+        ? data.porRevisarWebview
+        : [];
 
       cargarSelectProductos();
       cargarSelectDeeplinksNativos();
+      cargarSelectCategoriasWebview();
       renderCatalog();
+
+      const totalWebview = contarPathsWebview();
+      const totalCategorias = Object.keys(WEBVIEW_CATALOG).length;
 
       status.classList.remove("error");
       status.innerHTML =
         "✓ Configuración cargada: <strong>" + PRODUCTOS.length +
-        " productos</strong> y <strong>" + DEEPLINKS_NATIVOS.length +
-        " funcionalidades nativas</strong>.";
+        " productos configurados</strong>, <strong>" + DEEPLINKS_NATIVOS.length +
+        " funcionalidades nativas</strong> y <strong>" + totalWebview +
+        " paths WebView</strong> en <strong>" + totalCategorias + " categorías</strong>.";
 
     } catch (error) {
       console.error("[CONFIG] Error cargando ./links.json:", error);
 
       PRODUCTOS = [];
       DEEPLINKS_NATIVOS = [];
+      WEBVIEW_CATALOG = {};
+      POR_REVISAR_WEBVIEW = [];
 
       cargarSelectProductos();
       cargarSelectDeeplinksNativos();
+      cargarSelectCategoriasWebview();
       renderCatalog();
 
       status.classList.add("error");
       status.innerHTML =
         "⚠ No se pudo cargar <strong>./links.json</strong>. " +
-        "Cuando coloques el archivo en <strong>/generador/links.json</strong>, " +
-        "el catálogo se cargará automáticamente.";
+        "Verifica que <strong>deep.html</strong> y <strong>links.json</strong> estén en la misma carpeta " +
+        "y que la página se abra desde un servidor Web (no directamente como file://).";
     }
   }
 
@@ -1384,6 +1694,7 @@
 
   async function iniciar() {
     document.getElementById("sourceInternal").value = SOURCE_CAMPAIGN;
+    cargarSelectCategoriasWebview();
     cambiarTipoDestino();
     cambiarModoWebNativo();
     renderCatalog();

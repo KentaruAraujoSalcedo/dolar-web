@@ -1456,8 +1456,7 @@
     grupo.pantallas.forEach(item => {
       const option = document.createElement("option");
       option.value = item.path || "";
-      option.textContent = (item.nombre || item.path || "Pantalla") +
-        (item.path ? " — " + item.path : "");
+      option.textContent = item.path || "";
       pantalla.appendChild(option);
     });
 
@@ -1490,11 +1489,8 @@
     manualBlock.classList.add("hidden");
     pathInput.value = pantalla || "";
 
-    const option = document.getElementById("nativeScreen").selectedOptions[0];
-    const etiqueta = option ? option.textContent : pantalla;
-
     document.getElementById("nativeSelectedPathBox").innerHTML = pantalla
-      ? `<strong>Deeplink seleccionado:</strong><br>${etiqueta}`
+      ? `<strong>Deeplink seleccionado:</strong><br>${pantalla}`
       : '<strong>Deeplink seleccionado:</strong><br>Selecciona una pantalla.';
 
     previsualizarRutasGeneradas();

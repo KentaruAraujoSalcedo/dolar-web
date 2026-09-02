@@ -714,15 +714,44 @@
           </div>
 
           <div id="nativePanel" class="hidden">
-            <div class="field">
-              <label for="nativeAppDestination">Destino App nativo</label>
-              <select id="nativeAppDestination" onchange="previsualizarRutasGeneradas()">
-                <option value="">Seleccionar funcionalidad nativa...</option>
-              </select>
-              <span class="hint">
-                Selecciona la funcionalidad de la App. El generador construye automáticamente
-                <strong>scotiabankpe:///...</strong>.
-              </span>
+            <div class="webview-catalog-box">
+              <div class="webview-catalog-title">Seleccionar pantalla desde catálogo Nativo</div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="nativeCategory">Tipo</label>
+                  <select id="nativeCategory" onchange="cargarGruposNativo()">
+                    <option value="">Seleccionar tipo...</option>
+                  </select>
+                  <span class="hint">Productos, Funcionalidades o Perfil / Servicios.</span>
+                </div>
+
+                <div class="field">
+                  <label for="nativeGroup">Grupo</label>
+                  <select id="nativeGroup" onchange="cargarPantallasNativo()" disabled>
+                    <option value="">Seleccionar grupo...</option>
+                  </select>
+                  <span class="hint">Ej. Transferencias, Cambio de moneda, Metas, Perfil.</span>
+                </div>
+
+                <div class="field full">
+                  <label for="nativeScreen">Pantalla / deeplink</label>
+                  <select id="nativeScreen" onchange="seleccionarPantallaNativo()" disabled>
+                    <option value="">Seleccionar pantalla...</option>
+                  </select>
+                  <span class="hint">El nombre es amigable para Marketing; el path es el deeplink técnico de la App.</span>
+                </div>
+              </div>
+
+              <div id="nativeSelectedPathBox" class="selected-route">
+                <strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.
+              </div>
+
+              <div id="nativeManualBlock" class="field hidden" style="margin-top:12px;">
+                <label for="nativeAppDestination">Deeplink nativo manual</label>
+                <input id="nativeAppDestination" type="text" placeholder="/exchange" autocomplete="off" oninput="actualizarRutaManualNativo()">
+                <span class="hint">Úsalo si aparece una funcionalidad nativa nueva que todavía no está en links.json.</span>
+              </div>
             </div>
 
             <div class="subtype-grid">
@@ -1057,6 +1086,7 @@
   let PRODUCTOS = [];
   let DEEPLINKS_NATIVOS = [];
   let WEBVIEW_CATALOG = {};
+  let NATIVE_CATALOG = {};
   let POR_REVISAR_WEBVIEW = [];
 
   let productoSeleccionado = null;
@@ -1289,6 +1319,250 @@
     return false;
   }
 
+  function contarPantallasNativo() {
+    let total = 0;
+    Object.values(NATIVE_CATALOG || {}).forEach(grupos => {
+      if (!Array.isArray(grupos)) return;
+      grupos.forEach(grupo => {
+        if (Array.isArray(grupo.pantallas)) total += grupo.pantallas.length;
+      });
+    });
+    return total;
+  }
+
+  function construirCatalogoNativoLegacy(items) {
+    if (!Array.isArray(items) || !items.length) return {};
+    return {
+      "Funcionalidades": [
+        {
+          grupo: "Todas las funcionalidades nativas",
+          cantidad: items.length,
+          pantallas: items.map(item => ({
+            nombre: item.nombre || item.path || "Funcionalidad",
+            path: item.path || ""
+          })).filter(item => item.path)
+        }
+      ]
+    };
+  }
+
+  function cargarSelectCategoriasNativo() {
+    const categoria = document.getElementById("nativeCategory");
+    const grupo = document.getElementById("nativeGroup");
+    const pantalla = document.getElementById("nativeScreen");
+    const manualBlock = document.getElementById("nativeManualBlock");
+    const pathInput = document.getElementById("nativeAppDestination");
+
+    if (!categoria || !grupo || !pantalla || !manualBlock || !pathInput) return;
+
+    categoria.innerHTML = '<option value="">Seleccionar tipo...</option>';
+
+    Object.keys(NATIVE_CATALOG || {}).forEach(nombre => {
+      const option = document.createElement("option");
+      option.value = nombre;
+      option.textContent = nombre;
+      categoria.appendChild(option);
+    });
+
+    const manual = document.createElement("option");
+    manual.value = "__manual__";
+    manual.textContent = "Otro / escribir deeplink manualmente";
+    categoria.appendChild(manual);
+
+    grupo.innerHTML = '<option value="">Seleccionar grupo...</option>';
+    grupo.disabled = true;
+    pantalla.innerHTML = '<option value="">Seleccionar pantalla...</option>';
+    pantalla.disabled = true;
+    manualBlock.classList.add("hidden");
+    pathInput.value = "";
+
+    document.getElementById("nativeSelectedPathBox").innerHTML =
+      '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+  }
+
+  function cargarGruposNativo() {
+    const categoria = document.getElementById("nativeCategory").value;
+    const grupo = document.getElementById("nativeGroup");
+    const pantalla = document.getElementById("nativeScreen");
+    const manualBlock = document.getElementById("nativeManualBlock");
+    const pathInput = document.getElementById("nativeAppDestination");
+
+    grupo.innerHTML = '<option value="">Seleccionar grupo...</option>';
+    pantalla.innerHTML = '<option value="">Seleccionar pantalla...</option>';
+    pantalla.disabled = true;
+    pathInput.value = "";
+
+    if (categoria === "__manual__") {
+      grupo.disabled = true;
+      manualBlock.classList.remove("hidden");
+      document.getElementById("nativeSelectedPathBox").innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
+      previsualizarRutasGeneradas();
+      setTimeout(() => pathInput.focus(), 0);
+      return;
+    }
+
+    manualBlock.classList.add("hidden");
+
+    const grupos = NATIVE_CATALOG[categoria];
+    if (!categoria || !Array.isArray(grupos)) {
+      grupo.disabled = true;
+      document.getElementById("nativeSelectedPathBox").innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+      previsualizarRutasGeneradas();
+      return;
+    }
+
+    grupos.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = item.grupo + (item.cantidad ? ` (${item.cantidad})` : "");
+      grupo.appendChild(option);
+    });
+
+    grupo.disabled = false;
+    document.getElementById("nativeSelectedPathBox").innerHTML =
+      '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
+    previsualizarRutasGeneradas();
+  }
+
+  function cargarPantallasNativo() {
+    const categoria = document.getElementById("nativeCategory").value;
+    const grupoIndex = document.getElementById("nativeGroup").value;
+    const pantalla = document.getElementById("nativeScreen");
+    const pathInput = document.getElementById("nativeAppDestination");
+
+    pantalla.innerHTML = '<option value="">Seleccionar pantalla...</option>';
+    pathInput.value = "";
+    document.getElementById("nativeManualBlock").classList.add("hidden");
+
+    if (!categoria || grupoIndex === "") {
+      pantalla.disabled = true;
+      document.getElementById("nativeSelectedPathBox").innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
+      previsualizarRutasGeneradas();
+      return;
+    }
+
+    const grupos = NATIVE_CATALOG[categoria] || [];
+    const grupo = grupos[Number(grupoIndex)];
+
+    if (!grupo || !Array.isArray(grupo.pantallas)) {
+      pantalla.disabled = true;
+      previsualizarRutasGeneradas();
+      return;
+    }
+
+    grupo.pantallas.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.path || "";
+      option.textContent = (item.nombre || item.path || "Pantalla") +
+        (item.path ? " — " + item.path : "");
+      pantalla.appendChild(option);
+    });
+
+    const manual = document.createElement("option");
+    manual.value = "__manual__";
+    manual.textContent = "Otro / escribir deeplink manualmente";
+    pantalla.appendChild(manual);
+
+    pantalla.disabled = false;
+    document.getElementById("nativeSelectedPathBox").innerHTML =
+      `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
+    previsualizarRutasGeneradas();
+  }
+
+  function seleccionarPantallaNativo() {
+    const pantalla = document.getElementById("nativeScreen").value;
+    const manualBlock = document.getElementById("nativeManualBlock");
+    const pathInput = document.getElementById("nativeAppDestination");
+
+    if (pantalla === "__manual__") {
+      pathInput.value = "";
+      manualBlock.classList.remove("hidden");
+      document.getElementById("nativeSelectedPathBox").innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
+      previsualizarRutasGeneradas();
+      setTimeout(() => pathInput.focus(), 0);
+      return;
+    }
+
+    manualBlock.classList.add("hidden");
+    pathInput.value = pantalla || "";
+
+    const option = document.getElementById("nativeScreen").selectedOptions[0];
+    const etiqueta = option ? option.textContent : pantalla;
+
+    document.getElementById("nativeSelectedPathBox").innerHTML = pantalla
+      ? `<strong>Deeplink seleccionado:</strong><br>${etiqueta}`
+      : '<strong>Deeplink seleccionado:</strong><br>Selecciona una pantalla.';
+
+    previsualizarRutasGeneradas();
+  }
+
+  function actualizarRutaManualNativo() {
+    const ruta = limpiarValor(document.getElementById("nativeAppDestination").value);
+    document.getElementById("nativeSelectedPathBox").innerHTML = ruta
+      ? `<strong>Deeplink manual:</strong><br>${ruta}`
+      : '<strong>Deeplink seleccionado:</strong><br>Escribe un deeplink nativo.';
+    previsualizarRutasGeneradas();
+  }
+
+  function buscarRutaEnCatalogoNativo(ruta) {
+    const buscada = normalizarRuta(ruta);
+    if (!buscada) return null;
+
+    for (const [categoria, grupos] of Object.entries(NATIVE_CATALOG || {})) {
+      if (!Array.isArray(grupos)) continue;
+
+      for (let i = 0; i < grupos.length; i++) {
+        const grupo = grupos[i];
+        if (!Array.isArray(grupo.pantallas)) continue;
+
+        const pantallaIndex = grupo.pantallas.findIndex(item =>
+          normalizarRuta(item.path || "") === buscada
+        );
+
+        if (pantallaIndex !== -1) {
+          return {
+            categoria,
+            grupoIndex: i,
+            grupo: grupo.grupo,
+            pantallaIndex,
+            path: buscada
+          };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function seleccionarRutaNativoEnCatalogo(ruta) {
+    const buscada = normalizarRuta(ruta);
+    const encontrada = buscarRutaEnCatalogoNativo(buscada);
+    const categoriaSelect = document.getElementById("nativeCategory");
+    const grupoSelect = document.getElementById("nativeGroup");
+    const pantallaSelect = document.getElementById("nativeScreen");
+    const pathInput = document.getElementById("nativeAppDestination");
+
+    if (encontrada) {
+      categoriaSelect.value = encontrada.categoria;
+      cargarGruposNativo();
+      grupoSelect.value = String(encontrada.grupoIndex);
+      cargarPantallasNativo();
+      pantallaSelect.value = encontrada.path;
+      seleccionarPantallaNativo();
+      return true;
+    }
+
+    categoriaSelect.value = "__manual__";
+    cargarGruposNativo();
+    pathInput.value = buscada;
+    actualizarRutaManualNativo();
+    return false;
+  }
+
   function getModoWebNativo() {
     const seleccionado = document.querySelector('input[name="nativeWebMode"]:checked');
     return seleccionado ? seleccionado.value : "login";
@@ -1396,7 +1670,7 @@
 
     document.getElementById("nativeLoginPath").value = "";
     document.getElementById("nativeLandingUrl").value = "";
-    document.getElementById("nativeAppDestination").value = "";
+    cargarSelectCategoriasNativo();
     setModoWebNativo("login");
 
     document.getElementById("sameRouteBlock").classList.remove("hidden");
@@ -1481,17 +1755,9 @@
 
       const appBase = extraerBaseDeeplinkNativo(producto.app || "");
       const normalizedPath = appBase ? "/" + appBase.replace(/^\/+/, "") : "";
-      const select = document.getElementById("nativeAppDestination");
 
       if (normalizedPath) {
-        const existe = Array.from(select.options).some(option => option.value === normalizedPath);
-        if (!existe) {
-          const option = document.createElement("option");
-          option.value = normalizedPath;
-          option.textContent = normalizedPath + " — valor del catálogo";
-          select.appendChild(option);
-        }
-        select.value = normalizedPath;
+        seleccionarRutaNativoEnCatalogo(normalizedPath);
       }
     }
 
@@ -1575,7 +1841,7 @@
     }
 
     if (!rutas.app) {
-      alert("Selecciona el destino App nativo.");
+      alert("Selecciona o completa el destino App.");
       return;
     }
 
@@ -1626,24 +1892,30 @@
       WEBVIEW_CATALOG = data.webview && typeof data.webview === "object"
         ? data.webview
         : {};
+      NATIVE_CATALOG = data.nativo && typeof data.nativo === "object"
+        ? data.nativo
+        : construirCatalogoNativoLegacy(DEEPLINKS_NATIVOS);
       POR_REVISAR_WEBVIEW = Array.isArray(data.porRevisarWebview)
         ? data.porRevisarWebview
         : [];
 
       cargarSelectProductos();
-      cargarSelectDeeplinksNativos();
       cargarSelectCategoriasWebview();
+      cargarSelectCategoriasNativo();
       renderCatalog();
 
       const totalWebview = contarPathsWebview();
-      const totalCategorias = Object.keys(WEBVIEW_CATALOG).length;
+      const totalCategoriasWebview = Object.keys(WEBVIEW_CATALOG).length;
+      const totalNativo = contarPantallasNativo();
+      const totalCategoriasNativo = Object.keys(NATIVE_CATALOG).length;
 
       status.classList.remove("error");
       status.innerHTML =
         "✓ Configuración cargada: <strong>" + PRODUCTOS.length +
-        " productos configurados</strong>, <strong>" + DEEPLINKS_NATIVOS.length +
-        " funcionalidades nativas</strong> y <strong>" + totalWebview +
-        " paths WebView</strong> en <strong>" + totalCategorias + " categorías</strong>.";
+        " productos configurados</strong>, <strong>" + totalNativo +
+        " deeplinks nativos</strong> en <strong>" + totalCategoriasNativo +
+        " categorías</strong> y <strong>" + totalWebview +
+        " paths WebView</strong> en <strong>" + totalCategoriasWebview + " categorías</strong>.";
 
     } catch (error) {
       console.error("[CONFIG] Error cargando ./links.json:", error);
@@ -1651,11 +1923,12 @@
       PRODUCTOS = [];
       DEEPLINKS_NATIVOS = [];
       WEBVIEW_CATALOG = {};
+      NATIVE_CATALOG = {};
       POR_REVISAR_WEBVIEW = [];
 
       cargarSelectProductos();
-      cargarSelectDeeplinksNativos();
       cargarSelectCategoriasWebview();
+      cargarSelectCategoriasNativo();
       renderCatalog();
 
       status.classList.add("error");
@@ -1678,23 +1951,10 @@
     });
   }
 
-  function cargarSelectDeeplinksNativos() {
-    const select = document.getElementById("nativeAppDestination");
-    select.innerHTML = '<option value="">Seleccionar funcionalidad nativa...</option>';
-
-    DEEPLINKS_NATIVOS.forEach(item => {
-      const option = document.createElement("option");
-      option.value = item.path || "";
-      option.textContent =
-        (item.nombre || item.path || "Funcionalidad") +
-        (item.path ? " — " + item.path : "");
-      select.appendChild(option);
-    });
-  }
-
   async function iniciar() {
     document.getElementById("sourceInternal").value = SOURCE_CAMPAIGN;
     cargarSelectCategoriasWebview();
+    cargarSelectCategoriasNativo();
     cambiarTipoDestino();
     cambiarModoWebNativo();
     renderCatalog();

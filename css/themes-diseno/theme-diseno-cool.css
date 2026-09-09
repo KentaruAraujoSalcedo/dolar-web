@@ -1394,6 +1394,22 @@ button, input, select, textarea{ font: inherit; }
 
   .tabla-casas thead th{ font-size: 0.75rem; }
   .tabla-casas td.resultado{ font-size: 0.90rem; font-weight: var(--fw-900); }
+   
+  .page {
+    background-attachment: scroll;
+    background-image: none;
+  }
+
+  .page::before,
+  .page::after {
+    display: none;
+  }
+
+  .center,
+  .best-deal,
+  .panel {
+    animation: none;
+  }
 }
 
 @media (max-width:360px){

@@ -265,6 +265,56 @@
       gap: 10px;
     }
 
+    .variant-section {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #bbf7d0;
+    }
+
+    .variant-section-title {
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #087443;
+    }
+
+    .variant-card {
+      padding: 11px;
+      background: #ffffff;
+      border: 1px solid #d1fadf;
+      border-radius: 9px;
+      min-width: 0;
+    }
+
+    .variant-title {
+      margin-bottom: 7px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #475467;
+    }
+
+    .variant-value {
+      font-family: Consolas, monospace;
+      font-size: 10px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      max-height: 130px;
+      overflow: auto;
+      padding: 8px;
+      background: #f8fafc;
+      border-radius: 7px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .variant-actions {
+      margin-top: 8px;
+    }
+
+    .variant-actions button {
+      padding: 7px 10px;
+      font-size: 10px;
+    }
+
     .preview {
       padding: 11px;
       background: var(--soft);
@@ -966,14 +1016,51 @@
 
           <div id="generationModeNote" class="mode-note hidden"></div>
 
-          <div class="preview-grid">
-            <div class="preview">
-              <div class="preview-title">Destino Web parametrizado</div>
-              <div id="webPreview" class="preview-value"></div>
+          <div class="variant-section">
+            <div class="variant-section-title">Variantes del link final</div>
+            <div class="preview-grid">
+              <div class="variant-card">
+                <div class="variant-title">Link final encodeado</div>
+                <div id="finalEncodedPreview" class="variant-value"></div>
+                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('finalEncodedPreview', 'Link final encodeado')">Copiar</button></div>
+              </div>
+              <div class="variant-card">
+                <div class="variant-title">Link final sin encodear</div>
+                <div id="finalDecodedPreview" class="variant-value"></div>
+                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('finalDecodedPreview', 'Link final sin encodear')">Copiar</button></div>
+              </div>
             </div>
-            <div class="preview">
-              <div class="preview-title">Deeplink App antes del encoding</div>
-              <div id="appPreview" class="preview-value"></div>
+          </div>
+
+          <div class="variant-section">
+            <div class="variant-section-title">Destino Web</div>
+            <div class="preview-grid">
+              <div class="variant-card">
+                <div class="variant-title">Web sin encodear</div>
+                <div id="webPreview" class="variant-value"></div>
+                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('webPreview', 'Web sin encodear')">Copiar</button></div>
+              </div>
+              <div class="variant-card">
+                <div class="variant-title">Web encodeado</div>
+                <div id="webEncodedPreview" class="variant-value"></div>
+                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('webEncodedPreview', 'Web encodeado')">Copiar</button></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="variant-section">
+            <div class="variant-section-title">Deeplink App</div>
+            <div class="preview-grid">
+              <div class="variant-card">
+                <div class="variant-title">App sin encodear</div>
+                <div id="appPreview" class="variant-value"></div>
+                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('appPreview', 'App sin encodear')">Copiar</button></div>
+              </div>
+              <div class="variant-card">
+                <div class="variant-title">App encodeado</div>
+                <div id="appEncodedPreview" class="variant-value"></div>
+                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('appEncodedPreview', 'App encodeado')">Copiar</button></div>
+              </div>
             </div>
           </div>
 <div class="success-note">
@@ -2276,15 +2363,28 @@
         ? "&"
         : "?";
 
+    const appEncodeada = encodeURIComponent(appParametrizada);
+    const webEncodeada = encodeURIComponent(webParametrizada);
+
     const finalUrl =
       webParametrizada +
       separador +
       "embeddedURL=" +
-      encodeURIComponent(appParametrizada);
+      appEncodeada;
+
+    const finalUrlSinEncodear =
+      webParametrizada +
+      separador +
+      "embeddedURL=" +
+      appParametrizada;
 
     document.getElementById("finalUrl").textContent = finalUrl;
+    document.getElementById("finalEncodedPreview").textContent = finalUrl;
+    document.getElementById("finalDecodedPreview").textContent = finalUrlSinEncodear;
     document.getElementById("webPreview").textContent = webParametrizada;
+    document.getElementById("webEncodedPreview").textContent = webEncodeada;
     document.getElementById("appPreview").textContent = appParametrizada;
+    document.getElementById("appEncodedPreview").textContent = appEncodeada;
 
     const modeNote = document.getElementById("generationModeNote");
     const rutasActuales = obtenerRutasDesdeConstructor();
@@ -2319,6 +2419,24 @@
     if (modeNote) {
       modeNote.className = "mode-note hidden";
       modeNote.innerHTML = "";
+    }
+  }
+
+  async function copiarValor(elementId, nombre = "Valor") {
+    const element = document.getElementById(elementId);
+    const valor = element ? element.textContent : "";
+    if (!valor) return;
+    try {
+      await navigator.clipboard.writeText(valor);
+      alert(nombre + " copiado correctamente.");
+    } catch (error) {
+      const textarea = document.createElement("textarea");
+      textarea.value = valor;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+      alert(nombre + " copiado correctamente.");
     }
   }
 

@@ -3,500 +3,2497 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Generador de Links de Campaña</title>
 
   <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
+
 <div class="page">
 
-  <header class="header">
-    <h1>Generador de Links de Campaña</h1>
-    <p>
-      Genera rutas Web, Deeplinks App y links finales de campaña. Usa productos ya configurados o explora el catálogo completo de WebView y funcionalidades nativas.
-    </p>
+  <!-- =====================================================
+       CABECERA
+  ====================================================== -->
+
+  <header class="header main-header">
+
+    <div class="header-main">
+
+      <div>
+        <h1>Generador de Links de Campaña</h1>
+
+        <p>
+          Crea, revisa y prueba links Web y Deeplinks App para campañas digitales.
+        </p>
+      </div>
+
+      <div class="header-badge">
+        Digital Analytics
+      </div>
+
+    </div>
+
   </header>
 
-  <div class="layout">
-    <main class="left">
 
-      <section class="card">
-        <h2><span class="step">1</span>Destino del producto</h2>
-        <p class="section-description">
-          Selecciona un producto existente o genera las rutas desde cero. En WebView una misma ruta construye el destino Web y App. En Nativo eliges la funcionalidad de la App y luego defines cómo será el destino Web: una ruta interna que pasa por <strong>/login</strong> o una landing/URL directa que requerirá validar la apertura de App con GTM.
+  <!-- =====================================================
+       NAVEGACIÓN PRINCIPAL
+  ====================================================== -->
+
+  <nav class="module-tabs" aria-label="Herramientas">
+
+    <button
+      id="tabGenerador"
+      class="module-tab module-tab-generator active"
+      type="button"
+      onclick="cambiarModulo('generador')"
+    >
+      <span class="module-tab-icon">01</span>
+
+      <span class="module-tab-content">
+        <strong>Generar links</strong>
+        <small>Crear URLs para campañas</small>
+      </span>
+    </button>
+
+
+    <button
+      id="tabCatalogo"
+      class="module-tab module-tab-catalog"
+      type="button"
+      onclick="cambiarModulo('catalogo')"
+    >
+      <span class="module-tab-icon">02</span>
+
+      <span class="module-tab-content">
+        <strong>Catálogo de destinos</strong>
+        <small>Buscar rutas ya configuradas</small>
+      </span>
+    </button>
+
+
+    <button
+      id="tabAnalizador"
+      class="module-tab module-tab-analyzer"
+      type="button"
+      onclick="cambiarModulo('analizador')"
+    >
+      <span class="module-tab-icon">03</span>
+
+      <span class="module-tab-content">
+        <strong>Analizar link</strong>
+        <small>Desarmar URLs y revisar UTMs</small>
+      </span>
+    </button>
+
+
+    <button
+      id="tabProbador"
+      class="module-tab module-tab-tester"
+      type="button"
+      onclick="cambiarModulo('probador')"
+    >
+      <span class="module-tab-icon">04</span>
+
+      <span class="module-tab-content">
+        <strong>Probar link</strong>
+        <small>Validar Web y App</small>
+      </span>
+    </button>
+
+  </nav>
+
+
+  <!-- =====================================================
+       ESTADO DE CONFIGURACIÓN
+  ====================================================== -->
+
+  <div id="dataStatus" class="data-status global-data-status">
+    Cargando configuración desde
+    <strong>links.json</strong>,
+    <strong>nativos.json</strong> y
+    <strong>campanas.json</strong>...
+  </div>
+
+
+  <!-- =====================================================
+       MÓDULO 1 — GENERADOR
+  ====================================================== -->
+
+  <main
+    id="moduleGenerador"
+    class="module-panel module-generator active"
+  >
+
+    <div class="module-heading">
+
+      <div class="module-heading-number">
+        01
+      </div>
+
+      <div>
+        <h2>Generar links de campaña</h2>
+
+        <p>
+          Selecciona un destino, completa los datos de campaña y genera
+          uno o varios links listos para utilizar.
         </p>
+      </div>
 
-        <div class="form-grid">
-          <div class="field full">
-            <label for="productSelect">Producto ya configurado (acceso rápido)</label>
-            <select id="productSelect" onchange="seleccionarProducto(this.value)">
-              <option value="">Nuevo destino / seleccionar producto...</option>
-            </select>
-            <span class="hint">Los productos ya creados se cargan desde links.json. Úsalos como acceso rápido; si necesitas otra pantalla, usa el catálogo WebView de abajo.</span>
-            <div id="dataStatus" class="data-status">
-              Cargando configuración desde <strong>links.json</strong>, <strong>nativos.json</strong> y <strong>campanas.json</strong>...
-            </div>
-          </div>
+    </div>
+
+
+    <!-- ===================================================
+         PASO 1
+    ==================================================== -->
+
+    <section class="card generator-card destination-card">
+
+      <div class="card-section-header">
+
+        <div>
+          <span class="section-eyebrow">PASO 1</span>
+
+          <h2>¿A dónde quieres llevar al usuario?</h2>
+
+          <p class="section-description">
+            Puedes utilizar un destino ya configurado o ingresar
+            directamente las URLs Web y App.
+          </p>
         </div>
 
-        <div class="builder-box">
-          <div class="builder-title">Generador de rutas Web / App</div>
+      </div>
 
-          <div class="type-grid">
-            <label class="type-option">
-              <div><input type="radio" name="destinationType" value="webview" checked onchange="cambiarTipoDestino()"><strong>WebView</strong></div>
-              <span>Una misma ruta construye automáticamente el destino Web y el Deeplink App.</span>
+
+      <!-- DESTINO PRECONFIGURADO -->
+
+      <div class="destination-quick-box">
+
+        <div class="field">
+
+          <label for="productSelect">
+            Destino ya configurado
+          </label>
+
+          <select
+            id="productSelect"
+            onchange="seleccionarProducto(this.value)"
+          >
+            <option value="">
+              Seleccionar destino...
+            </option>
+          </select>
+
+          <span class="hint">
+            Busca productos y funcionalidades que ya tengan configurado
+            su destino Web y App.
+          </span>
+
+        </div>
+
+
+        <div class="destination-catalog-shortcut">
+
+          <span>
+            ¿No sabes cuál elegir?
+          </span>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="cambiarModulo('catalogo')"
+          >
+            Ir al catálogo
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- RESULTADOS DEL DESTINO -->
+
+      <div class="destination-result-box">
+
+        <div class="destination-result-title">
+          Destino de la campaña
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label for="webUrl">
+              Destino Web
             </label>
-            <label class="type-option">
-              <div><input type="radio" name="destinationType" value="native" onchange="cambiarTipoDestino()"><strong>Nativo</strong></div>
-              <span>Funcionalidad nativa de App + fallback Web vía /login o landing directa.</span>
-            </label>
+
+            <input
+              id="webUrl"
+              type="text"
+              placeholder="https://mi.scotiabank.com.pe/..."
+              autocomplete="off"
+            >
+
+            <span class="hint">
+              URL que se utilizará si el usuario continúa por Web.
+            </span>
+
           </div>
 
-          <div id="webviewPanel">
-            <div id="sameRouteBlock">
+
+          <div class="field">
+
+            <label for="appUrl">
+              Deeplink App
+            </label>
+
+            <input
+              id="appUrl"
+              type="text"
+              placeholder="scotiabankpe:///..."
+              autocomplete="off"
+            >
+
+            <span class="hint">
+              Destino que intentará abrir la aplicación.
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONFIGURACIÓN AVANZADA -->
+
+      <details class="advanced-destination">
+
+        <summary>
+          <span>
+            Configuración avanzada del destino
+          </span>
+
+          <small>
+            WebView, Nativo, rutas diferentes y nuevos destinos
+          </small>
+        </summary>
+
+
+        <div class="advanced-destination-content">
+
+          <div class="advanced-intro">
+
+            Usa esta sección solamente si el destino todavía no está
+            configurado o necesitas construir una ruta especial.
+
+          </div>
+
+
+          <div class="builder-box">
+
+            <div class="builder-title">
+              Tipo de destino
+            </div>
+
+
+            <div class="type-grid">
+
+              <label class="type-option">
+
+                <div>
+
+                  <input
+                    type="radio"
+                    name="destinationType"
+                    value="webview"
+                    checked
+                    onchange="cambiarTipoDestino()"
+                  >
+
+                  <strong>WebView</strong>
+
+                </div>
+
+                <span>
+                  Una ruta interna construye automáticamente
+                  el destino Web y el Deeplink App.
+                </span>
+
+              </label>
+
+
+              <label class="type-option">
+
+                <div>
+
+                  <input
+                    type="radio"
+                    name="destinationType"
+                    value="native"
+                    onchange="cambiarTipoDestino()"
+                  >
+
+                  <strong>Nativo</strong>
+
+                </div>
+
+                <span>
+                  Funcionalidad nativa de App con un fallback Web.
+                </span>
+
+              </label>
+
+            </div>
+
+
+            <!-- ===========================================
+                 WEBVIEW
+            ============================================ -->
+
+            <div id="webviewPanel">
+
+              <div id="sameRouteBlock">
+
+                <div class="webview-catalog-box">
+
+                  <div class="webview-catalog-title">
+                    Seleccionar pantalla WebView
+                  </div>
+
+
+                  <div class="form-grid">
+
+                    <div class="field">
+
+                      <label for="webviewCategory">
+                        Tipo
+                      </label>
+
+                      <select
+                        id="webviewCategory"
+                        onchange="cargarGruposWebview()"
+                      >
+                        <option value="">
+                          Seleccionar tipo...
+                        </option>
+                      </select>
+
+                      <span class="hint">
+                        Productos, Funcionalidades o Perfil / Servicios.
+                      </span>
+
+                    </div>
+
+
+                    <div class="field">
+
+                      <label for="webviewGroup">
+                        Grupo
+                      </label>
+
+                      <select
+                        id="webviewGroup"
+                        onchange="cargarPantallasWebview()"
+                        disabled
+                      >
+                        <option value="">
+                          Seleccionar grupo...
+                        </option>
+                      </select>
+
+                      <span class="hint">
+                        Ej. Apertura de cuentas, Campañas,
+                        Transferencias o Seguros.
+                      </span>
+
+                    </div>
+
+
+                    <div class="field full">
+
+                      <label for="webviewScreen">
+                        Pantalla / path
+                      </label>
+
+                      <select
+                        id="webviewScreen"
+                        onchange="seleccionarPantallaWebview()"
+                        disabled
+                      >
+                        <option value="">
+                          Seleccionar pantalla...
+                        </option>
+                      </select>
+
+                      <span class="hint">
+                        Algunas pantallas intermedias pueden requerir
+                        información previa del flujo.
+                      </span>
+
+                    </div>
+
+                  </div>
+
+
+                  <div
+                    id="webviewSelectedPathBox"
+                    class="selected-route"
+                  >
+                    <strong>Ruta seleccionada:</strong>
+                    <br>
+                    Selecciona Tipo → Grupo → Pantalla.
+                  </div>
+
+
+                  <div
+                    id="webviewManualBlock"
+                    class="field hidden"
+                    style="margin-top:12px;"
+                  >
+
+                    <label for="webviewPath">
+                      Ruta WebView manual
+                    </label>
+
+                    <input
+                      id="webviewPath"
+                      type="text"
+                      placeholder="/u/insurances/acquired-insurances/catalog"
+                      autocomplete="off"
+                      oninput="actualizarRutaManualWebview()"
+                    >
+
+                    <span class="hint">
+                      Úsalo cuando la ruta no aparezca en el catálogo.
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="checkbox-row">
+
+                <input
+                  id="differentRoutes"
+                  type="checkbox"
+                  onchange="manejarRutasDiferentes()"
+                >
+
+                <label for="differentRoutes">
+
+                  <strong>
+                    La ruta Web y App son diferentes
+                  </strong>
+
+                  <br>
+
+                  Úsalo solo para excepciones reales,
+                  por ejemplo algunos flujos KYC.
+
+                </label>
+
+              </div>
+
+
+              <div
+                id="differentRoutesBlock"
+                class="form-grid hidden"
+                style="margin-top:14px;"
+              >
+
+                <div class="field">
+
+                  <label for="webviewWebPath">
+                    Ruta Web
+                  </label>
+
+                  <input
+                    id="webviewWebPath"
+                    type="text"
+                    placeholder="/u/accounts/savings/confirm/199"
+                    autocomplete="off"
+                    oninput="previsualizarRutasGeneradas()"
+                  >
+
+                  <span class="hint">
+                    Ruta utilizada en redirectTo.
+                  </span>
+
+                </div>
+
+
+                <div class="field">
+
+                  <label for="webviewAppPath">
+                    Ruta App
+                  </label>
+
+                  <input
+                    id="webviewAppPath"
+                    type="text"
+                    placeholder="/u/accounts/savings/m/kyc/199"
+                    autocomplete="off"
+                    oninput="previsualizarRutasGeneradas()"
+                  >
+
+                  <span class="hint">
+                    Ruta utilizada dentro de
+                    scotiabankpe:///webView?path=...
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- ===========================================
+                 NATIVO
+            ============================================ -->
+
+            <div
+              id="nativePanel"
+              class="hidden"
+            >
+
               <div class="webview-catalog-box">
-                <div class="webview-catalog-title">Seleccionar pantalla desde catálogo WebView</div>
+
+                <div class="webview-catalog-title">
+                  Seleccionar funcionalidad Nativa
+                </div>
+
 
                 <div class="form-grid">
-                  <div class="field">
-                    <label for="webviewCategory">Tipo</label>
-                    <select id="webviewCategory" onchange="cargarGruposWebview()">
-                      <option value="">Seleccionar tipo...</option>
-                    </select>
-                    <span class="hint">Productos, Funcionalidades o Perfil / Servicios.</span>
-                  </div>
 
                   <div class="field">
-                    <label for="webviewGroup">Grupo</label>
-                    <select id="webviewGroup" onchange="cargarPantallasWebview()" disabled>
-                      <option value="">Seleccionar grupo...</option>
+
+                    <label for="nativeCategory">
+                      Tipo
+                    </label>
+
+                    <select
+                      id="nativeCategory"
+                      onchange="cargarGruposNativo()"
+                    >
+                      <option value="">
+                        Seleccionar tipo...
+                      </option>
                     </select>
-                    <span class="hint">Ej. Apertura de cuentas, Campañas, Transferencias, Seguros.</span>
+
+                    <span class="hint">
+                      Productos, Funcionalidades o Perfil / Servicios.
+                    </span>
+
                   </div>
+
+
+                  <div class="field">
+
+                    <label for="nativeGroup">
+                      Grupo
+                    </label>
+
+                    <select
+                      id="nativeGroup"
+                      onchange="cargarPantallasNativo()"
+                      disabled
+                    >
+                      <option value="">
+                        Seleccionar grupo...
+                      </option>
+                    </select>
+
+                    <span class="hint">
+                      Ej. Transferencias, Cambio de moneda,
+                      Metas o Perfil.
+                    </span>
+
+                  </div>
+
 
                   <div class="field full">
-                    <label for="webviewScreen">Pantalla / path</label>
-                    <select id="webviewScreen" onchange="seleccionarPantallaWebview()" disabled>
-                      <option value="">Seleccionar pantalla...</option>
+
+                    <label for="nativeScreen">
+                      Pantalla / Deeplink
+                    </label>
+
+                    <select
+                      id="nativeScreen"
+                      onchange="seleccionarPantallaNativo()"
+                      disabled
+                    >
+                      <option value="">
+                        Seleccionar pantalla...
+                      </option>
                     </select>
-                    <span class="hint">Puedes elegir cualquier pantalla del inventario. Algunas pantallas intermedias pueden requerir estado previo del flujo.</span>
+
+                    <span class="hint">
+                      Selecciona el Deeplink técnico de la App.
+                    </span>
+
                   </div>
+
                 </div>
 
-                <div id="webviewSelectedPathBox" class="selected-route">
-                  <strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.
+
+                <div
+                  id="nativeSelectedPathBox"
+                  class="selected-route"
+                >
+                  <strong>Deeplink seleccionado:</strong>
+                  <br>
+                  Selecciona Tipo → Grupo → Pantalla.
                 </div>
 
-                <div id="webviewManualBlock" class="field hidden" style="margin-top:12px;">
-                  <label for="webviewPath">Ruta WebView manual</label>
-                  <input id="webviewPath" type="text" placeholder="/u/insurances/acquired-insurances/catalog" autocomplete="off" oninput="actualizarRutaManualWebview()">
-                  <span class="hint">Úsalo cuando la ruta no aparezca en el catálogo.</span>
+
+                <div
+                  id="nativeManualBlock"
+                  class="field hidden"
+                  style="margin-top:12px;"
+                >
+
+                  <label for="nativeAppDestination">
+                    Deeplink nativo manual
+                  </label>
+
+                  <input
+                    id="nativeAppDestination"
+                    type="text"
+                    placeholder="/exchange"
+                    autocomplete="off"
+                    oninput="actualizarRutaManualNativo()"
+                  >
+
+                  <span class="hint">
+                    Úsalo para una funcionalidad que todavía
+                    no esté registrada en nativos.json.
+                  </span>
+
                 </div>
+
               </div>
-            </div>
 
-            <div class="checkbox-row">
-              <input id="differentRoutes" type="checkbox" onchange="manejarRutasDiferentes()">
-              <label for="differentRoutes"><strong>La ruta Web y App son diferentes</strong><br>Úsalo solo para excepciones reales, por ejemplo KYC.</label>
-            </div>
 
-            <div id="differentRoutesBlock" class="form-grid hidden" style="margin-top:14px;">
-              <div class="field">
-                <label for="webviewWebPath">Ruta Web</label>
-                <input id="webviewWebPath" type="text" placeholder="/u/accounts/savings/confirm/199" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-                <span class="hint">Ruta utilizada en redirectTo del destino Web.</span>
+              <div class="subtype-grid">
+
+                <label class="subtype-option">
+
+                  <div>
+
+                    <input
+                      type="radio"
+                      name="nativeWebMode"
+                      value="login"
+                      checked
+                      onchange="cambiarModoWebNativo()"
+                    >
+
+                    <strong>
+                      Ruta interna vía /login
+                    </strong>
+
+                  </div>
+
+                  <span>
+                    Utiliza mi.scotiabank.com.pe/login como wrapper.
+                  </span>
+
+                </label>
+
+
+                <label class="subtype-option">
+
+                  <div>
+
+                    <input
+                      type="radio"
+                      name="nativeWebMode"
+                      value="landing"
+                      onchange="cambiarModoWebNativo()"
+                    >
+
+                    <strong>
+                      Landing / URL directa
+                    </strong>
+
+                  </div>
+
+                  <span>
+                    Utiliza una URL HTTPS como fallback Web.
+                  </span>
+
+                </label>
+
               </div>
-              <div class="field">
-                <label for="webviewAppPath">Ruta App</label>
-                <input id="webviewAppPath" type="text" placeholder="/u/accounts/savings/m/kyc/199" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-                <span class="hint">Ruta utilizada dentro de scotiabankpe:///webView?path=...</span>
-              </div>
-            </div>
-          </div>
 
-          <div id="nativePanel" class="hidden">
-            <div class="webview-catalog-box">
-              <div class="webview-catalog-title">Seleccionar pantalla desde catálogo Nativo</div>
 
-              <div class="form-grid">
+              <div id="nativeLoginPanel">
+
                 <div class="field">
-                  <label for="nativeCategory">Tipo</label>
-                  <select id="nativeCategory" onchange="cargarGruposNativo()">
-                    <option value="">Seleccionar tipo...</option>
-                  </select>
-                  <span class="hint">Productos, Funcionalidades o Perfil / Servicios.</span>
+
+                  <label for="nativeLoginPath">
+                    Ruta Web interna de fallback
+                  </label>
+
+                  <input
+                    id="nativeLoginPath"
+                    type="text"
+                    placeholder="/u/payment"
+                    autocomplete="off"
+                    oninput="previsualizarRutasGeneradas()"
+                  >
+
+                  <span class="hint">
+                    Ejemplo:
+                    <strong>/u/payment</strong>.
+                    Se construirá
+                    <strong>
+                      https://mi.scotiabank.com.pe/login?redirectTo=/u/payment
+                    </strong>.
+                  </span>
+
                 </div>
+
+
+                <div class="mode-note verified">
+
+                  <strong>
+                    Modo actualmente validado
+                  </strong>
+
+                  <br>
+
+                  El wrapper
+                  <span class="mini-code">
+                    /login?redirectTo=...
+                  </span>
+                  ha demostrado procesar
+                  <span class="mini-code">
+                    embeddedURL
+                  </span>
+                  en las pruebas realizadas.
+
+                </div>
+
+              </div>
+
+
+              <div
+                id="nativeLandingPanel"
+                class="hidden"
+              >
 
                 <div class="field">
-                  <label for="nativeGroup">Grupo</label>
-                  <select id="nativeGroup" onchange="cargarPantallasNativo()" disabled>
-                    <option value="">Seleccionar grupo...</option>
-                  </select>
-                  <span class="hint">Ej. Transferencias, Cambio de moneda, Metas, Perfil.</span>
+
+                  <label for="nativeLandingUrl">
+                    Landing / URL Web de fallback
+                  </label>
+
+                  <input
+                    id="nativeLandingUrl"
+                    type="text"
+                    placeholder="https://www.scotiabank.com.pe/Personas/Ahorros/Cuentas-Bancarias/cuenta-meta"
+                    autocomplete="off"
+                    oninput="previsualizarRutasGeneradas()"
+                  >
+
+                  <span class="hint">
+                    Ingresa una URL HTTPS completa.
+                  </span>
+
                 </div>
 
-                <div class="field full">
-                  <label for="nativeScreen">Pantalla / deeplink</label>
-                  <select id="nativeScreen" onchange="seleccionarPantallaNativo()" disabled>
-                    <option value="">Seleccionar pantalla...</option>
-                  </select>
-                  <span class="hint">El nombre es amigable para Marketing; el path es el deeplink técnico de la App.</span>
+
+                <div class="mode-note experimental">
+
+                  <strong>
+                    Requiere validación con GTM
+                  </strong>
+
+                  <br>
+
+                  Una landing directa no necesariamente abrirá la App
+                  únicamente por recibir
+                  <span class="mini-code">
+                    embeddedURL
+                  </span>.
+
                 </div>
+
               </div>
 
-              <div id="nativeSelectedPathBox" class="selected-route">
-                <strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.
-              </div>
-
-              <div id="nativeManualBlock" class="field hidden" style="margin-top:12px;">
-                <label for="nativeAppDestination">Deeplink nativo manual</label>
-                <input id="nativeAppDestination" type="text" placeholder="/exchange" autocomplete="off" oninput="actualizarRutaManualNativo()">
-                <span class="hint">Úsalo si aparece una funcionalidad nativa nueva que todavía no está en nativos.json.</span>
-              </div>
             </div>
 
-            <div class="subtype-grid">
-              <label class="subtype-option">
-                <div>
-                  <input type="radio" name="nativeWebMode" value="login" checked onchange="cambiarModoWebNativo()">
-                  <strong>Ruta interna vía /login</strong>
-                </div>
-                <span>
-                  Para rutas como /u/payment. Usa mi.scotiabank.com.pe/login y es el mecanismo
-                  que ya comprobamos que procesa embeddedURL.
-                </span>
-              </label>
 
-              <label class="subtype-option">
-                <div>
-                  <input type="radio" name="nativeWebMode" value="landing" onchange="cambiarModoWebNativo()">
-                  <strong>Landing / URL directa</strong>
-                </div>
-                <span>
-                  Para páginas de www.scotiabank.com.pe, openmarket u otras URLs HTTPS.
-                  La URL se genera, pero la apertura de App debe validarse con GTM.
-                </span>
-              </label>
+            <div class="actions">
+
+              <button
+                class="btn-primary"
+                type="button"
+                onclick="generarRutasDestino()"
+              >
+                Usar estas rutas
+              </button>
+
+              <button
+                class="btn-secondary"
+                type="button"
+                onclick="limpiarConstructor()"
+              >
+                Limpiar configuración
+              </button>
+
             </div>
 
-            <div id="nativeLoginPanel">
-              <div class="field">
-                <label for="nativeLoginPath">Ruta Web interna de fallback</label>
-                <input id="nativeLoginPath" type="text" placeholder="/u/payment" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-                <span class="hint">
-                  Ejemplo: <strong>/u/payment</strong>. Se construirá
-                  <strong>https://mi.scotiabank.com.pe/login?redirectTo=/u/payment</strong>.
-                </span>
-              </div>
-
-              <div class="mode-note verified">
-                <strong>Modo actualmente validado</strong><br>
-                El wrapper <span class="mini-code">/login?redirectTo=...</span> sí ha demostrado
-                procesar <span class="mini-code">embeddedURL</span> y abrir la App en las pruebas.
-              </div>
-            </div>
-
-            <div id="nativeLandingPanel" class="hidden">
-              <div class="field">
-                <label for="nativeLandingUrl">Landing / URL Web de fallback</label>
-                <input id="nativeLandingUrl" type="text" placeholder="https://www.scotiabank.com.pe/Personas/Ahorros/Cuentas-Bancarias/cuenta-meta" autocomplete="off" oninput="previsualizarRutasGeneradas()">
-                <span class="hint">
-                  Ingresa una URL HTTPS completa. Puede ser de <strong>www.scotiabank.com.pe</strong>,
-                  <strong>mi.scotiabank.com.pe</strong> u otro destino Web autorizado.
-                </span>
-              </div>
-
-              <div class="mode-note experimental">
-                <strong>Requiere validación con GTM</strong><br>
-                Una landing directa no abre la App solo por recibir <span class="mini-code">embeddedURL</span>.
-                Este modo genera correctamente la URL y el deeplink, pero para intentar abrir la App
-                tendremos que implementar/probar la lectura de <span class="mini-code">embeddedURL</span>
-                en GTM sobre esas páginas.
-              </div>
-            </div>
           </div>
 
-          <div class="actions">
-            <button class="btn-primary" onclick="generarRutasDestino()">Generar rutas Web y App</button>
-            <button class="btn-secondary" onclick="limpiarConstructor()">Limpiar generador de rutas</button>
+
+          <div
+            id="routePreviewBox"
+            class="success-note"
+          >
+            <strong>Vista previa</strong>
+            <br><br>
+            Elige WebView o Nativo y completa sus datos.
           </div>
+
         </div>
 
-        <div class="form-grid" style="margin-top:14px;">
-          <div class="field">
-            <label for="webUrl">Destino Web resultante</label>
-            <input id="webUrl" type="text" placeholder="https://mi.scotiabank.com.pe/...">
-            <span class="hint">Se completa desde el catálogo o el generador. También puedes editarla manualmente.</span>
-          </div>
-          <div class="field">
-            <label for="appUrl">Deeplink App resultante</label>
-            <input id="appUrl" type="text" placeholder="scotiabankpe:///...">
-            <span class="hint">Se completa desde el catálogo o el generador. También puedes editarlo manualmente.</span>
-          </div>
-        </div>
+      </details>
 
-        <div id="routePreviewBox" class="success-note">
-          <strong>Vista previa</strong><br><br>Elige WebView o Nativo y completa sus datos.
-        </div>
-      </section>
+    </section>
 
-      <section class="card">
-        <h2><span class="step">2</span>Datos de campaña</h2>
+
+    <!-- ===================================================
+         PASO 2
+    ==================================================== -->
+
+    <section class="card generator-card campaign-card">
+
+      <div class="card-section-header">
+
+        <span class="section-eyebrow">
+          PASO 2
+        </span>
+
+        <h2>Datos de campaña</h2>
+
         <p class="section-description">
-          Selecciona los valores estandarizados. Si no encuentras el valor
-          necesario, elige “Otro” y escríbelo manualmente.
+          Define las UTMs que permitirán identificar el origen
+          del tráfico en Analytics.
         </p>
 
-        <div class="form-grid">
-          <div class="field">
-            <label for="utmSource">utm_source</label>
-            <select id="utmSource" onchange="manejarOtroSource()">
-              <option value="">Seleccionar fuente...</option>
-            </select>
-            <input id="utmSourceOtro" class="manual-input hidden" type="text" placeholder="Escribe la fuente" autocomplete="off">
-            <span class="hint">Plataforma, sistema o fuente que origina el tráfico.</span>
-          </div>
+      </div>
 
-          <div class="field">
-            <label for="utmMedium">utm_medium</label>
-            <select id="utmMedium" onchange="manejarOtroMedium()">
-              <option value="">Seleccionar medio...</option>
-            </select>
-            <input id="utmMediumOtro" class="manual-input hidden" type="text" placeholder="Escribe el medio" autocomplete="off">
-            <span class="hint">Medio o mecanismo utilizado por la campaña.</span>
-          </div>
 
-          <div class="field full">
-            <label for="utmCampaign">utm_campaign</label>
-            <input id="utmCampaign" list="campaignOptions" type="text" placeholder="Ej. Google-Search-CuentaSueldo-Ago26" autocomplete="off">
-            <datalist id="campaignOptions">
-              <option value="Google-Search-">
-              <option value="Google-Display-">
-              <option value="Google-Pmax-">
-              <option value="Google-DemandGen-">
-              <option value="Google-UAC-">
-              <option value="Google-ACE-">
-              <option value="Google-YouTube-">
-              <option value="DV360-">
-              <option value="Meta-">
-              <option value="TikTok-">
-              <option value="Bing-Search-">
-              <option value="Bing-Display-">
-              <option value="LinkedIn-">
-              <option value="Spotify-">
-              <option value="Email-">
-              <option value="Push-">
-            </datalist>
-            <span class="hint">Formato recomendado: Canal-TipoCampaña-Producto-Periodo.</span>
-          </div>
+      <div class="form-grid">
 
-          <div class="field">
-            <label for="sourceInternal">source</label>
-            <input id="sourceInternal" type="text" value="campaign" readonly>
-            <span class="hint">Puerta de entrada estandarizada para campañas.</span>
-          </div>
+        <div class="field">
 
-          <div class="field">
-            <label for="detail">detail <span style="font-weight:normal;color:#98a2b3">(opcional)</span></label>
-            <input id="detail" type="text" placeholder="Ej. banner-seguros" autocomplete="off">
-            <span class="hint">Úsalo solo si necesitas un nivel adicional de detalle.</span>
-          </div>
+          <label for="utmSource">
+            utm_source
+          </label>
+
+          <select
+            id="utmSource"
+            onchange="manejarOtroSource()"
+          >
+            <option value="">
+              Seleccionar fuente...
+            </option>
+          </select>
+
+          <input
+            id="utmSourceOtro"
+            class="manual-input hidden"
+            type="text"
+            placeholder="Escribe la fuente"
+            autocomplete="off"
+          >
+
+          <span class="hint">
+            Plataforma o sistema que origina el tráfico.
+          </span>
+
         </div>
 
-        <div class="campaign-source-box" style="margin-top:16px;">
-          <strong>Puerta de entrada estandarizada: campaign</strong>
-          <p>El generador agrega <strong>source=campaign</strong> tanto al destino Web como al Deeplink App. <strong>detail</strong> se agrega solo cuando se completa.</p>
+
+        <div class="field">
+
+          <label for="utmMedium">
+            utm_medium
+          </label>
+
+          <select
+            id="utmMedium"
+            onchange="manejarOtroMedium()"
+          >
+            <option value="">
+              Primero selecciona una fuente...
+            </option>
+          </select>
+
+          <input
+            id="utmMediumOtro"
+            class="manual-input hidden"
+            type="text"
+            placeholder="Escribe el medio"
+            autocomplete="off"
+          >
+
+          <span class="hint">
+            Medio o mecanismo utilizado para distribuir la campaña.
+          </span>
+
         </div>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="generarLink()">Generar link de campaña</button>
-          <button class="btn-secondary" onclick="mostrarAutogenerador()">Autogenerar links</button>
-          <button class="btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+
+        <div class="field full">
+
+          <label for="utmCampaign">
+            utm_campaign
+          </label>
+
+          <input
+            id="utmCampaign"
+            list="campaignOptions"
+            type="text"
+            placeholder="Ej. Google-Search-CuentaSueldo-Ago26"
+            autocomplete="off"
+          >
+
+          <datalist id="campaignOptions">
+
+            <option value="Google-Search-">
+            <option value="Google-Display-">
+            <option value="Google-Pmax-">
+            <option value="Google-DemandGen-">
+            <option value="Google-UAC-">
+            <option value="Google-ACE-">
+            <option value="Google-YouTube-">
+            <option value="DV360-">
+            <option value="Meta-">
+            <option value="TikTok-">
+            <option value="Bing-Search-">
+            <option value="Bing-Display-">
+            <option value="LinkedIn-">
+            <option value="Spotify-">
+            <option value="Email-">
+            <option value="Push-">
+
+          </datalist>
+
+          <span class="hint">
+            Formato recomendado:
+            Canal-TipoCampaña-Producto-Periodo.
+          </span>
+
         </div>
 
-        <div id="autoGeneratorPanel" class="builder-box hidden" style="margin-top:16px;">
-          <div class="builder-title">Autogeneración masiva de links</div>
 
-          <p class="section-description" style="margin-bottom:12px;">
-            Selecciona los canales que participarán en la campaña. El sistema generará
-            únicamente las combinaciones <strong>utm_source + utm_medium</strong>
-            permitidas en <strong>campanas.json</strong>.
+        <div class="field">
+
+          <label for="sourceInternal">
+            source
+          </label>
+
+          <input
+            id="sourceInternal"
+            type="text"
+            value="campaign"
+            readonly
+          >
+
+          <span class="hint">
+            Puerta de entrada estandarizada para campañas.
+          </span>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="detail">
+
+            detail
+
+            <span class="optional-label">
+              opcional
+            </span>
+
+          </label>
+
+          <input
+            id="detail"
+            type="text"
+            placeholder="Ej. banner-seguros"
+            autocomplete="off"
+          >
+
+          <span class="hint">
+            Nivel adicional de detalle cuando sea necesario.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="campaign-source-box">
+
+        <strong>
+          source=campaign
+        </strong>
+
+        <p>
+          El generador agrega automáticamente este parámetro
+          tanto al destino Web como al Deeplink App.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         PASO 3
+    ==================================================== -->
+
+    <section class="card generator-card generation-card">
+
+      <div class="card-section-header">
+
+        <span class="section-eyebrow">
+          PASO 3
+        </span>
+
+        <h2>¿Cuántos links necesitas?</h2>
+
+        <p class="section-description">
+          Genera un link específico o crea varios links
+          automáticamente para diferentes canales.
+        </p>
+
+      </div>
+
+
+      <div class="generation-mode-grid">
+
+        <div class="generation-mode-card">
+
+          <div class="generation-mode-icon">
+            1
+          </div>
+
+          <div>
+
+            <h3>
+              Un link
+            </h3>
+
+            <p>
+              Usa exactamente el utm_source y utm_medium
+              seleccionados arriba.
+            </p>
+
+          </div>
+
+          <button
+            class="btn-primary"
+            type="button"
+            onclick="generarLink()"
+          >
+            Generar link
+          </button>
+
+        </div>
+
+
+        <div class="generation-mode-card">
+
+          <div class="generation-mode-icon">
+            +
+          </div>
+
+          <div>
+
+            <h3>
+              Varios canales
+            </h3>
+
+            <p>
+              Genera automáticamente las combinaciones
+              configuradas en campanas.json.
+            </p>
+
+          </div>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="mostrarAutogenerador()"
+          >
+            Autogenerar links
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="btn-secondary"
+          type="button"
+          onclick="limpiarFormulario()"
+        >
+          Limpiar generador
+        </button>
+
+      </div>
+
+
+      <!-- AUTOGENERADOR -->
+
+      <div
+        id="autoGeneratorPanel"
+        class="builder-box auto-generator-panel hidden"
+      >
+
+        <div class="builder-title">
+          Autogeneración masiva
+        </div>
+
+        <p class="section-description">
+          Selecciona los canales para los que necesitas links.
+          Se utilizarán únicamente las combinaciones configuradas
+          en <strong>autogenerar</strong> dentro de campanas.json.
+        </p>
+
+
+        <div class="actions auto-top-actions">
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="seleccionarTodasFuentesAuto()"
+          >
+            Seleccionar todos
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="limpiarFuentesAuto()"
+          >
+            Limpiar selección
+          </button>
+
+        </div>
+
+
+        <div
+          id="autoSourcesList"
+          class="auto-sources-list"
+        >
+
+          <div class="data-status">
+            Los canales disponibles se cargarán desde
+            <strong>campanas.json</strong>.
+          </div>
+
+        </div>
+
+
+        <div class="campaign-source-box">
+
+          <strong>
+            Se mantiene el mismo destino y campaña
+          </strong>
+
+          <p>
+            Solo cambiarán
+            <strong>utm_source</strong>
+            y
+            <strong>utm_medium</strong>.
+            utm_campaign, source, detail y los destinos
+            Web/App permanecerán iguales.
           </p>
 
-          <div class="actions" style="margin-top:0;">
-            <button class="btn-secondary" onclick="seleccionarTodasFuentesAuto()">Seleccionar todos</button>
-            <button class="btn-secondary" onclick="limpiarFuentesAuto()">Limpiar selección</button>
-          </div>
-
-          <div id="autoSourcesList" class="auto-sources-list" style="margin-top:12px;">
-            <div class="data-status">
-              Los canales disponibles se cargarán desde <strong>campanas.json</strong>.
-            </div>
-          </div>
-
-          <div class="campaign-source-box" style="margin-top:14px;">
-            <strong>¿Qué se mantiene igual?</strong>
-            <p>
-              Todos los links usarán el mismo destino Web, Deeplink App,
-              <strong>utm_campaign</strong>, <strong>source=campaign</strong> y
-              <strong>detail</strong> si fue informado. Solo cambiarán
-              <strong>utm_source</strong> y <strong>utm_medium</strong>.
-            </p>
-          </div>
-
-          <div class="actions">
-            <button class="btn-primary" onclick="autogenerarLinks()">Generar links seleccionados</button>
-            <button class="btn-secondary" onclick="cerrarAutogenerador()">Cerrar</button>
-          </div>
         </div>
-      </section>
 
-      <section id="autoResultsCard" class="card hidden">
+
+        <div class="actions">
+
+          <button
+            class="btn-primary"
+            type="button"
+            onclick="autogenerarLinks()"
+          >
+            Generar links seleccionados
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="cerrarAutogenerador()"
+          >
+            Cerrar
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         RESULTADO INDIVIDUAL
+    ==================================================== -->
+
+    <section class="card generator-card result-card">
+
+      <div class="card-section-header">
+
+        <span class="section-eyebrow">
+          RESULTADO
+        </span>
+
+        <h2>Link generado</h2>
+
+        <p class="section-description">
+          Enlace final listo para utilizar en la campaña.
+        </p>
+
+      </div>
+
+
+      <div
+        id="emptyResult"
+        class="empty-state"
+      >
+
+        <div class="empty-state-icon">
+          ↗
+        </div>
+
+        <strong>
+          Todavía no has generado un link
+        </strong>
+
+        <span>
+          Completa los pasos anteriores y presiona
+          “Generar link”.
+        </span>
+
+      </div>
+
+
+      <div
+        id="resultBox"
+        class="result-box"
+      >
+
+        <div class="result-title">
+          ✓ Link generado correctamente
+        </div>
+
+
+        <div
+          id="finalUrl"
+          class="result-url"
+        ></div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn-primary"
+            type="button"
+            onclick="copiarFinal()"
+          >
+            Copiar link final
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="abrirFinal()"
+          >
+            Probar link
+          </button>
+
+        </div>
+
+
+        <div
+          id="generationModeNote"
+          class="mode-note hidden"
+        ></div>
+
+
+        <!-- VARIANTES -->
+
+        <details class="technical-result-details">
+
+          <summary>
+            Ver variantes técnicas del link
+          </summary>
+
+
+          <div class="variant-section">
+
+            <div class="variant-section-title">
+              Link final
+            </div>
+
+
+            <div class="preview-grid">
+
+              <div class="variant-card">
+
+                <div class="variant-title">
+                  Encodeado
+                </div>
+
+                <div
+                  id="finalEncodedPreview"
+                  class="variant-value"
+                ></div>
+
+                <div class="variant-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="copiarValor('finalEncodedPreview', 'Link final encodeado')"
+                  >
+                    Copiar
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <div class="variant-card">
+
+                <div class="variant-title">
+                  Sin encodear
+                </div>
+
+                <div
+                  id="finalDecodedPreview"
+                  class="variant-value"
+                ></div>
+
+                <div class="variant-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="copiarValor('finalDecodedPreview', 'Link final sin encodear')"
+                  >
+                    Copiar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="variant-section">
+
+            <div class="variant-section-title">
+              Destino Web
+            </div>
+
+
+            <div class="preview-grid">
+
+              <div class="variant-card">
+
+                <div class="variant-title">
+                  Web sin encodear
+                </div>
+
+                <div
+                  id="webPreview"
+                  class="variant-value"
+                ></div>
+
+                <div class="variant-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="copiarValor('webPreview', 'Web sin encodear')"
+                  >
+                    Copiar
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <div class="variant-card">
+
+                <div class="variant-title">
+                  Web encodeado
+                </div>
+
+                <div
+                  id="webEncodedPreview"
+                  class="variant-value"
+                ></div>
+
+                <div class="variant-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="copiarValor('webEncodedPreview', 'Web encodeado')"
+                  >
+                    Copiar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="variant-section">
+
+            <div class="variant-section-title">
+              Deeplink App
+            </div>
+
+
+            <div class="preview-grid">
+
+              <div class="variant-card">
+
+                <div class="variant-title">
+                  App sin encodear
+                </div>
+
+                <div
+                  id="appPreview"
+                  class="variant-value"
+                ></div>
+
+                <div class="variant-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="copiarValor('appPreview', 'App sin encodear')"
+                  >
+                    Copiar
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <div class="variant-card">
+
+                <div class="variant-title">
+                  App encodeado
+                </div>
+
+                <div
+                  id="appEncodedPreview"
+                  class="variant-value"
+                ></div>
+
+                <div class="variant-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="copiarValor('appEncodedPreview', 'App encodeado')"
+                  >
+                    Copiar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </details>
+
+
+        <div class="success-note">
+
+          <strong>
+            Link listo para usar
+          </strong>
+
+          <br><br>
+
+          Copia el enlace final y utilízalo en tu campaña.
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         RESULTADOS MASIVOS
+    ==================================================== -->
+
+    <section
+      id="autoResultsCard"
+      class="card generator-card auto-results-card hidden"
+    >
+
+      <div class="card-section-header">
+
+        <span class="section-eyebrow">
+          RESULTADO MASIVO
+        </span>
+
         <h2>Links autogenerados</h2>
+
         <p class="section-description">
-          Resultado masivo según las combinaciones permitidas en campanas.json.
+          Un link por cada combinación configurada para los canales seleccionados.
         </p>
 
-        <div id="autoResultsEmpty" class="warning">
-          Selecciona uno o más canales y presiona <strong>Generar links seleccionados</strong>.
+      </div>
+
+
+      <div
+        id="autoResultsEmpty"
+        class="warning"
+      >
+        Selecciona uno o más canales y presiona
+        <strong>
+          Generar links seleccionados
+        </strong>.
+      </div>
+
+
+      <div
+        id="autoResultsContent"
+        class="hidden"
+      >
+
+        <div class="actions">
+
+          <button
+            class="btn-primary"
+            type="button"
+            onclick="copiarTodosLinksAuto()"
+          >
+            Copiar todos
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="descargarLinksAutoCsv()"
+          >
+            Descargar CSV
+          </button>
+
         </div>
 
-        <div id="autoResultsContent" class="hidden">
-          <div class="actions" style="margin-top:0;">
-            <button class="btn-primary" onclick="copiarTodosLinksAuto()">Copiar todos</button>
-            <button class="btn-secondary" onclick="descargarLinksAutoCsv()">Descargar CSV</button>
-          </div>
 
-          <div class="auto-table-wrap" style="margin-top:14px;">
-            <table class="auto-table">
-              <thead>
-                <tr>
-                  <th>Fuente</th>
-                  <th>Medio</th>
-                  <th>Link final</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="autoResultsBody"></tbody>
-            </table>
-          </div>
+        <div class="auto-table-wrap">
 
-          <div id="autoResultsSummary" class="success-note"></div>
-        </div>
-      </section>
+          <table class="auto-table">
 
-      <section class="card">
-        <h2><span class="step">3</span>Link generado</h2>
-        <p class="section-description">Este es el enlace final listo para utilizar en la plataforma de campañas.</p>
+            <thead>
 
-        <div id="emptyResult" class="warning">
-          Completa los pasos anteriores y presiona <strong>Generar link de campaña</strong>.
+              <tr>
+                <th>Fuente</th>
+                <th>Medio</th>
+                <th>Link final</th>
+                <th>Acciones</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="autoResultsBody"></tbody>
+
+          </table>
+
         </div>
 
-        <div id="resultBox" class="result-box">
-          <div class="result-title">✓ Link generado correctamente</div>
-          <div id="finalUrl" class="result-url"></div>
 
-          <div class="actions">
-            <button class="btn-primary" onclick="copiarFinal()">Copiar link final</button>
-            <button class="btn-secondary" onclick="abrirFinal()">Probar link</button>
-          </div>
+        <div
+          id="autoResultsSummary"
+          class="success-note"
+        ></div>
 
-          <div id="generationModeNote" class="mode-note hidden"></div>
+      </div>
 
-          <div class="variant-section">
-            <div class="variant-section-title">Variantes del link final</div>
-            <div class="preview-grid">
-              <div class="variant-card">
-                <div class="variant-title">Link final encodeado</div>
-                <div id="finalEncodedPreview" class="variant-value"></div>
-                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('finalEncodedPreview', 'Link final encodeado')">Copiar</button></div>
-              </div>
-              <div class="variant-card">
-                <div class="variant-title">Link final sin encodear</div>
-                <div id="finalDecodedPreview" class="variant-value"></div>
-                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('finalDecodedPreview', 'Link final sin encodear')">Copiar</button></div>
-              </div>
-            </div>
-          </div>
+    </section>
 
-          <div class="variant-section">
-            <div class="variant-section-title">Destino Web</div>
-            <div class="preview-grid">
-              <div class="variant-card">
-                <div class="variant-title">Web sin encodear</div>
-                <div id="webPreview" class="variant-value"></div>
-                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('webPreview', 'Web sin encodear')">Copiar</button></div>
-              </div>
-              <div class="variant-card">
-                <div class="variant-title">Web encodeado</div>
-                <div id="webEncodedPreview" class="variant-value"></div>
-                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('webEncodedPreview', 'Web encodeado')">Copiar</button></div>
-              </div>
-            </div>
-          </div>
+  </main>
 
-          <div class="variant-section">
-            <div class="variant-section-title">Deeplink App</div>
-            <div class="preview-grid">
-              <div class="variant-card">
-                <div class="variant-title">App sin encodear</div>
-                <div id="appPreview" class="variant-value"></div>
-                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('appPreview', 'App sin encodear')">Copiar</button></div>
-              </div>
-              <div class="variant-card">
-                <div class="variant-title">App encodeado</div>
-                <div id="appEncodedPreview" class="variant-value"></div>
-                <div class="variant-actions"><button class="btn-secondary" onclick="copiarValor('appEncodedPreview', 'App encodeado')">Copiar</button></div>
-              </div>
-            </div>
-          </div>
-<div class="success-note">
-            <strong>Link listo para usar</strong><br><br>
-            Copia el enlace final y úsalo en tu campaña.
-            Para validar la apertura en la app, pruébalo desde WhatsApp,
-            email o desde la plataforma de campaña.
-          </div>
-        </div>
-      </section>
 
-      <section class="card">
-        <h2>Probador de producto</h2>
-        <p class="section-description">
-          Al seleccionar un producto del catálogo se cargan automáticamente
-          el link combinado, la URL Web y el Deeplink App, sin UTMs.
-          También puedes editar cualquiera de los campos manualmente.
+  <!-- =====================================================
+       MÓDULO 2 — CATÁLOGO
+  ====================================================== -->
+
+  <main
+    id="moduleCatalogo"
+    class="module-panel module-catalog hidden"
+  >
+
+    <div class="module-heading">
+
+      <div class="module-heading-number">
+        02
+      </div>
+
+      <div>
+
+        <h2>Catálogo de destinos</h2>
+
+        <p>
+          Consulta los productos que ya tienen rutas Web y App configuradas.
         </p>
 
-        <div id="testProductName" class="test-product-name">
-          Selecciona un producto para comenzar.
+      </div>
+
+    </div>
+
+
+    <section class="card catalog-main-card">
+
+      <div class="catalog-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            DESTINOS PRECONFIGURADOS
+          </span>
+
+          <h2>
+            Productos y funcionalidades
+          </h2>
+
+          <p class="section-description">
+            Busca por nombre, ruta Web, Deeplink App o tipo de destino.
+          </p>
+
         </div>
+
+
+        <div class="catalog-count-box">
+
+          <strong id="catalogVisibleCount">
+            Catálogo
+          </strong>
+
+          <span>
+            links.json
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="catalog-toolbar">
+
+        <div class="catalog-search-wrapper">
+
+          <span class="catalog-search-icon">
+            ⌕
+          </span>
+
+          <input
+            id="catalogSearch"
+            class="catalog-search"
+            type="search"
+            placeholder="Buscar Cuenta Sueldo, transferencias, /u/payment..."
+            oninput="renderCatalog()"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="catalog-help-box">
+
+        <strong>
+          ¿Qué aparece aquí?
+        </strong>
+
+        <p>
+          Son destinos que ya tienen definida su ruta Web y su Deeplink App.
+          Seleccionar uno permite enviarlo directamente al generador.
+        </p>
+
+      </div>
+
+
+      <div
+        id="catalog"
+        class="catalog catalog-full"
+      ></div>
+
+    </section>
+
+
+    <section class="card technical-catalog-info">
+
+      <span class="section-eyebrow">
+        CATÁLOGO TÉCNICO
+      </span>
+
+      <h2>
+        WebView y funcionalidades nativas
+      </h2>
+
+      <p class="section-description">
+        Si el destino que necesitas todavía no aparece como producto configurado,
+        puedes construirlo utilizando el inventario completo de rutas.
+      </p>
+
+
+      <div class="catalog-type-grid">
+
+        <div class="catalog-type-card">
+
+          <div class="catalog-type-icon">
+            W
+          </div>
+
+          <div>
+
+            <strong>
+              WebView
+            </strong>
+
+            <span>
+              Rutas internas disponibles dentro del flujo Web/App.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="catalog-type-card">
+
+          <div class="catalog-type-icon">
+            A
+          </div>
+
+          <div>
+
+            <strong>
+              Nativo
+            </strong>
+
+            <span>
+              Funcionalidades que abren directamente pantallas de la App.
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="btn-primary"
+          type="button"
+          onclick="cambiarModulo('generador')"
+        >
+          Crear un destino nuevo
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       MÓDULO 3 — ANALIZADOR
+  ====================================================== -->
+
+  <main
+    id="moduleAnalizador"
+    class="module-panel module-analyzer hidden"
+  >
+
+    <div class="module-heading">
+
+      <div class="module-heading-number">
+        03
+      </div>
+
+      <div>
+
+        <h2>Analizar un link</h2>
+
+        <p>
+          Pega una URL larga para separar sus UTMs,
+          destino Web y Deeplink App.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <section class="card analyzer-card">
+
+      <span class="section-eyebrow">
+        INSPECTOR DE URL
+      </span>
+
+      <h2>
+        Pega el link que quieres revisar
+      </h2>
+
+      <p class="section-description">
+        El analizador mostrará cada parámetro por separado para evitar
+        buscar manualmente valores dentro de una URL extensa.
+      </p>
+
+
+      <div class="field">
+
+        <label for="linkAnalyzerInput">
+          Link completo
+        </label>
+
+        <textarea
+          id="linkAnalyzerInput"
+          class="analyzer-input"
+          placeholder="https://mi.scotiabank.com.pe/login?redirectTo=/u/...&utm_source=...&utm_medium=...&utm_campaign=...&embeddedURL=..."
+          autocomplete="off"
+        ></textarea>
+
+        <span class="hint">
+          Puedes pegar un link combinado, una URL Web o un Deeplink App.
+        </span>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="btn-analyzer-primary"
+          type="button"
+          onclick="analizarLink()"
+        >
+          Analizar link
+        </button>
+
+        <button
+          class="btn-secondary"
+          type="button"
+          onclick="limpiarAnalizador()"
+        >
+          Limpiar
+        </button>
+
+      </div>
+
+
+      <div
+        id="linkAnalyzerEmpty"
+        class="analyzer-empty"
+      >
+
+        <div class="analyzer-empty-icon">
+          ?
+        </div>
+
+        <strong>
+          Pega un link para comenzar
+        </strong>
+
+        <span>
+          Aquí aparecerán sus componentes separados.
+        </span>
+
+      </div>
+
+
+      <div
+        id="linkAnalyzerResults"
+        class="analyzer-results hidden"
+      >
+
+        <!-- ===============================================
+             RESUMEN
+        ================================================ -->
+
+        <div class="analyzer-summary">
+
+          <div>
+
+            <span class="analyzer-label">
+              Tipo detectado
+            </span>
+
+            <strong id="analyzerDetectedType">
+              -
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span class="analyzer-label">
+              Dominio
+            </span>
+
+            <strong id="analyzerDomain">
+              -
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             UTMS
+        ================================================ -->
+
+        <div class="analyzer-section analyzer-section-utms">
+
+          <div class="analyzer-section-header">
+
+            <div>
+
+              <span class="section-eyebrow">
+                CAMPAÑA
+              </span>
+
+              <h3>
+                UTMs encontradas
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="analyzer-utm-grid">
+
+            <div class="analyzer-param-card">
+
+              <span>
+                utm_source
+              </span>
+
+              <strong id="analyzerUtmSource">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                utm_medium
+              </span>
+
+              <strong id="analyzerUtmMedium">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                utm_campaign
+              </span>
+
+              <strong id="analyzerUtmCampaign">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                source
+              </span>
+
+              <strong id="analyzerSource">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                detail
+              </span>
+
+              <strong id="analyzerDetail">
+                -
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             WEB
+        ================================================ -->
+
+        <div class="analyzer-section">
+
+          <span class="section-eyebrow">
+            DESTINO WEB
+          </span>
+
+          <h3>
+            Componentes Web
+          </h3>
+
+
+          <div class="analyzer-field">
+
+            <span>
+              URL base
+            </span>
+
+            <div
+              id="analyzerWebBase"
+              class="analyzer-code"
+            >
+              -
+            </div>
+
+          </div>
+
+
+          <div class="analyzer-field">
+
+            <span>
+              redirectTo
+            </span>
+
+            <div
+              id="analyzerRedirectTo"
+              class="analyzer-code"
+            >
+              -
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             APP
+        ================================================ -->
+
+        <div class="analyzer-section analyzer-section-app">
+
+          <span class="section-eyebrow">
+            DESTINO APP
+          </span>
+
+          <h3>
+            embeddedURL / Deeplink
+          </h3>
+
+
+          <div class="analyzer-field">
+
+            <span>
+              embeddedURL original
+            </span>
+
+            <div
+              id="analyzerEmbeddedEncoded"
+              class="analyzer-code"
+            >
+              -
+            </div>
+
+          </div>
+
+
+          <div class="analyzer-field">
+
+            <span>
+              Deeplink decodificado
+            </span>
+
+            <div
+              id="analyzerEmbeddedDecoded"
+              class="analyzer-code analyzer-code-highlight"
+            >
+              -
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             UTMS APP
+        ================================================ -->
+
+        <div class="analyzer-section">
+
+          <span class="section-eyebrow">
+            UTMs DENTRO DEL DEEPLINK
+          </span>
+
+          <h3>
+            Parámetros enviados a la App
+          </h3>
+
+
+          <div class="analyzer-utm-grid">
+
+            <div class="analyzer-param-card">
+
+              <span>
+                utm_source
+              </span>
+
+              <strong id="analyzerAppUtmSource">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                utm_medium
+              </span>
+
+              <strong id="analyzerAppUtmMedium">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                utm_campaign
+              </span>
+
+              <strong id="analyzerAppUtmCampaign">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                source
+              </span>
+
+              <strong id="analyzerAppSource">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="analyzer-param-card">
+
+              <span>
+                detail
+              </span>
+
+              <strong id="analyzerAppDetail">
+                -
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             PARÁMETROS ADICIONALES
+        ================================================ -->
+
+        <div class="analyzer-section">
+
+          <span class="section-eyebrow">
+            OTROS PARÁMETROS
+          </span>
+
+          <h3>
+            Parámetros adicionales encontrados
+          </h3>
+
+          <div
+            id="analyzerOtherParams"
+            class="analyzer-other-params"
+          >
+            -
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       MÓDULO 4 — PROBADOR
+  ====================================================== -->
+
+  <main
+    id="moduleProbador"
+    class="module-panel module-tester hidden"
+  >
+
+    <div class="module-heading">
+
+      <div class="module-heading-number">
+        04
+      </div>
+
+      <div>
+
+        <h2>Probar links</h2>
+
+        <p>
+          Valida por separado el link combinado,
+          el destino Web y el Deeplink App.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <section class="card tester-card">
+
+      <span class="section-eyebrow">
+        VALIDACIÓN
+      </span>
+
+      <h2>
+        Probador de destino
+      </h2>
+
+      <p class="section-description">
+        Puedes cargar automáticamente el destino seleccionado en el generador
+        o pegar cualquier URL manualmente.
+      </p>
+
+
+      <div
+        id="testProductName"
+        class="test-product-name"
+      >
+        Selecciona un producto para comenzar.
+      </div>
+
+
+      <!-- LINK COMBINADO -->
+
+      <div class="test-box combined-test-box">
+
+        <div class="test-box-heading">
+
+          <div class="test-number">
+            1
+          </div>
+
+          <div>
+
+            <strong>
+              Link combinado
+            </strong>
+
+            <span>
+              Web + embeddedURL con el Deeplink App.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="testFinalLink">
+            Link final
+          </label>
+
+          <input
+            id="testFinalLink"
+            type="text"
+            placeholder="https://..."
+            autocomplete="off"
+          >
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn-tester-primary"
+            type="button"
+            onclick="probarLinkExistente()"
+          >
+            Probar link combinado
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- WEB / APP -->
+
+      <div class="tester-grid">
 
         <div class="test-box">
-          <div class="field">
-            <label for="testFinalLink">Link combinado</label>
-            <input id="testFinalLink" type="text" placeholder="Se generará automáticamente..." autocomplete="off">
-            <span class="hint">Web + embeddedURL con el Deeplink App, sin parámetros de campaña.</span>
+
+          <div class="test-box-heading">
+
+            <div class="test-number">
+              2
+            </div>
+
+            <div>
+
+              <strong>
+                Destino Web
+              </strong>
+
+              <span>
+                Comprueba únicamente la navegación Web.
+              </span>
+
+            </div>
+
           </div>
+
+
+          <div class="field">
+
+            <label for="testWebLink">
+              URL Web
+            </label>
+
+            <input
+              id="testWebLink"
+              type="text"
+              placeholder="https://..."
+              autocomplete="off"
+            >
+
+          </div>
+
 
           <div class="actions">
-            <button class="btn-primary" onclick="probarLinkExistente()">Probar link</button>
+
+            <button
+              class="btn-secondary"
+              type="button"
+              onclick="probarLinkWeb()"
+            >
+              Probar Web
+            </button>
+
           </div>
+
         </div>
 
-        <div class="form-grid" style="margin-top:14px;">
-          <div class="field">
-            <label for="testWebLink">URL Web</label>
-            <input id="testWebLink" type="text" placeholder="URL Web..." autocomplete="off">
-            <div class="actions">
-              <button class="btn-secondary" onclick="probarLinkWeb()">Probar Web</button>
+
+        <div class="test-box">
+
+          <div class="test-box-heading">
+
+            <div class="test-number">
+              3
             </div>
+
+            <div>
+
+              <strong>
+                Deeplink App
+              </strong>
+
+              <span>
+                Intenta abrir directamente la aplicación.
+              </span>
+
+            </div>
+
           </div>
 
+
           <div class="field">
-            <label for="testAppLink">Deeplink App</label>
+
+            <label for="testAppLink">
+              Deeplink
+            </label>
+
             <input
               id="testAppLink"
               type="text"
@@ -505,55 +2502,77 @@
               oninput="actualizarEnlaceApp()"
             >
 
-            <span class="hint">
-              “Abrir Deeplink App” es un enlace HTML real que apunta directamente
-              al esquema scotiabankpe://. Esto permite probar el deeplink mediante
-              un clic real del usuario, sin usar window.location.href.
-            </span>
-
-            <div class="actions">
-              <a
-                id="testAppAnchor"
-                class="btn-secondary"
-                href="#"
-                onclick="registrarIntentoDeeplink()"
-              >
-                Abrir Deeplink App
-              </a>
-
-              <button class="btn-secondary" onclick="copiarDeeplinkApp()">
-                Copiar Deeplink App
-              </button>
-            </div>
           </div>
+
+
+          <div class="actions">
+
+            <a
+              id="testAppAnchor"
+              class="btn-tester-primary"
+              href="#"
+              onclick="registrarIntentoDeeplink()"
+            >
+              Abrir Deeplink App
+            </a>
+
+
+            <button
+              class="btn-secondary"
+              type="button"
+              onclick="copiarDeeplinkApp()"
+            >
+              Copiar
+            </button>
+
+          </div>
+
         </div>
 
-        <div id="testConsole" class="test-console">
-          <strong>Diagnóstico del Deeplink App</strong><br>
-          Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.
-        </div>
+      </div>
 
-        <div class="actions">
-          <button class="btn-secondary" onclick="limpiarProbador()">Limpiar probador</button>
-        </div>
-      </section>
 
-    </main>
+      <!-- DIAGNÓSTICO -->
 
-    <aside class="right">
-      <section class="card catalog-card">
-        <h2>Productos ya configurados</h2>
-        <p class="section-description">
-          Haz clic en un producto ya creado para cargar automáticamente sus rutas Web y App.
-        </p>
+      <div
+        id="testConsole"
+        class="test-console"
+      >
 
-        <input id="catalogSearch" class="catalog-search" type="search" placeholder="Buscar producto, ruta o deeplink..." oninput="renderCatalog()">
-        <div id="catalog" class="catalog"></div>
-      </section>
-    </aside>
-  </div>
+        <strong>
+          Diagnóstico del Deeplink App
+        </strong>
+
+        <br>
+
+        Selecciona un producto y presiona
+        <strong>
+          Abrir Deeplink App
+        </strong>.
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="btn-secondary"
+          type="button"
+          onclick="limpiarProbador()"
+        >
+          Limpiar probador
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
 </div>
 
+
 <script src="./app.js"></script>
+
 </body>
 </html>

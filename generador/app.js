@@ -7,6 +7,7 @@ let PRODUCTOS = [];
 let WEBVIEW_CATALOG = {};
 let NATIVE_CATALOG = {};
 let POR_REVISAR_WEBVIEW = [];
+
 let CAMPAIGN_SOURCES = {};
 let SOURCE_NAMES = {};
 let MEDIUM_NAMES = {};
@@ -16,23 +17,333 @@ let AUTO_GENERATED_LINKS = [];
 
 
 /* =========================================================
-   NAVEGACIÓN PRINCIPAL
+   UTILIDADES
 ========================================================= */
 
-function cambiarModulo(modulo, desplazar = true) {
+function $(id) {
+  return document.getElementById(id);
+}
+
+function limpiarValor(valor) {
+  return String(valor ?? "").trim();
+}
+
+function normalizarTaxonomia(valor) {
+  return limpiarValor(valor).toLowerCase();
+}
+
+function normalizarRuta(ruta) {
+  const limpia = limpiarValor(ruta);
+
+  if (!limpia) {
+    return "";
+  }
+
+  return limpia.startsWith("/")
+    ? limpia
+    : "/" + limpia;
+}
+
+function esUrlWebValida(url) {
+  const limpia =
+    limpiarValor(url);
+
+  return (
+    limpia.startsWith("https://") ||
+    limpia.startsWith("http://")
+  );
+}
+
+function esDeeplinkValido(deeplink) {
+  const limpia =
+    limpiarValor(deeplink);
+
+  return (
+    limpia.includes("://") &&
+    !limpia.includes(" ")
+  );
+}
+
+function decodificarSeguro(valor) {
+  const texto =
+    String(valor ?? "");
+
+  if (!texto) {
+    return "";
+  }
+
+  try {
+    return decodeURIComponent(
+      texto.replace(/\+/g, "%20")
+    );
+  } catch {
+    return texto;
+  }
+}
+
+function extraerParametro(url, nombre) {
+  const limpia =
+    limpiarValor(url);
+
+  const q =
+    limpia.indexOf("?");
+
+  if (q === -1) {
+    return "";
+  }
+
+  for (
+    const par
+    of limpia.substring(q + 1).split("&")
+  ) {
+    const eq =
+      par.indexOf("=");
+
+    if (eq === -1) {
+      continue;
+    }
+
+    const key =
+      par.substring(0, eq);
+
+    const value =
+      par.substring(eq + 1);
+
+    if (key === nombre) {
+      return decodificarSeguro(value);
+    }
+  }
+
+  return "";
+}
+
+
+/* =========================================================
+   ESTABLECER PARÁMETROS SIN ROMPER RUTAS EXISTENTES
+========================================================= */
+
+function establecerParametros(
+  urlBase,
+  parametros,
+  parametrosAEliminar = []
+) {
+  let original =
+    limpiarValor(urlBase);
+
+  let hash =
+    "";
+
+  const hashIndex =
+    original.indexOf("#");
+
+  if (hashIndex !== -1) {
+    hash =
+      original.substring(hashIndex);
+
+    original =
+      original.substring(
+        0,
+        hashIndex
+      );
+  }
+
+  const queryIndex =
+    original.indexOf("?");
+
+  const base =
+    queryIndex === -1
+      ? original
+      : original.substring(
+          0,
+          queryIndex
+        );
+
+  const queryOriginal =
+    queryIndex === -1
+      ? ""
+      : original.substring(
+          queryIndex + 1
+        );
+
+  const mapa =
+    new Map();
+
+  if (queryOriginal) {
+    queryOriginal
+      .split("&")
+      .forEach(par => {
+        if (!par) {
+          return;
+        }
+
+        const index =
+          par.indexOf("=");
+
+        const keyRaw =
+          index === -1
+            ? par
+            : par.substring(
+                0,
+                index
+              );
+
+        const valueRaw =
+          index === -1
+            ? ""
+            : par.substring(
+                index + 1
+              );
+
+        const key =
+          decodificarSeguro(
+            keyRaw
+          );
+
+        mapa.set(
+          key,
+          {
+            keyOriginal:
+              keyRaw,
+
+            valueOriginal:
+              valueRaw
+          }
+        );
+      });
+  }
+
+  parametrosAEliminar
+    .forEach(key => {
+      mapa.delete(key);
+    });
+
+  Object.entries(
+    parametros
+  ).forEach(
+    ([key, value]) => {
+      const limpio =
+        limpiarValor(value);
+
+      if (!limpio) {
+        mapa.delete(key);
+        return;
+      }
+
+      mapa.set(
+        key,
+        {
+          keyOriginal:
+            key,
+
+          valueOriginal:
+            encodeURIComponent(
+              limpio
+            )
+        }
+      );
+    }
+  );
+
+  const nuevaQuery =
+    Array.from(
+      mapa.values()
+    )
+      .map(item => {
+        if (
+          item.valueOriginal === ""
+        ) {
+          return item.keyOriginal;
+        }
+
+        return (
+          item.keyOriginal +
+          "=" +
+          item.valueOriginal
+        );
+      })
+      .join("&");
+
+  return (
+    base +
+    (
+      nuevaQuery
+        ? "?" + nuevaQuery
+        : ""
+    ) +
+    hash
+  );
+}
+
+
+/* =========================================================
+   PORTAPAPELES
+========================================================= */
+
+async function escribirPortapapeles(valor) {
+  const texto =
+    String(valor ?? "");
+
+  if (!texto) {
+    return false;
+  }
+
+  try {
+    await navigator
+      .clipboard
+      .writeText(texto);
+
+    return true;
+
+  } catch {
+    const textarea =
+      document.createElement(
+        "textarea"
+      );
+
+    textarea.value =
+      texto;
+
+    document.body.appendChild(
+      textarea
+    );
+
+    textarea.select();
+
+    document.execCommand(
+      "copy"
+    );
+
+    textarea.remove();
+
+    return true;
+  }
+}
+
+
+/* =========================================================
+   NAVEGACIÓN ENTRE MÓDULOS
+========================================================= */
+
+function cambiarModulo(
+  modulo,
+  desplazar = true
+) {
   const configuracion = {
     generador: {
       panel: "moduleGenerador",
       tab: "tabGenerador"
     },
+
     catalogo: {
       panel: "moduleCatalogo",
       tab: "tabCatalogo"
     },
+
     analizador: {
       panel: "moduleAnalizador",
       tab: "tabAnalizador"
     },
+
     probador: {
       panel: "moduleProbador",
       tab: "tabProbador"
@@ -43,45 +354,79 @@ function cambiarModulo(modulo, desplazar = true) {
     configuracion[modulo] ||
     configuracion.generador;
 
-  Object.values(configuracion).forEach(item => {
+  Object.values(
+    configuracion
+  ).forEach(item => {
     const panel =
-      document.getElementById(item.panel);
+      $(item.panel);
 
     const tab =
-      document.getElementById(item.tab);
+      $(item.tab);
 
     if (panel) {
-      panel.classList.add("hidden");
-      panel.classList.remove("active");
+      panel.classList.add(
+        "hidden"
+      );
+
+      panel.classList.remove(
+        "active"
+      );
     }
 
     if (tab) {
-      tab.classList.remove("active");
-      tab.setAttribute("aria-selected", "false");
+      tab.classList.remove(
+        "active"
+      );
+
+      tab.setAttribute(
+        "aria-selected",
+        "false"
+      );
     }
   });
 
   const panelActivo =
-    document.getElementById(destino.panel);
+    $(destino.panel);
 
   const tabActivo =
-    document.getElementById(destino.tab);
+    $(destino.tab);
 
   if (panelActivo) {
-    panelActivo.classList.remove("hidden");
-    panelActivo.classList.add("active");
+    panelActivo
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    panelActivo
+      .classList
+      .add(
+        "active"
+      );
   }
 
   if (tabActivo) {
-    tabActivo.classList.add("active");
-    tabActivo.setAttribute("aria-selected", "true");
+    tabActivo
+      .classList
+      .add(
+        "active"
+      );
+
+    tabActivo.setAttribute(
+      "aria-selected",
+      "true"
+    );
   }
 
-  if (modulo === "catalogo") {
+  if (
+    modulo === "catalogo"
+  ) {
     renderCatalog();
   }
 
-  if (modulo === "probador") {
+  if (
+    modulo === "probador"
+  ) {
     actualizarEnlaceApp();
   }
 
@@ -95,1527 +440,299 @@ function cambiarModulo(modulo, desplazar = true) {
 
 
 /* =========================================================
-   TIPO DE DESTINO
+   CARGA DE CONFIGURACIÓN
 ========================================================= */
 
-function getTipoDestino() {
-  return document.querySelector(
-    'input[name="destinationType"]:checked'
-  ).value;
-}
-
-function setTipoDestino(tipo) {
-  const radio =
-    document.querySelector(
-      `input[name="destinationType"][value="${tipo}"]`
-    );
-
-  if (radio) {
-    radio.checked = true;
-    cambiarTipoDestino();
-  }
-}
-
-function cambiarTipoDestino() {
-  const tipo =
-    getTipoDestino();
-
-  document
-    .getElementById("webviewPanel")
-    .classList.toggle(
-      "hidden",
-      tipo !== "webview"
-    );
-
-  document
-    .getElementById("nativePanel")
-    .classList.toggle(
-      "hidden",
-      tipo !== "native"
-    );
-
-  previsualizarRutasGeneradas();
-}
-
-
-/* =========================================================
-   WEBVIEW
-========================================================= */
-
-function contarPathsWebview() {
-  let total = 0;
-
-  Object.values(
-    WEBVIEW_CATALOG || {}
-  ).forEach(grupos => {
-    if (!Array.isArray(grupos)) {
-      return;
-    }
-
-    grupos.forEach(grupo => {
-      if (Array.isArray(grupo.paths)) {
-        total += grupo.paths.length;
-      }
-    });
-  });
-
-  return total;
-}
-
-function cargarSelectCategoriasWebview() {
-  const categoria =
-    document.getElementById(
-      "webviewCategory"
-    );
-
-  const grupo =
-    document.getElementById(
-      "webviewGroup"
-    );
-
-  const pantalla =
-    document.getElementById(
-      "webviewScreen"
-    );
-
-  if (
-    !categoria ||
-    !grupo ||
-    !pantalla
-  ) {
-    return;
-  }
-
-  categoria.innerHTML =
-    '<option value="">Seleccionar tipo...</option>';
-
-  Object.keys(
-    WEBVIEW_CATALOG || {}
-  ).forEach(nombre => {
-    const option =
-      document.createElement("option");
-
-    option.value =
-      nombre;
-
-    option.textContent =
-      nombre;
-
-    categoria.appendChild(
-      option
-    );
-  });
-
-  const manual =
-    document.createElement("option");
-
-  manual.value =
-    "__manual__";
-
-  manual.textContent =
-    "Otro / escribir ruta manualmente";
-
-  categoria.appendChild(
-    manual
-  );
-
-  grupo.innerHTML =
-    '<option value="">Seleccionar grupo...</option>';
-
-  grupo.disabled =
-    true;
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pantalla.disabled =
-    true;
-
-  document
-    .getElementById(
-      "webviewManualBlock"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-  document
-    .getElementById(
-      "webviewSelectedPathBox"
-    )
-    .innerHTML =
-      '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
-}
-
-function cargarGruposWebview() {
-  const categoria =
-    document
-      .getElementById(
-        "webviewCategory"
-      )
-      .value;
-
-  const grupo =
-    document.getElementById(
-      "webviewGroup"
-    );
-
-  const pantalla =
-    document.getElementById(
-      "webviewScreen"
-    );
-
-  const manualBlock =
-    document.getElementById(
-      "webviewManualBlock"
-    );
-
-  grupo.innerHTML =
-    '<option value="">Seleccionar grupo...</option>';
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pantalla.disabled =
-    true;
-
-  if (
-    categoria === "__manual__"
-  ) {
-    grupo.disabled =
-      true;
-
-    manualBlock
-      .classList
-      .remove(
-        "hidden"
-      );
-
-    document
-      .getElementById(
-        "webviewPath"
-      )
-      .value =
-        "";
-
-    document
-      .getElementById(
-        "webviewSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
-
-    previsualizarRutasGeneradas();
-
-    setTimeout(() => {
-      document
-        .getElementById(
-          "webviewPath"
-        )
-        .focus();
-    }, 0);
-
-    return;
-  }
-
-  manualBlock
-    .classList
-    .add(
-      "hidden"
-    );
-
-  document
-    .getElementById(
-      "webviewPath"
-    )
-    .value =
-      "";
-
-  const grupos =
-    WEBVIEW_CATALOG[
-      categoria
-    ];
-
-  if (
-    !categoria ||
-    !Array.isArray(
-      grupos
-    )
-  ) {
-    grupo.disabled =
-      true;
-
-    document
-      .getElementById(
-        "webviewSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  grupos.forEach(
-    (item, index) => {
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value =
-        String(index);
-
-      option.textContent =
-        item.grupo +
-        (
-          item.cantidad
-            ? ` (${item.cantidad})`
-            : ""
-        );
-
-      grupo.appendChild(
-        option
-      );
-    }
-  );
-
-  grupo.disabled =
-    false;
-
-  document
-    .getElementById(
-      "webviewSelectedPathBox"
-    )
-    .innerHTML =
-      '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
-
-  previsualizarRutasGeneradas();
-}
-
-function cargarPantallasWebview() {
-  const categoria =
-    document
-      .getElementById(
-        "webviewCategory"
-      )
-      .value;
-
-  const grupoIndex =
-    document
-      .getElementById(
-        "webviewGroup"
-      )
-      .value;
-
-  const pantalla =
-    document.getElementById(
-      "webviewScreen"
-    );
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  document
-    .getElementById(
-      "webviewPath"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "webviewManualBlock"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
-
-  if (
-    !categoria ||
-    grupoIndex === ""
-  ) {
-    pantalla.disabled =
-      true;
-
-    document
-      .getElementById(
-        "webviewSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  const grupos =
-    WEBVIEW_CATALOG[
-      categoria
-    ] || [];
-
-  const grupo =
-    grupos[
-      Number(grupoIndex)
-    ];
-
-  if (
-    !grupo ||
-    !Array.isArray(
-      grupo.paths
-    )
-  ) {
-    pantalla.disabled =
-      true;
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  grupo.paths.forEach(
-    path => {
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value =
-        path;
-
-      option.textContent =
-        path;
-
-      pantalla.appendChild(
-        option
-      );
-    }
-  );
-
-  const manual =
-    document.createElement(
-      "option"
-    );
-
-  manual.value =
-    "__manual__";
-
-  manual.textContent =
-    "Otro / escribir ruta manualmente";
-
-  pantalla.appendChild(
-    manual
-  );
-
-  pantalla.disabled =
-    false;
-
-  document
-    .getElementById(
-      "webviewSelectedPathBox"
-    )
-    .innerHTML =
-      `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
-
-  previsualizarRutasGeneradas();
-}
-
-function seleccionarPantallaWebview() {
-  const pantalla =
-    document
-      .getElementById(
-        "webviewScreen"
-      )
-      .value;
-
-  const manualBlock =
-    document.getElementById(
-      "webviewManualBlock"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "webviewPath"
-    );
-
-  if (
-    pantalla === "__manual__"
-  ) {
-    pathInput.value =
-      "";
-
-    manualBlock
-      .classList
-      .remove(
-        "hidden"
-      );
-
-    document
-      .getElementById(
-        "webviewSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
-
-    previsualizarRutasGeneradas();
-
-    setTimeout(() => {
-      pathInput.focus();
-    }, 0);
-
-    return;
-  }
-
-  manualBlock
-    .classList
-    .add(
-      "hidden"
-    );
-
-  pathInput.value =
-    pantalla || "";
-
-  document
-    .getElementById(
-      "webviewSelectedPathBox"
-    )
-    .innerHTML =
-      pantalla
-        ? `<strong>Ruta seleccionada:</strong><br>${pantalla}`
-        : '<strong>Ruta seleccionada:</strong><br>Selecciona una pantalla.';
-
-  previsualizarRutasGeneradas();
-}
-
-function actualizarRutaManualWebview() {
-  const ruta =
-    limpiarValor(
-      document
-        .getElementById(
-          "webviewPath"
-        )
-        .value
-    );
-
-  document
-    .getElementById(
-      "webviewSelectedPathBox"
-    )
-    .innerHTML =
-      ruta
-        ? `<strong>Ruta manual:</strong><br>${ruta}`
-        : '<strong>Ruta seleccionada:</strong><br>Escribe una ruta WebView.';
-
-  previsualizarRutasGeneradas();
-}
-
-function buscarRutaEnCatalogoWebview(
-  ruta
-) {
-  const buscada =
-    normalizarRuta(
-      ruta
-    );
-
-  if (!buscada) {
-    return null;
-  }
-
-  for (
+async function cargarConfiguracion() {
+  const status =
+    $("dataStatus");
+
+  try {
     const [
-      categoria,
-      grupos
-    ]
-    of Object.entries(
-      WEBVIEW_CATALOG || {}
-    )
-  ) {
-    if (
-      !Array.isArray(
-        grupos
-      )
-    ) {
-      continue;
-    }
+      productosResponse,
+      rutasResponse,
+      campanasResponse
+    ] =
+      await Promise.all([
+        fetch(
+          "./productos.json",
+          {
+            cache: "no-store"
+          }
+        ),
 
-    for (
-      let i = 0;
-      i < grupos.length;
-      i++
-    ) {
-      const grupo =
-        grupos[i];
+        fetch(
+          "./rutas.json",
+          {
+            cache: "no-store"
+          }
+        ),
 
-      if (
-        Array.isArray(
-          grupo.paths
-        ) &&
-        grupo.paths.includes(
-          buscada
+        fetch(
+          "./campanas.json",
+          {
+            cache: "no-store"
+          }
         )
-      ) {
-        return {
-          categoria,
-          grupoIndex: i,
-          grupo:
-            grupo.grupo,
-          path:
-            buscada
-        };
-      }
-    }
-  }
+      ]);
 
-  return null;
-}
-
-function seleccionarRutaWebviewEnCatalogo(
-  ruta
-) {
-  const buscada =
-    normalizarRuta(
-      ruta
-    );
-
-  const encontrada =
-    buscarRutaEnCatalogoWebview(
-      buscada
-    );
-
-  const categoriaSelect =
-    document.getElementById(
-      "webviewCategory"
-    );
-
-  const grupoSelect =
-    document.getElementById(
-      "webviewGroup"
-    );
-
-  const pantallaSelect =
-    document.getElementById(
-      "webviewScreen"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "webviewPath"
-    );
-
-  if (encontrada) {
-    categoriaSelect.value =
-      encontrada.categoria;
-
-    cargarGruposWebview();
-
-    grupoSelect.value =
-      String(
-        encontrada.grupoIndex
-      );
-
-    cargarPantallasWebview();
-
-    pantallaSelect.value =
-      encontrada.path;
-
-    seleccionarPantallaWebview();
-
-    return true;
-  }
-
-  categoriaSelect.value =
-    "__manual__";
-
-  cargarGruposWebview();
-
-  pathInput.value =
-    buscada;
-
-  actualizarRutaManualWebview();
-
-  return false;
-}
-
-
-/* =========================================================
-   NATIVO
-========================================================= */
-
-function contarPantallasNativo() {
-  let total = 0;
-
-  Object.values(
-    NATIVE_CATALOG || {}
-  ).forEach(grupos => {
     if (
-      !Array.isArray(
-        grupos
-      )
+      !productosResponse.ok
     ) {
-      return;
-    }
-
-    grupos.forEach(
-      grupo => {
-        if (
-          Array.isArray(
-            grupo.pantallas
-          )
-        ) {
-          total +=
-            grupo.pantallas.length;
-        }
-      }
-    );
-  });
-
-  return total;
-}
-
-function cargarSelectCategoriasNativo() {
-  const categoria =
-    document.getElementById(
-      "nativeCategory"
-    );
-
-  const grupo =
-    document.getElementById(
-      "nativeGroup"
-    );
-
-  const pantalla =
-    document.getElementById(
-      "nativeScreen"
-    );
-
-  const manualBlock =
-    document.getElementById(
-      "nativeManualBlock"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "nativeAppDestination"
-    );
-
-  if (
-    !categoria ||
-    !grupo ||
-    !pantalla ||
-    !manualBlock ||
-    !pathInput
-  ) {
-    return;
-  }
-
-  categoria.innerHTML =
-    '<option value="">Seleccionar tipo...</option>';
-
-  Object.keys(
-    NATIVE_CATALOG || {}
-  ).forEach(nombre => {
-    const option =
-      document.createElement(
-        "option"
-      );
-
-    option.value =
-      nombre;
-
-    option.textContent =
-      nombre;
-
-    categoria.appendChild(
-      option
-    );
-  });
-
-  const manual =
-    document.createElement(
-      "option"
-    );
-
-  manual.value =
-    "__manual__";
-
-  manual.textContent =
-    "Otro / escribir deeplink manualmente";
-
-  categoria.appendChild(
-    manual
-  );
-
-  grupo.innerHTML =
-    '<option value="">Seleccionar grupo...</option>';
-
-  grupo.disabled =
-    true;
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pantalla.disabled =
-    true;
-
-  manualBlock
-    .classList
-    .add(
-      "hidden"
-    );
-
-  pathInput.value =
-    "";
-
-  document
-    .getElementById(
-      "nativeSelectedPathBox"
-    )
-    .innerHTML =
-      '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
-}
-
-function cargarGruposNativo() {
-  const categoria =
-    document
-      .getElementById(
-        "nativeCategory"
-      )
-      .value;
-
-  const grupo =
-    document.getElementById(
-      "nativeGroup"
-    );
-
-  const pantalla =
-    document.getElementById(
-      "nativeScreen"
-    );
-
-  const manualBlock =
-    document.getElementById(
-      "nativeManualBlock"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "nativeAppDestination"
-    );
-
-  grupo.innerHTML =
-    '<option value="">Seleccionar grupo...</option>';
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pantalla.disabled =
-    true;
-
-  pathInput.value =
-    "";
-
-  if (
-    categoria === "__manual__"
-  ) {
-    grupo.disabled =
-      true;
-
-    manualBlock
-      .classList
-      .remove(
-        "hidden"
-      );
-
-    document
-      .getElementById(
-        "nativeSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
-
-    previsualizarRutasGeneradas();
-
-    setTimeout(() => {
-      pathInput.focus();
-    }, 0);
-
-    return;
-  }
-
-  manualBlock
-    .classList
-    .add(
-      "hidden"
-    );
-
-  const grupos =
-    NATIVE_CATALOG[
-      categoria
-    ];
-
-  if (
-    !categoria ||
-    !Array.isArray(
-      grupos
-    )
-  ) {
-    grupo.disabled =
-      true;
-
-    document
-      .getElementById(
-        "nativeSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  grupos.forEach(
-    (item, index) => {
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value =
-        String(index);
-
-      option.textContent =
-        item.grupo +
-        (
-          item.cantidad
-            ? ` (${item.cantidad})`
-            : ""
-        );
-
-      grupo.appendChild(
-        option
+      throw new Error(
+        "productos.json HTTP " +
+        productosResponse.status
       );
     }
-  );
 
-  grupo.disabled =
-    false;
-
-  document
-    .getElementById(
-      "nativeSelectedPathBox"
-    )
-    .innerHTML =
-      '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
-
-  previsualizarRutasGeneradas();
-}
-
-function cargarPantallasNativo() {
-  const categoria =
-    document
-      .getElementById(
-        "nativeCategory"
-      )
-      .value;
-
-  const grupoIndex =
-    document
-      .getElementById(
-        "nativeGroup"
-      )
-      .value;
-
-  const pantalla =
-    document.getElementById(
-      "nativeScreen"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "nativeAppDestination"
-    );
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pathInput.value =
-    "";
-
-  document
-    .getElementById(
-      "nativeManualBlock"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
-
-  if (
-    !categoria ||
-    grupoIndex === ""
-  ) {
-    pantalla.disabled =
-      true;
-
-    document
-      .getElementById(
-        "nativeSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  const grupos =
-    NATIVE_CATALOG[
-      categoria
-    ] || [];
-
-  const grupo =
-    grupos[
-      Number(
-        grupoIndex
-      )
-    ];
-
-  if (
-    !grupo ||
-    !Array.isArray(
-      grupo.pantallas
-    )
-  ) {
-    pantalla.disabled =
-      true;
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  grupo.pantallas.forEach(
-    item => {
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value =
-        item.path || "";
-
-      option.textContent =
-        item.path || "";
-
-      pantalla.appendChild(
-        option
+    if (
+      !rutasResponse.ok
+    ) {
+      throw new Error(
+        "rutas.json HTTP " +
+        rutasResponse.status
       );
     }
-  );
 
-  const manual =
-    document.createElement(
-      "option"
-    );
-
-  manual.value =
-    "__manual__";
-
-  manual.textContent =
-    "Otro / escribir deeplink manualmente";
-
-  pantalla.appendChild(
-    manual
-  );
-
-  pantalla.disabled =
-    false;
-
-  document
-    .getElementById(
-      "nativeSelectedPathBox"
-    )
-    .innerHTML =
-      `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
-
-  previsualizarRutasGeneradas();
-}
-
-function seleccionarPantallaNativo() {
-  const pantalla =
-    document
-      .getElementById(
-        "nativeScreen"
-      )
-      .value;
-
-  const manualBlock =
-    document.getElementById(
-      "nativeManualBlock"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "nativeAppDestination"
-    );
-
-  if (
-    pantalla === "__manual__"
-  ) {
-    pathInput.value =
-      "";
-
-    manualBlock
-      .classList
-      .remove(
-        "hidden"
+    if (
+      !campanasResponse.ok
+    ) {
+      throw new Error(
+        "campanas.json HTTP " +
+        campanasResponse.status
       );
+    }
 
-    document
-      .getElementById(
-        "nativeSelectedPathBox"
-      )
-      .innerHTML =
-        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
-
-    previsualizarRutasGeneradas();
-
-    setTimeout(() => {
-      pathInput.focus();
-    }, 0);
-
-    return;
-  }
-
-  manualBlock
-    .classList
-    .add(
-      "hidden"
-    );
-
-  pathInput.value =
-    pantalla || "";
-
-  document
-    .getElementById(
-      "nativeSelectedPathBox"
-    )
-    .innerHTML =
-      pantalla
-        ? `<strong>Deeplink seleccionado:</strong><br>${pantalla}`
-        : '<strong>Deeplink seleccionado:</strong><br>Selecciona una pantalla.';
-
-  previsualizarRutasGeneradas();
-}
-
-function actualizarRutaManualNativo() {
-  const ruta =
-    limpiarValor(
-      document
-        .getElementById(
-          "nativeAppDestination"
-        )
-        .value
-    );
-
-  document
-    .getElementById(
-      "nativeSelectedPathBox"
-    )
-    .innerHTML =
-      ruta
-        ? `<strong>Deeplink manual:</strong><br>${ruta}`
-        : '<strong>Deeplink seleccionado:</strong><br>Escribe un deeplink nativo.';
-
-  previsualizarRutasGeneradas();
-}
-
-function buscarRutaEnCatalogoNativo(
-  ruta
-) {
-  const buscada =
-    normalizarRuta(
-      ruta
-    );
-
-  if (!buscada) {
-    return null;
-  }
-
-  for (
     const [
-      categoria,
-      grupos
-    ]
-    of Object.entries(
-      NATIVE_CATALOG || {}
-    )
-  ) {
-    if (
-      !Array.isArray(
-        grupos
+      productosData,
+      rutasData,
+      campanasData
+    ] =
+      await Promise.all([
+        productosResponse.json(),
+        rutasResponse.json(),
+        campanasResponse.json()
+      ]);
+
+
+    /* PRODUCTOS YA CONFIGURADOS */
+
+    PRODUCTOS =
+      Array.isArray(
+        productosData.productos
       )
-    ) {
-      continue;
+        ? productosData.productos
+        : [];
+
+
+    /* CATÁLOGO TÉCNICO */
+
+    WEBVIEW_CATALOG =
+      rutasData.webview &&
+      typeof rutasData.webview === "object"
+        ? rutasData.webview
+        : {};
+
+    NATIVE_CATALOG =
+      rutasData.nativo &&
+      typeof rutasData.nativo === "object"
+        ? rutasData.nativo
+        : {};
+
+    POR_REVISAR_WEBVIEW =
+      Array.isArray(
+        rutasData.porRevisarWebview
+      )
+        ? rutasData.porRevisarWebview
+        : [];
+
+
+    /* CAMPAÑAS */
+
+    CAMPAIGN_SOURCES =
+      campanasData.fuentes &&
+      typeof campanasData.fuentes === "object"
+        ? campanasData.fuentes
+        : {};
+
+    SOURCE_NAMES =
+      campanasData.nombresFuente &&
+      typeof campanasData.nombresFuente === "object"
+        ? campanasData.nombresFuente
+        : {};
+
+    MEDIUM_NAMES =
+      campanasData.nombresMedio &&
+      typeof campanasData.nombresMedio === "object"
+        ? campanasData.nombresMedio
+        : {};
+
+
+    /* CONTROLES */
+
+    cargarSelectProductos();
+
+    cargarSelectCategoriasWebview();
+
+    cargarSelectCategoriasNativo();
+
+    cargarSelectFuentes();
+
+    renderFuentesAutogenerador();
+
+    renderCatalog();
+
+
+    /* CONTADORES */
+
+    const totalWebview =
+      contarPathsWebview();
+
+    const totalNativo =
+      contarPantallasNativo();
+
+    const totalCategoriasWebview =
+      Object.keys(
+        WEBVIEW_CATALOG
+      ).length;
+
+    const totalCategoriasNativo =
+      Object.keys(
+        NATIVE_CATALOG
+      ).length;
+
+    const totalFuentes =
+      Object.keys(
+        CAMPAIGN_SOURCES
+      ).length;
+
+
+    /* ESTADO */
+
+    if (status) {
+      status
+        .classList
+        .remove(
+          "error"
+        );
+
+      status.innerHTML =
+        "✓ Configuración cargada: " +
+        "<strong>" +
+        PRODUCTOS.length +
+        " productos</strong>, " +
+
+        "<strong>" +
+        totalNativo +
+        " deeplinks nativos</strong> en <strong>" +
+        totalCategoriasNativo +
+        " categorías</strong>, " +
+
+        "<strong>" +
+        totalWebview +
+        " paths WebView</strong> en <strong>" +
+        totalCategoriasWebview +
+        " categorías</strong> y " +
+
+        "<strong>" +
+        totalFuentes +
+        " fuentes de campaña</strong>.";
     }
 
-    for (
-      let i = 0;
-      i < grupos.length;
-      i++
-    ) {
-      const grupo =
-        grupos[i];
+  } catch (error) {
+    console.error(
+      "[CONFIG] Error cargando configuración:",
+      error
+    );
 
-      if (
-        !Array.isArray(
-          grupo.pantallas
-        )
-      ) {
-        continue;
-      }
+    PRODUCTOS = [];
 
-      const pantallaIndex =
-        grupo.pantallas
-          .findIndex(
-            item =>
-              normalizarRuta(
-                item.path || ""
-              ) === buscada
-          );
+    WEBVIEW_CATALOG = {};
 
-      if (
-        pantallaIndex !== -1
-      ) {
-        return {
-          categoria,
-          grupoIndex:
-            i,
-          grupo:
-            grupo.grupo,
-          pantallaIndex,
-          path:
-            buscada
-        };
-      }
+    NATIVE_CATALOG = {};
+
+    POR_REVISAR_WEBVIEW = [];
+
+    CAMPAIGN_SOURCES = {};
+
+    SOURCE_NAMES = {};
+
+    MEDIUM_NAMES = {};
+
+    cargarSelectProductos();
+
+    cargarSelectCategoriasWebview();
+
+    cargarSelectCategoriasNativo();
+
+    cargarSelectFuentes();
+
+    renderFuentesAutogenerador();
+
+    renderCatalog();
+
+    if (status) {
+      status
+        .classList
+        .add(
+          "error"
+        );
+
+      status.innerHTML =
+        "⚠ No se pudo cargar la configuración. Verifica que " +
+        "<strong>deep.html</strong>, " +
+        "<strong>styles.css</strong>, " +
+        "<strong>app.js</strong>, " +
+        "<strong>productos.json</strong>, " +
+        "<strong>rutas.json</strong> y " +
+        "<strong>campanas.json</strong> " +
+        "estén en la misma carpeta y que la página se abra desde un servidor Web.";
     }
   }
-
-  return null;
-}
-
-function seleccionarRutaNativoEnCatalogo(
-  ruta
-) {
-  const buscada =
-    normalizarRuta(
-      ruta
-    );
-
-  const encontrada =
-    buscarRutaEnCatalogoNativo(
-      buscada
-    );
-
-  const categoriaSelect =
-    document.getElementById(
-      "nativeCategory"
-    );
-
-  const grupoSelect =
-    document.getElementById(
-      "nativeGroup"
-    );
-
-  const pantallaSelect =
-    document.getElementById(
-      "nativeScreen"
-    );
-
-  const pathInput =
-    document.getElementById(
-      "nativeAppDestination"
-    );
-
-  if (encontrada) {
-    categoriaSelect.value =
-      encontrada.categoria;
-
-    cargarGruposNativo();
-
-    grupoSelect.value =
-      String(
-        encontrada.grupoIndex
-      );
-
-    cargarPantallasNativo();
-
-    pantallaSelect.value =
-      encontrada.path;
-
-    seleccionarPantallaNativo();
-
-    return true;
-  }
-
-  categoriaSelect.value =
-    "__manual__";
-
-  cargarGruposNativo();
-
-  pathInput.value =
-    buscada;
-
-  actualizarRutaManualNativo();
-
-  return false;
-}
-
-function getModoWebNativo() {
-  const seleccionado =
-    document.querySelector(
-      'input[name="nativeWebMode"]:checked'
-    );
-
-  return seleccionado
-    ? seleccionado.value
-    : "login";
-}
-
-function setModoWebNativo(
-  modo
-) {
-  const radio =
-    document.querySelector(
-      `input[name="nativeWebMode"][value="${modo}"]`
-    );
-
-  if (radio) {
-    radio.checked =
-      true;
-  }
-
-  cambiarModoWebNativo();
-}
-
-function cambiarModoWebNativo() {
-  const modo =
-    getModoWebNativo();
-
-  document
-    .getElementById(
-      "nativeLoginPanel"
-    )
-    .classList
-    .toggle(
-      "hidden",
-      modo !== "login"
-    );
-
-  document
-    .getElementById(
-      "nativeLandingPanel"
-    )
-    .classList
-    .toggle(
-      "hidden",
-      modo !== "landing"
-    );
-
-  previsualizarRutasGeneradas();
 }
 
 
 /* =========================================================
-   CONSTRUCTOR DE RUTAS
+   PRODUCTOS
 ========================================================= */
 
-function manejarRutasDiferentes() {
-  const checked =
-    document
-      .getElementById(
-        "differentRoutes"
-      )
-      .checked;
+function cargarSelectProductos() {
+  const select =
+    $("productSelect");
 
-  document
-    .getElementById(
-      "sameRouteBlock"
-    )
-    .classList
-    .toggle(
-      "hidden",
-      checked
-    );
-
-  document
-    .getElementById(
-      "differentRoutesBlock"
-    )
-    .classList
-    .toggle(
-      "hidden",
-      !checked
-    );
-
-  if (checked) {
-    const comun =
-      limpiarValor(
-        document
-          .getElementById(
-            "webviewPath"
-          )
-          .value
-      );
-
-    if (comun) {
-      if (
-        !document
-          .getElementById(
-            "webviewWebPath"
-          )
-          .value
-      ) {
-        document
-          .getElementById(
-            "webviewWebPath"
-          )
-          .value =
-            comun;
-      }
-
-      if (
-        !document
-          .getElementById(
-            "webviewAppPath"
-          )
-          .value
-      ) {
-        document
-          .getElementById(
-            "webviewAppPath"
-          )
-          .value =
-            comun;
-      }
-    }
+  if (!select) {
+    return;
   }
 
-  previsualizarRutasGeneradas();
-}
+  select.innerHTML =
+    '<option value="">Nuevo destino / seleccionar producto...</option>';
 
-function normalizarRuta(
-  ruta
-) {
-  const limpia =
-    limpiarValor(
-      ruta
-    );
-
-  if (!limpia) {
-    return "";
-  }
-
-  return limpia.startsWith("/")
-    ? limpia
-    : "/" + limpia;
-}
-
-function extraerParametro(
-  url,
-  nombre
-) {
-  const limpia =
-    limpiarValor(
-      url
-    );
-
-  const q =
-    limpia.indexOf("?");
-
-  if (q === -1) {
-    return "";
-  }
-
-  for (
-    const par
-    of limpia
-      .substring(
-        q + 1
-      )
-      .split("&")
-  ) {
-    const eq =
-      par.indexOf("=");
-
-    if (
-      eq === -1
-    ) {
-      continue;
-    }
-
-    const key =
-      par.substring(
-        0,
-        eq
-      );
-
-    const value =
-      par.substring(
-        eq + 1
-      );
-
-    if (
-      key === nombre
-    ) {
-      try {
-        return decodeURIComponent(
-          value
+  PRODUCTOS.forEach(
+    producto => {
+      const option =
+        document.createElement(
+          "option"
         );
-      } catch {
-        return value;
-      }
-    }
-  }
 
-  return "";
-}
+      option.value =
+        producto.id;
 
-function extraerPathWebViewApp(
-  appUrl
-) {
-  if (
-    !appUrl.startsWith(
-      APP_WEBVIEW_BASE
-    )
-  ) {
-    return "";
-  }
+      option.textContent =
+        producto.nombre;
 
-  const resto =
-    appUrl.substring(
-      APP_WEBVIEW_BASE.length
-    );
-
-  const amp =
-    resto.indexOf("&");
-
-  return amp === -1
-    ? resto
-    : resto.substring(
-        0,
-        amp
+      select.appendChild(
+        option
       );
+    }
+  );
 }
 
-function detectarTipoProducto(
-  producto
-) {
+
+/* =========================================================
+   RESOLUCIÓN DE PRODUCTOS
+========================================================= */
+
+function detectarTipoProducto(producto) {
   if (
     producto.tipo === "webview"
   ) {
@@ -1641,42 +758,41 @@ function detectarTipoProducto(
     : "native";
 }
 
-function construirWebNativaLogin(
-  ruta
+function extraerPathWebViewApp(
+  appUrl
 ) {
-  const limpia =
-    normalizarRuta(
-      ruta
+  const app =
+    limpiarValor(appUrl);
+
+  if (
+    !app.startsWith(
+      APP_WEBVIEW_BASE
+    )
+  ) {
+    return "";
+  }
+
+  const resto =
+    app.substring(
+      APP_WEBVIEW_BASE.length
     );
 
-  return limpia
-    ? WEB_LOGIN_BASE +
-      limpia
-    : "";
-}
+  const amp =
+    resto.indexOf("&");
 
-function construirWebNativaLanding(
-  url
-) {
-  const limpia =
-    limpiarValor(
-      url
-    );
-
-  return esUrlWebValida(
-    limpia
-  )
-    ? limpia
-    : "";
+  return amp === -1
+    ? resto
+    : resto.substring(
+        0,
+        amp
+      );
 }
 
 function normalizarDestinoAppNativo(
   valor
 ) {
   const limpia =
-    limpiarValor(
-      valor
-    );
+    limpiarValor(valor);
 
   if (!limpia) {
     return "";
@@ -1703,9 +819,7 @@ function extraerBaseDeeplinkNativo(
   appUrl
 ) {
   const app =
-    limpiarValor(
-      appUrl
-    );
+    limpiarValor(appUrl);
 
   if (
     !app.startsWith(
@@ -1731,89 +845,7 @@ function extraerBaseDeeplinkNativo(
       );
 }
 
-function limpiarCamposConstructor(
-  resetTipo = true
-) {
-  document
-    .getElementById(
-      "webviewPath"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "webviewWebPath"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "webviewAppPath"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "differentRoutes"
-    )
-    .checked =
-      false;
-
-  cargarSelectCategoriasWebview();
-
-  document
-    .getElementById(
-      "nativeLoginPath"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "nativeLandingUrl"
-    )
-    .value =
-      "";
-
-  cargarSelectCategoriasNativo();
-
-  setModoWebNativo(
-    "login"
-  );
-
-  document
-    .getElementById(
-      "sameRouteBlock"
-    )
-    .classList
-    .remove(
-      "hidden"
-    );
-
-  document
-    .getElementById(
-      "differentRoutesBlock"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
-
-  if (resetTipo) {
-    setTipoDestino(
-      "webview"
-    );
-  }
-
-  previsualizarRutasGeneradas();
-}
-
-function resolverProducto(
-  producto
-) {
+function resolverProducto(producto) {
   const tipo =
     detectarTipoProducto(
       producto
@@ -1903,6 +935,1681 @@ function resolverProducto(
   };
 }
 
+
+/* =========================================================
+   SELECCIÓN DE PRODUCTO
+========================================================= */
+
+function seleccionarProducto(id) {
+  const productoBase =
+    PRODUCTOS.find(
+      producto =>
+        producto.id === id
+    );
+
+  productoSeleccionado =
+    productoBase ||
+    null;
+
+  if (!productoBase) {
+    if ($("webUrl")) {
+      $("webUrl").value =
+        "";
+    }
+
+    if ($("appUrl")) {
+      $("appUrl").value =
+        "";
+    }
+
+    limpiarCamposConstructor(
+      true
+    );
+
+    limpiarProbador();
+
+    ocultarResultado();
+
+    resetAutogenerador();
+
+    renderCatalog();
+
+    return;
+  }
+
+  const producto =
+    resolverProducto(
+      productoBase
+    );
+
+  $("webUrl").value =
+    producto.web;
+
+  $("appUrl").value =
+    producto.app;
+
+  cargarConstructorDesdeProducto(
+    productoBase
+  );
+
+  cargarProbadorRutas(
+    producto.web,
+    producto.app,
+    producto.nombre
+  );
+
+  ocultarResultado();
+
+  AUTO_GENERATED_LINKS =
+    [];
+
+  const autoCard =
+    $("autoResultsCard");
+
+  if (autoCard) {
+    autoCard
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+
+  renderCatalog();
+}
+
+function seleccionarDesdeCatalogo(id) {
+  if ($("productSelect")) {
+    $("productSelect").value =
+      id;
+  }
+
+  seleccionarProducto(id);
+
+  cambiarModulo(
+    "generador"
+  );
+}
+
+
+/* =========================================================
+   CATÁLOGO PRINCIPAL
+========================================================= */
+
+function renderCatalog() {
+  const catalog =
+    $("catalog");
+
+  if (!catalog) {
+    return;
+  }
+
+  const searchEl =
+    $("catalogSearch");
+
+  const search =
+    limpiarValor(
+      searchEl
+        ? searchEl.value
+        : ""
+    )
+      .toLowerCase();
+
+  const contador =
+    $("catalogVisibleCount");
+
+  if (
+    !PRODUCTOS.length
+  ) {
+    catalog.innerHTML =
+      '<div class="empty">El catálogo se cargará desde productos.json.</div>';
+
+    if (contador) {
+      contador.textContent =
+        "0 destinos";
+    }
+
+    return;
+  }
+
+  const filtrados =
+    PRODUCTOS.filter(
+      productoBase => {
+        const producto =
+          resolverProducto(
+            productoBase
+          );
+
+        const texto =
+          (
+            producto.nombre +
+            " " +
+            producto.id +
+            " " +
+            producto.web +
+            " " +
+            producto.app +
+            " " +
+            producto.tipo
+          )
+            .toLowerCase();
+
+        return texto.includes(
+          search
+        );
+      }
+    );
+
+  if (contador) {
+    contador.textContent =
+      search
+        ? filtrados.length +
+          " de " +
+          PRODUCTOS.length
+        : PRODUCTOS.length +
+          " destinos";
+  }
+
+  catalog.innerHTML =
+    "";
+
+  if (
+    !filtrados.length
+  ) {
+    catalog.innerHTML =
+      '<div class="empty">No se encontraron productos.</div>';
+
+    return;
+  }
+
+  filtrados.forEach(
+    productoBase => {
+      const producto =
+        resolverProducto(
+          productoBase
+        );
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "product";
+
+      if (
+        productoSeleccionado &&
+        productoSeleccionado.id ===
+          producto.id
+      ) {
+        div
+          .classList
+          .add(
+            "active"
+          );
+      }
+
+      div.onclick =
+        () =>
+          seleccionarDesdeCatalogo(
+            producto.id
+          );
+
+      const nombre =
+        document.createElement(
+          "div"
+        );
+
+      nombre.className =
+        "product-name";
+
+      nombre.textContent =
+        producto.nombre;
+
+
+      const web =
+        document.createElement(
+          "div"
+        );
+
+      web.className =
+        "product-path";
+
+      const webStrong =
+        document.createElement(
+          "strong"
+        );
+
+      webStrong.textContent =
+        "Web:";
+
+      web.append(
+        webStrong,
+        document.createElement(
+          "br"
+        ),
+        document.createTextNode(
+          producto.web ||
+          "Pendiente de configurar"
+        )
+      );
+
+
+      const app =
+        document.createElement(
+          "div"
+        );
+
+      app.className =
+        "product-path";
+
+      const appStrong =
+        document.createElement(
+          "strong"
+        );
+
+      appStrong.textContent =
+        "App:";
+
+      app.append(
+        appStrong,
+        document.createElement(
+          "br"
+        ),
+        document.createTextNode(
+          producto.app ||
+          "Pendiente de configurar"
+        )
+      );
+
+
+      const badge =
+        document.createElement(
+          "span"
+        );
+
+      badge.className =
+        "badge";
+
+      badge.textContent =
+        producto.tipo === "webview"
+          ? "WebView"
+          : "Nativo";
+
+
+      div.append(
+        nombre,
+        web,
+        app,
+        badge
+      );
+
+      catalog.appendChild(
+        div
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   WEBVIEW
+========================================================= */
+
+function contarPathsWebview() {
+  let total =
+    0;
+
+  Object.values(
+    WEBVIEW_CATALOG || {}
+  ).forEach(grupos => {
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
+      return;
+    }
+
+    grupos.forEach(
+      grupo => {
+        if (
+          Array.isArray(
+            grupo.paths
+          )
+        ) {
+          total +=
+            grupo.paths.length;
+        }
+      }
+    );
+  });
+
+  return total;
+}
+
+function cargarSelectCategoriasWebview() {
+  const categoria =
+    $("webviewCategory");
+
+  const grupo =
+    $("webviewGroup");
+
+  const pantalla =
+    $("webviewScreen");
+
+  if (
+    !categoria ||
+    !grupo ||
+    !pantalla
+  ) {
+    return;
+  }
+
+  categoria.innerHTML =
+    '<option value="">Seleccionar tipo...</option>';
+
+  Object.keys(
+    WEBVIEW_CATALOG || {}
+  ).forEach(
+    nombre => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        nombre;
+
+      option.textContent =
+        nombre;
+
+      categoria.appendChild(
+        option
+      );
+    }
+  );
+
+  const manual =
+    document.createElement(
+      "option"
+    );
+
+  manual.value =
+    "__manual__";
+
+  manual.textContent =
+    "Otro / escribir ruta manualmente";
+
+  categoria.appendChild(
+    manual
+  );
+
+  grupo.innerHTML =
+    '<option value="">Seleccionar grupo...</option>';
+
+  grupo.disabled =
+    true;
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  pantalla.disabled =
+    true;
+
+  if ($("webviewManualBlock")) {
+    $("webviewManualBlock")
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+
+  if (
+    $("webviewSelectedPathBox")
+  ) {
+    $("webviewSelectedPathBox")
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+  }
+}
+
+function cargarGruposWebview() {
+  const categoria =
+    $("webviewCategory")
+      .value;
+
+  const grupo =
+    $("webviewGroup");
+
+  const pantalla =
+    $("webviewScreen");
+
+  const manualBlock =
+    $("webviewManualBlock");
+
+  grupo.innerHTML =
+    '<option value="">Seleccionar grupo...</option>';
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  pantalla.disabled =
+    true;
+
+  if (
+    categoria === "__manual__"
+  ) {
+    grupo.disabled =
+      true;
+
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    $("webviewPath").value =
+      "";
+
+    $("webviewSelectedPathBox")
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
+
+    previsualizarRutasGeneradas();
+
+    setTimeout(
+      () => {
+        $("webviewPath")
+          .focus();
+      },
+      0
+    );
+
+    return;
+  }
+
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
+
+  $("webviewPath").value =
+    "";
+
+  const grupos =
+    WEBVIEW_CATALOG[
+      categoria
+    ];
+
+  if (
+    !categoria ||
+    !Array.isArray(
+      grupos
+    )
+  ) {
+    grupo.disabled =
+      true;
+
+    $("webviewSelectedPathBox")
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  grupos.forEach(
+    (item, index) => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        String(index);
+
+      option.textContent =
+        item.grupo +
+        (
+          item.cantidad
+            ? " (" +
+              item.cantidad +
+              ")"
+            : ""
+        );
+
+      grupo.appendChild(
+        option
+      );
+    }
+  );
+
+  grupo.disabled =
+    false;
+
+  $("webviewSelectedPathBox")
+    .innerHTML =
+      '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
+
+  previsualizarRutasGeneradas();
+}
+
+function cargarPantallasWebview() {
+  const categoria =
+    $("webviewCategory")
+      .value;
+
+  const grupoIndex =
+    $("webviewGroup")
+      .value;
+
+  const pantalla =
+    $("webviewScreen");
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  $("webviewPath").value =
+    "";
+
+  $("webviewManualBlock")
+    .classList
+    .add(
+      "hidden"
+    );
+
+  if (
+    !categoria ||
+    grupoIndex === ""
+  ) {
+    pantalla.disabled =
+      true;
+
+    $("webviewSelectedPathBox")
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  const grupos =
+    WEBVIEW_CATALOG[
+      categoria
+    ] || [];
+
+  const grupo =
+    grupos[
+      Number(
+        grupoIndex
+      )
+    ];
+
+  if (
+    !grupo ||
+    !Array.isArray(
+      grupo.paths
+    )
+  ) {
+    pantalla.disabled =
+      true;
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  grupo.paths.forEach(
+    path => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        path;
+
+      option.textContent =
+        path;
+
+      pantalla.appendChild(
+        option
+      );
+    }
+  );
+
+  const manual =
+    document.createElement(
+      "option"
+    );
+
+  manual.value =
+    "__manual__";
+
+  manual.textContent =
+    "Otro / escribir ruta manualmente";
+
+  pantalla.appendChild(
+    manual
+  );
+
+  pantalla.disabled =
+    false;
+
+  $("webviewSelectedPathBox")
+    .innerHTML =
+      "<strong>" +
+      grupo.grupo +
+      "</strong><br>Selecciona la pantalla exacta.";
+
+  previsualizarRutasGeneradas();
+}
+
+function seleccionarPantallaWebview() {
+  const pantalla =
+    $("webviewScreen")
+      .value;
+
+  const manualBlock =
+    $("webviewManualBlock");
+
+  const pathInput =
+    $("webviewPath");
+
+  if (
+    pantalla === "__manual__"
+  ) {
+    pathInput.value =
+      "";
+
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    $("webviewSelectedPathBox")
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
+
+    previsualizarRutasGeneradas();
+
+    setTimeout(
+      () => {
+        pathInput.focus();
+      },
+      0
+    );
+
+    return;
+  }
+
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
+
+  pathInput.value =
+    pantalla || "";
+
+  $("webviewSelectedPathBox")
+    .innerHTML =
+      pantalla
+        ? "<strong>Ruta seleccionada:</strong><br>" +
+          pantalla
+        : '<strong>Ruta seleccionada:</strong><br>Selecciona una pantalla.';
+
+  previsualizarRutasGeneradas();
+}
+
+function actualizarRutaManualWebview() {
+  const ruta =
+    limpiarValor(
+      $("webviewPath")
+        .value
+    );
+
+  $("webviewSelectedPathBox")
+    .innerHTML =
+      ruta
+        ? "<strong>Ruta manual:</strong><br>" +
+          ruta
+        : '<strong>Ruta seleccionada:</strong><br>Escribe una ruta WebView.';
+
+  previsualizarRutasGeneradas();
+}
+
+function buscarRutaEnCatalogoWebview(
+  ruta
+) {
+  const buscada =
+    normalizarRuta(
+      ruta
+    );
+
+  if (!buscada) {
+    return null;
+  }
+
+  for (
+    const [
+      categoria,
+      grupos
+    ]
+    of Object.entries(
+      WEBVIEW_CATALOG || {}
+    )
+  ) {
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
+      continue;
+    }
+
+    for (
+      let i = 0;
+      i < grupos.length;
+      i++
+    ) {
+      const grupo =
+        grupos[i];
+
+      if (
+        Array.isArray(
+          grupo.paths
+        ) &&
+        grupo.paths.includes(
+          buscada
+        )
+      ) {
+        return {
+          categoria,
+          grupoIndex:
+            i,
+          grupo:
+            grupo.grupo,
+          path:
+            buscada
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+function seleccionarRutaWebviewEnCatalogo(
+  ruta
+) {
+  const buscada =
+    normalizarRuta(
+      ruta
+    );
+
+  const encontrada =
+    buscarRutaEnCatalogoWebview(
+      buscada
+    );
+
+  if (encontrada) {
+    $("webviewCategory").value =
+      encontrada.categoria;
+
+    cargarGruposWebview();
+
+    $("webviewGroup").value =
+      String(
+        encontrada.grupoIndex
+      );
+
+    cargarPantallasWebview();
+
+    $("webviewScreen").value =
+      encontrada.path;
+
+    seleccionarPantallaWebview();
+
+    return true;
+  }
+
+  $("webviewCategory").value =
+    "__manual__";
+
+  cargarGruposWebview();
+
+  $("webviewPath").value =
+    buscada;
+
+  actualizarRutaManualWebview();
+
+  return false;
+}
+
+
+/* =========================================================
+   NATIVO
+========================================================= */
+
+function contarPantallasNativo() {
+  let total =
+    0;
+
+  Object.values(
+    NATIVE_CATALOG || {}
+  ).forEach(grupos => {
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
+      return;
+    }
+
+    grupos.forEach(
+      grupo => {
+        if (
+          Array.isArray(
+            grupo.pantallas
+          )
+        ) {
+          total +=
+            grupo.pantallas.length;
+        }
+      }
+    );
+  });
+
+  return total;
+}
+
+function cargarSelectCategoriasNativo() {
+  const categoria =
+    $("nativeCategory");
+
+  const grupo =
+    $("nativeGroup");
+
+  const pantalla =
+    $("nativeScreen");
+
+  const manualBlock =
+    $("nativeManualBlock");
+
+  const pathInput =
+    $("nativeAppDestination");
+
+  if (
+    !categoria ||
+    !grupo ||
+    !pantalla ||
+    !manualBlock ||
+    !pathInput
+  ) {
+    return;
+  }
+
+  categoria.innerHTML =
+    '<option value="">Seleccionar tipo...</option>';
+
+  Object.keys(
+    NATIVE_CATALOG || {}
+  ).forEach(
+    nombre => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        nombre;
+
+      option.textContent =
+        nombre;
+
+      categoria.appendChild(
+        option
+      );
+    }
+  );
+
+  const manual =
+    document.createElement(
+      "option"
+    );
+
+  manual.value =
+    "__manual__";
+
+  manual.textContent =
+    "Otro / escribir deeplink manualmente";
+
+  categoria.appendChild(
+    manual
+  );
+
+  grupo.innerHTML =
+    '<option value="">Seleccionar grupo...</option>';
+
+  grupo.disabled =
+    true;
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  pantalla.disabled =
+    true;
+
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
+
+  pathInput.value =
+    "";
+
+  $("nativeSelectedPathBox")
+    .innerHTML =
+      '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+}
+
+function cargarGruposNativo() {
+  const categoria =
+    $("nativeCategory")
+      .value;
+
+  const grupo =
+    $("nativeGroup");
+
+  const pantalla =
+    $("nativeScreen");
+
+  const manualBlock =
+    $("nativeManualBlock");
+
+  const pathInput =
+    $("nativeAppDestination");
+
+  grupo.innerHTML =
+    '<option value="">Seleccionar grupo...</option>';
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  pantalla.disabled =
+    true;
+
+  pathInput.value =
+    "";
+
+  if (
+    categoria === "__manual__"
+  ) {
+    grupo.disabled =
+      true;
+
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    $("nativeSelectedPathBox")
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
+
+    previsualizarRutasGeneradas();
+
+    setTimeout(
+      () => {
+        pathInput.focus();
+      },
+      0
+    );
+
+    return;
+  }
+
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
+
+  const grupos =
+    NATIVE_CATALOG[
+      categoria
+    ];
+
+  if (
+    !categoria ||
+    !Array.isArray(
+      grupos
+    )
+  ) {
+    grupo.disabled =
+      true;
+
+    $("nativeSelectedPathBox")
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  grupos.forEach(
+    (item, index) => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        String(index);
+
+      option.textContent =
+        item.grupo +
+        (
+          item.cantidad
+            ? " (" +
+              item.cantidad +
+              ")"
+            : ""
+        );
+
+      grupo.appendChild(
+        option
+      );
+    }
+  );
+
+  grupo.disabled =
+    false;
+
+  $("nativeSelectedPathBox")
+    .innerHTML =
+      '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
+
+  previsualizarRutasGeneradas();
+}
+
+function cargarPantallasNativo() {
+  const categoria =
+    $("nativeCategory")
+      .value;
+
+  const grupoIndex =
+    $("nativeGroup")
+      .value;
+
+  const pantalla =
+    $("nativeScreen");
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  $("nativeAppDestination").value =
+    "";
+
+  $("nativeManualBlock")
+    .classList
+    .add(
+      "hidden"
+    );
+
+  if (
+    !categoria ||
+    grupoIndex === ""
+  ) {
+    pantalla.disabled =
+      true;
+
+    $("nativeSelectedPathBox")
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  const grupos =
+    NATIVE_CATALOG[
+      categoria
+    ] || [];
+
+  const grupo =
+    grupos[
+      Number(
+        grupoIndex
+      )
+    ];
+
+  if (
+    !grupo ||
+    !Array.isArray(
+      grupo.pantallas
+    )
+  ) {
+    pantalla.disabled =
+      true;
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  grupo.pantallas.forEach(
+    item => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        item.path || "";
+
+      option.textContent =
+        item.nombre
+          ? item.nombre +
+            " — " +
+            item.path
+          : item.path || "";
+
+      pantalla.appendChild(
+        option
+      );
+    }
+  );
+
+  const manual =
+    document.createElement(
+      "option"
+    );
+
+  manual.value =
+    "__manual__";
+
+  manual.textContent =
+    "Otro / escribir deeplink manualmente";
+
+  pantalla.appendChild(
+    manual
+  );
+
+  pantalla.disabled =
+    false;
+
+  $("nativeSelectedPathBox")
+    .innerHTML =
+      "<strong>" +
+      grupo.grupo +
+      "</strong><br>Selecciona la pantalla exacta.";
+
+  previsualizarRutasGeneradas();
+}
+
+function seleccionarPantallaNativo() {
+  const pantalla =
+    $("nativeScreen")
+      .value;
+
+  const manualBlock =
+    $("nativeManualBlock");
+
+  const pathInput =
+    $("nativeAppDestination");
+
+  if (
+    pantalla === "__manual__"
+  ) {
+    pathInput.value =
+      "";
+
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    $("nativeSelectedPathBox")
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
+
+    previsualizarRutasGeneradas();
+
+    setTimeout(
+      () => {
+        pathInput.focus();
+      },
+      0
+    );
+
+    return;
+  }
+
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
+
+  pathInput.value =
+    pantalla || "";
+
+  $("nativeSelectedPathBox")
+    .innerHTML =
+      pantalla
+        ? "<strong>Deeplink seleccionado:</strong><br>" +
+          pantalla
+        : '<strong>Deeplink seleccionado:</strong><br>Selecciona una pantalla.';
+
+  previsualizarRutasGeneradas();
+}
+
+function actualizarRutaManualNativo() {
+  const ruta =
+    limpiarValor(
+      $("nativeAppDestination")
+        .value
+    );
+
+  $("nativeSelectedPathBox")
+    .innerHTML =
+      ruta
+        ? "<strong>Deeplink manual:</strong><br>" +
+          ruta
+        : '<strong>Deeplink seleccionado:</strong><br>Escribe un deeplink nativo.';
+
+  previsualizarRutasGeneradas();
+}
+
+function buscarRutaEnCatalogoNativo(
+  ruta
+) {
+  const buscada =
+    normalizarRuta(
+      ruta
+    );
+
+  if (!buscada) {
+    return null;
+  }
+
+  for (
+    const [
+      categoria,
+      grupos
+    ]
+    of Object.entries(
+      NATIVE_CATALOG || {}
+    )
+  ) {
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
+      continue;
+    }
+
+    for (
+      let i = 0;
+      i < grupos.length;
+      i++
+    ) {
+      const grupo =
+        grupos[i];
+
+      if (
+        !Array.isArray(
+          grupo.pantallas
+        )
+      ) {
+        continue;
+      }
+
+      const pantallaIndex =
+        grupo.pantallas
+          .findIndex(
+            item =>
+              normalizarRuta(
+                item.path || ""
+              ) === buscada
+          );
+
+      if (
+        pantallaIndex !== -1
+      ) {
+        return {
+          categoria,
+
+          grupoIndex:
+            i,
+
+          grupo:
+            grupo.grupo,
+
+          pantallaIndex,
+
+          path:
+            buscada
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+function seleccionarRutaNativoEnCatalogo(
+  ruta
+) {
+  const buscada =
+    normalizarRuta(
+      ruta
+    );
+
+  const encontrada =
+    buscarRutaEnCatalogoNativo(
+      buscada
+    );
+
+  if (encontrada) {
+    $("nativeCategory").value =
+      encontrada.categoria;
+
+    cargarGruposNativo();
+
+    $("nativeGroup").value =
+      String(
+        encontrada.grupoIndex
+      );
+
+    cargarPantallasNativo();
+
+    $("nativeScreen").value =
+      encontrada.path;
+
+    seleccionarPantallaNativo();
+
+    return true;
+  }
+
+  $("nativeCategory").value =
+    "__manual__";
+
+  cargarGruposNativo();
+
+  $("nativeAppDestination").value =
+    buscada;
+
+  actualizarRutaManualNativo();
+
+  return false;
+}
+
+function getModoWebNativo() {
+  const seleccionado =
+    document.querySelector(
+      'input[name="nativeWebMode"]:checked'
+    );
+
+  return seleccionado
+    ? seleccionado.value
+    : "login";
+}
+
+function setModoWebNativo(modo) {
+  const radio =
+    document.querySelector(
+      'input[name="nativeWebMode"][value="' +
+      modo +
+      '"]'
+    );
+
+  if (radio) {
+    radio.checked =
+      true;
+  }
+
+  cambiarModoWebNativo();
+}
+
+function cambiarModoWebNativo() {
+  const modo =
+    getModoWebNativo();
+
+  $("nativeLoginPanel")
+    .classList
+    .toggle(
+      "hidden",
+      modo !== "login"
+    );
+
+  $("nativeLandingPanel")
+    .classList
+    .toggle(
+      "hidden",
+      modo !== "landing"
+    );
+
+  previsualizarRutasGeneradas();
+}
+
+
+/* =========================================================
+   TIPO DE DESTINO
+========================================================= */
+
+function getTipoDestino() {
+  const seleccionado =
+    document.querySelector(
+      'input[name="destinationType"]:checked'
+    );
+
+  return seleccionado
+    ? seleccionado.value
+    : "webview";
+}
+
+function setTipoDestino(tipo) {
+  const radio =
+    document.querySelector(
+      'input[name="destinationType"][value="' +
+      tipo +
+      '"]'
+    );
+
+  if (radio) {
+    radio.checked =
+      true;
+  }
+
+  cambiarTipoDestino();
+}
+
+function cambiarTipoDestino() {
+  const tipo =
+    getTipoDestino();
+
+  $("webviewPanel")
+    .classList
+    .toggle(
+      "hidden",
+      tipo !== "webview"
+    );
+
+  $("nativePanel")
+    .classList
+    .toggle(
+      "hidden",
+      tipo !== "native"
+    );
+
+  previsualizarRutasGeneradas();
+}
+
+
+/* =========================================================
+   CONSTRUCTOR DE DESTINOS
+========================================================= */
+
+function manejarRutasDiferentes() {
+  const checked =
+    $("differentRoutes")
+      .checked;
+
+  $("sameRouteBlock")
+    .classList
+    .toggle(
+      "hidden",
+      checked
+    );
+
+  $("differentRoutesBlock")
+    .classList
+    .toggle(
+      "hidden",
+      !checked
+    );
+
+  if (checked) {
+    const comun =
+      limpiarValor(
+        $("webviewPath")
+          .value
+      );
+
+    if (comun) {
+      if (
+        !$("webviewWebPath")
+          .value
+      ) {
+        $("webviewWebPath")
+          .value =
+            comun;
+      }
+
+      if (
+        !$("webviewAppPath")
+          .value
+      ) {
+        $("webviewAppPath")
+          .value =
+            comun;
+      }
+    }
+  }
+
+  previsualizarRutasGeneradas();
+}
+
+function construirWebNativaLogin(
+  ruta
+) {
+  const limpia =
+    normalizarRuta(
+      ruta
+    );
+
+  return limpia
+    ? WEB_LOGIN_BASE +
+      limpia
+    : "";
+}
+
+function construirWebNativaLanding(
+  url
+) {
+  const limpia =
+    limpiarValor(
+      url
+    );
+
+  return esUrlWebValida(
+    limpia
+  )
+    ? limpia
+    : "";
+}
+
+function limpiarCamposConstructor(
+  resetTipo = true
+) {
+  if ($("webviewPath")) {
+    $("webviewPath").value =
+      "";
+  }
+
+  if ($("webviewWebPath")) {
+    $("webviewWebPath").value =
+      "";
+  }
+
+  if ($("webviewAppPath")) {
+    $("webviewAppPath").value =
+      "";
+  }
+
+  if ($("differentRoutes")) {
+    $("differentRoutes").checked =
+      false;
+  }
+
+  cargarSelectCategoriasWebview();
+
+  if ($("nativeLoginPath")) {
+    $("nativeLoginPath").value =
+      "";
+  }
+
+  if ($("nativeLandingUrl")) {
+    $("nativeLandingUrl").value =
+      "";
+  }
+
+  cargarSelectCategoriasNativo();
+
+  setModoWebNativo(
+    "login"
+  );
+
+  if ($("sameRouteBlock")) {
+    $("sameRouteBlock")
+      .classList
+      .remove(
+        "hidden"
+      );
+  }
+
+  if (
+    $("differentRoutesBlock")
+  ) {
+    $("differentRoutesBlock")
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+
+  if (resetTipo) {
+    setTipoDestino(
+      "webview"
+    );
+  }
+
+  previsualizarRutasGeneradas();
+}
+
 function cargarConstructorDesdeProducto(
   productoOriginal
 ) {
@@ -1915,15 +2622,12 @@ function cargarConstructorDesdeProducto(
       productoOriginal
     );
 
-  const tipo =
-    producto.tipo;
-
   setTipoDestino(
-    tipo
+    producto.tipo
   );
 
   if (
-    tipo === "webview"
+    producto.tipo === "webview"
   ) {
     const rutaWeb =
       producto.rutaWeb;
@@ -1936,35 +2640,20 @@ function cargarConstructorDesdeProducto(
       rutaApp &&
       rutaWeb !== rutaApp
     ) {
-      document
-        .getElementById(
-          "differentRoutes"
-        )
-        .checked =
-          true;
+      $("differentRoutes").checked =
+        true;
 
       manejarRutasDiferentes();
 
-      document
-        .getElementById(
-          "webviewWebPath"
-        )
-        .value =
-          rutaWeb;
+      $("webviewWebPath").value =
+        rutaWeb;
 
-      document
-        .getElementById(
-          "webviewAppPath"
-        )
-        .value =
-          rutaApp;
+      $("webviewAppPath").value =
+        rutaApp;
+
     } else {
-      document
-        .getElementById(
-          "differentRoutes"
-        )
-        .checked =
-          false;
+      $("differentRoutes").checked =
+        false;
 
       manejarRutasDiferentes();
 
@@ -1974,6 +2663,7 @@ function cargarConstructorDesdeProducto(
         ""
       );
     }
+
   } else {
     const webProducto =
       limpiarValor(
@@ -2000,37 +2690,22 @@ function cargarConstructorDesdeProducto(
         "login"
       );
 
-      document
-        .getElementById(
-          "nativeLoginPath"
-        )
-        .value =
-          rutaLogin;
+      $("nativeLoginPath").value =
+        rutaLogin;
 
-      document
-        .getElementById(
-          "nativeLandingUrl"
-        )
-        .value =
-          "";
+      $("nativeLandingUrl").value =
+        "";
+
     } else {
       setModoWebNativo(
         "landing"
       );
 
-      document
-        .getElementById(
-          "nativeLandingUrl"
-        )
-        .value =
-          webProducto;
+      $("nativeLandingUrl").value =
+        webProducto;
 
-      document
-        .getElementById(
-          "nativeLoginPath"
-        )
-        .value =
-          "";
+      $("nativeLoginPath").value =
+        "";
     }
 
     const appBase =
@@ -2047,9 +2722,7 @@ function cargarConstructorDesdeProducto(
           )
         : "";
 
-    if (
-      normalizedPath
-    ) {
+    if (normalizedPath) {
       seleccionarRutaNativoEnCatalogo(
         normalizedPath
       );
@@ -2067,10 +2740,7 @@ function obtenerRutasDesdeConstructor() {
     tipo === "webview"
   ) {
     const diferentes =
-      document
-        .getElementById(
-          "differentRoutes"
-        )
+      $("differentRoutes")
         .checked;
 
     let rutaWeb =
@@ -2079,33 +2749,23 @@ function obtenerRutasDesdeConstructor() {
     let rutaApp =
       "";
 
-    if (
-      diferentes
-    ) {
+    if (diferentes) {
       rutaWeb =
         normalizarRuta(
-          document
-            .getElementById(
-              "webviewWebPath"
-            )
+          $("webviewWebPath")
             .value
         );
 
       rutaApp =
         normalizarRuta(
-          document
-            .getElementById(
-              "webviewAppPath"
-            )
+          $("webviewAppPath")
             .value
         );
+
     } else {
       const ruta =
         normalizarRuta(
-          document
-            .getElementById(
-              "webviewPath"
-            )
+          $("webviewPath")
             .value
         );
 
@@ -2139,26 +2799,17 @@ function obtenerRutasDesdeConstructor() {
   const web =
     modoWeb === "login"
       ? construirWebNativaLogin(
-          document
-            .getElementById(
-              "nativeLoginPath"
-            )
+          $("nativeLoginPath")
             .value
         )
       : construirWebNativaLanding(
-          document
-            .getElementById(
-              "nativeLandingUrl"
-            )
+          $("nativeLandingUrl")
             .value
         );
 
   const app =
     normalizarDestinoAppNativo(
-      document
-        .getElementById(
-          "nativeAppDestination"
-        )
+      $("nativeAppDestination")
         .value
     );
 
@@ -2171,6 +2822,13 @@ function obtenerRutasDesdeConstructor() {
 }
 
 function previsualizarRutasGeneradas() {
+  const box =
+    $("routePreviewBox");
+
+  if (!box) {
+    return;
+  }
+
   const rutas =
     obtenerRutasDesdeConstructor();
 
@@ -2187,19 +2845,30 @@ function previsualizarRutasGeneradas() {
   ) {
     detalleModo =
       rutas.modoWeb === "login"
-        ? "<br><br><strong>Modo Web:</strong> Ruta interna vía /login (validado)"
-        : "<br><br><strong>Modo Web:</strong> Landing / URL directa (requiere prueba GTM)";
+        ? "<br><br><strong>Modo Web:</strong> Ruta interna vía /login"
+        : "<br><br><strong>Modo Web:</strong> Landing / URL directa";
   }
 
-  document
-    .getElementById(
-      "routePreviewBox"
-    )
-    .innerHTML =
-      `<strong>Vista previa — ${nombre}</strong><br><br>` +
-      `<strong>Web:</strong><br>${rutas.web || "Pendiente"}<br><br>` +
-      `<strong>App:</strong><br>${rutas.app || "Pendiente"}` +
-      detalleModo;
+  box.innerHTML =
+    "<strong>Vista previa — " +
+    nombre +
+    "</strong><br><br>" +
+
+    "<strong>Web:</strong><br>" +
+    (
+      rutas.web ||
+      "Pendiente"
+    ) +
+
+    "<br><br>" +
+
+    "<strong>App:</strong><br>" +
+    (
+      rutas.app ||
+      "Pendiente"
+    ) +
+
+    detalleModo;
 }
 
 function generarRutasDestino() {
@@ -2255,19 +2924,11 @@ function generarRutasDestino() {
     return;
   }
 
-  document
-    .getElementById(
-      "webUrl"
-    )
-    .value =
-      rutas.web;
+  $("webUrl").value =
+    rutas.web;
 
-  document
-    .getElementById(
-      "appUrl"
-    )
-    .value =
-      rutas.app;
+  $("appUrl").value =
+    rutas.app;
 
   cargarProbadorRutas(
     rutas.web,
@@ -2282,13 +2943,8 @@ function generarRutasDestino() {
   AUTO_GENERATED_LINKS =
     [];
 
-  const autoCard =
-    document.getElementById(
-      "autoResultsCard"
-    );
-
-  if (autoCard) {
-    autoCard
+  if ($("autoResultsCard")) {
+    $("autoResultsCard")
       .classList
       .add(
         "hidden"
@@ -2297,12 +2953,10 @@ function generarRutasDestino() {
 }
 
 function limpiarConstructor() {
-  document
-    .getElementById(
-      "productSelect"
-    )
-    .value =
+  if ($("productSelect")) {
+    $("productSelect").value =
       "";
+  }
 
   productoSeleccionado =
     null;
@@ -2311,19 +2965,15 @@ function limpiarConstructor() {
     true
   );
 
-  document
-    .getElementById(
-      "webUrl"
-    )
-    .value =
+  if ($("webUrl")) {
+    $("webUrl").value =
       "";
+  }
 
-  document
-    .getElementById(
-      "appUrl"
-    )
-    .value =
+  if ($("appUrl")) {
+    $("appUrl").value =
       "";
+  }
 
   limpiarProbador();
 
@@ -2336,350 +2986,127 @@ function limpiarConstructor() {
 
 
 /* =========================================================
-   CARGA DE CONFIGURACIÓN
-========================================================= */
-
-async function cargarConfiguracion() {
-  const status =
-    document.getElementById(
-      "dataStatus"
-    );
-
-  try {
-    const [
-      linksResponse,
-      nativosResponse,
-      campanasResponse
-    ] =
-      await Promise.all([
-        fetch(
-          "./links.json",
-          {
-            cache:
-              "no-store"
-          }
-        ),
-
-        fetch(
-          "./nativos.json",
-          {
-            cache:
-              "no-store"
-          }
-        ),
-
-        fetch(
-          "./campanas.json",
-          {
-            cache:
-              "no-store"
-          }
-        )
-      ]);
-
-    if (
-      !linksResponse.ok
-    ) {
-      throw new Error(
-        "links.json HTTP " +
-        linksResponse.status
-      );
-    }
-
-    if (
-      !nativosResponse.ok
-    ) {
-      throw new Error(
-        "nativos.json HTTP " +
-        nativosResponse.status
-      );
-    }
-
-    if (
-      !campanasResponse.ok
-    ) {
-      throw new Error(
-        "campanas.json HTTP " +
-        campanasResponse.status
-      );
-    }
-
-    const [
-      linksData,
-      nativosData,
-      campanasData
-    ] =
-      await Promise.all([
-        linksResponse.json(),
-        nativosResponse.json(),
-        campanasResponse.json()
-      ]);
-
-    PRODUCTOS =
-      Array.isArray(
-        linksData.productos
-      )
-        ? linksData.productos
-        : [];
-
-    WEBVIEW_CATALOG =
-      linksData.webview &&
-      typeof linksData.webview ===
-        "object"
-        ? linksData.webview
-        : {};
-
-    POR_REVISAR_WEBVIEW =
-      Array.isArray(
-        linksData
-          .porRevisarWebview
-      )
-        ? linksData
-            .porRevisarWebview
-        : [];
-
-    NATIVE_CATALOG =
-      nativosData.nativo &&
-      typeof nativosData.nativo ===
-        "object"
-        ? nativosData.nativo
-        : {};
-
-    CAMPAIGN_SOURCES =
-      campanasData.fuentes &&
-      typeof campanasData.fuentes ===
-        "object"
-        ? campanasData.fuentes
-        : {};
-
-    SOURCE_NAMES =
-      campanasData.nombresFuente &&
-      typeof campanasData
-        .nombresFuente ===
-        "object"
-        ? campanasData
-            .nombresFuente
-        : {};
-
-    MEDIUM_NAMES =
-      campanasData.nombresMedio &&
-      typeof campanasData
-        .nombresMedio ===
-        "object"
-        ? campanasData
-            .nombresMedio
-        : {};
-
-    cargarSelectProductos();
-
-    cargarSelectCategoriasWebview();
-
-    cargarSelectCategoriasNativo();
-
-    cargarSelectFuentes();
-
-    renderFuentesAutogenerador();
-
-    renderCatalog();
-
-    const totalWebview =
-      contarPathsWebview();
-
-    const totalCategoriasWebview =
-      Object.keys(
-        WEBVIEW_CATALOG
-      ).length;
-
-    const totalNativo =
-      contarPantallasNativo();
-
-    const totalCategoriasNativo =
-      Object.keys(
-        NATIVE_CATALOG
-      ).length;
-
-    const totalFuentes =
-      Object.keys(
-        CAMPAIGN_SOURCES
-      ).length;
-
-    status
-      .classList
-      .remove(
-        "error"
-      );
-
-    status.innerHTML =
-      "✓ Configuración cargada: <strong>" +
-      PRODUCTOS.length +
-      " productos</strong>, <strong>" +
-      totalNativo +
-      " deeplinks nativos</strong> en <strong>" +
-      totalCategoriasNativo +
-      " categorías</strong>, <strong>" +
-      totalWebview +
-      " paths WebView</strong> en <strong>" +
-      totalCategoriasWebview +
-      " categorías</strong> y <strong>" +
-      totalFuentes +
-      " fuentes de campaña</strong>.";
-
-  } catch (error) {
-    console.error(
-      "[CONFIG] Error cargando configuración:",
-      error
-    );
-
-    PRODUCTOS =
-      [];
-
-    WEBVIEW_CATALOG =
-      {};
-
-    NATIVE_CATALOG =
-      {};
-
-    POR_REVISAR_WEBVIEW =
-      [];
-
-    CAMPAIGN_SOURCES =
-      {};
-
-    SOURCE_NAMES =
-      {};
-
-    MEDIUM_NAMES =
-      {};
-
-    cargarSelectProductos();
-
-    cargarSelectCategoriasWebview();
-
-    cargarSelectCategoriasNativo();
-
-    cargarSelectFuentes();
-
-    renderFuentesAutogenerador();
-
-    renderCatalog();
-
-    status
-      .classList
-      .add(
-        "error"
-      );
-
-    status.innerHTML =
-      "⚠ No se pudo cargar la configuración. Verifica que <strong>deep.html</strong>, " +
-      "<strong>styles.css</strong>, <strong>app.js</strong>, <strong>links.json</strong>, " +
-      "<strong>nativos.json</strong> y <strong>campanas.json</strong> estén en la misma carpeta " +
-      "y que la página se abra desde un servidor Web.";
-  }
-}
-
-function cargarSelectProductos() {
-  const select =
-    document.getElementById(
-      "productSelect"
-    );
-
-  select.innerHTML =
-    '<option value="">Nuevo destino / seleccionar producto...</option>';
-
-  PRODUCTOS.forEach(
-    producto => {
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value =
-        producto.id;
-
-      option.textContent =
-        producto.nombre;
-
-      select.appendChild(
-        option
-      );
-    }
-  );
-}
-
-async function iniciar() {
-  document
-    .getElementById(
-      "sourceInternal"
-    )
-    .value =
-      SOURCE_CAMPAIGN;
-
-  cambiarModulo(
-    "generador",
-    false
-  );
-
-  limpiarAnalizador();
-
-  cargarSelectCategoriasWebview();
-
-  cargarSelectCategoriasNativo();
-
-  cambiarTipoDestino();
-
-  cambiarModoWebNativo();
-
-  renderCatalog();
-
-  await cargarConfiguracion();
-}
-
-
-/* =========================================================
    SOURCE / MEDIUM
 ========================================================= */
 
+function obtenerMediosFuente(source) {
+  const config =
+    CAMPAIGN_SOURCES[
+      source
+    ];
+
+  /*
+    Compatibilidad estructura antigua:
+
+    "google": [
+      "paid-cpc",
+      "display"
+    ]
+  */
+
+  if (
+    Array.isArray(
+      config
+    )
+  ) {
+    return config;
+  }
+
+  /*
+    Estructura nueva:
+
+    "google": {
+      "medios": [...],
+      "autogenerar": [...]
+    }
+  */
+
+  if (
+    config &&
+    Array.isArray(
+      config.medios
+    )
+  ) {
+    return config.medios;
+  }
+
+  return [];
+}
+
+function obtenerMediosAutogenerar(source) {
+  const config =
+    CAMPAIGN_SOURCES[
+      source
+    ];
+
+  if (
+    Array.isArray(
+      config
+    )
+  ) {
+    return config;
+  }
+
+  if (
+    config &&
+    Array.isArray(
+      config.autogenerar
+    )
+  ) {
+    return config.autogenerar;
+  }
+
+  return obtenerMediosFuente(
+    source
+  );
+}
+
 function cargarSelectFuentes() {
   const select =
-    document.getElementById(
-      "utmSource"
-    );
+    $("utmSource");
 
   const medium =
-    document.getElementById(
-      "utmMedium"
-    );
+    $("utmMedium");
+
+  if (
+    !select ||
+    !medium
+  ) {
+    return;
+  }
 
   select.innerHTML =
     '<option value="">Seleccionar fuente...</option>';
 
   Object.keys(
     CAMPAIGN_SOURCES || {}
-  ).forEach(source => {
-    const option =
-      document.createElement(
-        "option"
+  ).forEach(
+    source => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        source;
+
+      const nombre =
+        SOURCE_NAMES[
+          source
+        ];
+
+      option.textContent =
+        nombre
+          ? source +
+            " — " +
+            nombre
+          : source;
+
+      select.appendChild(
+        option
       );
-
-    option.value =
-      source;
-
-    const nombre =
-      SOURCE_NAMES[
-        source
-      ];
-
-    option.textContent =
-      nombre
-        ? source +
-          " — " +
-          nombre
-        : source;
-
-    select.appendChild(
-      option
-    );
-  });
+    }
+  );
 
   const otro =
     document.createElement(
@@ -2705,24 +3132,16 @@ function cargarSelectFuentes() {
 
 function cargarMediosPorFuente() {
   const sourceSelect =
-    document.getElementById(
-      "utmSource"
-    );
+    $("utmSource");
 
   const mediumSelect =
-    document.getElementById(
-      "utmMedium"
-    );
+    $("utmMedium");
 
   const sourceOtro =
-    document.getElementById(
-      "utmSourceOtro"
-    );
+    $("utmSourceOtro");
 
   const mediumOtro =
-    document.getElementById(
-      "utmMediumOtro"
-    );
+    $("utmMediumOtro");
 
   const source =
     sourceSelect.value;
@@ -2762,30 +3181,32 @@ function cargarMediosPorFuente() {
 
     Object.keys(
       MEDIUM_NAMES || {}
-    ).forEach(medium => {
-      const option =
-        document.createElement(
-          "option"
+    ).forEach(
+      medium => {
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          medium;
+
+        option.textContent =
+          MEDIUM_NAMES[
+            medium
+          ]
+            ? medium +
+              " — " +
+              MEDIUM_NAMES[
+                medium
+              ]
+            : medium;
+
+        mediumSelect.appendChild(
+          option
         );
-
-      option.value =
-        medium;
-
-      option.textContent =
-        MEDIUM_NAMES[
-          medium
-        ]
-          ? medium +
-            " — " +
-            MEDIUM_NAMES[
-              medium
-            ]
-          : medium;
-
-      mediumSelect.appendChild(
-        option
-      );
-    });
+      }
+    );
 
     const otro =
       document.createElement(
@@ -2817,24 +3238,10 @@ function cargarMediosPorFuente() {
   sourceOtro.value =
     "";
 
-  const configFuente =
-    CAMPAIGN_SOURCES[
-      source
-    ] &&
-    typeof CAMPAIGN_SOURCES[
-      source
-    ] === "object"
-      ? CAMPAIGN_SOURCES[
-          source
-        ]
-      : {};
-
   const medios =
-    Array.isArray(
-      configFuente.medios
-    )
-      ? configFuente.medios
-      : [];
+    obtenerMediosFuente(
+      source
+    );
 
   mediumSelect.innerHTML =
     '<option value="">Seleccionar medio...</option>';
@@ -2895,18 +3302,13 @@ function cargarMediosPorFuente() {
 
 function manejarOtroSource() {
   const select =
-    document.getElementById(
-      "utmSource"
-    );
+    $("utmSource");
 
   const inputOtro =
-    document.getElementById(
-      "utmSourceOtro"
-    );
+    $("utmSourceOtro");
 
   if (
-    select.value ===
-    "__otro__"
+    select.value === "__otro__"
   ) {
     inputOtro
       .classList
@@ -2929,18 +3331,13 @@ function manejarOtroSource() {
 
 function manejarOtroMedium() {
   const select =
-    document.getElementById(
-      "utmMedium"
-    );
+    $("utmMedium");
 
   const inputOtro =
-    document.getElementById(
-      "utmMediumOtro"
-    );
+    $("utmMediumOtro");
 
   if (
-    select.value ===
-    "__otro__"
+    select.value === "__otro__"
   ) {
     inputOtro
       .classList
@@ -2949,6 +3346,7 @@ function manejarOtroMedium() {
       );
 
     inputOtro.focus();
+
   } else {
     inputOtro
       .classList
@@ -2963,215 +3361,8 @@ function manejarOtroMedium() {
 
 
 /* =========================================================
-   AUTOGENERADOR
+   CONSTRUCCIÓN DE CAMPAÑA
 ========================================================= */
-
-function mostrarAutogenerador() {
-  const panel =
-    document.getElementById(
-      "autoGeneratorPanel"
-    );
-
-  if (!panel) {
-    return;
-  }
-
-  renderFuentesAutogenerador();
-
-  panel
-    .classList
-    .remove(
-      "hidden"
-    );
-
-  panel.scrollIntoView({
-    behavior:
-      "smooth",
-    block:
-      "nearest"
-  });
-}
-
-function cerrarAutogenerador() {
-  const panel =
-    document.getElementById(
-      "autoGeneratorPanel"
-    );
-
-  if (panel) {
-    panel
-      .classList
-      .add(
-        "hidden"
-      );
-  }
-}
-
-function renderFuentesAutogenerador() {
-  const contenedor =
-    document.getElementById(
-      "autoSourcesList"
-    );
-
-  if (!contenedor) {
-    return;
-  }
-
-  const sources =
-    Object.keys(
-      CAMPAIGN_SOURCES || {}
-    );
-
-  if (
-    !sources.length
-  ) {
-    contenedor.innerHTML =
-      '<div class="data-status">Los canales disponibles se cargarán desde <strong>campanas.json</strong>.</div>';
-
-    return;
-  }
-
-  contenedor.innerHTML =
-    "";
-
-  sources.forEach(
-    source => {
-      const configFuente =
-        CAMPAIGN_SOURCES[
-          source
-        ] &&
-        typeof CAMPAIGN_SOURCES[
-          source
-        ] === "object"
-          ? CAMPAIGN_SOURCES[
-              source
-            ]
-          : {};
-
-      const medios =
-        Array.isArray(
-          configFuente.autogenerar
-        )
-          ? configFuente
-              .autogenerar
-          : [];
-
-      const item =
-        document.createElement(
-          "label"
-        );
-
-      item.className =
-        "auto-source-option";
-
-      const checkbox =
-        document.createElement(
-          "input"
-        );
-
-      checkbox.type =
-        "checkbox";
-
-      checkbox.className =
-        "auto-source-checkbox";
-
-      checkbox.value =
-        source;
-
-      const texto =
-        document.createElement(
-          "span"
-        );
-
-      texto.className =
-        "auto-source-text";
-
-      const titulo =
-        document.createElement(
-          "strong"
-        );
-
-      titulo.textContent =
-        SOURCE_NAMES[
-          source
-        ]
-          ? source +
-            " — " +
-            SOURCE_NAMES[
-              source
-            ]
-          : source;
-
-      const detalle =
-        document.createElement(
-          "small"
-        );
-
-      detalle.textContent =
-        medios.length
-          ? "Autogenerar: " +
-            medios.join(", ")
-          : "Sin combinaciones configuradas para autogenerar";
-
-      texto.appendChild(
-        titulo
-      );
-
-      texto.appendChild(
-        detalle
-      );
-
-      item.appendChild(
-        checkbox
-      );
-
-      item.appendChild(
-        texto
-      );
-
-      contenedor.appendChild(
-        item
-      );
-    }
-  );
-}
-
-function seleccionarTodasFuentesAuto() {
-  document
-    .querySelectorAll(
-      ".auto-source-checkbox"
-    )
-    .forEach(
-      input => {
-        input.checked =
-          true;
-      }
-    );
-}
-
-function limpiarFuentesAuto() {
-  document
-    .querySelectorAll(
-      ".auto-source-checkbox"
-    )
-    .forEach(
-      input => {
-        input.checked =
-          false;
-      }
-    );
-}
-
-function obtenerFuentesAutoSeleccionadas() {
-  return Array.from(
-    document.querySelectorAll(
-      ".auto-source-checkbox:checked"
-    )
-  ).map(
-    input =>
-      input.value
-  );
-}
 
 function construirVariantesCampana(
   webBase,
@@ -3286,77 +3477,511 @@ function construirVariantesCampana(
   };
 }
 
-function validarBaseAutogenerador() {
+
+/* =========================================================
+   GENERACIÓN INDIVIDUAL
+========================================================= */
+
+function generarLink() {
   const webBase =
     limpiarValor(
-      document
-        .getElementById(
-          "webUrl"
-        )
+      $("webUrl")
         .value
     );
 
   const appBase =
     limpiarValor(
-      document
-        .getElementById(
-          "appUrl"
-        )
+      $("appUrl")
         .value
+    );
+
+  const sourceSeleccionado =
+    $("utmSource")
+      .value;
+
+  const mediumSeleccionado =
+    $("utmMedium")
+      .value;
+
+  const utmSource =
+    normalizarTaxonomia(
+      sourceSeleccionado === "__otro__"
+        ? $("utmSourceOtro")
+            .value
+        : sourceSeleccionado
+    );
+
+  const utmMedium =
+    normalizarTaxonomia(
+      mediumSeleccionado === "__otro__"
+        ? $("utmMediumOtro")
+            .value
+        : mediumSeleccionado
     );
 
   const utmCampaign =
     limpiarValor(
-      document
-        .getElementById(
-          "utmCampaign"
-        )
+      $("utmCampaign")
         .value
     );
 
-  if (!webBase) {
-    alert(
-      "Completa la URL Web antes de autogenerar."
+  const detail =
+    limpiarValor(
+      $("detail")
+        .value
     );
 
-    return null;
-  }
-
   if (
+    !webBase ||
     !esUrlWebValida(
       webBase
     )
   ) {
     alert(
-      "La URL Web debe comenzar con http:// o https://."
+      "Completa una URL Web válida."
     );
 
-    return null;
-  }
-
-  if (!appBase) {
-    alert(
-      "Completa el Deeplink App antes de autogenerar."
-    );
-
-    return null;
+    return;
   }
 
   if (
+    !appBase ||
     !esDeeplinkValido(
       appBase
     )
   ) {
     alert(
-      "El Deeplink App no parece tener un formato válido."
+      "Completa un Deeplink App válido."
+    );
+
+    return;
+  }
+
+  if (
+    !utmSource ||
+    !utmMedium ||
+    !utmCampaign
+  ) {
+    alert(
+      "Completa utm_source, utm_medium y utm_campaign."
+    );
+
+    return;
+  }
+
+  const resultado =
+    construirVariantesCampana(
+      webBase,
+      appBase,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      detail
+    );
+
+  $("finalUrl")
+    .textContent =
+      resultado.finalUrl;
+
+  $("finalEncodedPreview")
+    .textContent =
+      resultado.finalUrl;
+
+  $("finalDecodedPreview")
+    .textContent =
+      resultado.finalUrlSinEncodear;
+
+  $("webPreview")
+    .textContent =
+      resultado.webParametrizada;
+
+  $("webEncodedPreview")
+    .textContent =
+      resultado.webEncodeada;
+
+  $("appPreview")
+    .textContent =
+      resultado.appParametrizada;
+
+  $("appEncodedPreview")
+    .textContent =
+      resultado.appEncodeada;
+
+  const modeNote =
+    $("generationModeNote");
+
+  const rutasActuales =
+    obtenerRutasDesdeConstructor();
+
+  if (modeNote) {
+    if (
+      rutasActuales.tipo === "native" &&
+      rutasActuales.modoWeb === "landing"
+    ) {
+      modeNote.className =
+        "mode-note experimental";
+
+      modeNote.innerHTML =
+        "<strong>Landing directa / modo de prueba</strong><br>" +
+        "El link fue generado con embeddedURL, pero esta landing no necesariamente abrirá la App por sí sola.";
+
+    } else if (
+      rutasActuales.tipo === "native" &&
+      rutasActuales.modoWeb === "login"
+    ) {
+      modeNote.className =
+        "mode-note verified";
+
+      modeNote.innerHTML =
+        "<strong>Wrapper /login</strong><br>" +
+        "Este modo usa la estructura que procesa embeddedURL.";
+
+    } else {
+      modeNote.className =
+        "mode-note verified";
+
+      modeNote.innerHTML =
+        "<strong>WebView</strong><br>" +
+        "Se usa /login como wrapper y webView?path=... como Deeplink App.";
+    }
+  }
+
+  $("resultBox")
+    .classList
+    .add(
+      "visible"
+    );
+
+  $("emptyResult")
+    .classList
+    .add(
+      "hidden"
+    );
+}
+
+function ocultarResultado() {
+  if ($("resultBox")) {
+    $("resultBox")
+      .classList
+      .remove(
+        "visible"
+      );
+  }
+
+  if ($("emptyResult")) {
+    $("emptyResult")
+      .classList
+      .remove(
+        "hidden"
+      );
+  }
+
+  const modeNote =
+    $("generationModeNote");
+
+  if (modeNote) {
+    modeNote.className =
+      "mode-note hidden";
+
+    modeNote.innerHTML =
+      "";
+  }
+}
+
+async function copiarValor(
+  elementId,
+  nombre = "Valor"
+) {
+  const element =
+    $(elementId);
+
+  const valor =
+    element
+      ? element.textContent
+      : "";
+
+  if (!valor) {
+    return;
+  }
+
+  await escribirPortapapeles(
+    valor
+  );
+
+  alert(
+    nombre +
+    " copiado correctamente."
+  );
+}
+
+async function copiarFinal() {
+  const link =
+    $("finalUrl")
+      ? $("finalUrl")
+          .textContent
+      : "";
+
+  if (!link) {
+    return;
+  }
+
+  await escribirPortapapeles(
+    link
+  );
+
+  alert(
+    "Link copiado correctamente."
+  );
+}
+
+function abrirFinal() {
+  const link =
+    $("finalUrl")
+      ? $("finalUrl")
+          .textContent
+      : "";
+
+  if (link) {
+    window.location.href =
+      link;
+  }
+}
+
+
+/* =========================================================
+   AUTOGENERADOR
+========================================================= */
+
+function mostrarAutogenerador() {
+  const panel =
+    $("autoGeneratorPanel");
+
+  if (!panel) {
+    return;
+  }
+
+  renderFuentesAutogenerador();
+
+  panel
+    .classList
+    .remove(
+      "hidden"
+    );
+
+  panel.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+}
+
+function cerrarAutogenerador() {
+  const panel =
+    $("autoGeneratorPanel");
+
+  if (panel) {
+    panel
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+}
+
+function renderFuentesAutogenerador() {
+  const contenedor =
+    $("autoSourcesList");
+
+  if (!contenedor) {
+    return;
+  }
+
+  const sources =
+    Object.keys(
+      CAMPAIGN_SOURCES || {}
+    );
+
+  if (
+    !sources.length
+  ) {
+    contenedor.innerHTML =
+      '<div class="data-status">Los canales disponibles se cargarán desde <strong>campanas.json</strong>.</div>';
+
+    return;
+  }
+
+  contenedor.innerHTML =
+    "";
+
+  sources.forEach(
+    source => {
+      const medios =
+        obtenerMediosAutogenerar(
+          source
+        );
+
+      const item =
+        document.createElement(
+          "label"
+        );
+
+      item.className =
+        "auto-source-option";
+
+      const checkbox =
+        document.createElement(
+          "input"
+        );
+
+      checkbox.type =
+        "checkbox";
+
+      checkbox.className =
+        "auto-source-checkbox";
+
+      checkbox.value =
+        source;
+
+      const texto =
+        document.createElement(
+          "span"
+        );
+
+      texto.className =
+        "auto-source-text";
+
+      const titulo =
+        document.createElement(
+          "strong"
+        );
+
+      titulo.textContent =
+        SOURCE_NAMES[
+          source
+        ]
+          ? source +
+            " — " +
+            SOURCE_NAMES[
+              source
+            ]
+          : source;
+
+      const detalle =
+        document.createElement(
+          "small"
+        );
+
+      detalle.textContent =
+        medios.length
+          ? "Autogenerar: " +
+            medios.join(", ")
+          : "Sin combinaciones configuradas para autogenerar";
+
+      texto.append(
+        titulo,
+        detalle
+      );
+
+      item.append(
+        checkbox,
+        texto
+      );
+
+      contenedor.appendChild(
+        item
+      );
+    }
+  );
+}
+
+function seleccionarTodasFuentesAuto() {
+  document
+    .querySelectorAll(
+      ".auto-source-checkbox"
+    )
+    .forEach(
+      input => {
+        input.checked =
+          true;
+      }
+    );
+}
+
+function limpiarFuentesAuto() {
+  document
+    .querySelectorAll(
+      ".auto-source-checkbox"
+    )
+    .forEach(
+      input => {
+        input.checked =
+          false;
+      }
+    );
+}
+
+function obtenerFuentesAutoSeleccionadas() {
+  return Array.from(
+    document.querySelectorAll(
+      ".auto-source-checkbox:checked"
+    )
+  ).map(
+    input =>
+      input.value
+  );
+}
+
+function validarBaseAutogenerador() {
+  const webBase =
+    limpiarValor(
+      $("webUrl")
+        .value
+    );
+
+  const appBase =
+    limpiarValor(
+      $("appUrl")
+        .value
+    );
+
+  const utmCampaign =
+    limpiarValor(
+      $("utmCampaign")
+        .value
+    );
+
+  const detail =
+    limpiarValor(
+      $("detail")
+        .value
+    );
+
+  if (
+    !webBase ||
+    !esUrlWebValida(
+      webBase
+    )
+  ) {
+    alert(
+      "Completa una URL Web válida antes de autogenerar."
     );
 
     return null;
   }
 
   if (
-    !utmCampaign
+    !appBase ||
+    !esDeeplinkValido(
+      appBase
+    )
   ) {
+    alert(
+      "Completa un Deeplink App válido antes de autogenerar."
+    );
+
+    return null;
+  }
+
+  if (!utmCampaign) {
     alert(
       "Completa utm_campaign antes de autogenerar."
     );
@@ -3368,15 +3993,7 @@ function validarBaseAutogenerador() {
     webBase,
     appBase,
     utmCampaign,
-
-    detail:
-      limpiarValor(
-        document
-          .getElementById(
-            "detail"
-          )
-          .value
-      )
+    detail
   };
 }
 
@@ -3406,25 +4023,10 @@ function autogenerarLinks() {
 
   fuentes.forEach(
     source => {
-      const configFuente =
-        CAMPAIGN_SOURCES[
-          source
-        ] &&
-        typeof CAMPAIGN_SOURCES[
-          source
-        ] === "object"
-          ? CAMPAIGN_SOURCES[
-              source
-            ]
-          : {};
-
       const medios =
-        Array.isArray(
-          configFuente.autogenerar
-        )
-          ? configFuente
-              .autogenerar
-          : [];
+        obtenerMediosAutogenerar(
+          source
+        );
 
       medios.forEach(
         medium => {
@@ -3459,9 +4061,7 @@ function autogenerarLinks() {
   renderResultadosAutogenerados();
 
   const card =
-    document.getElementById(
-      "autoResultsCard"
-    );
+    $("autoResultsCard");
 
   if (card) {
     card
@@ -3471,34 +4071,24 @@ function autogenerarLinks() {
       );
 
     card.scrollIntoView({
-      behavior:
-        "smooth",
-      block:
-        "start"
+      behavior: "smooth",
+      block: "start"
     });
   }
 }
 
 function renderResultadosAutogenerados() {
   const body =
-    document.getElementById(
-      "autoResultsBody"
-    );
+    $("autoResultsBody");
 
   const empty =
-    document.getElementById(
-      "autoResultsEmpty"
-    );
+    $("autoResultsEmpty");
 
   const content =
-    document.getElementById(
-      "autoResultsContent"
-    );
+    $("autoResultsContent");
 
   const summary =
-    document.getElementById(
-      "autoResultsSummary"
-    );
+    $("autoResultsSummary");
 
   if (
     !body ||
@@ -3530,128 +4120,122 @@ function renderResultadosAutogenerados() {
     return;
   }
 
-  AUTO_GENERATED_LINKS
-    .forEach(
-      (item, index) => {
-        const tr =
-          document.createElement(
-            "tr"
-          );
-
-        const tdSource =
-          document.createElement(
-            "td"
-          );
-
-        tdSource.textContent =
-          item.source;
-
-        const tdMedium =
-          document.createElement(
-            "td"
-          );
-
-        tdMedium.textContent =
-          item.medium;
-
-        const tdLink =
-          document.createElement(
-            "td"
-          );
-
-        const linkBox =
-          document.createElement(
-            "div"
-          );
-
-        linkBox.className =
-          "auto-link-value";
-
-        linkBox.textContent =
-          item.finalUrl;
-
-        tdLink.appendChild(
-          linkBox
+  AUTO_GENERATED_LINKS.forEach(
+    (item, index) => {
+      const tr =
+        document.createElement(
+          "tr"
         );
 
-        const tdActions =
-          document.createElement(
-            "td"
+      const tdSource =
+        document.createElement(
+          "td"
+        );
+
+      tdSource.textContent =
+        item.source;
+
+
+      const tdMedium =
+        document.createElement(
+          "td"
+        );
+
+      tdMedium.textContent =
+        item.medium;
+
+
+      const tdLink =
+        document.createElement(
+          "td"
+        );
+
+      const linkBox =
+        document.createElement(
+          "div"
+        );
+
+      linkBox.className =
+        "auto-link-value";
+
+      linkBox.textContent =
+        item.finalUrl;
+
+      tdLink.appendChild(
+        linkBox
+      );
+
+
+      const tdActions =
+        document.createElement(
+          "td"
+        );
+
+      tdActions.className =
+        "auto-row-actions";
+
+
+      const copyBtn =
+        document.createElement(
+          "button"
+        );
+
+      copyBtn.className =
+        "btn-secondary";
+
+      copyBtn.textContent =
+        "Copiar";
+
+      copyBtn.onclick =
+        () =>
+          copiarLinkAuto(
+            index
           );
 
-        tdActions.className =
-          "auto-row-actions";
 
-        const copyBtn =
-          document.createElement(
-            "button"
+      const testBtn =
+        document.createElement(
+          "button"
+        );
+
+      testBtn.className =
+        "btn-secondary";
+
+      testBtn.textContent =
+        "Probar";
+
+      testBtn.onclick =
+        () =>
+          probarLinkAuto(
+            index
           );
 
-        copyBtn.className =
-          "btn-secondary";
 
-        copyBtn.textContent =
-          "Copiar";
+      tdActions.append(
+        copyBtn,
+        testBtn
+      );
 
-        copyBtn.onclick =
-          () =>
-            copiarLinkAuto(
-              index
-            );
+      tr.append(
+        tdSource,
+        tdMedium,
+        tdLink,
+        tdActions
+      );
 
-        const testBtn =
-          document.createElement(
-            "button"
-          );
-
-        testBtn.className =
-          "btn-secondary";
-
-        testBtn.textContent =
-          "Probar";
-
-        testBtn.onclick =
-          () =>
-            probarLinkAuto(
-              index
-            );
-
-        tdActions.appendChild(
-          copyBtn
-        );
-
-        tdActions.appendChild(
-          testBtn
-        );
-
-        tr.appendChild(
-          tdSource
-        );
-
-        tr.appendChild(
-          tdMedium
-        );
-
-        tr.appendChild(
-          tdLink
-        );
-
-        tr.appendChild(
-          tdActions
-        );
-
-        body.appendChild(
-          tr
-        );
-      }
-    );
+      body.appendChild(
+        tr
+      );
+    }
+  );
 
   const fuentesUnicas =
     new Set(
-      AUTO_GENERATED_LINKS.map(
-        item =>
-          item.source
-      )
+      AUTO_GENERATED_LINKS
+        .map(
+          item =>
+            item.source
+        )
     ).size;
 
   summary.innerHTML =
@@ -3660,8 +4244,7 @@ function renderResultadosAutogenerados() {
     AUTO_GENERATED_LINKS.length +
     " links</strong> para <strong>" +
     fuentesUnicas +
-    " fuentes</strong>. Cada fila corresponde a una combinación definida en " +
-    "<strong>autogenerar</strong> dentro de campanas.json.";
+    " fuentes</strong>.";
 
   empty
     .classList
@@ -3676,46 +4259,7 @@ function renderResultadosAutogenerados() {
     );
 }
 
-async function escribirPortapapeles(
-  valor
-) {
-  try {
-    await navigator
-      .clipboard
-      .writeText(
-        valor
-      );
-
-    return true;
-
-  } catch (error) {
-    const textarea =
-      document.createElement(
-        "textarea"
-      );
-
-    textarea.value =
-      valor;
-
-    document.body.appendChild(
-      textarea
-    );
-
-    textarea.select();
-
-    document.execCommand(
-      "copy"
-    );
-
-    textarea.remove();
-
-    return true;
-  }
-}
-
-async function copiarLinkAuto(
-  index
-) {
+async function copiarLinkAuto(index) {
   const item =
     AUTO_GENERATED_LINKS[
       index
@@ -3737,23 +4281,19 @@ async function copiarLinkAuto(
   );
 }
 
-function probarLinkAuto(
-  index
-) {
+function probarLinkAuto(index) {
   const item =
     AUTO_GENERATED_LINKS[
       index
     ];
 
   if (
-    !item ||
-    !item.finalUrl
+    item &&
+    item.finalUrl
   ) {
-    return;
+    window.location.href =
+      item.finalUrl;
   }
-
-  window.location.href =
-    item.finalUrl;
 }
 
 async function copiarTodosLinksAuto() {
@@ -3791,9 +4331,7 @@ async function copiarTodosLinksAuto() {
   );
 }
 
-function escaparCsv(
-  valor
-) {
+function escaparCsv(valor) {
   const texto =
     String(
       valor ?? ""
@@ -3891,10 +4429,7 @@ function descargarLinksAutoCsv() {
 
   const nombreCampana =
     limpiarValor(
-      document
-        .getElementById(
-          "utmCampaign"
-        )
+      $("utmCampaign")
         .value
     )
       .replace(
@@ -3932,62 +4467,38 @@ function resetAutogenerador() {
   AUTO_GENERATED_LINKS =
     [];
 
-  const panel =
-    document.getElementById(
-      "autoGeneratorPanel"
-    );
-
-  const card =
-    document.getElementById(
-      "autoResultsCard"
-    );
-
-  const body =
-    document.getElementById(
-      "autoResultsBody"
-    );
-
-  const empty =
-    document.getElementById(
-      "autoResultsEmpty"
-    );
-
-  const content =
-    document.getElementById(
-      "autoResultsContent"
-    );
-
-  if (panel) {
-    panel
+  if ($("autoGeneratorPanel")) {
+    $("autoGeneratorPanel")
       .classList
       .add(
         "hidden"
       );
   }
 
-  if (card) {
-    card
+  if ($("autoResultsCard")) {
+    $("autoResultsCard")
       .classList
       .add(
         "hidden"
       );
   }
 
-  if (body) {
-    body.innerHTML =
-      "";
+  if ($("autoResultsBody")) {
+    $("autoResultsBody")
+      .innerHTML =
+        "";
   }
 
-  if (empty) {
-    empty
+  if ($("autoResultsEmpty")) {
+    $("autoResultsEmpty")
       .classList
       .remove(
         "hidden"
       );
   }
 
-  if (content) {
-    content
+  if ($("autoResultsContent")) {
+    $("autoResultsContent")
       .classList
       .add(
         "hidden"
@@ -3999,519 +4510,8 @@ function resetAutogenerador() {
 
 
 /* =========================================================
-   PRODUCTOS
+   PROBADOR
 ========================================================= */
-
-function seleccionarProducto(
-  id
-) {
-  const productoBase =
-    PRODUCTOS.find(
-      producto =>
-        producto.id === id
-    );
-
-  productoSeleccionado =
-    productoBase ||
-    null;
-
-  if (!productoBase) {
-    document
-      .getElementById(
-        "webUrl"
-      )
-      .value =
-        "";
-
-    document
-      .getElementById(
-        "appUrl"
-      )
-      .value =
-        "";
-
-    limpiarCamposConstructor(
-      true
-    );
-
-    limpiarProbador();
-
-    ocultarResultado();
-
-    resetAutogenerador();
-
-    renderCatalog();
-
-    return;
-  }
-
-  const producto =
-    resolverProducto(
-      productoBase
-    );
-
-  document
-    .getElementById(
-      "webUrl"
-    )
-    .value =
-      producto.web;
-
-  document
-    .getElementById(
-      "appUrl"
-    )
-    .value =
-      producto.app;
-
-  cargarConstructorDesdeProducto(
-    productoBase
-  );
-
-  cargarProbadorRutas(
-    producto.web,
-    producto.app,
-    producto.nombre
-  );
-
-  ocultarResultado();
-
-  AUTO_GENERATED_LINKS =
-    [];
-
-  const autoCard =
-    document.getElementById(
-      "autoResultsCard"
-    );
-
-  if (autoCard) {
-    autoCard
-      .classList
-      .add(
-        "hidden"
-      );
-  }
-
-  renderCatalog();
-}
-
-function seleccionarDesdeCatalogo(
-  id
-) {
-  document
-    .getElementById(
-      "productSelect"
-    )
-    .value =
-      id;
-
-  seleccionarProducto(
-    id
-  );
-
-  cambiarModulo(
-    "generador"
-  );
-}
-
-function renderCatalog() {
-  const catalog =
-    document.getElementById(
-      "catalog"
-    );
-
-  const search =
-    document
-      .getElementById(
-        "catalogSearch"
-      )
-      .value
-      .toLowerCase()
-      .trim();
-
-  if (
-    !PRODUCTOS.length
-  ) {
-    catalog.innerHTML =
-      '<div class="empty">El catálogo se cargará desde links.json.</div>';
-
-    const contador =
-      document.getElementById(
-        "catalogVisibleCount"
-      );
-
-    if (contador) {
-      contador.textContent =
-        "0 destinos";
-    }
-
-    return;
-  }
-
-  const filtrados =
-    PRODUCTOS.filter(
-      productoBase => {
-        const producto =
-          resolverProducto(
-            productoBase
-          );
-
-        const texto =
-          (
-            producto.nombre +
-            " " +
-            producto.id +
-            " " +
-            producto.web +
-            " " +
-            producto.app +
-            " " +
-            producto.tipo
-          )
-            .toLowerCase();
-
-        return texto.includes(
-          search
-        );
-      }
-    );
-
-  const contador =
-    document.getElementById(
-      "catalogVisibleCount"
-    );
-
-  if (contador) {
-    contador.textContent =
-      search
-        ? filtrados.length +
-          " de " +
-          PRODUCTOS.length
-        : PRODUCTOS.length +
-          " destinos";
-  }
-
-  catalog.innerHTML =
-    "";
-
-  if (
-    !filtrados.length
-  ) {
-    catalog.innerHTML =
-      '<div class="empty">No se encontraron productos.</div>';
-
-    return;
-  }
-
-  filtrados.forEach(
-    productoBase => {
-      const producto =
-        resolverProducto(
-          productoBase
-        );
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.className =
-        "product";
-
-      if (
-        productoSeleccionado &&
-        productoSeleccionado.id ===
-          producto.id
-      ) {
-        div
-          .classList
-          .add(
-            "active"
-          );
-      }
-
-      div.onclick =
-        () =>
-          seleccionarDesdeCatalogo(
-            producto.id
-          );
-
-      div.innerHTML = `
-        <div class="product-name">
-          ${producto.nombre}
-        </div>
-
-        <div class="product-path">
-          <strong>Web:</strong><br>
-          ${producto.web || "Pendiente de configurar"}
-        </div>
-
-        <div class="product-path">
-          <strong>App:</strong><br>
-          ${producto.app || "Pendiente de configurar"}
-        </div>
-
-        <span class="badge">
-          ${
-            producto.tipo === "webview"
-              ? "WebView"
-              : "Nativo"
-          }
-        </span>
-      `;
-
-      catalog.appendChild(
-        div
-      );
-    }
-  );
-}
-
-
-/* =========================================================
-   UTILIDADES
-========================================================= */
-
-function limpiarValor(
-  valor
-) {
-  return String(
-    valor ?? ""
-  ).trim();
-}
-
-function normalizarTaxonomia(
-  valor
-) {
-  return limpiarValor(
-    valor
-  ).toLowerCase();
-}
-
-function esUrlWebValida(
-  url
-) {
-  return (
-    url.startsWith(
-      "https://"
-    ) ||
-    url.startsWith(
-      "http://"
-    )
-  );
-}
-
-function esDeeplinkValido(
-  deeplink
-) {
-  return (
-    deeplink.includes(
-      "://"
-    ) &&
-    !deeplink.includes(
-      " "
-    )
-  );
-}
-
-function establecerParametros(
-  urlBase,
-  parametros,
-  parametrosAEliminar = []
-) {
-  let original =
-    limpiarValor(
-      urlBase
-    );
-
-  let hash =
-    "";
-
-  const hashIndex =
-    original.indexOf(
-      "#"
-    );
-
-  if (
-    hashIndex !== -1
-  ) {
-    hash =
-      original.substring(
-        hashIndex
-      );
-
-    original =
-      original.substring(
-        0,
-        hashIndex
-      );
-  }
-
-  const queryIndex =
-    original.indexOf(
-      "?"
-    );
-
-  const base =
-    queryIndex === -1
-      ? original
-      : original.substring(
-          0,
-          queryIndex
-        );
-
-  const queryOriginal =
-    queryIndex === -1
-      ? ""
-      : original.substring(
-          queryIndex + 1
-        );
-
-  const pares =
-    queryOriginal
-      ? queryOriginal.split(
-          "&"
-        )
-      : [];
-
-  const mapa =
-    new Map();
-
-  pares.forEach(
-    par => {
-      if (!par) {
-        return;
-      }
-
-      const index =
-        par.indexOf(
-          "="
-        );
-
-      let key;
-      let value;
-
-      if (
-        index === -1
-      ) {
-        key =
-          par;
-
-        value =
-          "";
-      } else {
-        key =
-          par.substring(
-            0,
-            index
-          );
-
-        value =
-          par.substring(
-            index + 1
-          );
-      }
-
-      let keyNormalizada;
-
-      try {
-        keyNormalizada =
-          decodeURIComponent(
-            key
-          );
-      } catch {
-        keyNormalizada =
-          key;
-      }
-
-      mapa.set(
-        keyNormalizada,
-        {
-          keyOriginal:
-            key,
-
-          valueOriginal:
-            value
-        }
-      );
-    }
-  );
-
-  parametrosAEliminar
-    .forEach(
-      key =>
-        mapa.delete(
-          key
-        )
-    );
-
-  Object.entries(
-    parametros
-  ).forEach(
-    ([key, value]) => {
-      const limpio =
-        limpiarValor(
-          value
-        );
-
-      if (!limpio) {
-        mapa.delete(
-          key
-        );
-
-        return;
-      }
-
-      mapa.set(
-        key,
-        {
-          keyOriginal:
-            key,
-
-          valueOriginal:
-            encodeURIComponent(
-              limpio
-            )
-        }
-      );
-    }
-  );
-
-  const nuevaQuery =
-    Array.from(
-      mapa.values()
-    )
-      .map(
-        item => {
-          if (
-            item.valueOriginal ===
-            ""
-          ) {
-            return item.keyOriginal;
-          }
-
-          return (
-            item.keyOriginal +
-            "=" +
-            item.valueOriginal
-          );
-        }
-      )
-      .join(
-        "&"
-      );
-
-  return (
-    base +
-    (
-      nuevaQuery
-        ? "?" +
-          nuevaQuery
-        : ""
-    ) +
-    hash
-  );
-}
 
 function construirLinkPrueba(
   webBase,
@@ -4552,138 +4552,57 @@ function cargarProbadorRutas(
   app,
   nombre = "Destino actual"
 ) {
-  document
-    .getElementById(
-      "testProductName"
-    )
-    .textContent =
-      "Probando: " +
-      nombre;
+  if ($("testProductName")) {
+    $("testProductName")
+      .textContent =
+        "Probando: " +
+        nombre;
+  }
 
-  document
-    .getElementById(
-      "testWebLink"
-    )
-    .value =
+  if ($("testWebLink")) {
+    $("testWebLink").value =
       web || "";
+  }
 
-  document
-    .getElementById(
-      "testAppLink"
-    )
-    .value =
+  if ($("testAppLink")) {
+    $("testAppLink").value =
       app || "";
+  }
 
   actualizarEnlaceApp();
 
-  document
-    .getElementById(
-      "testFinalLink"
-    )
-    .value =
+  if ($("testFinalLink")) {
+    $("testFinalLink").value =
       web
         ? construirLinkPrueba(
             web,
             app
           )
         : "";
+  }
 
-  document
-    .getElementById(
-      "testConsole"
-    )
-    .innerHTML =
-      "<strong>Diagnóstico del Deeplink App</strong><br>" +
-      (
-        app
-          ? "Deeplink cargado. Presiona <strong>Abrir Deeplink App</strong> para probarlo."
-          : "Este destino no tiene Deeplink App configurado."
-      );
+  if ($("testConsole")) {
+    $("testConsole")
+      .innerHTML =
+        "<strong>Diagnóstico del Deeplink App</strong><br>" +
+        (
+          app
+            ? "Deeplink cargado. Presiona <strong>Abrir Deeplink App</strong> para probarlo."
+            : "Este destino no tiene Deeplink App configurado."
+        );
+  }
 }
 
-
-/* =========================================================
-   GENERACIÓN INDIVIDUAL
-========================================================= */
-
-function generarLink() {
-  const webBase =
+function probarLinkExistente() {
+  const link =
     limpiarValor(
-      document
-        .getElementById(
-          "webUrl"
-        )
+      $("testFinalLink")
         .value
     );
 
-  const appBase =
-    limpiarValor(
-      document
-        .getElementById(
-          "appUrl"
-        )
-        .value
-    );
-
-  const sourceSeleccionado =
-    document
-      .getElementById(
-        "utmSource"
-      )
-      .value;
-
-  const utmSource =
-    normalizarTaxonomia(
-      sourceSeleccionado ===
-        "__otro__"
-        ? document
-            .getElementById(
-              "utmSourceOtro"
-            )
-            .value
-        : sourceSeleccionado
-    );
-
-  const mediumSeleccionado =
-    document
-      .getElementById(
-        "utmMedium"
-      )
-      .value;
-
-  const utmMedium =
-    normalizarTaxonomia(
-      mediumSeleccionado ===
-        "__otro__"
-        ? document
-            .getElementById(
-              "utmMediumOtro"
-            )
-            .value
-        : mediumSeleccionado
-    );
-
-  const utmCampaign =
-    limpiarValor(
-      document
-        .getElementById(
-          "utmCampaign"
-        )
-        .value
-    );
-
-  const detail =
-    limpiarValor(
-      document
-        .getElementById(
-          "detail"
-        )
-        .value
-    );
-
-  if (!webBase) {
+  if (!link) {
     alert(
-      "Completa la URL Web."
+      "Selecciona un producto o pega un link combinado."
     );
 
     return;
@@ -4691,7 +4610,38 @@ function generarLink() {
 
   if (
     !esUrlWebValida(
-      webBase
+      link
+    )
+  ) {
+    alert(
+      "El link combinado debe comenzar con http:// o https://."
+    );
+
+    return;
+  }
+
+  window.location.href =
+    link;
+}
+
+function probarLinkWeb() {
+  const link =
+    limpiarValor(
+      $("testWebLink")
+        .value
+    );
+
+  if (!link) {
+    alert(
+      "Selecciona un producto o pega una URL Web."
+    );
+
+    return;
+  }
+
+  if (
+    !esUrlWebValida(
+      link
     )
   ) {
     alert(
@@ -4701,368 +4651,194 @@ function generarLink() {
     return;
   }
 
-  if (!appBase) {
-    alert(
-      "Completa el Deeplink App."
-    );
-
-    return;
-  }
-
-  if (
-    !esDeeplinkValido(
-      appBase
-    )
-  ) {
-    alert(
-      "El Deeplink App no parece tener un formato válido."
-    );
-
-    return;
-  }
-
-  if (
-    !utmSource ||
-    !utmMedium ||
-    !utmCampaign
-  ) {
-    alert(
-      "Completa utm_source, utm_medium y utm_campaign."
-    );
-
-    return;
-  }
-
-  const parametrosCampana = {
-    utm_source:
-      utmSource,
-
-    utm_medium:
-      utmMedium,
-
-    utm_campaign:
-      utmCampaign,
-
-    source:
-      SOURCE_CAMPAIGN
-  };
-
-  if (detail) {
-    parametrosCampana.detail =
-      detail;
-  }
-
-  const webParametrizada =
-    establecerParametros(
-      webBase,
-      parametrosCampana,
-      [
-        "embeddedURL"
-      ]
-    );
-
-  const appParametrizada =
-    establecerParametros(
-      appBase,
-      parametrosCampana
-    );
-
-  const separador =
-    webParametrizada.includes(
-      "?"
-    )
-      ? "&"
-      : "?";
-
-  const appEncodeada =
-    encodeURIComponent(
-      appParametrizada
-    );
-
-  const webEncodeada =
-    encodeURIComponent(
-      webParametrizada
-    );
-
-  const finalUrl =
-    webParametrizada +
-    separador +
-    "embeddedURL=" +
-    appEncodeada;
-
-  const finalUrlSinEncodear =
-    webParametrizada +
-    separador +
-    "embeddedURL=" +
-    appParametrizada;
-
-  document
-    .getElementById(
-      "finalUrl"
-    )
-    .textContent =
-      finalUrl;
-
-  document
-    .getElementById(
-      "finalEncodedPreview"
-    )
-    .textContent =
-      finalUrl;
-
-  document
-    .getElementById(
-      "finalDecodedPreview"
-    )
-    .textContent =
-      finalUrlSinEncodear;
-
-  document
-    .getElementById(
-      "webPreview"
-    )
-    .textContent =
-      webParametrizada;
-
-  document
-    .getElementById(
-      "webEncodedPreview"
-    )
-    .textContent =
-      webEncodeada;
-
-  document
-    .getElementById(
-      "appPreview"
-    )
-    .textContent =
-      appParametrizada;
-
-  document
-    .getElementById(
-      "appEncodedPreview"
-    )
-    .textContent =
-      appEncodeada;
-
-  const modeNote =
-    document.getElementById(
-      "generationModeNote"
-    );
-
-  const rutasActuales =
-    obtenerRutasDesdeConstructor();
-
-  if (
-    rutasActuales.tipo ===
-      "native" &&
-    rutasActuales.modoWeb ===
-      "landing"
-  ) {
-    modeNote.className =
-      "mode-note experimental";
-
-    modeNote.innerHTML =
-      "<strong>Landing directa / modo de prueba</strong><br>" +
-      "El link fue generado con embeddedURL, pero esta landing no necesariamente abrirá la App por sí sola. " +
-      "La siguiente etapa es probar en GTM la lectura de embeddedURL y el intento de apertura del deeplink.";
-
-  } else if (
-    rutasActuales.tipo ===
-      "native" &&
-    rutasActuales.modoWeb ===
-      "login"
-  ) {
-    modeNote.className =
-      "mode-note verified";
-
-    modeNote.innerHTML =
-      "<strong>Wrapper /login</strong><br>" +
-      "Este modo usa la estructura que ya comprobamos que procesa embeddedURL.";
-
-  } else {
-    modeNote.className =
-      "mode-note verified";
-
-    modeNote.innerHTML =
-      "<strong>WebView</strong><br>" +
-      "Se usa /login como wrapper y webView?path=... como Deeplink App.";
-  }
-
-  document
-    .getElementById(
-      "resultBox"
-    )
-    .classList
-    .add(
-      "visible"
-    );
-
-  document
-    .getElementById(
-      "emptyResult"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
-}
-
-function ocultarResultado() {
-  document
-    .getElementById(
-      "resultBox"
-    )
-    .classList
-    .remove(
-      "visible"
-    );
-
-  document
-    .getElementById(
-      "emptyResult"
-    )
-    .classList
-    .remove(
-      "hidden"
-    );
-
-  const modeNote =
-    document.getElementById(
-      "generationModeNote"
-    );
-
-  if (modeNote) {
-    modeNote.className =
-      "mode-note hidden";
-
-    modeNote.innerHTML =
-      "";
-  }
-}
-
-async function copiarValor(
-  elementId,
-  nombre = "Valor"
-) {
-  const element =
-    document.getElementById(
-      elementId
-    );
-
-  const valor =
-    element
-      ? element.textContent
-      : "";
-
-  if (!valor) {
-    return;
-  }
-
-  try {
-    await navigator
-      .clipboard
-      .writeText(
-        valor
-      );
-
-    alert(
-      nombre +
-      " copiado correctamente."
-    );
-
-  } catch (error) {
-    const textarea =
-      document.createElement(
-        "textarea"
-      );
-
-    textarea.value =
-      valor;
-
-    document.body.appendChild(
-      textarea
-    );
-
-    textarea.select();
-
-    document.execCommand(
-      "copy"
-    );
-
-    textarea.remove();
-
-    alert(
-      nombre +
-      " copiado correctamente."
-    );
-  }
-}
-
-async function copiarFinal() {
-  const link =
-    document
-      .getElementById(
-        "finalUrl"
-      )
-      .textContent;
-
-  if (!link) {
-    return;
-  }
-
-  try {
-    await navigator
-      .clipboard
-      .writeText(
-        link
-      );
-
-    alert(
-      "Link copiado correctamente."
-    );
-
-  } catch (error) {
-    const textarea =
-      document.createElement(
-        "textarea"
-      );
-
-    textarea.value =
-      link;
-
-    document.body.appendChild(
-      textarea
-    );
-
-    textarea.select();
-
-    document.execCommand(
-      "copy"
-    );
-
-    textarea.remove();
-
-    alert(
-      "Link copiado correctamente."
-    );
-  }
-}
-
-function abrirFinal() {
-  const link =
-    document
-      .getElementById(
-        "finalUrl"
-      )
-      .textContent;
-
-  if (!link) {
-    return;
-  }
-
   window.location.href =
     link;
+}
+
+function actualizarEnlaceApp() {
+  const enlace =
+    $("testAppAnchor");
+
+  if (!enlace) {
+    return;
+  }
+
+  const link =
+    limpiarValor(
+      $("testAppLink")
+        .value
+    );
+
+  if (
+    link.startsWith(
+      "scotiabankpe://"
+    )
+  ) {
+    enlace.href =
+      link;
+
+    enlace.setAttribute(
+      "aria-disabled",
+      "false"
+    );
+
+  } else {
+    enlace.href =
+      "#";
+
+    enlace.setAttribute(
+      "aria-disabled",
+      "true"
+    );
+  }
+}
+
+function registrarIntentoDeeplink() {
+  const link =
+    limpiarValor(
+      $("testAppLink")
+        .value
+    );
+
+  const consola =
+    $("testConsole");
+
+  const enlace =
+    $("testAppAnchor");
+
+  if (!link) {
+    alert(
+      "Selecciona un producto o pega un Deeplink App."
+    );
+
+    enlace.href =
+      "#";
+
+    return false;
+  }
+
+  if (
+    !link.startsWith(
+      "scotiabankpe://"
+    )
+  ) {
+    alert(
+      "El Deeplink App debe comenzar con scotiabankpe:///."
+    );
+
+    enlace.href =
+      "#";
+
+    return false;
+  }
+
+  enlace.href =
+    link;
+
+  let paginaOculta =
+    false;
+
+  consola.innerHTML =
+    "<strong>Diagnóstico del Deeplink App</strong><br><br>" +
+    '<span class="info">Estado:</span> intentando abrir el esquema...';
+
+  const detectarCambio =
+    () => {
+      if (
+        document.hidden &&
+        !paginaOculta
+      ) {
+        paginaOculta =
+          true;
+
+        consola.innerHTML +=
+          '<br><br><span class="ok">' +
+          "✓ La página pasó a segundo plano. " +
+          "Es una señal compatible con que el sistema haya entregado el deeplink." +
+          "</span>";
+      }
+    };
+
+  document.addEventListener(
+    "visibilitychange",
+    detectarCambio
+  );
+
+  setTimeout(
+    () => {
+      document.removeEventListener(
+        "visibilitychange",
+        detectarCambio
+      );
+
+      if (!paginaOculta) {
+        consola.innerHTML +=
+          '<br><br><span class="warn">' +
+          "⚠ La página siguió visible. " +
+          "El navegador o el sistema no abrió una aplicación con este esquema en esta prueba." +
+          "</span>";
+      }
+    },
+    1800
+  );
+
+  return true;
+}
+
+async function copiarDeeplinkApp() {
+  const link =
+    limpiarValor(
+      $("testAppLink")
+        .value
+    );
+
+  if (!link) {
+    alert(
+      "No hay Deeplink App para copiar."
+    );
+
+    return;
+  }
+
+  await escribirPortapapeles(
+    link
+  );
+
+  alert(
+    "Deeplink App copiado correctamente."
+  );
+}
+
+function limpiarProbador() {
+  if ($("testProductName")) {
+    $("testProductName")
+      .textContent =
+        "Selecciona un producto para comenzar.";
+  }
+
+  if ($("testFinalLink")) {
+    $("testFinalLink").value =
+      "";
+  }
+
+  if ($("testWebLink")) {
+    $("testWebLink").value =
+      "";
+  }
+
+  if ($("testAppLink")) {
+    $("testAppLink").value =
+      "";
+  }
+
+  actualizarEnlaceApp();
+
+  if ($("testConsole")) {
+    $("testConsole")
+      .innerHTML =
+        "<strong>Diagnóstico del Deeplink App</strong><br>" +
+        "Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.";
+  }
 }
 
 
@@ -5070,42 +4846,14 @@ function abrirFinal() {
    ANALIZADOR DE LINKS
 ========================================================= */
 
-function decodificarSeguro(
-  valor
-) {
-  const texto =
-    String(
-      valor ?? ""
-    );
-
-  if (!texto) {
-    return "";
-  }
-
-  try {
-    return decodeURIComponent(
-      texto.replace(
-        /\+/g,
-        "%20"
-      )
-    );
-  } catch {
-    return texto;
-  }
-}
-
-function obtenerQueryCruda(
-  url
-) {
+function obtenerQueryCruda(url) {
   const limpia =
     limpiarValor(
       url
     );
 
   const interrogacion =
-    limpia.indexOf(
-      "?"
-    );
+    limpia.indexOf("?");
 
   if (
     interrogacion === -1
@@ -5129,9 +4877,7 @@ function obtenerQueryCruda(
       );
 }
 
-function obtenerParesParametros(
-  url
-) {
+function obtenerParesParametros(url) {
   const query =
     obtenerQueryCruda(
       url
@@ -5143,15 +4889,11 @@ function obtenerParesParametros(
 
   return query
     .split("&")
-    .filter(
-      Boolean
-    )
+    .filter(Boolean)
     .map(
       par => {
         const index =
-          par.indexOf(
-            "="
-          );
+          par.indexOf("=");
 
         const keyRaw =
           index === -1
@@ -5216,9 +4958,7 @@ function obtenerParametroCrudoAnalizador(
     : "";
 }
 
-function obtenerBaseAnalizador(
-  valor
-) {
+function obtenerBaseAnalizador(valor) {
   const limpia =
     limpiarValor(
       valor
@@ -5229,14 +4969,10 @@ function obtenerBaseAnalizador(
   }
 
   const queryIndex =
-    limpia.indexOf(
-      "?"
-    );
+    limpia.indexOf("?");
 
   const hashIndex =
-    limpia.indexOf(
-      "#"
-    );
+    limpia.indexOf("#");
 
   let corte =
     limpia.length;
@@ -5267,9 +5003,7 @@ function obtenerBaseAnalizador(
   );
 }
 
-function obtenerDominioAnalizador(
-  valor
-) {
+function obtenerDominioAnalizador(valor) {
   const limpia =
     limpiarValor(
       valor
@@ -5350,21 +5084,16 @@ function asignarTextoAnalizador(
   fallback = "-"
 ) {
   const elemento =
-    document.getElementById(
-      id
-    );
+    $(id);
 
   if (!elemento) {
     return;
   }
 
-  const limpio =
+  elemento.textContent =
     limpiarValor(
       valor
-    );
-
-  elemento.textContent =
-    limpio ||
+    ) ||
     fallback;
 }
 
@@ -5373,9 +5102,7 @@ function renderOtrosParametrosAnalizador(
   paresApp = []
 ) {
   const contenedor =
-    document.getElementById(
-      "analyzerOtherParams"
-    );
+    $("analyzerOtherParams");
 
   if (!contenedor) {
     return;
@@ -5393,26 +5120,16 @@ function renderOtrosParametrosAnalizador(
       "redirecto"
     ]);
 
-  const adicionalesWeb =
-    pares.filter(
-      item =>
-        !ignorados.has(
-          item.key
-        )
-    );
-
-  const adicionalesApp =
-    paresApp.filter(
-      item =>
-        !ignorados.has(
-          item.key
-        )
-    );
-
   const bloques =
     [];
 
-  adicionalesWeb
+  pares
+    .filter(
+      item =>
+        !ignorados.has(
+          item.key
+        )
+    )
     .forEach(
       item => {
         bloques.push(
@@ -5427,7 +5144,13 @@ function renderOtrosParametrosAnalizador(
       }
     );
 
-  adicionalesApp
+  paresApp
+    .filter(
+      item =>
+        !ignorados.has(
+          item.key
+        )
+    )
     .forEach(
       item => {
         bloques.push(
@@ -5442,6 +5165,9 @@ function renderOtrosParametrosAnalizador(
       }
     );
 
+  contenedor.innerHTML =
+    "";
+
   if (
     !bloques.length
   ) {
@@ -5450,9 +5176,6 @@ function renderOtrosParametrosAnalizador(
 
     return;
   }
-
-  contenedor.innerHTML =
-    "";
 
   bloques.forEach(
     texto => {
@@ -5473,9 +5196,7 @@ function renderOtrosParametrosAnalizador(
 
 function analizarLink() {
   const input =
-    document.getElementById(
-      "linkAnalyzerInput"
-    );
+    $("linkAnalyzerInput");
 
   const valor =
     limpiarValor(
@@ -5667,45 +5388,32 @@ function analizarLink() {
     paresApp
   );
 
-  const empty =
-    document.getElementById(
-      "linkAnalyzerEmpty"
-    );
-
-  const results =
-    document.getElementById(
-      "linkAnalyzerResults"
-    );
-
-  if (empty) {
-    empty
+  if ($("linkAnalyzerEmpty")) {
+    $("linkAnalyzerEmpty")
       .classList
       .add(
         "hidden"
       );
   }
 
-  if (results) {
-    results
+  if ($("linkAnalyzerResults")) {
+    $("linkAnalyzerResults")
       .classList
       .remove(
         "hidden"
       );
 
-    results.scrollIntoView({
-      behavior:
-        "smooth",
-      block:
-        "nearest"
-    });
+    $("linkAnalyzerResults")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
   }
 }
 
 function limpiarAnalizador() {
   const input =
-    document.getElementById(
-      "linkAnalyzerInput"
-    );
+    $("linkAnalyzerInput");
 
   if (input) {
     input.value =
@@ -5732,508 +5440,107 @@ function limpiarAnalizador() {
   ];
 
   ids.forEach(
-    id =>
+    id => {
       asignarTextoAnalizador(
         id,
         ""
-      )
+      );
+    }
   );
 
-  const otros =
-    document.getElementById(
-      "analyzerOtherParams"
-    );
-
-  if (otros) {
-    otros.textContent =
-      "-";
+  if ($("analyzerOtherParams")) {
+    $("analyzerOtherParams")
+      .textContent =
+        "-";
   }
 
-  const empty =
-    document.getElementById(
-      "linkAnalyzerEmpty"
-    );
-
-  const results =
-    document.getElementById(
-      "linkAnalyzerResults"
-    );
-
-  if (empty) {
-    empty
+  if ($("linkAnalyzerEmpty")) {
+    $("linkAnalyzerEmpty")
       .classList
       .remove(
         "hidden"
       );
   }
 
-  if (results) {
-    results
+  if ($("linkAnalyzerResults")) {
+    $("linkAnalyzerResults")
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+}
+
+
+/* =========================================================
+   LIMPIAR FORMULARIO
+========================================================= */
+
+function limpiarFormulario() {
+  if ($("productSelect")) {
+    $("productSelect").value =
+      "";
+  }
+
+  if ($("webUrl")) {
+    $("webUrl").value =
+      "";
+  }
+
+  if ($("appUrl")) {
+    $("appUrl").value =
+      "";
+  }
+
+  if ($("utmSource")) {
+    $("utmSource").value =
+      "";
+  }
+
+  if ($("utmSourceOtro")) {
+    $("utmSourceOtro").value =
+      "";
+
+    $("utmSourceOtro")
       .classList
       .add(
         "hidden"
       );
   }
 
-  if (input) {
-    input.focus();
-  }
-}
-
-
-/* =========================================================
-   PROBADOR
-========================================================= */
-
-function probarLinkExistente() {
-  const link =
-    limpiarValor(
-      document
-        .getElementById(
-          "testFinalLink"
-        )
-        .value
-    );
-
-  if (!link) {
-    alert(
-      "Selecciona un producto o pega un link combinado."
-    );
-
-    return;
-  }
-
-  if (
-    !esUrlWebValida(
-      link
-    )
-  ) {
-    alert(
-      "El link combinado debe comenzar con http:// o https://."
-    );
-
-    return;
-  }
-
-  window.location.href =
-    link;
-}
-
-function probarLinkWeb() {
-  const link =
-    limpiarValor(
-      document
-        .getElementById(
-          "testWebLink"
-        )
-        .value
-    );
-
-  if (!link) {
-    alert(
-      "Selecciona un producto o pega una URL Web."
-    );
-
-    return;
-  }
-
-  if (
-    !esUrlWebValida(
-      link
-    )
-  ) {
-    alert(
-      "La URL Web debe comenzar con http:// o https://."
-    );
-
-    return;
-  }
-
-  window.location.href =
-    link;
-}
-
-function actualizarEnlaceApp() {
-  const link =
-    limpiarValor(
-      document
-        .getElementById(
-          "testAppLink"
-        )
-        .value
-    );
-
-  const enlace =
-    document.getElementById(
-      "testAppAnchor"
-    );
-
-  if (!enlace) {
-    return;
-  }
-
-  if (
-    link.startsWith(
-      "scotiabankpe://"
-    )
-  ) {
-    enlace.href =
-      link;
-
-    enlace.setAttribute(
-      "aria-disabled",
-      "false"
-    );
-  } else {
-    enlace.href =
-      "#";
-
-    enlace.setAttribute(
-      "aria-disabled",
-      "true"
-    );
-  }
-}
-
-function registrarIntentoDeeplink() {
-  const link =
-    limpiarValor(
-      document
-        .getElementById(
-          "testAppLink"
-        )
-        .value
-    );
-
-  const consola =
-    document.getElementById(
-      "testConsole"
-    );
-
-  const enlace =
-    document.getElementById(
-      "testAppAnchor"
-    );
-
-  if (!link) {
-    alert(
-      "Selecciona un producto o pega un Deeplink App."
-    );
-
-    enlace.href =
-      "#";
-
-    return false;
-  }
-
-  if (
-    !link.startsWith(
-      "scotiabankpe://"
-    )
-  ) {
-    alert(
-      "El Deeplink App debe comenzar con scotiabankpe:///."
-    );
-
-    enlace.href =
-      "#";
-
-    return false;
-  }
-
-  enlace.href =
-    link;
-
-  let paginaOculta =
-    false;
-
-  consola.innerHTML = `
-    <strong>Diagnóstico del Deeplink App</strong><br><br>
-
-    <span class="info">
-      Enlace HTML real:
-    </span><br>
-
-    &lt;a href="${link}"&gt;Abrir Deeplink App&lt;/a&gt;<br><br>
-
-    <span class="info">
-      Estado:
-    </span>
-
-    clic del usuario enviado directamente al esquema...
-  `;
-
-  console.log(
-    "[DEEPLINK ANCHOR TEST] href:",
-    link
-  );
-
-  const detectarCambio =
-    () => {
-      if (
-        document.hidden &&
-        !paginaOculta
-      ) {
-        paginaOculta =
-          true;
-
-        consola.innerHTML += `
-          <br><br>
-
-          <span class="ok">
-            ✓ La página pasó a segundo plano.
-            Es una señal compatible con que Android haya entregado
-            el deeplink a la app o a un selector externo.
-          </span>
-        `;
-
-        console.log(
-          "[DEEPLINK ANCHOR TEST] La página pasó a segundo plano."
-        );
-      }
-    };
-
-  document.addEventListener(
-    "visibilitychange",
-    detectarCambio
-  );
-
-  setTimeout(
-    () => {
-      document.removeEventListener(
-        "visibilitychange",
-        detectarCambio
-      );
-
-      if (
-        !paginaOculta
-      ) {
-        consola.innerHTML += `
-          <br><br>
-
-          <span class="warn">
-            ⚠ La página siguió visible.
-            El navegador o el sistema no abrió una aplicación con este esquema
-            en esta prueba.
-          </span>
-
-          <br><br>
-
-          <span class="info">
-            En PC esto es normal si no existe una aplicación registrada para
-            scotiabankpe://. En Android, si la app está instalada y aun así no abre,
-            conviene validar el registro del esquema/deeplink en la app o probarlo
-            directamente en el entorno de Meta.
-          </span>
-        `;
-
-        console.warn(
-          "[DEEPLINK ANCHOR TEST] La página siguió visible."
-        );
-      }
-    },
-    1800
-  );
-
-  return true;
-}
-
-async function copiarDeeplinkApp() {
-  const link =
-    limpiarValor(
-      document
-        .getElementById(
-          "testAppLink"
-        )
-        .value
-    );
-
-  if (!link) {
-    alert(
-      "No hay Deeplink App para copiar."
-    );
-
-    return;
-  }
-
-  try {
-    await navigator
-      .clipboard
-      .writeText(
-        link
-      );
-
-    alert(
-      "Deeplink App copiado correctamente."
-    );
-
-  } catch (error) {
-    const textarea =
-      document.createElement(
-        "textarea"
-      );
-
-    textarea.value =
-      link;
-
-    document.body.appendChild(
-      textarea
-    );
-
-    textarea.select();
-
-    document.execCommand(
-      "copy"
-    );
-
-    textarea.remove();
-
-    alert(
-      "Deeplink App copiado correctamente."
-    );
-  }
-}
-
-function limpiarProbador() {
-  document
-    .getElementById(
-      "testProductName"
-    )
-    .textContent =
-      "Selecciona un producto para comenzar.";
-
-  document
-    .getElementById(
-      "testFinalLink"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "testWebLink"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "testAppLink"
-    )
-    .value =
-      "";
-
-  actualizarEnlaceApp();
-
-  document
-    .getElementById(
-      "testConsole"
-    )
-    .innerHTML =
-      "<strong>Diagnóstico del Deeplink App</strong><br>" +
-      "Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.";
-}
-
-
-/* =========================================================
-   LIMPIEZA GENERAL
-========================================================= */
-
-function limpiarFormulario() {
-  document
-    .getElementById(
-      "productSelect"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "webUrl"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "appUrl"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "utmSource"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "utmSourceOtro"
-    )
-    .value =
-      "";
-
-  document
-    .getElementById(
-      "utmSourceOtro"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
-
-  document
-    .getElementById(
-      "utmMedium"
-    )
-    .innerHTML =
+  if ($("utmMedium")) {
+    $("utmMedium").innerHTML =
       '<option value="">Primero selecciona una fuente...</option>';
 
-  document
-    .getElementById(
-      "utmMedium"
-    )
-    .disabled =
+    $("utmMedium").disabled =
       true;
+  }
 
-  document
-    .getElementById(
-      "utmMediumOtro"
-    )
-    .value =
+  if ($("utmMediumOtro")) {
+    $("utmMediumOtro").value =
       "";
 
-  document
-    .getElementById(
-      "utmMediumOtro"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
+    $("utmMediumOtro")
+      .classList
+      .add(
+        "hidden"
+      );
+  }
 
-  document
-    .getElementById(
-      "utmCampaign"
-    )
-    .value =
+  if ($("utmCampaign")) {
+    $("utmCampaign").value =
       "";
+  }
 
-  document
-    .getElementById(
-      "sourceInternal"
-    )
-    .value =
+  if ($("sourceInternal")) {
+    $("sourceInternal").value =
       SOURCE_CAMPAIGN;
+  }
 
-  document
-    .getElementById(
-      "detail"
-    )
-    .value =
+  if ($("detail")) {
+    $("detail").value =
       "";
+  }
 
   productoSeleccionado =
     null;
@@ -6255,5 +5562,31 @@ function limpiarFormulario() {
 /* =========================================================
    INICIO
 ========================================================= */
+
+async function iniciar() {
+  if ($("sourceInternal")) {
+    $("sourceInternal").value =
+      SOURCE_CAMPAIGN;
+  }
+
+  cambiarModulo(
+    "generador",
+    false
+  );
+
+  limpiarAnalizador();
+
+  cargarSelectCategoriasWebview();
+
+  cargarSelectCategoriasNativo();
+
+  cambiarTipoDestino();
+
+  cambiarModoWebNativo();
+
+  renderCatalog();
+
+  await cargarConfiguracion();
+}
 
 iniciar();

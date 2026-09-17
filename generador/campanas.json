@@ -1,0 +1,111 @@
+{
+  "fuentes": {
+    "masterbase": [
+      "email"
+    ],
+    "google": [
+      "paid-cpc",
+      "display",
+      "sem",
+      "organic"
+    ],
+    "meta": [
+      "paid-social",
+      "paid-cpc",
+      "paid-cpm"
+    ],
+    "tiktok": [
+      "paid-social",
+      "paid-cpc",
+      "paid-cpv"
+    ],
+    "youtube": [
+      "paid-cpv",
+      "paid-cpc",
+      "display"
+    ],
+    "bing": [
+      "paid-cpc",
+      "display",
+      "sem"
+    ],
+    "linkedin": [
+      "paid-social",
+      "paid-cpc",
+      "paid-cpm"
+    ],
+    "spotify": [
+      "paid-cpm",
+      "paid-cpv"
+    ],
+    "firebase": [
+      "push"
+    ],
+    "web": [
+      "link",
+      "referral",
+      "organic"
+    ],
+    "whatsapp": [
+      "link"
+    ],
+    "sms": [
+      "sms"
+    ],
+    "ntbcd": [
+      "ntb"
+    ],
+    "folleto-fisico": [
+      "qr"
+    ],
+    "linktree": [
+      "referral",
+      "link"
+    ],
+    "epsilon": [
+      "email",
+      "display"
+    ],
+    "dv360": [
+      "display",
+      "paid-cpm",
+      "paid-cpv"
+    ]
+  },
+  "nombresFuente": {
+    "masterbase": "Campañas de email",
+    "google": "Google Ads",
+    "meta": "Facebook e Instagram Ads",
+    "tiktok": "TikTok Ads",
+    "youtube": "YouTube",
+    "bing": "Microsoft / Bing Ads",
+    "linkedin": "LinkedIn Ads",
+    "spotify": "Spotify",
+    "firebase": "Notificaciones Push",
+    "web": "Sitios propios",
+    "whatsapp": "WhatsApp",
+    "sms": "SMS",
+    "ntbcd": "Canal interno NTBCD",
+    "folleto-fisico": "Material físico / QR",
+    "linktree": "Linktree",
+    "epsilon": "Epsilon",
+    "dv360": "Display & Video 360"
+  },
+  "nombresMedio": {
+    "email": "Email marketing",
+    "paid-cpc": "Pago por clic",
+    "paid-cpa": "Pago por adquisición",
+    "paid-cpm": "Pago por mil impresiones",
+    "paid-cpv": "Pago por visualización",
+    "paid-social": "Publicidad pagada en redes sociales",
+    "display": "Publicidad display / banners",
+    "sem": "Search Engine Marketing",
+    "push": "Notificaciones Push",
+    "organic": "Tráfico orgánico",
+    "referral": "Tráfico desde otra web",
+    "sms": "Mensajería SMS",
+    "qr": "Código QR",
+    "link": "Enlace genérico / interno",
+    "ntb": "Canal interno NTB"
+  }
+}

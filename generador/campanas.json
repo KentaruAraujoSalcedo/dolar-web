@@ -1,77 +1,165 @@
 {
   "fuentes": {
-    "masterbase": [
-      "email"
-    ],
-    "google": [
-      "paid-cpc",
-      "display",
-      "sem",
-      "organic"
-    ],
-    "meta": [
-      "paid-social",
-      "paid-cpc",
-      "paid-cpm"
-    ],
-    "tiktok": [
-      "paid-social",
-      "paid-cpc",
-      "paid-cpv"
-    ],
-    "youtube": [
-      "paid-cpv",
-      "paid-cpc",
-      "display"
-    ],
-    "bing": [
-      "paid-cpc",
-      "display",
-      "sem"
-    ],
-    "linkedin": [
-      "paid-social",
-      "paid-cpc",
-      "paid-cpm"
-    ],
-    "spotify": [
-      "paid-cpm",
-      "paid-cpv"
-    ],
-    "firebase": [
-      "push"
-    ],
-    "web": [
-      "link",
-      "referral",
-      "organic"
-    ],
-    "whatsapp": [
-      "link"
-    ],
-    "sms": [
-      "sms"
-    ],
-    "ntbcd": [
-      "ntb"
-    ],
-    "folleto-fisico": [
-      "qr"
-    ],
-    "linktree": [
-      "referral",
-      "link"
-    ],
-    "epsilon": [
-      "email",
-      "display"
-    ],
-    "dv360": [
-      "display",
-      "paid-cpm",
-      "paid-cpv"
-    ]
+    "masterbase": {
+      "medios": [
+        "email"
+      ],
+      "autogenerar": [
+        "email"
+      ]
+    },
+    "google": {
+      "medios": [
+        "paid-cpc",
+        "display",
+        "sem",
+        "organic"
+      ],
+      "autogenerar": [
+        "paid-cpc",
+        "display"
+      ]
+    },
+    "meta": {
+      "medios": [
+        "paid-social",
+        "paid-cpc",
+        "paid-cpm"
+      ],
+      "autogenerar": [
+        "paid-social"
+      ]
+    },
+    "tiktok": {
+      "medios": [
+        "paid-social",
+        "paid-cpc",
+        "paid-cpv"
+      ],
+      "autogenerar": [
+        "paid-social"
+      ]
+    },
+    "youtube": {
+      "medios": [
+        "paid-cpv",
+        "paid-cpc",
+        "display"
+      ],
+      "autogenerar": [
+        "paid-cpv"
+      ]
+    },
+    "bing": {
+      "medios": [
+        "paid-cpc",
+        "display",
+        "sem"
+      ],
+      "autogenerar": [
+        "paid-cpc",
+        "display"
+      ]
+    },
+    "linkedin": {
+      "medios": [
+        "paid-social",
+        "paid-cpc",
+        "paid-cpm"
+      ],
+      "autogenerar": [
+        "paid-social"
+      ]
+    },
+    "spotify": {
+      "medios": [
+        "paid-cpm",
+        "paid-cpv"
+      ],
+      "autogenerar": [
+        "paid-cpm"
+      ]
+    },
+    "firebase": {
+      "medios": [
+        "push"
+      ],
+      "autogenerar": [
+        "push"
+      ]
+    },
+    "web": {
+      "medios": [
+        "link",
+        "referral",
+        "organic"
+      ],
+      "autogenerar": [
+        "link"
+      ]
+    },
+    "whatsapp": {
+      "medios": [
+        "link"
+      ],
+      "autogenerar": [
+        "link"
+      ]
+    },
+    "sms": {
+      "medios": [
+        "sms"
+      ],
+      "autogenerar": [
+        "sms"
+      ]
+    },
+    "ntbcd": {
+      "medios": [
+        "ntb"
+      ],
+      "autogenerar": [
+        "ntb"
+      ]
+    },
+    "folleto-fisico": {
+      "medios": [
+        "qr"
+      ],
+      "autogenerar": [
+        "qr"
+      ]
+    },
+    "linktree": {
+      "medios": [
+        "referral",
+        "link"
+      ],
+      "autogenerar": [
+        "referral"
+      ]
+    },
+    "epsilon": {
+      "medios": [
+        "email",
+        "display"
+      ],
+      "autogenerar": [
+        "email"
+      ]
+    },
+    "dv360": {
+      "medios": [
+        "display",
+        "paid-cpm",
+        "paid-cpv"
+      ],
+      "autogenerar": [
+        "display"
+      ]
+    }
   },
+
   "nombresFuente": {
     "masterbase": "Campañas de email",
     "google": "Google Ads",
@@ -91,6 +179,7 @@
     "epsilon": "Epsilon",
     "dv360": "Display & Video 360"
   },
+
   "nombresMedio": {
     "email": "Email marketing",
     "paid-cpc": "Pago por clic",

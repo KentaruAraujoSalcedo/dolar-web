@@ -16,17 +16,99 @@ let AUTO_GENERATED_LINKS = [];
 
 
 /* =========================================================
+   NAVEGACIÓN PRINCIPAL
+========================================================= */
+
+function cambiarModulo(modulo, desplazar = true) {
+  const configuracion = {
+    generador: {
+      panel: "moduleGenerador",
+      tab: "tabGenerador"
+    },
+    catalogo: {
+      panel: "moduleCatalogo",
+      tab: "tabCatalogo"
+    },
+    analizador: {
+      panel: "moduleAnalizador",
+      tab: "tabAnalizador"
+    },
+    probador: {
+      panel: "moduleProbador",
+      tab: "tabProbador"
+    }
+  };
+
+  const destino =
+    configuracion[modulo] ||
+    configuracion.generador;
+
+  Object.values(configuracion).forEach(item => {
+    const panel =
+      document.getElementById(item.panel);
+
+    const tab =
+      document.getElementById(item.tab);
+
+    if (panel) {
+      panel.classList.add("hidden");
+      panel.classList.remove("active");
+    }
+
+    if (tab) {
+      tab.classList.remove("active");
+      tab.setAttribute("aria-selected", "false");
+    }
+  });
+
+  const panelActivo =
+    document.getElementById(destino.panel);
+
+  const tabActivo =
+    document.getElementById(destino.tab);
+
+  if (panelActivo) {
+    panelActivo.classList.remove("hidden");
+    panelActivo.classList.add("active");
+  }
+
+  if (tabActivo) {
+    tabActivo.classList.add("active");
+    tabActivo.setAttribute("aria-selected", "true");
+  }
+
+  if (modulo === "catalogo") {
+    renderCatalog();
+  }
+
+  if (modulo === "probador") {
+    actualizarEnlaceApp();
+  }
+
+  if (desplazar) {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+}
+
+
+/* =========================================================
    TIPO DE DESTINO
 ========================================================= */
 
 function getTipoDestino() {
-  return document.querySelector('input[name="destinationType"]:checked').value;
+  return document.querySelector(
+    'input[name="destinationType"]:checked'
+  ).value;
 }
 
 function setTipoDestino(tipo) {
-  const radio = document.querySelector(
-    `input[name="destinationType"][value="${tipo}"]`
-  );
+  const radio =
+    document.querySelector(
+      `input[name="destinationType"][value="${tipo}"]`
+    );
 
   if (radio) {
     radio.checked = true;
@@ -35,15 +117,22 @@ function setTipoDestino(tipo) {
 }
 
 function cambiarTipoDestino() {
-  const tipo = getTipoDestino();
+  const tipo =
+    getTipoDestino();
 
   document
     .getElementById("webviewPanel")
-    .classList.toggle("hidden", tipo !== "webview");
+    .classList.toggle(
+      "hidden",
+      tipo !== "webview"
+    );
 
   document
     .getElementById("nativePanel")
-    .classList.toggle("hidden", tipo !== "native");
+    .classList.toggle(
+      "hidden",
+      tipo !== "native"
+    );
 
   previsualizarRutasGeneradas();
 }
@@ -56,8 +145,12 @@ function cambiarTipoDestino() {
 function contarPathsWebview() {
   let total = 0;
 
-  Object.values(WEBVIEW_CATALOG || {}).forEach(grupos => {
-    if (!Array.isArray(grupos)) return;
+  Object.values(
+    WEBVIEW_CATALOG || {}
+  ).forEach(grupos => {
+    if (!Array.isArray(grupos)) {
+      return;
+    }
 
     grupos.forEach(grupo => {
       if (Array.isArray(grupo.paths)) {
@@ -70,185 +163,47 @@ function contarPathsWebview() {
 }
 
 function cargarSelectCategoriasWebview() {
-  const categoria = document.getElementById("webviewCategory");
-  const grupo = document.getElementById("webviewGroup");
-  const pantalla = document.getElementById("webviewScreen");
+  const categoria =
+    document.getElementById(
+      "webviewCategory"
+    );
 
-  if (!categoria || !grupo || !pantalla) return;
+  const grupo =
+    document.getElementById(
+      "webviewGroup"
+    );
+
+  const pantalla =
+    document.getElementById(
+      "webviewScreen"
+    );
+
+  if (
+    !categoria ||
+    !grupo ||
+    !pantalla
+  ) {
+    return;
+  }
 
   categoria.innerHTML =
     '<option value="">Seleccionar tipo...</option>';
 
-  Object.keys(WEBVIEW_CATALOG || {}).forEach(nombre => {
-    const option = document.createElement("option");
-
-    option.value = nombre;
-    option.textContent = nombre;
-
-    categoria.appendChild(option);
-  });
-
-  const manual = document.createElement("option");
-
-  manual.value = "__manual__";
-  manual.textContent = "Otro / escribir ruta manualmente";
-
-  categoria.appendChild(manual);
-
-  grupo.innerHTML =
-    '<option value="">Seleccionar grupo...</option>';
-
-  grupo.disabled = true;
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pantalla.disabled = true;
-
-  document
-    .getElementById("webviewManualBlock")
-    .classList.add("hidden");
-
-  document.getElementById("webviewSelectedPathBox").innerHTML =
-    '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
-}
-
-function cargarGruposWebview() {
-  const categoria =
-    document.getElementById("webviewCategory").value;
-
-  const grupo =
-    document.getElementById("webviewGroup");
-
-  const pantalla =
-    document.getElementById("webviewScreen");
-
-  const manualBlock =
-    document.getElementById("webviewManualBlock");
-
-  grupo.innerHTML =
-    '<option value="">Seleccionar grupo...</option>';
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  pantalla.disabled = true;
-
-  if (categoria === "__manual__") {
-    grupo.disabled = true;
-
-    manualBlock.classList.remove("hidden");
-
-    document.getElementById("webviewPath").value = "";
-
-    document.getElementById("webviewSelectedPathBox").innerHTML =
-      '<strong>Ruta seleccionada:</strong><br>Modo manual.';
-
-    previsualizarRutasGeneradas();
-
-    setTimeout(() => {
-      document.getElementById("webviewPath").focus();
-    }, 0);
-
-    return;
-  }
-
-  manualBlock.classList.add("hidden");
-
-  document.getElementById("webviewPath").value = "";
-
-  const grupos =
-    WEBVIEW_CATALOG[categoria];
-
-  if (!categoria || !Array.isArray(grupos)) {
-    grupo.disabled = true;
-
-    document.getElementById("webviewSelectedPathBox").innerHTML =
-      '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  grupos.forEach((item, index) => {
+  Object.keys(
+    WEBVIEW_CATALOG || {}
+  ).forEach(nombre => {
     const option =
       document.createElement("option");
 
     option.value =
-      String(index);
+      nombre;
 
     option.textContent =
-      item.grupo +
-      (
-        item.cantidad
-          ? ` (${item.cantidad})`
-          : ""
-      );
+      nombre;
 
-    grupo.appendChild(option);
-  });
-
-  grupo.disabled = false;
-
-  document.getElementById("webviewSelectedPathBox").innerHTML =
-    '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
-
-  previsualizarRutasGeneradas();
-}
-
-function cargarPantallasWebview() {
-  const categoria =
-    document.getElementById("webviewCategory").value;
-
-  const grupoIndex =
-    document.getElementById("webviewGroup").value;
-
-  const pantalla =
-    document.getElementById("webviewScreen");
-
-  pantalla.innerHTML =
-    '<option value="">Seleccionar pantalla...</option>';
-
-  document.getElementById("webviewPath").value = "";
-
-  document
-    .getElementById("webviewManualBlock")
-    .classList.add("hidden");
-
-  if (!categoria || grupoIndex === "") {
-    pantalla.disabled = true;
-
-    document.getElementById("webviewSelectedPathBox").innerHTML =
-      '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  const grupos =
-    WEBVIEW_CATALOG[categoria] || [];
-
-  const grupo =
-    grupos[Number(grupoIndex)];
-
-  if (!grupo || !Array.isArray(grupo.paths)) {
-    pantalla.disabled = true;
-
-    previsualizarRutasGeneradas();
-
-    return;
-  }
-
-  grupo.paths.forEach(path => {
-    const option =
-      document.createElement("option");
-
-    option.value = path;
-    option.textContent = path;
-
-    pantalla.appendChild(option);
+    categoria.appendChild(
+      option
+    );
   });
 
   const manual =
@@ -260,33 +215,350 @@ function cargarPantallasWebview() {
   manual.textContent =
     "Otro / escribir ruta manualmente";
 
-  pantalla.appendChild(manual);
+  categoria.appendChild(
+    manual
+  );
 
-  pantalla.disabled = false;
+  grupo.innerHTML =
+    '<option value="">Seleccionar grupo...</option>';
 
-  document.getElementById("webviewSelectedPathBox").innerHTML =
-    `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
+  grupo.disabled =
+    true;
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  pantalla.disabled =
+    true;
+
+  document
+    .getElementById(
+      "webviewManualBlock"
+    )
+    .classList.add(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "webviewSelectedPathBox"
+    )
+    .innerHTML =
+      '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+}
+
+function cargarGruposWebview() {
+  const categoria =
+    document
+      .getElementById(
+        "webviewCategory"
+      )
+      .value;
+
+  const grupo =
+    document.getElementById(
+      "webviewGroup"
+    );
+
+  const pantalla =
+    document.getElementById(
+      "webviewScreen"
+    );
+
+  const manualBlock =
+    document.getElementById(
+      "webviewManualBlock"
+    );
+
+  grupo.innerHTML =
+    '<option value="">Seleccionar grupo...</option>';
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  pantalla.disabled =
+    true;
+
+  if (
+    categoria === "__manual__"
+  ) {
+    grupo.disabled =
+      true;
+
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    document
+      .getElementById(
+        "webviewPath"
+      )
+      .value =
+        "";
+
+    document
+      .getElementById(
+        "webviewSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
+
+    previsualizarRutasGeneradas();
+
+    setTimeout(() => {
+      document
+        .getElementById(
+          "webviewPath"
+        )
+        .focus();
+    }, 0);
+
+    return;
+  }
+
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "webviewPath"
+    )
+    .value =
+      "";
+
+  const grupos =
+    WEBVIEW_CATALOG[
+      categoria
+    ];
+
+  if (
+    !categoria ||
+    !Array.isArray(
+      grupos
+    )
+  ) {
+    grupo.disabled =
+      true;
+
+    document
+      .getElementById(
+        "webviewSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  grupos.forEach(
+    (item, index) => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        String(index);
+
+      option.textContent =
+        item.grupo +
+        (
+          item.cantidad
+            ? ` (${item.cantidad})`
+            : ""
+        );
+
+      grupo.appendChild(
+        option
+      );
+    }
+  );
+
+  grupo.disabled =
+    false;
+
+  document
+    .getElementById(
+      "webviewSelectedPathBox"
+    )
+    .innerHTML =
+      '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
+
+  previsualizarRutasGeneradas();
+}
+
+function cargarPantallasWebview() {
+  const categoria =
+    document
+      .getElementById(
+        "webviewCategory"
+      )
+      .value;
+
+  const grupoIndex =
+    document
+      .getElementById(
+        "webviewGroup"
+      )
+      .value;
+
+  const pantalla =
+    document.getElementById(
+      "webviewScreen"
+    );
+
+  pantalla.innerHTML =
+    '<option value="">Seleccionar pantalla...</option>';
+
+  document
+    .getElementById(
+      "webviewPath"
+    )
+    .value =
+      "";
+
+  document
+    .getElementById(
+      "webviewManualBlock"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+  if (
+    !categoria ||
+    grupoIndex === ""
+  ) {
+    pantalla.disabled =
+      true;
+
+    document
+      .getElementById(
+        "webviewSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Selecciona un grupo.';
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  const grupos =
+    WEBVIEW_CATALOG[
+      categoria
+    ] || [];
+
+  const grupo =
+    grupos[
+      Number(grupoIndex)
+    ];
+
+  if (
+    !grupo ||
+    !Array.isArray(
+      grupo.paths
+    )
+  ) {
+    pantalla.disabled =
+      true;
+
+    previsualizarRutasGeneradas();
+
+    return;
+  }
+
+  grupo.paths.forEach(
+    path => {
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        path;
+
+      option.textContent =
+        path;
+
+      pantalla.appendChild(
+        option
+      );
+    }
+  );
+
+  const manual =
+    document.createElement(
+      "option"
+    );
+
+  manual.value =
+    "__manual__";
+
+  manual.textContent =
+    "Otro / escribir ruta manualmente";
+
+  pantalla.appendChild(
+    manual
+  );
+
+  pantalla.disabled =
+    false;
+
+  document
+    .getElementById(
+      "webviewSelectedPathBox"
+    )
+    .innerHTML =
+      `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
 
   previsualizarRutasGeneradas();
 }
 
 function seleccionarPantallaWebview() {
   const pantalla =
-    document.getElementById("webviewScreen").value;
+    document
+      .getElementById(
+        "webviewScreen"
+      )
+      .value;
 
   const manualBlock =
-    document.getElementById("webviewManualBlock");
+    document.getElementById(
+      "webviewManualBlock"
+    );
 
   const pathInput =
-    document.getElementById("webviewPath");
+    document.getElementById(
+      "webviewPath"
+    );
 
-  if (pantalla === "__manual__") {
-    pathInput.value = "";
+  if (
+    pantalla === "__manual__"
+  ) {
+    pathInput.value =
+      "";
 
-    manualBlock.classList.remove("hidden");
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
 
-    document.getElementById("webviewSelectedPathBox").innerHTML =
-      '<strong>Ruta seleccionada:</strong><br>Modo manual.';
+    document
+      .getElementById(
+        "webviewSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Ruta seleccionada:</strong><br>Modo manual.';
 
     previsualizarRutasGeneradas();
 
@@ -297,15 +569,23 @@ function seleccionarPantallaWebview() {
     return;
   }
 
-  manualBlock.classList.add("hidden");
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
 
   pathInput.value =
     pantalla || "";
 
-  document.getElementById("webviewSelectedPathBox").innerHTML =
-    pantalla
-      ? `<strong>Ruta seleccionada:</strong><br>${pantalla}`
-      : '<strong>Ruta seleccionada:</strong><br>Selecciona una pantalla.';
+  document
+    .getElementById(
+      "webviewSelectedPathBox"
+    )
+    .innerHTML =
+      pantalla
+        ? `<strong>Ruta seleccionada:</strong><br>${pantalla}`
+        : '<strong>Ruta seleccionada:</strong><br>Selecciona una pantalla.';
 
   previsualizarRutasGeneradas();
 }
@@ -313,28 +593,53 @@ function seleccionarPantallaWebview() {
 function actualizarRutaManualWebview() {
   const ruta =
     limpiarValor(
-      document.getElementById("webviewPath").value
+      document
+        .getElementById(
+          "webviewPath"
+        )
+        .value
     );
 
-  document.getElementById("webviewSelectedPathBox").innerHTML =
-    ruta
-      ? `<strong>Ruta manual:</strong><br>${ruta}`
-      : '<strong>Ruta seleccionada:</strong><br>Escribe una ruta WebView.';
+  document
+    .getElementById(
+      "webviewSelectedPathBox"
+    )
+    .innerHTML =
+      ruta
+        ? `<strong>Ruta manual:</strong><br>${ruta}`
+        : '<strong>Ruta seleccionada:</strong><br>Escribe una ruta WebView.';
 
   previsualizarRutasGeneradas();
 }
 
-function buscarRutaEnCatalogoWebview(ruta) {
+function buscarRutaEnCatalogoWebview(
+  ruta
+) {
   const buscada =
-    normalizarRuta(ruta);
+    normalizarRuta(
+      ruta
+    );
 
-  if (!buscada) return null;
+  if (!buscada) {
+    return null;
+  }
 
   for (
-    const [categoria, grupos]
-    of Object.entries(WEBVIEW_CATALOG || {})
+    const [
+      categoria,
+      grupos
+    ]
+    of Object.entries(
+      WEBVIEW_CATALOG || {}
+    )
   ) {
-    if (!Array.isArray(grupos)) continue;
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
+      continue;
+    }
 
     for (
       let i = 0;
@@ -345,14 +650,20 @@ function buscarRutaEnCatalogoWebview(ruta) {
         grupos[i];
 
       if (
-        Array.isArray(grupo.paths) &&
-        grupo.paths.includes(buscada)
+        Array.isArray(
+          grupo.paths
+        ) &&
+        grupo.paths.includes(
+          buscada
+        )
       ) {
         return {
           categoria,
           grupoIndex: i,
-          grupo: grupo.grupo,
-          path: buscada
+          grupo:
+            grupo.grupo,
+          path:
+            buscada
         };
       }
     }
@@ -361,24 +672,38 @@ function buscarRutaEnCatalogoWebview(ruta) {
   return null;
 }
 
-function seleccionarRutaWebviewEnCatalogo(ruta) {
+function seleccionarRutaWebviewEnCatalogo(
+  ruta
+) {
   const buscada =
-    normalizarRuta(ruta);
+    normalizarRuta(
+      ruta
+    );
 
   const encontrada =
-    buscarRutaEnCatalogoWebview(buscada);
+    buscarRutaEnCatalogoWebview(
+      buscada
+    );
 
   const categoriaSelect =
-    document.getElementById("webviewCategory");
+    document.getElementById(
+      "webviewCategory"
+    );
 
   const grupoSelect =
-    document.getElementById("webviewGroup");
+    document.getElementById(
+      "webviewGroup"
+    );
 
   const pantallaSelect =
-    document.getElementById("webviewScreen");
+    document.getElementById(
+      "webviewScreen"
+    );
 
   const pathInput =
-    document.getElementById("webviewPath");
+    document.getElementById(
+      "webviewPath"
+    );
 
   if (encontrada) {
     categoriaSelect.value =
@@ -387,7 +712,9 @@ function seleccionarRutaWebviewEnCatalogo(ruta) {
     cargarGruposWebview();
 
     grupoSelect.value =
-      String(encontrada.grupoIndex);
+      String(
+        encontrada.grupoIndex
+      );
 
     cargarPantallasWebview();
 
@@ -420,14 +747,29 @@ function seleccionarRutaWebviewEnCatalogo(ruta) {
 function contarPantallasNativo() {
   let total = 0;
 
-  Object.values(NATIVE_CATALOG || {}).forEach(grupos => {
-    if (!Array.isArray(grupos)) return;
+  Object.values(
+    NATIVE_CATALOG || {}
+  ).forEach(grupos => {
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
+      return;
+    }
 
-    grupos.forEach(grupo => {
-      if (Array.isArray(grupo.pantallas)) {
-        total += grupo.pantallas.length;
+    grupos.forEach(
+      grupo => {
+        if (
+          Array.isArray(
+            grupo.pantallas
+          )
+        ) {
+          total +=
+            grupo.pantallas.length;
+        }
       }
-    });
+    );
   });
 
   return total;
@@ -435,19 +777,29 @@ function contarPantallasNativo() {
 
 function cargarSelectCategoriasNativo() {
   const categoria =
-    document.getElementById("nativeCategory");
+    document.getElementById(
+      "nativeCategory"
+    );
 
   const grupo =
-    document.getElementById("nativeGroup");
+    document.getElementById(
+      "nativeGroup"
+    );
 
   const pantalla =
-    document.getElementById("nativeScreen");
+    document.getElementById(
+      "nativeScreen"
+    );
 
   const manualBlock =
-    document.getElementById("nativeManualBlock");
+    document.getElementById(
+      "nativeManualBlock"
+    );
 
   const pathInput =
-    document.getElementById("nativeAppDestination");
+    document.getElementById(
+      "nativeAppDestination"
+    );
 
   if (
     !categoria ||
@@ -462,9 +814,13 @@ function cargarSelectCategoriasNativo() {
   categoria.innerHTML =
     '<option value="">Seleccionar tipo...</option>';
 
-  Object.keys(NATIVE_CATALOG || {}).forEach(nombre => {
+  Object.keys(
+    NATIVE_CATALOG || {}
+  ).forEach(nombre => {
     const option =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
 
     option.value =
       nombre;
@@ -472,11 +828,15 @@ function cargarSelectCategoriasNativo() {
     option.textContent =
       nombre;
 
-    categoria.appendChild(option);
+    categoria.appendChild(
+      option
+    );
   });
 
   const manual =
-    document.createElement("option");
+    document.createElement(
+      "option"
+    );
 
   manual.value =
     "__manual__";
@@ -484,41 +844,66 @@ function cargarSelectCategoriasNativo() {
   manual.textContent =
     "Otro / escribir deeplink manualmente";
 
-  categoria.appendChild(manual);
+  categoria.appendChild(
+    manual
+  );
 
   grupo.innerHTML =
     '<option value="">Seleccionar grupo...</option>';
 
-  grupo.disabled = true;
+  grupo.disabled =
+    true;
 
   pantalla.innerHTML =
     '<option value="">Seleccionar pantalla...</option>';
 
-  pantalla.disabled = true;
+  pantalla.disabled =
+    true;
 
-  manualBlock.classList.add("hidden");
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
 
-  pathInput.value = "";
+  pathInput.value =
+    "";
 
-  document.getElementById("nativeSelectedPathBox").innerHTML =
-    '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+  document
+    .getElementById(
+      "nativeSelectedPathBox"
+    )
+    .innerHTML =
+      '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
 }
 
 function cargarGruposNativo() {
   const categoria =
-    document.getElementById("nativeCategory").value;
+    document
+      .getElementById(
+        "nativeCategory"
+      )
+      .value;
 
   const grupo =
-    document.getElementById("nativeGroup");
+    document.getElementById(
+      "nativeGroup"
+    );
 
   const pantalla =
-    document.getElementById("nativeScreen");
+    document.getElementById(
+      "nativeScreen"
+    );
 
   const manualBlock =
-    document.getElementById("nativeManualBlock");
+    document.getElementById(
+      "nativeManualBlock"
+    );
 
   const pathInput =
-    document.getElementById("nativeAppDestination");
+    document.getElementById(
+      "nativeAppDestination"
+    );
 
   grupo.innerHTML =
     '<option value="">Seleccionar grupo...</option>';
@@ -532,14 +917,24 @@ function cargarGruposNativo() {
   pathInput.value =
     "";
 
-  if (categoria === "__manual__") {
+  if (
+    categoria === "__manual__"
+  ) {
     grupo.disabled =
       true;
 
-    manualBlock.classList.remove("hidden");
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
 
-    document.getElementById("nativeSelectedPathBox").innerHTML =
-      '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
+    document
+      .getElementById(
+        "nativeSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
 
     previsualizarRutasGeneradas();
 
@@ -550,65 +945,99 @@ function cargarGruposNativo() {
     return;
   }
 
-  manualBlock.classList.add("hidden");
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
 
   const grupos =
-    NATIVE_CATALOG[categoria];
+    NATIVE_CATALOG[
+      categoria
+    ];
 
   if (
     !categoria ||
-    !Array.isArray(grupos)
+    !Array.isArray(
+      grupos
+    )
   ) {
     grupo.disabled =
       true;
 
-    document.getElementById("nativeSelectedPathBox").innerHTML =
-      '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
+    document
+      .getElementById(
+        "nativeSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Selecciona Tipo → Grupo → Pantalla.';
 
     previsualizarRutasGeneradas();
 
     return;
   }
 
-  grupos.forEach((item, index) => {
-    const option =
-      document.createElement("option");
+  grupos.forEach(
+    (item, index) => {
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.value =
-      String(index);
+      option.value =
+        String(index);
 
-    option.textContent =
-      item.grupo +
-      (
-        item.cantidad
-          ? ` (${item.cantidad})`
-          : ""
+      option.textContent =
+        item.grupo +
+        (
+          item.cantidad
+            ? ` (${item.cantidad})`
+            : ""
+        );
+
+      grupo.appendChild(
+        option
       );
-
-    grupo.appendChild(option);
-  });
+    }
+  );
 
   grupo.disabled =
     false;
 
-  document.getElementById("nativeSelectedPathBox").innerHTML =
-    '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
+  document
+    .getElementById(
+      "nativeSelectedPathBox"
+    )
+    .innerHTML =
+      '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
 
   previsualizarRutasGeneradas();
 }
 
 function cargarPantallasNativo() {
   const categoria =
-    document.getElementById("nativeCategory").value;
+    document
+      .getElementById(
+        "nativeCategory"
+      )
+      .value;
 
   const grupoIndex =
-    document.getElementById("nativeGroup").value;
+    document
+      .getElementById(
+        "nativeGroup"
+      )
+      .value;
 
   const pantalla =
-    document.getElementById("nativeScreen");
+    document.getElementById(
+      "nativeScreen"
+    );
 
   const pathInput =
-    document.getElementById("nativeAppDestination");
+    document.getElementById(
+      "nativeAppDestination"
+    );
 
   pantalla.innerHTML =
     '<option value="">Seleccionar pantalla...</option>';
@@ -617,8 +1046,13 @@ function cargarPantallasNativo() {
     "";
 
   document
-    .getElementById("nativeManualBlock")
-    .classList.add("hidden");
+    .getElementById(
+      "nativeManualBlock"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
 
   if (
     !categoria ||
@@ -627,8 +1061,12 @@ function cargarPantallasNativo() {
     pantalla.disabled =
       true;
 
-    document.getElementById("nativeSelectedPathBox").innerHTML =
-      '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
+    document
+      .getElementById(
+        "nativeSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Selecciona un grupo.';
 
     previsualizarRutasGeneradas();
 
@@ -636,14 +1074,22 @@ function cargarPantallasNativo() {
   }
 
   const grupos =
-    NATIVE_CATALOG[categoria] || [];
+    NATIVE_CATALOG[
+      categoria
+    ] || [];
 
   const grupo =
-    grupos[Number(grupoIndex)];
+    grupos[
+      Number(
+        grupoIndex
+      )
+    ];
 
   if (
     !grupo ||
-    !Array.isArray(grupo.pantallas)
+    !Array.isArray(
+      grupo.pantallas
+    )
   ) {
     pantalla.disabled =
       true;
@@ -653,21 +1099,29 @@ function cargarPantallasNativo() {
     return;
   }
 
-  grupo.pantallas.forEach(item => {
-    const option =
-      document.createElement("option");
+  grupo.pantallas.forEach(
+    item => {
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.value =
-      item.path || "";
+      option.value =
+        item.path || "";
 
-    option.textContent =
-      item.path || "";
+      option.textContent =
+        item.path || "";
 
-    pantalla.appendChild(option);
-  });
+      pantalla.appendChild(
+        option
+      );
+    }
+  );
 
   const manual =
-    document.createElement("option");
+    document.createElement(
+      "option"
+    );
 
   manual.value =
     "__manual__";
@@ -675,26 +1129,40 @@ function cargarPantallasNativo() {
   manual.textContent =
     "Otro / escribir deeplink manualmente";
 
-  pantalla.appendChild(manual);
+  pantalla.appendChild(
+    manual
+  );
 
   pantalla.disabled =
     false;
 
-  document.getElementById("nativeSelectedPathBox").innerHTML =
-    `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
+  document
+    .getElementById(
+      "nativeSelectedPathBox"
+    )
+    .innerHTML =
+      `<strong>${grupo.grupo}</strong><br>Selecciona la pantalla exacta.`;
 
   previsualizarRutasGeneradas();
 }
 
 function seleccionarPantallaNativo() {
   const pantalla =
-    document.getElementById("nativeScreen").value;
+    document
+      .getElementById(
+        "nativeScreen"
+      )
+      .value;
 
   const manualBlock =
-    document.getElementById("nativeManualBlock");
+    document.getElementById(
+      "nativeManualBlock"
+    );
 
   const pathInput =
-    document.getElementById("nativeAppDestination");
+    document.getElementById(
+      "nativeAppDestination"
+    );
 
   if (
     pantalla === "__manual__"
@@ -702,10 +1170,18 @@ function seleccionarPantallaNativo() {
     pathInput.value =
       "";
 
-    manualBlock.classList.remove("hidden");
+    manualBlock
+      .classList
+      .remove(
+        "hidden"
+      );
 
-    document.getElementById("nativeSelectedPathBox").innerHTML =
-      '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
+    document
+      .getElementById(
+        "nativeSelectedPathBox"
+      )
+      .innerHTML =
+        '<strong>Deeplink seleccionado:</strong><br>Modo manual.';
 
     previsualizarRutasGeneradas();
 
@@ -716,15 +1192,23 @@ function seleccionarPantallaNativo() {
     return;
   }
 
-  manualBlock.classList.add("hidden");
+  manualBlock
+    .classList
+    .add(
+      "hidden"
+    );
 
   pathInput.value =
     pantalla || "";
 
-  document.getElementById("nativeSelectedPathBox").innerHTML =
-    pantalla
-      ? `<strong>Deeplink seleccionado:</strong><br>${pantalla}`
-      : '<strong>Deeplink seleccionado:</strong><br>Selecciona una pantalla.';
+  document
+    .getElementById(
+      "nativeSelectedPathBox"
+    )
+    .innerHTML =
+      pantalla
+        ? `<strong>Deeplink seleccionado:</strong><br>${pantalla}`
+        : '<strong>Deeplink seleccionado:</strong><br>Selecciona una pantalla.';
 
   previsualizarRutasGeneradas();
 }
@@ -732,28 +1216,51 @@ function seleccionarPantallaNativo() {
 function actualizarRutaManualNativo() {
   const ruta =
     limpiarValor(
-      document.getElementById("nativeAppDestination").value
+      document
+        .getElementById(
+          "nativeAppDestination"
+        )
+        .value
     );
 
-  document.getElementById("nativeSelectedPathBox").innerHTML =
-    ruta
-      ? `<strong>Deeplink manual:</strong><br>${ruta}`
-      : '<strong>Deeplink seleccionado:</strong><br>Escribe un deeplink nativo.';
+  document
+    .getElementById(
+      "nativeSelectedPathBox"
+    )
+    .innerHTML =
+      ruta
+        ? `<strong>Deeplink manual:</strong><br>${ruta}`
+        : '<strong>Deeplink seleccionado:</strong><br>Escribe un deeplink nativo.';
 
   previsualizarRutasGeneradas();
 }
 
-function buscarRutaEnCatalogoNativo(ruta) {
+function buscarRutaEnCatalogoNativo(
+  ruta
+) {
   const buscada =
-    normalizarRuta(ruta);
+    normalizarRuta(
+      ruta
+    );
 
-  if (!buscada) return null;
+  if (!buscada) {
+    return null;
+  }
 
   for (
-    const [categoria, grupos]
-    of Object.entries(NATIVE_CATALOG || {})
+    const [
+      categoria,
+      grupos
+    ]
+    of Object.entries(
+      NATIVE_CATALOG || {}
+    )
   ) {
-    if (!Array.isArray(grupos)) {
+    if (
+      !Array.isArray(
+        grupos
+      )
+    ) {
       continue;
     }
 
@@ -766,25 +1273,34 @@ function buscarRutaEnCatalogoNativo(ruta) {
         grupos[i];
 
       if (
-        !Array.isArray(grupo.pantallas)
+        !Array.isArray(
+          grupo.pantallas
+        )
       ) {
         continue;
       }
 
       const pantallaIndex =
-        grupo.pantallas.findIndex(item =>
-          normalizarRuta(item.path || "") === buscada
-        );
+        grupo.pantallas
+          .findIndex(
+            item =>
+              normalizarRuta(
+                item.path || ""
+              ) === buscada
+          );
 
       if (
         pantallaIndex !== -1
       ) {
         return {
           categoria,
-          grupoIndex: i,
-          grupo: grupo.grupo,
+          grupoIndex:
+            i,
+          grupo:
+            grupo.grupo,
           pantallaIndex,
-          path: buscada
+          path:
+            buscada
         };
       }
     }
@@ -793,24 +1309,38 @@ function buscarRutaEnCatalogoNativo(ruta) {
   return null;
 }
 
-function seleccionarRutaNativoEnCatalogo(ruta) {
+function seleccionarRutaNativoEnCatalogo(
+  ruta
+) {
   const buscada =
-    normalizarRuta(ruta);
+    normalizarRuta(
+      ruta
+    );
 
   const encontrada =
-    buscarRutaEnCatalogoNativo(buscada);
+    buscarRutaEnCatalogoNativo(
+      buscada
+    );
 
   const categoriaSelect =
-    document.getElementById("nativeCategory");
+    document.getElementById(
+      "nativeCategory"
+    );
 
   const grupoSelect =
-    document.getElementById("nativeGroup");
+    document.getElementById(
+      "nativeGroup"
+    );
 
   const pantallaSelect =
-    document.getElementById("nativeScreen");
+    document.getElementById(
+      "nativeScreen"
+    );
 
   const pathInput =
-    document.getElementById("nativeAppDestination");
+    document.getElementById(
+      "nativeAppDestination"
+    );
 
   if (encontrada) {
     categoriaSelect.value =
@@ -819,7 +1349,9 @@ function seleccionarRutaNativoEnCatalogo(ruta) {
     cargarGruposNativo();
 
     grupoSelect.value =
-      String(encontrada.grupoIndex);
+      String(
+        encontrada.grupoIndex
+      );
 
     cargarPantallasNativo();
 
@@ -855,14 +1387,17 @@ function getModoWebNativo() {
     : "login";
 }
 
-function setModoWebNativo(modo) {
+function setModoWebNativo(
+  modo
+) {
   const radio =
     document.querySelector(
       `input[name="nativeWebMode"][value="${modo}"]`
     );
 
   if (radio) {
-    radio.checked = true;
+    radio.checked =
+      true;
   }
 
   cambiarModoWebNativo();
@@ -873,15 +1408,21 @@ function cambiarModoWebNativo() {
     getModoWebNativo();
 
   document
-    .getElementById("nativeLoginPanel")
-    .classList.toggle(
+    .getElementById(
+      "nativeLoginPanel"
+    )
+    .classList
+    .toggle(
       "hidden",
       modo !== "login"
     );
 
   document
-    .getElementById("nativeLandingPanel")
-    .classList.toggle(
+    .getElementById(
+      "nativeLandingPanel"
+    )
+    .classList
+    .toggle(
       "hidden",
       modo !== "landing"
     );
@@ -896,35 +1437,71 @@ function cambiarModoWebNativo() {
 
 function manejarRutasDiferentes() {
   const checked =
-    document.getElementById("differentRoutes").checked;
+    document
+      .getElementById(
+        "differentRoutes"
+      )
+      .checked;
 
   document
-    .getElementById("sameRouteBlock")
-    .classList.toggle("hidden", checked);
+    .getElementById(
+      "sameRouteBlock"
+    )
+    .classList
+    .toggle(
+      "hidden",
+      checked
+    );
 
   document
-    .getElementById("differentRoutesBlock")
-    .classList.toggle("hidden", !checked);
+    .getElementById(
+      "differentRoutesBlock"
+    )
+    .classList
+    .toggle(
+      "hidden",
+      !checked
+    );
 
   if (checked) {
     const comun =
       limpiarValor(
-        document.getElementById("webviewPath").value
+        document
+          .getElementById(
+            "webviewPath"
+          )
+          .value
       );
 
     if (comun) {
       if (
-        !document.getElementById("webviewWebPath").value
+        !document
+          .getElementById(
+            "webviewWebPath"
+          )
+          .value
       ) {
-        document.getElementById("webviewWebPath").value =
-          comun;
+        document
+          .getElementById(
+            "webviewWebPath"
+          )
+          .value =
+            comun;
       }
 
       if (
-        !document.getElementById("webviewAppPath").value
+        !document
+          .getElementById(
+            "webviewAppPath"
+          )
+          .value
       ) {
-        document.getElementById("webviewAppPath").value =
-          comun;
+        document
+          .getElementById(
+            "webviewAppPath"
+          )
+          .value =
+            comun;
       }
     }
   }
@@ -932,20 +1509,31 @@ function manejarRutasDiferentes() {
   previsualizarRutasGeneradas();
 }
 
-function normalizarRuta(ruta) {
+function normalizarRuta(
+  ruta
+) {
   const limpia =
-    limpiarValor(ruta);
+    limpiarValor(
+      ruta
+    );
 
-  if (!limpia) return "";
+  if (!limpia) {
+    return "";
+  }
 
   return limpia.startsWith("/")
     ? limpia
     : "/" + limpia;
 }
 
-function extraerParametro(url, nombre) {
+function extraerParametro(
+  url,
+  nombre
+) {
   const limpia =
-    limpiarValor(url);
+    limpiarValor(
+      url
+    );
 
   const q =
     limpia.indexOf("?");
@@ -956,24 +1544,39 @@ function extraerParametro(url, nombre) {
 
   for (
     const par
-    of limpia.substring(q + 1).split("&")
+    of limpia
+      .substring(
+        q + 1
+      )
+      .split("&")
   ) {
     const eq =
       par.indexOf("=");
 
-    if (eq === -1) {
+    if (
+      eq === -1
+    ) {
       continue;
     }
 
     const key =
-      par.substring(0, eq);
+      par.substring(
+        0,
+        eq
+      );
 
     const value =
-      par.substring(eq + 1);
+      par.substring(
+        eq + 1
+      );
 
-    if (key === nombre) {
+    if (
+      key === nombre
+    ) {
       try {
-        return decodeURIComponent(value);
+        return decodeURIComponent(
+          value
+        );
       } catch {
         return value;
       }
@@ -983,9 +1586,13 @@ function extraerParametro(url, nombre) {
   return "";
 }
 
-function extraerPathWebViewApp(appUrl) {
+function extraerPathWebViewApp(
+  appUrl
+) {
   if (
-    !appUrl.startsWith(APP_WEBVIEW_BASE)
+    !appUrl.startsWith(
+      APP_WEBVIEW_BASE
+    )
   ) {
     return "";
   }
@@ -1000,10 +1607,15 @@ function extraerPathWebViewApp(appUrl) {
 
   return amp === -1
     ? resto
-    : resto.substring(0, amp);
+    : resto.substring(
+        0,
+        amp
+      );
 }
 
-function detectarTipoProducto(producto) {
+function detectarTipoProducto(
+  producto
+) {
   if (
     producto.tipo === "webview"
   ) {
@@ -1018,57 +1630,87 @@ function detectarTipoProducto(producto) {
   }
 
   const app =
-    limpiarValor(producto.app);
+    limpiarValor(
+      producto.app
+    );
 
-  return app.startsWith(APP_WEBVIEW_BASE)
+  return app.startsWith(
+    APP_WEBVIEW_BASE
+  )
     ? "webview"
     : "native";
 }
 
-function construirWebNativaLogin(ruta) {
+function construirWebNativaLogin(
+  ruta
+) {
   const limpia =
-    normalizarRuta(ruta);
+    normalizarRuta(
+      ruta
+    );
 
   return limpia
-    ? WEB_LOGIN_BASE + limpia
+    ? WEB_LOGIN_BASE +
+      limpia
     : "";
 }
 
-function construirWebNativaLanding(url) {
+function construirWebNativaLanding(
+  url
+) {
   const limpia =
-    limpiarValor(url);
+    limpiarValor(
+      url
+    );
 
-  return esUrlWebValida(limpia)
+  return esUrlWebValida(
+    limpia
+  )
     ? limpia
     : "";
 }
 
-function normalizarDestinoAppNativo(valor) {
+function normalizarDestinoAppNativo(
+  valor
+) {
   const limpia =
-    limpiarValor(valor);
+    limpiarValor(
+      valor
+    );
 
   if (!limpia) {
     return "";
   }
 
   if (
-    limpia.startsWith("scotiabankpe://")
+    limpia.startsWith(
+      "scotiabankpe://"
+    )
   ) {
     return limpia;
   }
 
   return (
     APP_SCHEME_BASE +
-    limpia.replace(/^\/+/, "")
+    limpia.replace(
+      /^\/+/,
+      ""
+    )
   );
 }
 
-function extraerBaseDeeplinkNativo(appUrl) {
+function extraerBaseDeeplinkNativo(
+  appUrl
+) {
   const app =
-    limpiarValor(appUrl);
+    limpiarValor(
+      appUrl
+    );
 
   if (
-    !app.startsWith(APP_SCHEME_BASE)
+    !app.startsWith(
+      APP_SCHEME_BASE
+    )
   ) {
     return app;
   }
@@ -1083,54 +1725,103 @@ function extraerBaseDeeplinkNativo(appUrl) {
 
   return q === -1
     ? sinScheme
-    : sinScheme.substring(0, q);
+    : sinScheme.substring(
+        0,
+        q
+      );
 }
 
-function limpiarCamposConstructor(resetTipo = true) {
-  document.getElementById("webviewPath").value =
-    "";
+function limpiarCamposConstructor(
+  resetTipo = true
+) {
+  document
+    .getElementById(
+      "webviewPath"
+    )
+    .value =
+      "";
 
-  document.getElementById("webviewWebPath").value =
-    "";
+  document
+    .getElementById(
+      "webviewWebPath"
+    )
+    .value =
+      "";
 
-  document.getElementById("webviewAppPath").value =
-    "";
+  document
+    .getElementById(
+      "webviewAppPath"
+    )
+    .value =
+      "";
 
-  document.getElementById("differentRoutes").checked =
-    false;
+  document
+    .getElementById(
+      "differentRoutes"
+    )
+    .checked =
+      false;
 
   cargarSelectCategoriasWebview();
 
-  document.getElementById("nativeLoginPath").value =
-    "";
+  document
+    .getElementById(
+      "nativeLoginPath"
+    )
+    .value =
+      "";
 
-  document.getElementById("nativeLandingUrl").value =
-    "";
+  document
+    .getElementById(
+      "nativeLandingUrl"
+    )
+    .value =
+      "";
 
   cargarSelectCategoriasNativo();
 
-  setModoWebNativo("login");
+  setModoWebNativo(
+    "login"
+  );
 
   document
-    .getElementById("sameRouteBlock")
-    .classList.remove("hidden");
+    .getElementById(
+      "sameRouteBlock"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
 
   document
-    .getElementById("differentRoutesBlock")
-    .classList.add("hidden");
+    .getElementById(
+      "differentRoutesBlock"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
 
   if (resetTipo) {
-    setTipoDestino("webview");
+    setTipoDestino(
+      "webview"
+    );
   }
 
   previsualizarRutasGeneradas();
 }
 
-function resolverProducto(producto) {
+function resolverProducto(
+  producto
+) {
   const tipo =
-    detectarTipoProducto(producto);
+    detectarTipoProducto(
+      producto
+    );
 
-  if (tipo === "webview") {
+  if (
+    tipo === "webview"
+  ) {
     const rutaWeb =
       producto.rutaWeb ||
       producto.ruta ||
@@ -1167,7 +1858,9 @@ function resolverProducto(producto) {
         (
           rutaWeb
             ? WEB_LOGIN_BASE +
-              normalizarRuta(rutaWeb)
+              normalizarRuta(
+                rutaWeb
+              )
             : ""
         ),
 
@@ -1176,7 +1869,9 @@ function resolverProducto(producto) {
         (
           rutaApp
             ? APP_WEBVIEW_BASE +
-              normalizarRuta(rutaApp)
+              normalizarRuta(
+                rutaApp
+              )
             : ""
         )
     };
@@ -1208,18 +1903,28 @@ function resolverProducto(producto) {
   };
 }
 
-function cargarConstructorDesdeProducto(productoOriginal) {
-  limpiarCamposConstructor(false);
+function cargarConstructorDesdeProducto(
+  productoOriginal
+) {
+  limpiarCamposConstructor(
+    false
+  );
 
   const producto =
-    resolverProducto(productoOriginal);
+    resolverProducto(
+      productoOriginal
+    );
 
   const tipo =
     producto.tipo;
 
-  setTipoDestino(tipo);
+  setTipoDestino(
+    tipo
+  );
 
-  if (tipo === "webview") {
+  if (
+    tipo === "webview"
+  ) {
     const rutaWeb =
       producto.rutaWeb;
 
@@ -1231,19 +1936,35 @@ function cargarConstructorDesdeProducto(productoOriginal) {
       rutaApp &&
       rutaWeb !== rutaApp
     ) {
-      document.getElementById("differentRoutes").checked =
-        true;
+      document
+        .getElementById(
+          "differentRoutes"
+        )
+        .checked =
+          true;
 
       manejarRutasDiferentes();
 
-      document.getElementById("webviewWebPath").value =
-        rutaWeb;
+      document
+        .getElementById(
+          "webviewWebPath"
+        )
+        .value =
+          rutaWeb;
 
-      document.getElementById("webviewAppPath").value =
-        rutaApp;
+      document
+        .getElementById(
+          "webviewAppPath"
+        )
+        .value =
+          rutaApp;
     } else {
-      document.getElementById("differentRoutes").checked =
-        false;
+      document
+        .getElementById(
+          "differentRoutes"
+        )
+        .checked =
+          false;
 
       manejarRutasDiferentes();
 
@@ -1275,21 +1996,41 @@ function cargarConstructorDesdeProducto(productoOriginal) {
       ) &&
       rutaLogin
     ) {
-      setModoWebNativo("login");
+      setModoWebNativo(
+        "login"
+      );
 
-      document.getElementById("nativeLoginPath").value =
-        rutaLogin;
+      document
+        .getElementById(
+          "nativeLoginPath"
+        )
+        .value =
+          rutaLogin;
 
-      document.getElementById("nativeLandingUrl").value =
-        "";
+      document
+        .getElementById(
+          "nativeLandingUrl"
+        )
+        .value =
+          "";
     } else {
-      setModoWebNativo("landing");
+      setModoWebNativo(
+        "landing"
+      );
 
-      document.getElementById("nativeLandingUrl").value =
-        webProducto;
+      document
+        .getElementById(
+          "nativeLandingUrl"
+        )
+        .value =
+          webProducto;
 
-      document.getElementById("nativeLoginPath").value =
-        "";
+      document
+        .getElementById(
+          "nativeLoginPath"
+        )
+        .value =
+          "";
     }
 
     const appBase =
@@ -1300,10 +2041,15 @@ function cargarConstructorDesdeProducto(productoOriginal) {
     const normalizedPath =
       appBase
         ? "/" +
-          appBase.replace(/^\/+/, "")
+          appBase.replace(
+            /^\/+/,
+            ""
+          )
         : "";
 
-    if (normalizedPath) {
+    if (
+      normalizedPath
+    ) {
       seleccionarRutaNativoEnCatalogo(
         normalizedPath
       );
@@ -1317,9 +2063,15 @@ function obtenerRutasDesdeConstructor() {
   const tipo =
     getTipoDestino();
 
-  if (tipo === "webview") {
+  if (
+    tipo === "webview"
+  ) {
     const diferentes =
-      document.getElementById("differentRoutes").checked;
+      document
+        .getElementById(
+          "differentRoutes"
+        )
+        .checked;
 
     let rutaWeb =
       "";
@@ -1327,20 +2079,34 @@ function obtenerRutasDesdeConstructor() {
     let rutaApp =
       "";
 
-    if (diferentes) {
+    if (
+      diferentes
+    ) {
       rutaWeb =
         normalizarRuta(
-          document.getElementById("webviewWebPath").value
+          document
+            .getElementById(
+              "webviewWebPath"
+            )
+            .value
         );
 
       rutaApp =
         normalizarRuta(
-          document.getElementById("webviewAppPath").value
+          document
+            .getElementById(
+              "webviewAppPath"
+            )
+            .value
         );
     } else {
       const ruta =
         normalizarRuta(
-          document.getElementById("webviewPath").value
+          document
+            .getElementById(
+              "webviewPath"
+            )
+            .value
         );
 
       rutaWeb =
@@ -1355,12 +2121,14 @@ function obtenerRutasDesdeConstructor() {
 
       web:
         rutaWeb
-          ? WEB_LOGIN_BASE + rutaWeb
+          ? WEB_LOGIN_BASE +
+            rutaWeb
           : "",
 
       app:
         rutaApp
-          ? APP_WEBVIEW_BASE + rutaApp
+          ? APP_WEBVIEW_BASE +
+            rutaApp
           : ""
     };
   }
@@ -1371,15 +2139,27 @@ function obtenerRutasDesdeConstructor() {
   const web =
     modoWeb === "login"
       ? construirWebNativaLogin(
-          document.getElementById("nativeLoginPath").value
+          document
+            .getElementById(
+              "nativeLoginPath"
+            )
+            .value
         )
       : construirWebNativaLanding(
-          document.getElementById("nativeLandingUrl").value
+          document
+            .getElementById(
+              "nativeLandingUrl"
+            )
+            .value
         );
 
   const app =
     normalizarDestinoAppNativo(
-      document.getElementById("nativeAppDestination").value
+      document
+        .getElementById(
+          "nativeAppDestination"
+        )
+        .value
     );
 
   return {
@@ -1411,11 +2191,15 @@ function previsualizarRutasGeneradas() {
         : "<br><br><strong>Modo Web:</strong> Landing / URL directa (requiere prueba GTM)";
   }
 
-  document.getElementById("routePreviewBox").innerHTML =
-    `<strong>Vista previa — ${nombre}</strong><br><br>` +
-    `<strong>Web:</strong><br>${rutas.web || "Pendiente"}<br><br>` +
-    `<strong>App:</strong><br>${rutas.app || "Pendiente"}` +
-    detalleModo;
+  document
+    .getElementById(
+      "routePreviewBox"
+    )
+    .innerHTML =
+      `<strong>Vista previa — ${nombre}</strong><br><br>` +
+      `<strong>Web:</strong><br>${rutas.web || "Pendiente"}<br><br>` +
+      `<strong>App:</strong><br>${rutas.app || "Pendiente"}` +
+      detalleModo;
 }
 
 function generarRutasDestino() {
@@ -1440,7 +2224,9 @@ function generarRutasDestino() {
   }
 
   if (
-    !esUrlWebValida(rutas.web)
+    !esUrlWebValida(
+      rutas.web
+    )
   ) {
     alert(
       "La URL Web generada no parece válida."
@@ -1458,7 +2244,9 @@ function generarRutasDestino() {
   }
 
   if (
-    !esDeeplinkValido(rutas.app)
+    !esDeeplinkValido(
+      rutas.app
+    )
   ) {
     alert(
       "El Deeplink App generado no parece válido."
@@ -1467,11 +2255,19 @@ function generarRutasDestino() {
     return;
   }
 
-  document.getElementById("webUrl").value =
-    rutas.web;
+  document
+    .getElementById(
+      "webUrl"
+    )
+    .value =
+      rutas.web;
 
-  document.getElementById("appUrl").value =
-    rutas.app;
+  document
+    .getElementById(
+      "appUrl"
+    )
+    .value =
+      rutas.app;
 
   cargarProbadorRutas(
     rutas.web,
@@ -1487,27 +2283,47 @@ function generarRutasDestino() {
     [];
 
   const autoCard =
-    document.getElementById("autoResultsCard");
+    document.getElementById(
+      "autoResultsCard"
+    );
 
   if (autoCard) {
-    autoCard.classList.add("hidden");
+    autoCard
+      .classList
+      .add(
+        "hidden"
+      );
   }
 }
 
 function limpiarConstructor() {
-  document.getElementById("productSelect").value =
-    "";
+  document
+    .getElementById(
+      "productSelect"
+    )
+    .value =
+      "";
 
   productoSeleccionado =
     null;
 
-  limpiarCamposConstructor(true);
+  limpiarCamposConstructor(
+    true
+  );
 
-  document.getElementById("webUrl").value =
-    "";
+  document
+    .getElementById(
+      "webUrl"
+    )
+    .value =
+      "";
 
-  document.getElementById("appUrl").value =
-    "";
+  document
+    .getElementById(
+      "appUrl"
+    )
+    .value =
+      "";
 
   limpiarProbador();
 
@@ -1525,45 +2341,63 @@ function limpiarConstructor() {
 
 async function cargarConfiguracion() {
   const status =
-    document.getElementById("dataStatus");
+    document.getElementById(
+      "dataStatus"
+    );
 
   try {
     const [
       linksResponse,
       nativosResponse,
       campanasResponse
-    ] = await Promise.all([
-      fetch(
-        "./links.json",
-        { cache: "no-store" }
-      ),
+    ] =
+      await Promise.all([
+        fetch(
+          "./links.json",
+          {
+            cache:
+              "no-store"
+          }
+        ),
 
-      fetch(
-        "./nativos.json",
-        { cache: "no-store" }
-      ),
+        fetch(
+          "./nativos.json",
+          {
+            cache:
+              "no-store"
+          }
+        ),
 
-      fetch(
-        "./campanas.json",
-        { cache: "no-store" }
-      )
-    ]);
+        fetch(
+          "./campanas.json",
+          {
+            cache:
+              "no-store"
+          }
+        )
+      ]);
 
-    if (!linksResponse.ok) {
+    if (
+      !linksResponse.ok
+    ) {
       throw new Error(
         "links.json HTTP " +
         linksResponse.status
       );
     }
 
-    if (!nativosResponse.ok) {
+    if (
+      !nativosResponse.ok
+    ) {
       throw new Error(
         "nativos.json HTTP " +
         nativosResponse.status
       );
     }
 
-    if (!campanasResponse.ok) {
+    if (
+      !campanasResponse.ok
+    ) {
       throw new Error(
         "campanas.json HTTP " +
         campanasResponse.status
@@ -1574,11 +2408,12 @@ async function cargarConfiguracion() {
       linksData,
       nativosData,
       campanasData
-    ] = await Promise.all([
-      linksResponse.json(),
-      nativosResponse.json(),
-      campanasResponse.json()
-    ]);
+    ] =
+      await Promise.all([
+        linksResponse.json(),
+        nativosResponse.json(),
+        campanasResponse.json()
+      ]);
 
     PRODUCTOS =
       Array.isArray(
@@ -1589,39 +2424,50 @@ async function cargarConfiguracion() {
 
     WEBVIEW_CATALOG =
       linksData.webview &&
-      typeof linksData.webview === "object"
+      typeof linksData.webview ===
+        "object"
         ? linksData.webview
         : {};
 
     POR_REVISAR_WEBVIEW =
       Array.isArray(
-        linksData.porRevisarWebview
+        linksData
+          .porRevisarWebview
       )
-        ? linksData.porRevisarWebview
+        ? linksData
+            .porRevisarWebview
         : [];
 
     NATIVE_CATALOG =
       nativosData.nativo &&
-      typeof nativosData.nativo === "object"
+      typeof nativosData.nativo ===
+        "object"
         ? nativosData.nativo
         : {};
 
     CAMPAIGN_SOURCES =
       campanasData.fuentes &&
-      typeof campanasData.fuentes === "object"
+      typeof campanasData.fuentes ===
+        "object"
         ? campanasData.fuentes
         : {};
 
     SOURCE_NAMES =
       campanasData.nombresFuente &&
-      typeof campanasData.nombresFuente === "object"
-        ? campanasData.nombresFuente
+      typeof campanasData
+        .nombresFuente ===
+        "object"
+        ? campanasData
+            .nombresFuente
         : {};
 
     MEDIUM_NAMES =
       campanasData.nombresMedio &&
-      typeof campanasData.nombresMedio === "object"
-        ? campanasData.nombresMedio
+      typeof campanasData
+        .nombresMedio ===
+        "object"
+        ? campanasData
+            .nombresMedio
         : {};
 
     cargarSelectProductos();
@@ -1657,7 +2503,11 @@ async function cargarConfiguracion() {
         CAMPAIGN_SOURCES
       ).length;
 
-    status.classList.remove("error");
+    status
+      .classList
+      .remove(
+        "error"
+      );
 
     status.innerHTML =
       "✓ Configuración cargada: <strong>" +
@@ -1680,13 +2530,26 @@ async function cargarConfiguracion() {
       error
     );
 
-    PRODUCTOS = [];
-    WEBVIEW_CATALOG = {};
-    NATIVE_CATALOG = {};
-    POR_REVISAR_WEBVIEW = [];
-    CAMPAIGN_SOURCES = {};
-    SOURCE_NAMES = {};
-    MEDIUM_NAMES = {};
+    PRODUCTOS =
+      [];
+
+    WEBVIEW_CATALOG =
+      {};
+
+    NATIVE_CATALOG =
+      {};
+
+    POR_REVISAR_WEBVIEW =
+      [];
+
+    CAMPAIGN_SOURCES =
+      {};
+
+    SOURCE_NAMES =
+      {};
+
+    MEDIUM_NAMES =
+      {};
 
     cargarSelectProductos();
 
@@ -1700,7 +2563,11 @@ async function cargarConfiguracion() {
 
     renderCatalog();
 
-    status.classList.add("error");
+    status
+      .classList
+      .add(
+        "error"
+      );
 
     status.innerHTML =
       "⚠ No se pudo cargar la configuración. Verifica que <strong>deep.html</strong>, " +
@@ -1712,28 +2579,47 @@ async function cargarConfiguracion() {
 
 function cargarSelectProductos() {
   const select =
-    document.getElementById("productSelect");
+    document.getElementById(
+      "productSelect"
+    );
 
   select.innerHTML =
     '<option value="">Nuevo destino / seleccionar producto...</option>';
 
-  PRODUCTOS.forEach(producto => {
-    const option =
-      document.createElement("option");
+  PRODUCTOS.forEach(
+    producto => {
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.value =
-      producto.id;
+      option.value =
+        producto.id;
 
-    option.textContent =
-      producto.nombre;
+      option.textContent =
+        producto.nombre;
 
-    select.appendChild(option);
-  });
+      select.appendChild(
+        option
+      );
+    }
+  );
 }
 
 async function iniciar() {
-  document.getElementById("sourceInternal").value =
-    SOURCE_CAMPAIGN;
+  document
+    .getElementById(
+      "sourceInternal"
+    )
+    .value =
+      SOURCE_CAMPAIGN;
+
+  cambiarModulo(
+    "generador",
+    false
+  );
+
+  limpiarAnalizador();
 
   cargarSelectCategoriasWebview();
 
@@ -1755,10 +2641,14 @@ async function iniciar() {
 
 function cargarSelectFuentes() {
   const select =
-    document.getElementById("utmSource");
+    document.getElementById(
+      "utmSource"
+    );
 
   const medium =
-    document.getElementById("utmMedium");
+    document.getElementById(
+      "utmMedium"
+    );
 
   select.innerHTML =
     '<option value="">Seleccionar fuente...</option>';
@@ -1767,13 +2657,17 @@ function cargarSelectFuentes() {
     CAMPAIGN_SOURCES || {}
   ).forEach(source => {
     const option =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
 
     option.value =
       source;
 
     const nombre =
-      SOURCE_NAMES[source];
+      SOURCE_NAMES[
+        source
+      ];
 
     option.textContent =
       nombre
@@ -1782,11 +2676,15 @@ function cargarSelectFuentes() {
           nombre
         : source;
 
-    select.appendChild(option);
+    select.appendChild(
+      option
+    );
   });
 
   const otro =
-    document.createElement("option");
+    document.createElement(
+      "option"
+    );
 
   otro.value =
     "__otro__";
@@ -1794,7 +2692,9 @@ function cargarSelectFuentes() {
   otro.textContent =
     "Otro — Escribir manualmente";
 
-  select.appendChild(otro);
+  select.appendChild(
+    otro
+  );
 
   medium.innerHTML =
     '<option value="">Primero selecciona una fuente...</option>';
@@ -1805,21 +2705,33 @@ function cargarSelectFuentes() {
 
 function cargarMediosPorFuente() {
   const sourceSelect =
-    document.getElementById("utmSource");
+    document.getElementById(
+      "utmSource"
+    );
 
   const mediumSelect =
-    document.getElementById("utmMedium");
+    document.getElementById(
+      "utmMedium"
+    );
 
   const sourceOtro =
-    document.getElementById("utmSourceOtro");
+    document.getElementById(
+      "utmSourceOtro"
+    );
 
   const mediumOtro =
-    document.getElementById("utmMediumOtro");
+    document.getElementById(
+      "utmMediumOtro"
+    );
 
   const source =
     sourceSelect.value;
 
-  mediumOtro.classList.add("hidden");
+  mediumOtro
+    .classList
+    .add(
+      "hidden"
+    );
 
   mediumOtro.value =
     "";
@@ -1837,7 +2749,11 @@ function cargarMediosPorFuente() {
   if (
     source === "__otro__"
   ) {
-    sourceOtro.classList.remove("hidden");
+    sourceOtro
+      .classList
+      .remove(
+        "hidden"
+      );
 
     sourceOtro.focus();
 
@@ -1848,23 +2764,33 @@ function cargarMediosPorFuente() {
       MEDIUM_NAMES || {}
     ).forEach(medium => {
       const option =
-        document.createElement("option");
+        document.createElement(
+          "option"
+        );
 
       option.value =
         medium;
 
       option.textContent =
-        MEDIUM_NAMES[medium]
+        MEDIUM_NAMES[
+          medium
+        ]
           ? medium +
             " — " +
-            MEDIUM_NAMES[medium]
+            MEDIUM_NAMES[
+              medium
+            ]
           : medium;
 
-      mediumSelect.appendChild(option);
+      mediumSelect.appendChild(
+        option
+      );
     });
 
     const otro =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
 
     otro.value =
       "__otro__";
@@ -1872,7 +2798,9 @@ function cargarMediosPorFuente() {
     otro.textContent =
       "Otro — Escribir manualmente";
 
-    mediumSelect.appendChild(otro);
+    mediumSelect.appendChild(
+      otro
+    );
 
     mediumSelect.disabled =
       false;
@@ -1880,47 +2808,69 @@ function cargarMediosPorFuente() {
     return;
   }
 
-  sourceOtro.classList.add("hidden");
+  sourceOtro
+    .classList
+    .add(
+      "hidden"
+    );
 
   sourceOtro.value =
     "";
 
   const configFuente =
-    CAMPAIGN_SOURCES[source] &&
-    typeof CAMPAIGN_SOURCES[source] === "object"
-      ? CAMPAIGN_SOURCES[source]
+    CAMPAIGN_SOURCES[
+      source
+    ] &&
+    typeof CAMPAIGN_SOURCES[
+      source
+    ] === "object"
+      ? CAMPAIGN_SOURCES[
+          source
+        ]
       : {};
 
   const medios =
-    Array.isArray(configFuente.medios)
+    Array.isArray(
+      configFuente.medios
+    )
       ? configFuente.medios
       : [];
 
   mediumSelect.innerHTML =
     '<option value="">Seleccionar medio...</option>';
 
-  medios.forEach(medium => {
-    const option =
-      document.createElement("option");
+  medios.forEach(
+    medium => {
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.value =
-      medium;
+      option.value =
+        medium;
 
-    const nombre =
-      MEDIUM_NAMES[medium];
+      const nombre =
+        MEDIUM_NAMES[
+          medium
+        ];
 
-    option.textContent =
-      nombre
-        ? medium +
-          " — " +
-          nombre
-        : medium;
+      option.textContent =
+        nombre
+          ? medium +
+            " — " +
+            nombre
+          : medium;
 
-    mediumSelect.appendChild(option);
-  });
+      mediumSelect.appendChild(
+        option
+      );
+    }
+  );
 
   const otro =
-    document.createElement("option");
+    document.createElement(
+      "option"
+    );
 
   otro.value =
     "__otro__";
@@ -1928,7 +2878,9 @@ function cargarMediosPorFuente() {
   otro.textContent =
     "Otro — Escribir manualmente";
 
-  mediumSelect.appendChild(otro);
+  mediumSelect.appendChild(
+    otro
+  );
 
   mediumSelect.disabled =
     false;
@@ -1943,17 +2895,30 @@ function cargarMediosPorFuente() {
 
 function manejarOtroSource() {
   const select =
-    document.getElementById("utmSource");
+    document.getElementById(
+      "utmSource"
+    );
 
   const inputOtro =
-    document.getElementById("utmSourceOtro");
+    document.getElementById(
+      "utmSourceOtro"
+    );
 
   if (
-    select.value === "__otro__"
+    select.value ===
+    "__otro__"
   ) {
-    inputOtro.classList.remove("hidden");
+    inputOtro
+      .classList
+      .remove(
+        "hidden"
+      );
   } else {
-    inputOtro.classList.add("hidden");
+    inputOtro
+      .classList
+      .add(
+        "hidden"
+      );
 
     inputOtro.value =
       "";
@@ -1964,19 +2929,32 @@ function manejarOtroSource() {
 
 function manejarOtroMedium() {
   const select =
-    document.getElementById("utmMedium");
+    document.getElementById(
+      "utmMedium"
+    );
 
   const inputOtro =
-    document.getElementById("utmMediumOtro");
+    document.getElementById(
+      "utmMediumOtro"
+    );
 
   if (
-    select.value === "__otro__"
+    select.value ===
+    "__otro__"
   ) {
-    inputOtro.classList.remove("hidden");
+    inputOtro
+      .classList
+      .remove(
+        "hidden"
+      );
 
     inputOtro.focus();
   } else {
-    inputOtro.classList.add("hidden");
+    inputOtro
+      .classList
+      .add(
+        "hidden"
+      );
 
     inputOtro.value =
       "";
@@ -1990,32 +2968,50 @@ function manejarOtroMedium() {
 
 function mostrarAutogenerador() {
   const panel =
-    document.getElementById("autoGeneratorPanel");
+    document.getElementById(
+      "autoGeneratorPanel"
+    );
 
-  if (!panel) return;
+  if (!panel) {
+    return;
+  }
 
   renderFuentesAutogenerador();
 
-  panel.classList.remove("hidden");
+  panel
+    .classList
+    .remove(
+      "hidden"
+    );
 
   panel.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest"
+    behavior:
+      "smooth",
+    block:
+      "nearest"
   });
 }
 
 function cerrarAutogenerador() {
   const panel =
-    document.getElementById("autoGeneratorPanel");
+    document.getElementById(
+      "autoGeneratorPanel"
+    );
 
   if (panel) {
-    panel.classList.add("hidden");
+    panel
+      .classList
+      .add(
+        "hidden"
+      );
   }
 }
 
 function renderFuentesAutogenerador() {
   const contenedor =
-    document.getElementById("autoSourcesList");
+    document.getElementById(
+      "autoSourcesList"
+    );
 
   if (!contenedor) {
     return;
@@ -2026,7 +3022,9 @@ function renderFuentesAutogenerador() {
       CAMPAIGN_SOURCES || {}
     );
 
-  if (!sources.length) {
+  if (
+    !sources.length
+  ) {
     contenedor.innerHTML =
       '<div class="data-status">Los canales disponibles se cargarán desde <strong>campanas.json</strong>.</div>';
 
@@ -2036,71 +3034,106 @@ function renderFuentesAutogenerador() {
   contenedor.innerHTML =
     "";
 
-  sources.forEach(source => {
-    const configFuente =
-      CAMPAIGN_SOURCES[source] &&
-      typeof CAMPAIGN_SOURCES[source] === "object"
-        ? CAMPAIGN_SOURCES[source]
-        : {};
+  sources.forEach(
+    source => {
+      const configFuente =
+        CAMPAIGN_SOURCES[
+          source
+        ] &&
+        typeof CAMPAIGN_SOURCES[
+          source
+        ] === "object"
+          ? CAMPAIGN_SOURCES[
+              source
+            ]
+          : {};
 
-    const medios =
-      Array.isArray(configFuente.autogenerar)
-        ? configFuente.autogenerar
-        : [];
+      const medios =
+        Array.isArray(
+          configFuente.autogenerar
+        )
+          ? configFuente
+              .autogenerar
+          : [];
 
-    const item =
-      document.createElement("label");
+      const item =
+        document.createElement(
+          "label"
+        );
 
-    item.className =
-      "auto-source-option";
+      item.className =
+        "auto-source-option";
 
-    const checkbox =
-      document.createElement("input");
+      const checkbox =
+        document.createElement(
+          "input"
+        );
 
-    checkbox.type =
-      "checkbox";
+      checkbox.type =
+        "checkbox";
 
-    checkbox.className =
-      "auto-source-checkbox";
+      checkbox.className =
+        "auto-source-checkbox";
 
-    checkbox.value =
-      source;
+      checkbox.value =
+        source;
 
-    const texto =
-      document.createElement("span");
+      const texto =
+        document.createElement(
+          "span"
+        );
 
-    texto.className =
-      "auto-source-text";
+      texto.className =
+        "auto-source-text";
 
-    const titulo =
-      document.createElement("strong");
+      const titulo =
+        document.createElement(
+          "strong"
+        );
 
-    titulo.textContent =
-      SOURCE_NAMES[source]
-        ? source +
-          " — " +
-          SOURCE_NAMES[source]
-        : source;
+      titulo.textContent =
+        SOURCE_NAMES[
+          source
+        ]
+          ? source +
+            " — " +
+            SOURCE_NAMES[
+              source
+            ]
+          : source;
 
-    const detalle =
-      document.createElement("small");
+      const detalle =
+        document.createElement(
+          "small"
+        );
 
-    detalle.textContent =
-      medios.length
-        ? "Autogenerar: " +
-          medios.join(", ")
-        : "Sin combinaciones configuradas para autogenerar";
+      detalle.textContent =
+        medios.length
+          ? "Autogenerar: " +
+            medios.join(", ")
+          : "Sin combinaciones configuradas para autogenerar";
 
-    texto.appendChild(titulo);
+      texto.appendChild(
+        titulo
+      );
 
-    texto.appendChild(detalle);
+      texto.appendChild(
+        detalle
+      );
 
-    item.appendChild(checkbox);
+      item.appendChild(
+        checkbox
+      );
 
-    item.appendChild(texto);
+      item.appendChild(
+        texto
+      );
 
-    contenedor.appendChild(item);
-  });
+      contenedor.appendChild(
+        item
+      );
+    }
+  );
 }
 
 function seleccionarTodasFuentesAuto() {
@@ -2108,10 +3141,12 @@ function seleccionarTodasFuentesAuto() {
     .querySelectorAll(
       ".auto-source-checkbox"
     )
-    .forEach(input => {
-      input.checked =
-        true;
-    });
+    .forEach(
+      input => {
+        input.checked =
+          true;
+      }
+    );
 }
 
 function limpiarFuentesAuto() {
@@ -2119,10 +3154,12 @@ function limpiarFuentesAuto() {
     .querySelectorAll(
       ".auto-source-checkbox"
     )
-    .forEach(input => {
-      input.checked =
-        false;
-    });
+    .forEach(
+      input => {
+        input.checked =
+          false;
+      }
+    );
 }
 
 function obtenerFuentesAutoSeleccionadas() {
@@ -2130,7 +3167,10 @@ function obtenerFuentesAutoSeleccionadas() {
     document.querySelectorAll(
       ".auto-source-checkbox:checked"
     )
-  ).map(input => input.value);
+  ).map(
+    input =>
+      input.value
+  );
 }
 
 function construirVariantesCampana(
@@ -2162,17 +3202,23 @@ function construirVariantesCampana(
   };
 
   if (
-    limpiarValor(detail)
+    limpiarValor(
+      detail
+    )
   ) {
     parametrosCampana.detail =
-      limpiarValor(detail);
+      limpiarValor(
+        detail
+      );
   }
 
   const webParametrizada =
     establecerParametros(
       webBase,
       parametrosCampana,
-      ["embeddedURL"]
+      [
+        "embeddedURL"
+      ]
     );
 
   const appParametrizada =
@@ -2182,7 +3228,9 @@ function construirVariantesCampana(
     );
 
   const separador =
-    webParametrizada.includes("?")
+    webParametrizada.includes(
+      "?"
+    )
       ? "&"
       : "?";
 
@@ -2241,17 +3289,29 @@ function construirVariantesCampana(
 function validarBaseAutogenerador() {
   const webBase =
     limpiarValor(
-      document.getElementById("webUrl").value
+      document
+        .getElementById(
+          "webUrl"
+        )
+        .value
     );
 
   const appBase =
     limpiarValor(
-      document.getElementById("appUrl").value
+      document
+        .getElementById(
+          "appUrl"
+        )
+        .value
     );
 
   const utmCampaign =
     limpiarValor(
-      document.getElementById("utmCampaign").value
+      document
+        .getElementById(
+          "utmCampaign"
+        )
+        .value
     );
 
   if (!webBase) {
@@ -2263,7 +3323,9 @@ function validarBaseAutogenerador() {
   }
 
   if (
-    !esUrlWebValida(webBase)
+    !esUrlWebValida(
+      webBase
+    )
   ) {
     alert(
       "La URL Web debe comenzar con http:// o https://."
@@ -2281,7 +3343,9 @@ function validarBaseAutogenerador() {
   }
 
   if (
-    !esDeeplinkValido(appBase)
+    !esDeeplinkValido(
+      appBase
+    )
   ) {
     alert(
       "El Deeplink App no parece tener un formato válido."
@@ -2290,7 +3354,9 @@ function validarBaseAutogenerador() {
     return null;
   }
 
-  if (!utmCampaign) {
+  if (
+    !utmCampaign
+  ) {
     alert(
       "Completa utm_campaign antes de autogenerar."
     );
@@ -2305,7 +3371,11 @@ function validarBaseAutogenerador() {
 
     detail:
       limpiarValor(
-        document.getElementById("detail").value
+        document
+          .getElementById(
+            "detail"
+          )
+          .value
       )
   };
 }
@@ -2321,7 +3391,9 @@ function autogenerarLinks() {
   const fuentes =
     obtenerFuentesAutoSeleccionadas();
 
-  if (!fuentes.length) {
+  if (
+    !fuentes.length
+  ) {
     alert(
       "Selecciona al menos un canal para autogenerar."
     );
@@ -2332,33 +3404,48 @@ function autogenerarLinks() {
   const resultados =
     [];
 
-  fuentes.forEach(source => {
-    const configFuente =
-      CAMPAIGN_SOURCES[source] &&
-      typeof CAMPAIGN_SOURCES[source] === "object"
-        ? CAMPAIGN_SOURCES[source]
-        : {};
+  fuentes.forEach(
+    source => {
+      const configFuente =
+        CAMPAIGN_SOURCES[
+          source
+        ] &&
+        typeof CAMPAIGN_SOURCES[
+          source
+        ] === "object"
+          ? CAMPAIGN_SOURCES[
+              source
+            ]
+          : {};
 
-    const medios =
-      Array.isArray(configFuente.autogenerar)
-        ? configFuente.autogenerar
-        : [];
-
-    medios.forEach(medium => {
-      resultados.push(
-        construirVariantesCampana(
-          base.webBase,
-          base.appBase,
-          source,
-          medium,
-          base.utmCampaign,
-          base.detail
+      const medios =
+        Array.isArray(
+          configFuente.autogenerar
         )
-      );
-    });
-  });
+          ? configFuente
+              .autogenerar
+          : [];
 
-  if (!resultados.length) {
+      medios.forEach(
+        medium => {
+          resultados.push(
+            construirVariantesCampana(
+              base.webBase,
+              base.appBase,
+              source,
+              medium,
+              base.utmCampaign,
+              base.detail
+            )
+          );
+        }
+      );
+    }
+  );
+
+  if (
+    !resultados.length
+  ) {
     alert(
       "Las fuentes seleccionadas no tienen combinaciones configuradas en autogenerar."
     );
@@ -2372,30 +3459,46 @@ function autogenerarLinks() {
   renderResultadosAutogenerados();
 
   const card =
-    document.getElementById("autoResultsCard");
+    document.getElementById(
+      "autoResultsCard"
+    );
 
   if (card) {
-    card.classList.remove("hidden");
+    card
+      .classList
+      .remove(
+        "hidden"
+      );
 
     card.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+      behavior:
+        "smooth",
+      block:
+        "start"
     });
   }
 }
 
 function renderResultadosAutogenerados() {
   const body =
-    document.getElementById("autoResultsBody");
+    document.getElementById(
+      "autoResultsBody"
+    );
 
   const empty =
-    document.getElementById("autoResultsEmpty");
+    document.getElementById(
+      "autoResultsEmpty"
+    );
 
   const content =
-    document.getElementById("autoResultsContent");
+    document.getElementById(
+      "autoResultsContent"
+    );
 
   const summary =
-    document.getElementById("autoResultsSummary");
+    document.getElementById(
+      "autoResultsSummary"
+    );
 
   if (
     !body ||
@@ -2412,96 +3515,142 @@ function renderResultadosAutogenerados() {
   if (
     !AUTO_GENERATED_LINKS.length
   ) {
-    empty.classList.remove("hidden");
+    empty
+      .classList
+      .remove(
+        "hidden"
+      );
 
-    content.classList.add("hidden");
+    content
+      .classList
+      .add(
+        "hidden"
+      );
 
     return;
   }
 
-  AUTO_GENERATED_LINKS.forEach(
-    (item, index) => {
-      const tr =
-        document.createElement("tr");
+  AUTO_GENERATED_LINKS
+    .forEach(
+      (item, index) => {
+        const tr =
+          document.createElement(
+            "tr"
+          );
 
-      const tdSource =
-        document.createElement("td");
+        const tdSource =
+          document.createElement(
+            "td"
+          );
 
-      tdSource.textContent =
-        item.source;
+        tdSource.textContent =
+          item.source;
 
-      const tdMedium =
-        document.createElement("td");
+        const tdMedium =
+          document.createElement(
+            "td"
+          );
 
-      tdMedium.textContent =
-        item.medium;
+        tdMedium.textContent =
+          item.medium;
 
-      const tdLink =
-        document.createElement("td");
+        const tdLink =
+          document.createElement(
+            "td"
+          );
 
-      const linkBox =
-        document.createElement("div");
+        const linkBox =
+          document.createElement(
+            "div"
+          );
 
-      linkBox.className =
-        "auto-link-value";
+        linkBox.className =
+          "auto-link-value";
 
-      linkBox.textContent =
-        item.finalUrl;
+        linkBox.textContent =
+          item.finalUrl;
 
-      tdLink.appendChild(linkBox);
+        tdLink.appendChild(
+          linkBox
+        );
 
-      const tdActions =
-        document.createElement("td");
+        const tdActions =
+          document.createElement(
+            "td"
+          );
 
-      tdActions.className =
-        "auto-row-actions";
+        tdActions.className =
+          "auto-row-actions";
 
-      const copyBtn =
-        document.createElement("button");
+        const copyBtn =
+          document.createElement(
+            "button"
+          );
 
-      copyBtn.className =
-        "btn-secondary";
+        copyBtn.className =
+          "btn-secondary";
 
-      copyBtn.textContent =
-        "Copiar";
+        copyBtn.textContent =
+          "Copiar";
 
-      copyBtn.onclick =
-        () =>
-          copiarLinkAuto(index);
+        copyBtn.onclick =
+          () =>
+            copiarLinkAuto(
+              index
+            );
 
-      const testBtn =
-        document.createElement("button");
+        const testBtn =
+          document.createElement(
+            "button"
+          );
 
-      testBtn.className =
-        "btn-secondary";
+        testBtn.className =
+          "btn-secondary";
 
-      testBtn.textContent =
-        "Probar";
+        testBtn.textContent =
+          "Probar";
 
-      testBtn.onclick =
-        () =>
-          probarLinkAuto(index);
+        testBtn.onclick =
+          () =>
+            probarLinkAuto(
+              index
+            );
 
-      tdActions.appendChild(copyBtn);
+        tdActions.appendChild(
+          copyBtn
+        );
 
-      tdActions.appendChild(testBtn);
+        tdActions.appendChild(
+          testBtn
+        );
 
-      tr.appendChild(tdSource);
+        tr.appendChild(
+          tdSource
+        );
 
-      tr.appendChild(tdMedium);
+        tr.appendChild(
+          tdMedium
+        );
 
-      tr.appendChild(tdLink);
+        tr.appendChild(
+          tdLink
+        );
 
-      tr.appendChild(tdActions);
+        tr.appendChild(
+          tdActions
+        );
 
-      body.appendChild(tr);
-    }
-  );
+        body.appendChild(
+          tr
+        );
+      }
+    );
 
   const fuentesUnicas =
     new Set(
       AUTO_GENERATED_LINKS.map(
-        item => item.source
+        item =>
+          item.source
       )
     ).size;
 
@@ -2514,22 +3663,36 @@ function renderResultadosAutogenerados() {
     " fuentes</strong>. Cada fila corresponde a una combinación definida en " +
     "<strong>autogenerar</strong> dentro de campanas.json.";
 
-  empty.classList.add("hidden");
+  empty
+    .classList
+    .add(
+      "hidden"
+    );
 
-  content.classList.remove("hidden");
+  content
+    .classList
+    .remove(
+      "hidden"
+    );
 }
 
-async function escribirPortapapeles(valor) {
+async function escribirPortapapeles(
+  valor
+) {
   try {
-    await navigator.clipboard.writeText(
-      valor
-    );
+    await navigator
+      .clipboard
+      .writeText(
+        valor
+      );
 
     return true;
 
   } catch (error) {
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
     textarea.value =
       valor;
@@ -2550,9 +3713,13 @@ async function escribirPortapapeles(valor) {
   }
 }
 
-async function copiarLinkAuto(index) {
+async function copiarLinkAuto(
+  index
+) {
   const item =
-    AUTO_GENERATED_LINKS[index];
+    AUTO_GENERATED_LINKS[
+      index
+    ];
 
   if (!item) {
     return;
@@ -2570,9 +3737,13 @@ async function copiarLinkAuto(index) {
   );
 }
 
-function probarLinkAuto(index) {
+function probarLinkAuto(
+  index
+) {
   const item =
-    AUTO_GENERATED_LINKS[index];
+    AUTO_GENERATED_LINKS[
+      index
+    ];
 
   if (
     !item ||
@@ -2598,14 +3769,17 @@ async function copiarTodosLinksAuto() {
 
   const texto =
     AUTO_GENERATED_LINKS
-      .map(item =>
-        item.source +
-        "\t" +
-        item.medium +
-        "\t" +
-        item.finalUrl
+      .map(
+        item =>
+          item.source +
+          "\t" +
+          item.medium +
+          "\t" +
+          item.finalUrl
       )
-      .join("\n");
+      .join(
+        "\n"
+      );
 
   await escribirPortapapeles(
     texto
@@ -2617,9 +3791,13 @@ async function copiarTodosLinksAuto() {
   );
 }
 
-function escaparCsv(valor) {
+function escaparCsv(
+  valor
+) {
   const texto =
-    String(valor ?? "");
+    String(
+      valor ?? ""
+    );
 
   return (
     '"' +
@@ -2657,29 +3835,37 @@ function descargarLinksAutoCsv() {
     ]
   ];
 
-  AUTO_GENERATED_LINKS.forEach(item => {
-    filas.push([
-      item.source,
-      item.medium,
-      item.campaign,
-      item.detail,
-      item.finalUrl,
-      item.finalUrlSinEncodear,
-      item.webParametrizada,
-      item.webEncodeada,
-      item.appParametrizada,
-      item.appEncodeada
-    ]);
-  });
+  AUTO_GENERATED_LINKS
+    .forEach(
+      item => {
+        filas.push([
+          item.source,
+          item.medium,
+          item.campaign,
+          item.detail,
+          item.finalUrl,
+          item.finalUrlSinEncodear,
+          item.webParametrizada,
+          item.webEncodeada,
+          item.appParametrizada,
+          item.appEncodeada
+        ]);
+      }
+    );
 
   const csv =
     filas
-      .map(fila =>
-        fila
-          .map(escaparCsv)
-          .join(",")
+      .map(
+        fila =>
+          fila
+            .map(
+              escaparCsv
+            )
+            .join(",")
       )
-      .join("\r\n");
+      .join(
+        "\r\n"
+      );
 
   const blob =
     new Blob(
@@ -2699,11 +3885,17 @@ function descargarLinksAutoCsv() {
     );
 
   const enlace =
-    document.createElement("a");
+    document.createElement(
+      "a"
+    );
 
   const nombreCampana =
     limpiarValor(
-      document.getElementById("utmCampaign").value
+      document
+        .getElementById(
+          "utmCampaign"
+        )
+        .value
     )
       .replace(
         /[^a-zA-Z0-9_-]+/g,
@@ -2741,26 +3933,44 @@ function resetAutogenerador() {
     [];
 
   const panel =
-    document.getElementById("autoGeneratorPanel");
+    document.getElementById(
+      "autoGeneratorPanel"
+    );
 
   const card =
-    document.getElementById("autoResultsCard");
+    document.getElementById(
+      "autoResultsCard"
+    );
 
   const body =
-    document.getElementById("autoResultsBody");
+    document.getElementById(
+      "autoResultsBody"
+    );
 
   const empty =
-    document.getElementById("autoResultsEmpty");
+    document.getElementById(
+      "autoResultsEmpty"
+    );
 
   const content =
-    document.getElementById("autoResultsContent");
+    document.getElementById(
+      "autoResultsContent"
+    );
 
   if (panel) {
-    panel.classList.add("hidden");
+    panel
+      .classList
+      .add(
+        "hidden"
+      );
   }
 
   if (card) {
-    card.classList.add("hidden");
+    card
+      .classList
+      .add(
+        "hidden"
+      );
   }
 
   if (body) {
@@ -2769,11 +3979,19 @@ function resetAutogenerador() {
   }
 
   if (empty) {
-    empty.classList.remove("hidden");
+    empty
+      .classList
+      .remove(
+        "hidden"
+      );
   }
 
   if (content) {
-    content.classList.add("hidden");
+    content
+      .classList
+      .add(
+        "hidden"
+      );
   }
 
   limpiarFuentesAuto();
@@ -2784,7 +4002,9 @@ function resetAutogenerador() {
    PRODUCTOS
 ========================================================= */
 
-function seleccionarProducto(id) {
+function seleccionarProducto(
+  id
+) {
   const productoBase =
     PRODUCTOS.find(
       producto =>
@@ -2792,16 +4012,27 @@ function seleccionarProducto(id) {
     );
 
   productoSeleccionado =
-    productoBase || null;
+    productoBase ||
+    null;
 
   if (!productoBase) {
-    document.getElementById("webUrl").value =
-      "";
+    document
+      .getElementById(
+        "webUrl"
+      )
+      .value =
+        "";
 
-    document.getElementById("appUrl").value =
-      "";
+    document
+      .getElementById(
+        "appUrl"
+      )
+      .value =
+        "";
 
-    limpiarCamposConstructor(true);
+    limpiarCamposConstructor(
+      true
+    );
 
     limpiarProbador();
 
@@ -2819,11 +4050,19 @@ function seleccionarProducto(id) {
       productoBase
     );
 
-  document.getElementById("webUrl").value =
-    producto.web;
+  document
+    .getElementById(
+      "webUrl"
+    )
+    .value =
+      producto.web;
 
-  document.getElementById("appUrl").value =
-    producto.app;
+  document
+    .getElementById(
+      "appUrl"
+    )
+    .value =
+      producto.app;
 
   cargarConstructorDesdeProducto(
     productoBase
@@ -2841,41 +4080,70 @@ function seleccionarProducto(id) {
     [];
 
   const autoCard =
-    document.getElementById("autoResultsCard");
+    document.getElementById(
+      "autoResultsCard"
+    );
 
   if (autoCard) {
-    autoCard.classList.add("hidden");
+    autoCard
+      .classList
+      .add(
+        "hidden"
+      );
   }
 
   renderCatalog();
 }
 
-function seleccionarDesdeCatalogo(id) {
-  document.getElementById("productSelect").value =
-    id;
+function seleccionarDesdeCatalogo(
+  id
+) {
+  document
+    .getElementById(
+      "productSelect"
+    )
+    .value =
+      id;
 
-  seleccionarProducto(id);
+  seleccionarProducto(
+    id
+  );
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  cambiarModulo(
+    "generador"
+  );
 }
 
 function renderCatalog() {
   const catalog =
-    document.getElementById("catalog");
+    document.getElementById(
+      "catalog"
+    );
 
   const search =
     document
-      .getElementById("catalogSearch")
+      .getElementById(
+        "catalogSearch"
+      )
       .value
       .toLowerCase()
       .trim();
 
-  if (!PRODUCTOS.length) {
+  if (
+    !PRODUCTOS.length
+  ) {
     catalog.innerHTML =
       '<div class="empty">El catálogo se cargará desde links.json.</div>';
+
+    const contador =
+      document.getElementById(
+        "catalogVisibleCount"
+      );
+
+    if (contador) {
+      contador.textContent =
+        "0 destinos";
+    }
 
     return;
   }
@@ -2899,7 +4167,8 @@ function renderCatalog() {
             producto.app +
             " " +
             producto.tipo
-          ).toLowerCase();
+          )
+            .toLowerCase();
 
         return texto.includes(
           search
@@ -2907,10 +4176,27 @@ function renderCatalog() {
       }
     );
 
+  const contador =
+    document.getElementById(
+      "catalogVisibleCount"
+    );
+
+  if (contador) {
+    contador.textContent =
+      search
+        ? filtrados.length +
+          " de " +
+          PRODUCTOS.length
+        : PRODUCTOS.length +
+          " destinos";
+  }
+
   catalog.innerHTML =
     "";
 
-  if (!filtrados.length) {
+  if (
+    !filtrados.length
+  ) {
     catalog.innerHTML =
       '<div class="empty">No se encontraron productos.</div>';
 
@@ -2925,18 +4211,23 @@ function renderCatalog() {
         );
 
       const div =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       div.className =
         "product";
 
       if (
         productoSeleccionado &&
-        productoSeleccionado.id === producto.id
+        productoSeleccionado.id ===
+          producto.id
       ) {
-        div.classList.add(
-          "active"
-        );
+        div
+          .classList
+          .add(
+            "active"
+          );
       }
 
       div.onclick =
@@ -2969,7 +4260,9 @@ function renderCatalog() {
         </span>
       `;
 
-      catalog.appendChild(div);
+      catalog.appendChild(
+        div
+      );
     }
   );
 }
@@ -2979,29 +4272,45 @@ function renderCatalog() {
    UTILIDADES
 ========================================================= */
 
-function limpiarValor(valor) {
+function limpiarValor(
+  valor
+) {
   return String(
     valor ?? ""
   ).trim();
 }
 
-function normalizarTaxonomia(valor) {
+function normalizarTaxonomia(
+  valor
+) {
   return limpiarValor(
     valor
   ).toLowerCase();
 }
 
-function esUrlWebValida(url) {
+function esUrlWebValida(
+  url
+) {
   return (
-    url.startsWith("https://") ||
-    url.startsWith("http://")
+    url.startsWith(
+      "https://"
+    ) ||
+    url.startsWith(
+      "http://"
+    )
   );
 }
 
-function esDeeplinkValido(deeplink) {
+function esDeeplinkValido(
+  deeplink
+) {
   return (
-    deeplink.includes("://") &&
-    !deeplink.includes(" ")
+    deeplink.includes(
+      "://"
+    ) &&
+    !deeplink.includes(
+      " "
+    )
   );
 }
 
@@ -3019,7 +4328,9 @@ function establecerParametros(
     "";
 
   const hashIndex =
-    original.indexOf("#");
+    original.indexOf(
+      "#"
+    );
 
   if (
     hashIndex !== -1
@@ -3037,7 +4348,9 @@ function establecerParametros(
   }
 
   const queryIndex =
-    original.indexOf("?");
+    original.indexOf(
+      "?"
+    );
 
   const base =
     queryIndex === -1
@@ -3056,70 +4369,81 @@ function establecerParametros(
 
   const pares =
     queryOriginal
-      ? queryOriginal.split("&")
+      ? queryOriginal.split(
+          "&"
+        )
       : [];
 
   const mapa =
     new Map();
 
-  pares.forEach(par => {
-    if (!par) return;
-
-    const index =
-      par.indexOf("=");
-
-    let key;
-    let value;
-
-    if (
-      index === -1
-    ) {
-      key =
-        par;
-
-      value =
-        "";
-    } else {
-      key =
-        par.substring(
-          0,
-          index
-        );
-
-      value =
-        par.substring(
-          index + 1
-        );
-    }
-
-    let keyNormalizada;
-
-    try {
-      keyNormalizada =
-        decodeURIComponent(
-          key
-        );
-    } catch {
-      keyNormalizada =
-        key;
-    }
-
-    mapa.set(
-      keyNormalizada,
-      {
-        keyOriginal:
-          key,
-
-        valueOriginal:
-          value
+  pares.forEach(
+    par => {
+      if (!par) {
+        return;
       }
-    );
-  });
 
-  parametrosAEliminar.forEach(
-    key =>
-      mapa.delete(key)
+      const index =
+        par.indexOf(
+          "="
+        );
+
+      let key;
+      let value;
+
+      if (
+        index === -1
+      ) {
+        key =
+          par;
+
+        value =
+          "";
+      } else {
+        key =
+          par.substring(
+            0,
+            index
+          );
+
+        value =
+          par.substring(
+            index + 1
+          );
+      }
+
+      let keyNormalizada;
+
+      try {
+        keyNormalizada =
+          decodeURIComponent(
+            key
+          );
+      } catch {
+        keyNormalizada =
+          key;
+      }
+
+      mapa.set(
+        keyNormalizada,
+        {
+          keyOriginal:
+            key,
+
+          valueOriginal:
+            value
+        }
+      );
+    }
   );
+
+  parametrosAEliminar
+    .forEach(
+      key =>
+        mapa.delete(
+          key
+        )
+    );
 
   Object.entries(
     parametros
@@ -3157,20 +4481,25 @@ function establecerParametros(
     Array.from(
       mapa.values()
     )
-      .map(item => {
-        if (
-          item.valueOriginal === ""
-        ) {
-          return item.keyOriginal;
-        }
+      .map(
+        item => {
+          if (
+            item.valueOriginal ===
+            ""
+          ) {
+            return item.keyOriginal;
+          }
 
-        return (
-          item.keyOriginal +
-          "=" +
-          item.valueOriginal
-        );
-      })
-      .join("&");
+          return (
+            item.keyOriginal +
+            "=" +
+            item.valueOriginal
+          );
+        }
+      )
+      .join(
+        "&"
+      );
 
   return (
     base +
@@ -3192,7 +4521,9 @@ function construirLinkPrueba(
     establecerParametros(
       webBase,
       {},
-      ["embeddedURL"]
+      [
+        "embeddedURL"
+      ]
     );
 
   if (!appBase) {
@@ -3200,7 +4531,9 @@ function construirLinkPrueba(
   }
 
   const separador =
-    webLimpia.includes("?")
+    webLimpia.includes(
+      "?"
+    )
       ? "&"
       : "?";
 
@@ -3219,33 +4552,53 @@ function cargarProbadorRutas(
   app,
   nombre = "Destino actual"
 ) {
-  document.getElementById("testProductName").textContent =
-    "Probando: " +
-    nombre;
+  document
+    .getElementById(
+      "testProductName"
+    )
+    .textContent =
+      "Probando: " +
+      nombre;
 
-  document.getElementById("testWebLink").value =
-    web || "";
+  document
+    .getElementById(
+      "testWebLink"
+    )
+    .value =
+      web || "";
 
-  document.getElementById("testAppLink").value =
-    app || "";
+  document
+    .getElementById(
+      "testAppLink"
+    )
+    .value =
+      app || "";
 
   actualizarEnlaceApp();
 
-  document.getElementById("testFinalLink").value =
-    web
-      ? construirLinkPrueba(
-          web,
-          app
-        )
-      : "";
+  document
+    .getElementById(
+      "testFinalLink"
+    )
+    .value =
+      web
+        ? construirLinkPrueba(
+            web,
+            app
+          )
+        : "";
 
-  document.getElementById("testConsole").innerHTML =
-    "<strong>Diagnóstico del Deeplink App</strong><br>" +
-    (
-      app
-        ? "Deeplink cargado. Presiona <strong>Abrir Deeplink App</strong> para probarlo."
-        : "Este destino no tiene Deeplink App configurado."
-    );
+  document
+    .getElementById(
+      "testConsole"
+    )
+    .innerHTML =
+      "<strong>Diagnóstico del Deeplink App</strong><br>" +
+      (
+        app
+          ? "Deeplink cargado. Presiona <strong>Abrir Deeplink App</strong> para probarlo."
+          : "Este destino no tiene Deeplink App configurado."
+      );
 }
 
 
@@ -3256,42 +4609,76 @@ function cargarProbadorRutas(
 function generarLink() {
   const webBase =
     limpiarValor(
-      document.getElementById("webUrl").value
+      document
+        .getElementById(
+          "webUrl"
+        )
+        .value
     );
 
   const appBase =
     limpiarValor(
-      document.getElementById("appUrl").value
+      document
+        .getElementById(
+          "appUrl"
+        )
+        .value
     );
 
   const sourceSeleccionado =
-    document.getElementById("utmSource").value;
+    document
+      .getElementById(
+        "utmSource"
+      )
+      .value;
 
   const utmSource =
     normalizarTaxonomia(
-      sourceSeleccionado === "__otro__"
-        ? document.getElementById("utmSourceOtro").value
+      sourceSeleccionado ===
+        "__otro__"
+        ? document
+            .getElementById(
+              "utmSourceOtro"
+            )
+            .value
         : sourceSeleccionado
     );
 
   const mediumSeleccionado =
-    document.getElementById("utmMedium").value;
+    document
+      .getElementById(
+        "utmMedium"
+      )
+      .value;
 
   const utmMedium =
     normalizarTaxonomia(
-      mediumSeleccionado === "__otro__"
-        ? document.getElementById("utmMediumOtro").value
+      mediumSeleccionado ===
+        "__otro__"
+        ? document
+            .getElementById(
+              "utmMediumOtro"
+            )
+            .value
         : mediumSeleccionado
     );
 
   const utmCampaign =
     limpiarValor(
-      document.getElementById("utmCampaign").value
+      document
+        .getElementById(
+          "utmCampaign"
+        )
+        .value
     );
 
   const detail =
     limpiarValor(
-      document.getElementById("detail").value
+      document
+        .getElementById(
+          "detail"
+        )
+        .value
     );
 
   if (!webBase) {
@@ -3303,7 +4690,9 @@ function generarLink() {
   }
 
   if (
-    !esUrlWebValida(webBase)
+    !esUrlWebValida(
+      webBase
+    )
   ) {
     alert(
       "La URL Web debe comenzar con http:// o https://."
@@ -3321,7 +4710,9 @@ function generarLink() {
   }
 
   if (
-    !esDeeplinkValido(appBase)
+    !esDeeplinkValido(
+      appBase
+    )
   ) {
     alert(
       "El Deeplink App no parece tener un formato válido."
@@ -3365,7 +4756,9 @@ function generarLink() {
     establecerParametros(
       webBase,
       parametrosCampana,
-      ["embeddedURL"]
+      [
+        "embeddedURL"
+      ]
     );
 
   const appParametrizada =
@@ -3375,7 +4768,9 @@ function generarLink() {
     );
 
   const separador =
-    webParametrizada.includes("?")
+    webParametrizada.includes(
+      "?"
+    )
       ? "&"
       : "?";
 
@@ -3401,36 +4796,68 @@ function generarLink() {
     "embeddedURL=" +
     appParametrizada;
 
-  document.getElementById("finalUrl").textContent =
-    finalUrl;
+  document
+    .getElementById(
+      "finalUrl"
+    )
+    .textContent =
+      finalUrl;
 
-  document.getElementById("finalEncodedPreview").textContent =
-    finalUrl;
+  document
+    .getElementById(
+      "finalEncodedPreview"
+    )
+    .textContent =
+      finalUrl;
 
-  document.getElementById("finalDecodedPreview").textContent =
-    finalUrlSinEncodear;
+  document
+    .getElementById(
+      "finalDecodedPreview"
+    )
+    .textContent =
+      finalUrlSinEncodear;
 
-  document.getElementById("webPreview").textContent =
-    webParametrizada;
+  document
+    .getElementById(
+      "webPreview"
+    )
+    .textContent =
+      webParametrizada;
 
-  document.getElementById("webEncodedPreview").textContent =
-    webEncodeada;
+  document
+    .getElementById(
+      "webEncodedPreview"
+    )
+    .textContent =
+      webEncodeada;
 
-  document.getElementById("appPreview").textContent =
-    appParametrizada;
+  document
+    .getElementById(
+      "appPreview"
+    )
+    .textContent =
+      appParametrizada;
 
-  document.getElementById("appEncodedPreview").textContent =
-    appEncodeada;
+  document
+    .getElementById(
+      "appEncodedPreview"
+    )
+    .textContent =
+      appEncodeada;
 
   const modeNote =
-    document.getElementById("generationModeNote");
+    document.getElementById(
+      "generationModeNote"
+    );
 
   const rutasActuales =
     obtenerRutasDesdeConstructor();
 
   if (
-    rutasActuales.tipo === "native" &&
-    rutasActuales.modoWeb === "landing"
+    rutasActuales.tipo ===
+      "native" &&
+    rutasActuales.modoWeb ===
+      "landing"
   ) {
     modeNote.className =
       "mode-note experimental";
@@ -3441,8 +4868,10 @@ function generarLink() {
       "La siguiente etapa es probar en GTM la lectura de embeddedURL y el intento de apertura del deeplink.";
 
   } else if (
-    rutasActuales.tipo === "native" &&
-    rutasActuales.modoWeb === "login"
+    rutasActuales.tipo ===
+      "native" &&
+    rutasActuales.modoWeb ===
+      "login"
   ) {
     modeNote.className =
       "mode-note verified";
@@ -3461,25 +4890,47 @@ function generarLink() {
   }
 
   document
-    .getElementById("resultBox")
-    .classList.add("visible");
+    .getElementById(
+      "resultBox"
+    )
+    .classList
+    .add(
+      "visible"
+    );
 
   document
-    .getElementById("emptyResult")
-    .classList.add("hidden");
+    .getElementById(
+      "emptyResult"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
 }
 
 function ocultarResultado() {
   document
-    .getElementById("resultBox")
-    .classList.remove("visible");
+    .getElementById(
+      "resultBox"
+    )
+    .classList
+    .remove(
+      "visible"
+    );
 
   document
-    .getElementById("emptyResult")
-    .classList.remove("hidden");
+    .getElementById(
+      "emptyResult"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
 
   const modeNote =
-    document.getElementById("generationModeNote");
+    document.getElementById(
+      "generationModeNote"
+    );
 
   if (modeNote) {
     modeNote.className =
@@ -3509,9 +4960,11 @@ async function copiarValor(
   }
 
   try {
-    await navigator.clipboard.writeText(
-      valor
-    );
+    await navigator
+      .clipboard
+      .writeText(
+        valor
+      );
 
     alert(
       nombre +
@@ -3520,7 +4973,9 @@ async function copiarValor(
 
   } catch (error) {
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
     textarea.value =
       valor;
@@ -3546,16 +5001,22 @@ async function copiarValor(
 
 async function copiarFinal() {
   const link =
-    document.getElementById("finalUrl").textContent;
+    document
+      .getElementById(
+        "finalUrl"
+      )
+      .textContent;
 
   if (!link) {
     return;
   }
 
   try {
-    await navigator.clipboard.writeText(
-      link
-    );
+    await navigator
+      .clipboard
+      .writeText(
+        link
+      );
 
     alert(
       "Link copiado correctamente."
@@ -3563,7 +5024,9 @@ async function copiarFinal() {
 
   } catch (error) {
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
     textarea.value =
       link;
@@ -3588,7 +5051,11 @@ async function copiarFinal() {
 
 function abrirFinal() {
   const link =
-    document.getElementById("finalUrl").textContent;
+    document
+      .getElementById(
+        "finalUrl"
+      )
+      .textContent;
 
   if (!link) {
     return;
@@ -3600,13 +5067,732 @@ function abrirFinal() {
 
 
 /* =========================================================
+   ANALIZADOR DE LINKS
+========================================================= */
+
+function decodificarSeguro(
+  valor
+) {
+  const texto =
+    String(
+      valor ?? ""
+    );
+
+  if (!texto) {
+    return "";
+  }
+
+  try {
+    return decodeURIComponent(
+      texto.replace(
+        /\+/g,
+        "%20"
+      )
+    );
+  } catch {
+    return texto;
+  }
+}
+
+function obtenerQueryCruda(
+  url
+) {
+  const limpia =
+    limpiarValor(
+      url
+    );
+
+  const interrogacion =
+    limpia.indexOf(
+      "?"
+    );
+
+  if (
+    interrogacion === -1
+  ) {
+    return "";
+  }
+
+  const hash =
+    limpia.indexOf(
+      "#",
+      interrogacion
+    );
+
+  return hash === -1
+    ? limpia.substring(
+        interrogacion + 1
+      )
+    : limpia.substring(
+        interrogacion + 1,
+        hash
+      );
+}
+
+function obtenerParesParametros(
+  url
+) {
+  const query =
+    obtenerQueryCruda(
+      url
+    );
+
+  if (!query) {
+    return [];
+  }
+
+  return query
+    .split("&")
+    .filter(
+      Boolean
+    )
+    .map(
+      par => {
+        const index =
+          par.indexOf(
+            "="
+          );
+
+        const keyRaw =
+          index === -1
+            ? par
+            : par.substring(
+                0,
+                index
+              );
+
+        const valueRaw =
+          index === -1
+            ? ""
+            : par.substring(
+                index + 1
+              );
+
+        return {
+          keyRaw,
+          valueRaw,
+
+          key:
+            decodificarSeguro(
+              keyRaw
+            ),
+
+          value:
+            decodificarSeguro(
+              valueRaw
+            )
+        };
+      }
+    );
+}
+
+function obtenerParametroAnalizador(
+  pares,
+  nombre
+) {
+  const encontrado =
+    pares.find(
+      item =>
+        item.key === nombre
+    );
+
+  return encontrado
+    ? encontrado.value
+    : "";
+}
+
+function obtenerParametroCrudoAnalizador(
+  pares,
+  nombre
+) {
+  const encontrado =
+    pares.find(
+      item =>
+        item.key === nombre
+    );
+
+  return encontrado
+    ? encontrado.valueRaw
+    : "";
+}
+
+function obtenerBaseAnalizador(
+  valor
+) {
+  const limpia =
+    limpiarValor(
+      valor
+    );
+
+  if (!limpia) {
+    return "";
+  }
+
+  const queryIndex =
+    limpia.indexOf(
+      "?"
+    );
+
+  const hashIndex =
+    limpia.indexOf(
+      "#"
+    );
+
+  let corte =
+    limpia.length;
+
+  if (
+    queryIndex !== -1
+  ) {
+    corte =
+      Math.min(
+        corte,
+        queryIndex
+      );
+  }
+
+  if (
+    hashIndex !== -1
+  ) {
+    corte =
+      Math.min(
+        corte,
+        hashIndex
+      );
+  }
+
+  return limpia.substring(
+    0,
+    corte
+  );
+}
+
+function obtenerDominioAnalizador(
+  valor
+) {
+  const limpia =
+    limpiarValor(
+      valor
+    );
+
+  if (!limpia) {
+    return "-";
+  }
+
+  if (
+    limpia.startsWith(
+      "scotiabankpe://"
+    )
+  ) {
+    return "scotiabankpe://";
+  }
+
+  try {
+    const url =
+      new URL(
+        limpia
+      );
+
+    return url.hostname ||
+      "-";
+
+  } catch {
+    return "-";
+  }
+}
+
+function detectarTipoLinkAnalizador(
+  valor,
+  pares
+) {
+  const limpia =
+    limpiarValor(
+      valor
+    );
+
+  const embedded =
+    obtenerParametroAnalizador(
+      pares,
+      "embeddedURL"
+    );
+
+  if (
+    /^https?:\/\//i.test(
+      limpia
+    ) &&
+    embedded
+  ) {
+    return "Link combinado Web + App";
+  }
+
+  if (
+    /^https?:\/\//i.test(
+      limpia
+    )
+  ) {
+    return "URL Web";
+  }
+
+  if (
+    /^scotiabankpe:\/\//i.test(
+      limpia
+    )
+  ) {
+    return "Deeplink App";
+  }
+
+  return "Formato no reconocido";
+}
+
+function asignarTextoAnalizador(
+  id,
+  valor,
+  fallback = "-"
+) {
+  const elemento =
+    document.getElementById(
+      id
+    );
+
+  if (!elemento) {
+    return;
+  }
+
+  const limpio =
+    limpiarValor(
+      valor
+    );
+
+  elemento.textContent =
+    limpio ||
+    fallback;
+}
+
+function renderOtrosParametrosAnalizador(
+  pares,
+  paresApp = []
+) {
+  const contenedor =
+    document.getElementById(
+      "analyzerOtherParams"
+    );
+
+  if (!contenedor) {
+    return;
+  }
+
+  const ignorados =
+    new Set([
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "source",
+      "detail",
+      "embeddedURL",
+      "redirectTo",
+      "redirecto"
+    ]);
+
+  const adicionalesWeb =
+    pares.filter(
+      item =>
+        !ignorados.has(
+          item.key
+        )
+    );
+
+  const adicionalesApp =
+    paresApp.filter(
+      item =>
+        !ignorados.has(
+          item.key
+        )
+    );
+
+  const bloques =
+    [];
+
+  adicionalesWeb
+    .forEach(
+      item => {
+        bloques.push(
+          "Web · " +
+          item.key +
+          " = " +
+          (
+            item.value ||
+            "(vacío)"
+          )
+        );
+      }
+    );
+
+  adicionalesApp
+    .forEach(
+      item => {
+        bloques.push(
+          "App · " +
+          item.key +
+          " = " +
+          (
+            item.value ||
+            "(vacío)"
+          )
+        );
+      }
+    );
+
+  if (
+    !bloques.length
+  ) {
+    contenedor.textContent =
+      "No se encontraron parámetros adicionales.";
+
+    return;
+  }
+
+  contenedor.innerHTML =
+    "";
+
+  bloques.forEach(
+    texto => {
+      const fila =
+        document.createElement(
+          "div"
+        );
+
+      fila.textContent =
+        texto;
+
+      contenedor.appendChild(
+        fila
+      );
+    }
+  );
+}
+
+function analizarLink() {
+  const input =
+    document.getElementById(
+      "linkAnalyzerInput"
+    );
+
+  const valor =
+    limpiarValor(
+      input
+        ? input.value
+        : ""
+    );
+
+  if (!valor) {
+    alert(
+      "Pega un link para analizar."
+    );
+
+    return;
+  }
+
+  const pares =
+    obtenerParesParametros(
+      valor
+    );
+
+  const tipo =
+    detectarTipoLinkAnalizador(
+      valor,
+      pares
+    );
+
+  const esAppDirecta =
+    /^scotiabankpe:\/\//i.test(
+      valor
+    );
+
+  const embeddedCrudo =
+    obtenerParametroCrudoAnalizador(
+      pares,
+      "embeddedURL"
+    );
+
+  const embeddedDecodificado =
+    embeddedCrudo
+      ? decodificarSeguro(
+          embeddedCrudo
+        )
+      : "";
+
+  const appAnalizada =
+    embeddedDecodificado ||
+    (
+      esAppDirecta
+        ? valor
+        : ""
+    );
+
+  const paresApp =
+    appAnalizada
+      ? obtenerParesParametros(
+          appAnalizada
+        )
+      : [];
+
+  const redirectTo =
+    obtenerParametroAnalizador(
+      pares,
+      "redirectTo"
+    ) ||
+    obtenerParametroAnalizador(
+      pares,
+      "redirecto"
+    );
+
+  asignarTextoAnalizador(
+    "analyzerDetectedType",
+    tipo
+  );
+
+  asignarTextoAnalizador(
+    "analyzerDomain",
+    obtenerDominioAnalizador(
+      valor
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerUtmSource",
+    obtenerParametroAnalizador(
+      pares,
+      "utm_source"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerUtmMedium",
+    obtenerParametroAnalizador(
+      pares,
+      "utm_medium"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerUtmCampaign",
+    obtenerParametroAnalizador(
+      pares,
+      "utm_campaign"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerSource",
+    obtenerParametroAnalizador(
+      pares,
+      "source"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerDetail",
+    obtenerParametroAnalizador(
+      pares,
+      "detail"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerWebBase",
+    esAppDirecta
+      ? ""
+      : obtenerBaseAnalizador(
+          valor
+        )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerRedirectTo",
+    redirectTo
+  );
+
+  asignarTextoAnalizador(
+    "analyzerEmbeddedEncoded",
+    embeddedCrudo
+  );
+
+  asignarTextoAnalizador(
+    "analyzerEmbeddedDecoded",
+    appAnalizada
+  );
+
+  asignarTextoAnalizador(
+    "analyzerAppUtmSource",
+    obtenerParametroAnalizador(
+      paresApp,
+      "utm_source"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerAppUtmMedium",
+    obtenerParametroAnalizador(
+      paresApp,
+      "utm_medium"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerAppUtmCampaign",
+    obtenerParametroAnalizador(
+      paresApp,
+      "utm_campaign"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerAppSource",
+    obtenerParametroAnalizador(
+      paresApp,
+      "source"
+    )
+  );
+
+  asignarTextoAnalizador(
+    "analyzerAppDetail",
+    obtenerParametroAnalizador(
+      paresApp,
+      "detail"
+    )
+  );
+
+  renderOtrosParametrosAnalizador(
+    pares,
+    paresApp
+  );
+
+  const empty =
+    document.getElementById(
+      "linkAnalyzerEmpty"
+    );
+
+  const results =
+    document.getElementById(
+      "linkAnalyzerResults"
+    );
+
+  if (empty) {
+    empty
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+
+  if (results) {
+    results
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    results.scrollIntoView({
+      behavior:
+        "smooth",
+      block:
+        "nearest"
+    });
+  }
+}
+
+function limpiarAnalizador() {
+  const input =
+    document.getElementById(
+      "linkAnalyzerInput"
+    );
+
+  if (input) {
+    input.value =
+      "";
+  }
+
+  const ids = [
+    "analyzerDetectedType",
+    "analyzerDomain",
+    "analyzerUtmSource",
+    "analyzerUtmMedium",
+    "analyzerUtmCampaign",
+    "analyzerSource",
+    "analyzerDetail",
+    "analyzerWebBase",
+    "analyzerRedirectTo",
+    "analyzerEmbeddedEncoded",
+    "analyzerEmbeddedDecoded",
+    "analyzerAppUtmSource",
+    "analyzerAppUtmMedium",
+    "analyzerAppUtmCampaign",
+    "analyzerAppSource",
+    "analyzerAppDetail"
+  ];
+
+  ids.forEach(
+    id =>
+      asignarTextoAnalizador(
+        id,
+        ""
+      )
+  );
+
+  const otros =
+    document.getElementById(
+      "analyzerOtherParams"
+    );
+
+  if (otros) {
+    otros.textContent =
+      "-";
+  }
+
+  const empty =
+    document.getElementById(
+      "linkAnalyzerEmpty"
+    );
+
+  const results =
+    document.getElementById(
+      "linkAnalyzerResults"
+    );
+
+  if (empty) {
+    empty
+      .classList
+      .remove(
+        "hidden"
+      );
+  }
+
+  if (results) {
+    results
+      .classList
+      .add(
+        "hidden"
+      );
+  }
+
+  if (input) {
+    input.focus();
+  }
+}
+
+
+/* =========================================================
    PROBADOR
 ========================================================= */
 
 function probarLinkExistente() {
   const link =
     limpiarValor(
-      document.getElementById("testFinalLink").value
+      document
+        .getElementById(
+          "testFinalLink"
+        )
+        .value
     );
 
   if (!link) {
@@ -3618,7 +5804,9 @@ function probarLinkExistente() {
   }
 
   if (
-    !esUrlWebValida(link)
+    !esUrlWebValida(
+      link
+    )
   ) {
     alert(
       "El link combinado debe comenzar con http:// o https://."
@@ -3634,7 +5822,11 @@ function probarLinkExistente() {
 function probarLinkWeb() {
   const link =
     limpiarValor(
-      document.getElementById("testWebLink").value
+      document
+        .getElementById(
+          "testWebLink"
+        )
+        .value
     );
 
   if (!link) {
@@ -3646,7 +5838,9 @@ function probarLinkWeb() {
   }
 
   if (
-    !esUrlWebValida(link)
+    !esUrlWebValida(
+      link
+    )
   ) {
     alert(
       "La URL Web debe comenzar con http:// o https://."
@@ -3662,18 +5856,26 @@ function probarLinkWeb() {
 function actualizarEnlaceApp() {
   const link =
     limpiarValor(
-      document.getElementById("testAppLink").value
+      document
+        .getElementById(
+          "testAppLink"
+        )
+        .value
     );
 
   const enlace =
-    document.getElementById("testAppAnchor");
+    document.getElementById(
+      "testAppAnchor"
+    );
 
   if (!enlace) {
     return;
   }
 
   if (
-    link.startsWith("scotiabankpe://")
+    link.startsWith(
+      "scotiabankpe://"
+    )
   ) {
     enlace.href =
       link;
@@ -3696,14 +5898,22 @@ function actualizarEnlaceApp() {
 function registrarIntentoDeeplink() {
   const link =
     limpiarValor(
-      document.getElementById("testAppLink").value
+      document
+        .getElementById(
+          "testAppLink"
+        )
+        .value
     );
 
   const consola =
-    document.getElementById("testConsole");
+    document.getElementById(
+      "testConsole"
+    );
 
   const enlace =
-    document.getElementById("testAppAnchor");
+    document.getElementById(
+      "testAppAnchor"
+    );
 
   if (!link) {
     alert(
@@ -3717,7 +5927,9 @@ function registrarIntentoDeeplink() {
   }
 
   if (
-    !link.startsWith("scotiabankpe://")
+    !link.startsWith(
+      "scotiabankpe://"
+    )
   ) {
     alert(
       "El Deeplink App debe comenzar con scotiabankpe:///."
@@ -3793,7 +6005,9 @@ function registrarIntentoDeeplink() {
         detectarCambio
       );
 
-      if (!paginaOculta) {
+      if (
+        !paginaOculta
+      ) {
         consola.innerHTML += `
           <br><br>
 
@@ -3827,7 +6041,11 @@ function registrarIntentoDeeplink() {
 async function copiarDeeplinkApp() {
   const link =
     limpiarValor(
-      document.getElementById("testAppLink").value
+      document
+        .getElementById(
+          "testAppLink"
+        )
+        .value
     );
 
   if (!link) {
@@ -3839,9 +6057,11 @@ async function copiarDeeplinkApp() {
   }
 
   try {
-    await navigator.clipboard.writeText(
-      link
-    );
+    await navigator
+      .clipboard
+      .writeText(
+        link
+      );
 
     alert(
       "Deeplink App copiado correctamente."
@@ -3849,7 +6069,9 @@ async function copiarDeeplinkApp() {
 
   } catch (error) {
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
     textarea.value =
       link;
@@ -3873,23 +6095,43 @@ async function copiarDeeplinkApp() {
 }
 
 function limpiarProbador() {
-  document.getElementById("testProductName").textContent =
-    "Selecciona un producto para comenzar.";
+  document
+    .getElementById(
+      "testProductName"
+    )
+    .textContent =
+      "Selecciona un producto para comenzar.";
 
-  document.getElementById("testFinalLink").value =
-    "";
+  document
+    .getElementById(
+      "testFinalLink"
+    )
+    .value =
+      "";
 
-  document.getElementById("testWebLink").value =
-    "";
+  document
+    .getElementById(
+      "testWebLink"
+    )
+    .value =
+      "";
 
-  document.getElementById("testAppLink").value =
-    "";
+  document
+    .getElementById(
+      "testAppLink"
+    )
+    .value =
+      "";
 
   actualizarEnlaceApp();
 
-  document.getElementById("testConsole").innerHTML =
-    "<strong>Diagnóstico del Deeplink App</strong><br>" +
-    "Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.";
+  document
+    .getElementById(
+      "testConsole"
+    )
+    .innerHTML =
+      "<strong>Diagnóstico del Deeplink App</strong><br>" +
+      "Selecciona un producto y presiona <strong>Abrir Deeplink App</strong>.";
 }
 
 
@@ -3898,46 +6140,100 @@ function limpiarProbador() {
 ========================================================= */
 
 function limpiarFormulario() {
-  document.getElementById("productSelect").value =
-    "";
-
-  document.getElementById("webUrl").value =
-    "";
-
-  document.getElementById("appUrl").value =
-    "";
-
-  document.getElementById("utmSource").value =
-    "";
-
-  document.getElementById("utmSourceOtro").value =
-    "";
+  document
+    .getElementById(
+      "productSelect"
+    )
+    .value =
+      "";
 
   document
-    .getElementById("utmSourceOtro")
-    .classList.add("hidden");
-
-  document.getElementById("utmMedium").innerHTML =
-    '<option value="">Primero selecciona una fuente...</option>';
-
-  document.getElementById("utmMedium").disabled =
-    true;
-
-  document.getElementById("utmMediumOtro").value =
-    "";
+    .getElementById(
+      "webUrl"
+    )
+    .value =
+      "";
 
   document
-    .getElementById("utmMediumOtro")
-    .classList.add("hidden");
+    .getElementById(
+      "appUrl"
+    )
+    .value =
+      "";
 
-  document.getElementById("utmCampaign").value =
-    "";
+  document
+    .getElementById(
+      "utmSource"
+    )
+    .value =
+      "";
 
-  document.getElementById("sourceInternal").value =
-    SOURCE_CAMPAIGN;
+  document
+    .getElementById(
+      "utmSourceOtro"
+    )
+    .value =
+      "";
 
-  document.getElementById("detail").value =
-    "";
+  document
+    .getElementById(
+      "utmSourceOtro"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "utmMedium"
+    )
+    .innerHTML =
+      '<option value="">Primero selecciona una fuente...</option>';
+
+  document
+    .getElementById(
+      "utmMedium"
+    )
+    .disabled =
+      true;
+
+  document
+    .getElementById(
+      "utmMediumOtro"
+    )
+    .value =
+      "";
+
+  document
+    .getElementById(
+      "utmMediumOtro"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "utmCampaign"
+    )
+    .value =
+      "";
+
+  document
+    .getElementById(
+      "sourceInternal"
+    )
+    .value =
+      SOURCE_CAMPAIGN;
+
+  document
+    .getElementById(
+      "detail"
+    )
+    .value =
+      "";
 
   productoSeleccionado =
     null;

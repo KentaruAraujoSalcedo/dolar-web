@@ -312,7 +312,78 @@
 
         <div class="actions">
           <button class="btn-primary" onclick="generarLink()">Generar link de campaña</button>
+          <button class="btn-secondary" onclick="mostrarAutogenerador()">Autogenerar links</button>
           <button class="btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+        </div>
+
+        <div id="autoGeneratorPanel" class="builder-box hidden" style="margin-top:16px;">
+          <div class="builder-title">Autogeneración masiva de links</div>
+
+          <p class="section-description" style="margin-bottom:12px;">
+            Selecciona los canales que participarán en la campaña. El sistema generará
+            únicamente las combinaciones <strong>utm_source + utm_medium</strong>
+            permitidas en <strong>campanas.json</strong>.
+          </p>
+
+          <div class="actions" style="margin-top:0;">
+            <button class="btn-secondary" onclick="seleccionarTodasFuentesAuto()">Seleccionar todos</button>
+            <button class="btn-secondary" onclick="limpiarFuentesAuto()">Limpiar selección</button>
+          </div>
+
+          <div id="autoSourcesList" class="auto-sources-list" style="margin-top:12px;">
+            <div class="data-status">
+              Los canales disponibles se cargarán desde <strong>campanas.json</strong>.
+            </div>
+          </div>
+
+          <div class="campaign-source-box" style="margin-top:14px;">
+            <strong>¿Qué se mantiene igual?</strong>
+            <p>
+              Todos los links usarán el mismo destino Web, Deeplink App,
+              <strong>utm_campaign</strong>, <strong>source=campaign</strong> y
+              <strong>detail</strong> si fue informado. Solo cambiarán
+              <strong>utm_source</strong> y <strong>utm_medium</strong>.
+            </p>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" onclick="autogenerarLinks()">Generar links seleccionados</button>
+            <button class="btn-secondary" onclick="cerrarAutogenerador()">Cerrar</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="autoResultsCard" class="card hidden">
+        <h2>Links autogenerados</h2>
+        <p class="section-description">
+          Resultado masivo según las combinaciones permitidas en campanas.json.
+        </p>
+
+        <div id="autoResultsEmpty" class="warning">
+          Selecciona uno o más canales y presiona <strong>Generar links seleccionados</strong>.
+        </div>
+
+        <div id="autoResultsContent" class="hidden">
+          <div class="actions" style="margin-top:0;">
+            <button class="btn-primary" onclick="copiarTodosLinksAuto()">Copiar todos</button>
+            <button class="btn-secondary" onclick="descargarLinksAutoCsv()">Descargar CSV</button>
+          </div>
+
+          <div class="auto-table-wrap" style="margin-top:14px;">
+            <table class="auto-table">
+              <thead>
+                <tr>
+                  <th>Fuente</th>
+                  <th>Medio</th>
+                  <th>Link final</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="autoResultsBody"></tbody>
+            </table>
+          </div>
+
+          <div id="autoResultsSummary" class="success-note"></div>
         </div>
       </section>
 

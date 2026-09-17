@@ -14,6 +14,11 @@ let MEDIUM_NAMES = {};
 let productoSeleccionado = null;
 let AUTO_GENERATED_LINKS = [];
 
+
+/* =========================================================
+   TIPO DE DESTINO
+========================================================= */
+
 function getTipoDestino() {
   return document.querySelector('input[name="destinationType"]:checked').value;
 }
@@ -175,9 +180,11 @@ function cargarGruposWebview() {
 
     option.textContent =
       item.grupo +
-      (item.cantidad
-        ? ` (${item.cantidad})`
-        : "");
+      (
+        item.cantidad
+          ? ` (${item.cantidad})`
+          : ""
+      );
 
     grupo.appendChild(option);
   });
@@ -424,40 +431,6 @@ function contarPantallasNativo() {
   });
 
   return total;
-}
-
-function construirCatalogoNativoLegacy(items) {
-  if (
-    !Array.isArray(items) ||
-    !items.length
-  ) {
-    return {};
-  }
-
-  return {
-    "Funcionalidades": [
-      {
-        grupo:
-          "Todas las funcionalidades nativas",
-
-        cantidad:
-          items.length,
-
-        pantallas:
-          items
-            .map(item => ({
-              nombre:
-                item.nombre ||
-                item.path ||
-                "Funcionalidad",
-
-              path:
-                item.path || ""
-            }))
-            .filter(item => item.path)
-      }
-    ]
-  };
 }
 
 function cargarSelectCategoriasNativo() {
@@ -1540,12 +1513,14 @@ function limpiarConstructor() {
 
   ocultarResultado();
 
+  resetAutogenerador();
+
   renderCatalog();
 }
 
 
 /* =========================================================
-   CARGA DE JSON
+   CARGA DE CONFIGURACIÓN
 ========================================================= */
 
 async function cargarConfiguracion() {
@@ -1706,17 +1681,11 @@ async function cargarConfiguracion() {
     );
 
     PRODUCTOS = [];
-
     WEBVIEW_CATALOG = {};
-
     NATIVE_CATALOG = {};
-
     POR_REVISAR_WEBVIEW = [];
-
     CAMPAIGN_SOURCES = {};
-
     SOURCE_NAMES = {};
-
     MEDIUM_NAMES = {};
 
     cargarSelectProductos();
@@ -1726,6 +1695,8 @@ async function cargarConfiguracion() {
     cargarSelectCategoriasNativo();
 
     cargarSelectFuentes();
+
+    renderFuentesAutogenerador();
 
     renderCatalog();
 
@@ -1914,11 +1885,15 @@ function cargarMediosPorFuente() {
   sourceOtro.value =
     "";
 
-  const medios =
-    Array.isArray(
-      CAMPAIGN_SOURCES[source]
-    )
+  const configFuente =
+    CAMPAIGN_SOURCES[source] &&
+    typeof CAMPAIGN_SOURCES[source] === "object"
       ? CAMPAIGN_SOURCES[source]
+      : {};
+
+  const medios =
+    Array.isArray(configFuente.medios)
+      ? configFuente.medios
       : [];
 
   mediumSelect.innerHTML =
@@ -2062,11 +2037,15 @@ function renderFuentesAutogenerador() {
     "";
 
   sources.forEach(source => {
-    const medios =
-      Array.isArray(
-        CAMPAIGN_SOURCES[source]
-      )
+    const configFuente =
+      CAMPAIGN_SOURCES[source] &&
+      typeof CAMPAIGN_SOURCES[source] === "object"
         ? CAMPAIGN_SOURCES[source]
+        : {};
+
+    const medios =
+      Array.isArray(configFuente.autogenerar)
+        ? configFuente.autogenerar
         : [];
 
     const item =
@@ -2108,9 +2087,9 @@ function renderFuentesAutogenerador() {
 
     detalle.textContent =
       medios.length
-        ? "Medios: " +
+        ? "Autogenerar: " +
           medios.join(", ")
-        : "Sin medios configurados";
+        : "Sin combinaciones configuradas para autogenerar";
 
     texto.appendChild(titulo);
 
@@ -2354,11 +2333,15 @@ function autogenerarLinks() {
     [];
 
   fuentes.forEach(source => {
-    const medios =
-      Array.isArray(
-        CAMPAIGN_SOURCES[source]
-      )
+    const configFuente =
+      CAMPAIGN_SOURCES[source] &&
+      typeof CAMPAIGN_SOURCES[source] === "object"
         ? CAMPAIGN_SOURCES[source]
+        : {};
+
+    const medios =
+      Array.isArray(configFuente.autogenerar)
+        ? configFuente.autogenerar
         : [];
 
     medios.forEach(medium => {
@@ -2377,7 +2360,7 @@ function autogenerarLinks() {
 
   if (!resultados.length) {
     alert(
-      "Las fuentes seleccionadas no tienen medios configurados en campanas.json."
+      "Las fuentes seleccionadas no tienen combinaciones configuradas en autogenerar."
     );
 
     return;
@@ -2528,8 +2511,8 @@ function renderResultadosAutogenerados() {
     AUTO_GENERATED_LINKS.length +
     " links</strong> para <strong>" +
     fuentesUnicas +
-    " fuentes</strong>. Cada fila corresponde a una combinación válida " +
-    "<strong>utm_source + utm_medium</strong> de campanas.json.";
+    " fuentes</strong>. Cada fila corresponde a una combinación definida en " +
+    "<strong>autogenerar</strong> dentro de campanas.json.";
 
   empty.classList.add("hidden");
 
@@ -2823,6 +2806,8 @@ function seleccionarProducto(id) {
     limpiarProbador();
 
     ocultarResultado();
+
+    resetAutogenerador();
 
     renderCatalog();
 

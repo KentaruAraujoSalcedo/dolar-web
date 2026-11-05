@@ -10,6 +10,7 @@ import {
 import { initModal } from "./ui/modal.js";
 import { initRankingModalUI, refreshRankingModal } from "./ui/rankingModal.js";
 import { renderBestHeader } from './ui/bestHeader.js';
+import { renderHomeStats, loadHomeTrend } from './home-redesign.js';
 
 import {
   initStaticUI,
@@ -97,6 +98,8 @@ async function init() {
       if (estadoDatos) estadoDatos.hidden = true;
     } catch (error) {
       console.error('No se pudieron cargar cotizaciones:', error);
+      const fecha = document.getElementById('fecha');
+      if (fecha) fecha.textContent = 'sin datos';
       if (estadoDatos) {
         estadoDatos.textContent = 'No pudimos actualizar las cotizaciones en este momento. Vuelve a intentarlo más tarde y verifica la tasa directamente con la entidad antes de operar.';
         estadoDatos.hidden = false;
@@ -105,6 +108,10 @@ async function init() {
 
     // 5) Render inicial
     renderAll();
+
+    // El histórico de 7 días se alimenta de datos SUNAT reales, sin
+    // bloquear la interacción con el conversor y el ranking.
+    void loadHomeTrend();
 
     // 6) Modal gráfico (lazy-load Chart.js + tu chart.js)
     const btnOpenChart = document.getElementById("btn-open-chart");
@@ -162,6 +169,7 @@ async function init() {
         renderResultadoConversor();
         renderBestDeal();
         renderBestHeader(state);
+        renderHomeStats();
 
         refreshRankingModal({ onlyRecalc: type === 'amount' });
       },
@@ -178,25 +186,33 @@ async function init() {
       renderResultadoConversor();
       renderBestDeal();
       renderBestHeader(state);
+      renderHomeStats();
     }
 
     function pintarActualizado(meta) {
       const els = getEls();
 
       if (!els.fecha || !els.hora || !els.updatedAt) return;
-      if (!meta?.run_at_utc) return;
+      if (!meta?.run_at_utc) {
+        els.fecha.textContent = 'sin datos';
+        els.hora.textContent = '';
+        return;
+      }
 
       const d = new Date(meta.run_at_utc);
+      if (!Number.isFinite(d.getTime())) return;
 
       els.fecha.textContent = d.toLocaleDateString('es-PE', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
+        timeZone: 'America/Lima',
       });
 
       els.hora.textContent = d.toLocaleTimeString('es-PE', {
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: 'America/Lima',
       });
 
       els.updatedAt.setAttribute('datetime', d.toISOString());

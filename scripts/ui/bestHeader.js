@@ -11,9 +11,11 @@ export function renderBestHeader({ mejorCompra, mejorVenta }) {
 
   if (els.bestCompra) {
     els.bestCompra.textContent = Number.isFinite(mejorCompra) ? rateFmt(mejorCompra) : '—';
+    els.bestCompra.dataset.hasRate = String(Number.isFinite(mejorCompra));
   }
 
   if (els.bestVenta) {
     els.bestVenta.textContent = Number.isFinite(mejorVenta) ? rateFmt(mejorVenta) : '—';
+    els.bestVenta.dataset.hasRate = String(Number.isFinite(mejorVenta));
   }
 }

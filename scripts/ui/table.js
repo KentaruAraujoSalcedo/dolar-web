@@ -36,7 +36,16 @@ export function renderTabla() {
   let filas = getCasasValidasLimpias({ fallbackToTasas: true });
   filas = sortCasas(filas, "auto");
 
-  // ✅ Home SIEMPRE = Top 3 (el ranking completo vive en el modal)
+  // Muestra tres tasas principales; el modal ofrece las demás disponibles.
+  if (!filas.length) {
+    const row = document.createElement('tr');
+    row.className = 'empty-row';
+    const cell = document.createElement('td');
+    cell.colSpan = 4;
+    cell.textContent = 'No hay cotizaciones de casas de cambio disponibles en este momento.';
+    row.appendChild(cell);
+    tbody.appendChild(row);
+  }
   const TOP_N = 3;
   filas = filas.slice(0, TOP_N);
 

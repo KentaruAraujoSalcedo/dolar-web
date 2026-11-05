@@ -135,7 +135,7 @@ export function renderBestDeal() {
               : `Necesitas ${abs} menos que SUNAT`);
       }
     } else {
-      noteEl.textContent = 'Muy similar al tipo SUNAT';
+      noteEl.textContent = '';
     }
   }
 
@@ -143,7 +143,7 @@ export function renderBestDeal() {
   // Logo
   if (logoEl) {
     const raw = getCasaLogoSrc(winner.casa);
-    const src = raw ? (BASE_PATH + raw.replace(/^\//, "")) : "";
+    const src = raw ? (BASE_PATH + raw) : "";
 
     const finalSrc = src || "/IMG/ui/best-placeholder.webp";
 

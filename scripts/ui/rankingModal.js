@@ -121,9 +121,20 @@ function renderAllLogos() {
       a.setAttribute("aria-disabled", "true");
     }
 
-    a.innerHTML = logo
-      ? `<img src="${logo}" alt="${casa}" loading="lazy" decoding="async">`
-      : `<span class="logo-fallback" aria-hidden="true">${String(casa).slice(0, 2).toUpperCase()}</span>`;
+    if (logo) {
+      const img = document.createElement("img");
+      img.src = logo;
+      img.alt = String(casa);
+      img.loading = "lazy";
+      img.decoding = "async";
+      a.appendChild(img);
+    } else {
+      const fallback = document.createElement("span");
+      fallback.className = "logo-fallback";
+      fallback.setAttribute("aria-hidden", "true");
+      fallback.textContent = String(casa).slice(0, 2).toUpperCase();
+      a.appendChild(fallback);
+    }
 
     frag.appendChild(a);
   }

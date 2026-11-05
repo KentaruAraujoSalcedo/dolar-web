@@ -88,9 +88,20 @@ async function init() {
       monto: Number.isFinite(montoIni) ? montoIni : NaN
     });
 
-    // 3) Cargar datos
-    await cargarData();
-    pintarActualizado(state.meta);
+    // 3) Cargar datos. Una caída de la API no debe inutilizar el conversor
+    //    ni impedir mostrar una explicación visible del problema.
+    const estadoDatos = document.getElementById('estado-datos');
+    try {
+      await cargarData();
+      pintarActualizado(state.meta);
+      if (estadoDatos) estadoDatos.hidden = true;
+    } catch (error) {
+      console.error('No se pudieron cargar cotizaciones:', error);
+      if (estadoDatos) {
+        estadoDatos.textContent = 'No pudimos actualizar las cotizaciones en este momento. Vuelve a intentarlo más tarde y verifica la tasa directamente con la entidad antes de operar.';
+        estadoDatos.hidden = false;
+      }
+    }
 
     // 5) Render inicial
     renderAll();

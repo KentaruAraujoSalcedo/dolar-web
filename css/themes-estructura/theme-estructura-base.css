@@ -2161,3 +2161,35 @@ body.modal-open {
     padding: 16px 14px;
   }
 }
+
+
+/* =========================================================
+   MODO SIN ANUNCIOS - activación pendiente
+   El HTML mantiene los ad-slots, sin reservar espacio visible.
+   Para monetizar: quitar ads-paused del body e integrar la red.
+   ========================================================= */
+body.ads-paused .ads,
+body.ads-paused .ad-inline,
+body.ads-paused .ad-final {
+  display: none !important;
+}
+body.ads-paused .shell {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1020px;
+}
+body.ads-paused .pdh-main-grid {
+  grid-template-areas:
+    "pills pills"
+    "calc best"
+    "table best"
+    "table sunat";
+}
+@media (max-width: 700px) {
+  body.ads-paused .pdh-main-grid {
+    grid-template-areas:
+      "pills"
+      "calc"
+      "best"
+      "table";
+  }
+}

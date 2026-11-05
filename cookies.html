@@ -237,7 +237,7 @@
     </div>
 
     <!-- Cookies banner -->
-    <div id="cookie-banner">
+    <div id="cookie-banner" role="region" aria-label="Preferencias de cookies">
         Usamos cookies para mejorar tu experiencia.
         <a href="/cookies.html">Ver cookies</a>
         <button onclick="acceptCookies()">Aceptar</button>
@@ -246,28 +246,7 @@
 
     <script defer src="/scripts/cookies.js"></script>
 
-    <script>
-        function resetCookieConsent() {
-            try {
-                localStorage.removeItem('pdh_cookie_consent');
-            } catch (e) { }
 
-            // Vuelve a mostrar el banner
-            const banner = document.getElementById('cookie-banner');
-            if (banner) banner.classList.add('show');
-
-            // Opcional: vuelve a "denied" hasta que el usuario decida otra vez
-            if (window.gtag) {
-                gtag('consent', 'update', {
-                    ad_storage: 'denied',
-                    ad_user_data: 'denied',
-                    ad_personalization: 'denied',
-                    analytics_storage: 'denied',
-                    personalization_storage: 'denied'
-                });
-            }
-        }
-    </script>
 
 
 </body>

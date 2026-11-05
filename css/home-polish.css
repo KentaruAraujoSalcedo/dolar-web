@@ -1,0 +1,293 @@
+/* ============================================================================
+   PRECIO DÓLAR HOY · Ajuste editorial y visual · 2026-11-05
+   Cambios confinados a la portada; conservan CSS y scripts originales.
+   Estructura: cotizaciones+mejor casa / calculadora+comparador / gráfico+SUNAT.
+   Las posiciones publicitarias existen pero NO se muestran vacías en producción.
+   Para revisar su colocación, añadir temporalmente ads-preview al <body>.
+   ============================================================================ */
+
+body.pdh-home {
+  --home-ink: #291e30;
+  --home-muted: #665e6c;
+  --home-purple: #392243;
+  --home-purple-light: #eee8f1;
+  --home-green: #19744b;
+  --home-red: #b23d58;
+  --home-border: rgba(65, 44, 73, .14);
+  --home-shadow: 0 10px 30px rgba(22, 15, 27, .07), 0 2px 7px rgba(22, 15, 27, .045);
+  color: var(--home-ink);
+  background: linear-gradient(110deg, rgba(21, 18, 24, .14), rgba(28, 23, 31, .07)), url('/IMG/wallpapers/base.webp') center top / cover fixed;
+  min-height: 100vh;
+}
+body.pdh-home :focus-visible { outline: 3px solid #8d735c; outline-offset: 3px; }
+
+/* Navegación de marca: vidrio gris, morado ciruela y un acento lima. */
+body.pdh-home .site-topbar {
+  background: rgba(247, 245, 247, .94);
+  border-bottom: 1px solid rgba(255,255,255,.4);
+  box-shadow: 0 5px 22px rgba(16, 10, 22, .12);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+}
+body.pdh-home .site-topbar__inner { min-height: 71px; }
+body.pdh-home .site-brand__copy strong, body.pdh-home .site-footer__brand strong { color: #2b1933; }
+body.pdh-home .site-brand__copy strong span, body.pdh-home .site-footer__brand strong span { color: #684077; }
+body.pdh-home .site-nav a.is-current {
+  background: #312037; color: #e9f1a4; box-shadow: 0 4px 12px rgba(34, 18, 41, .15);
+}
+body.pdh-home .site-nav a:hover { background: rgba(52, 29, 59, .09); color: #312037; }
+body.pdh-home .site-nav__mobile { background: #32203b; color: #e5f19b; }
+
+/* Un solo centro cuando no hay publicidad real; sin columnas fantasma. */
+body.pdh-home .page { padding: 22px 18px 36px; }
+body.pdh-home .shell {
+  display: grid;
+  max-width: 1580px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 15px;
+  margin: 0 auto;
+}
+body.pdh-home .center {
+  max-width: 1160px;
+  margin: auto;
+  padding: clamp(14px, 1.65vw, 22px);
+  border: 1px solid rgba(255,255,255,.45);
+  border-radius: 24px;
+  background: rgba(244, 241, 245, .89);
+  box-shadow: 0 22px 70px rgba(0,0,0,.20);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+}
+body.pdh-home .pdh-main { gap: 16px; }
+body.pdh-home .panel, body.pdh-home .guide-shortcut {
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(77, 54, 84, .13);
+  border-radius: 17px;
+  box-shadow: var(--home-shadow);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+body.pdh-home .section-title, body.pdh-home .guide-section h2, body.pdh-home .info-grid h2 {color:#302538;}
+body.pdh-home .feature-icon { background: #eae3ec; color: #482952; }
+body.pdh-home .section-subtitle { color: #77707c; }
+body.pdh-home .live-dot { background: #398557; box-shadow: 0 0 0 4px rgba(95,170,115,.12); }
+
+/* FILA 1: precio y recomendación en el mismo plano visual. */
+body.pdh-home .market-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(285px, .82fr);
+  gap: 15px;
+  align-items: start;
+}
+body.pdh-home .market-overview > *, body.pdh-home .trade-grid > *, body.pdh-home .reference-grid > * { min-width:0; }
+body.pdh-home .hero-intro { grid-column:auto; grid-row:auto; padding: 5px 6px 0; }
+body.pdh-home .hero-intro__eyebrow {color:#684576; font-size:10px;}
+body.pdh-home .hero-intro h1 {color:#26192e; font-size: clamp(27px, 2.6vw, 38px);}
+body.pdh-home .hero-intro__lead {color:#615b66;max-width:57ch;}
+body.pdh-home .updated-chip {background:rgba(219,238,207,.50); color:#275c36;border:1px solid rgba(85,132,70,.16);}
+body.pdh-home .pdh-pills { gap: 11px; margin-top: 14px; }
+body.pdh-home .pdh-pill {
+  padding: 15px 13px; min-height: 113px;
+  border-radius: 15px; border: 1px solid rgba(48,100,70,.12);
+  background: linear-gradient(135deg,rgba(229,245,224,.92),rgba(248,250,245,.74));
+  box-shadow: none;
+}
+body.pdh-home .pdh-pill--sell {
+  border-color:rgba(157,90,105,.12);
+  background: linear-gradient(135deg,rgba(249,237,239,.93),rgba(251,249,249,.76));
+}
+body.pdh-home .pdh-pill__icon {background: rgba(37,127,69,.11);color:#247144;}
+body.pdh-home .pdh-pill--sell .pdh-pill__icon {background:rgba(174,63,84,.11);color:#aa4561;}
+body.pdh-home .pdh-pill__label {color:#3d3742;font-size:12px;}
+body.pdh-home .pdh-pill__value {color:var(--home-green);font-size:clamp(25px,2.1vw,33px);}
+body.pdh-home .pdh-pill--sell .pdh-pill__value {color:var(--home-red);}
+body.pdh-home .pdh-pill__meta,body.pdh-home .pdh-pill--sell .pdh-pill__meta {color:#746d78;font-size:11px;}
+
+body.pdh-home .spotlight-card { padding: 17px; }
+body.pdh-home .spotlight-card .section-head { margin-bottom:10px; }
+body.pdh-home .spotlight-card .section-title {font-size:18px;}
+body.pdh-home .spotlight-card .best-deal {
+  display:block;
+  margin:0;
+  padding: 12px;
+  border: 1px solid rgba(155,178,96,.30);
+  border-radius:13px;
+  background: linear-gradient(140deg,rgba(235,242,206,.64),rgba(253,253,246,.85));
+}
+body.pdh-home .spotlight-card .best-deal__head {margin:0 0 8px;}
+body.pdh-home .spotlight-card .best-deal__tag {background: rgba(226,237,180,.70);color:#3b5130;}
+body.pdh-home .spotlight-card .best-deal__row {
+  display:grid; grid-template-columns: 76px minmax(0,1fr);
+  align-items:center; gap:9px 11px;
+}
+body.pdh-home .spotlight-card .best-deal__row img {width:76px;height:34px;}
+body.pdh-home .spotlight-card .best-deal__details {min-width:0;}
+body.pdh-home .spotlight-card .best-deal__details strong {color:#34243a;font-size:15px;}
+body.pdh-home .spotlight-card .best-deal__details small {font-size:10px;color:#69676d;}
+body.pdh-home .spotlight-card .best-deal__rates {grid-column:1/-1;justify-content:space-between;gap:7px;border-top:1px solid rgba(100,84,93,.12);padding-top:10px;}
+body.pdh-home .spotlight-card .best-deal__rates span {display:flex;align-items:center;gap:6px;}
+body.pdh-home .spotlight-card .best-deal__rates b {font-size:13px;color:#39283f;}
+body.pdh-home .spotlight-card .best-deal .btn-primary {
+  grid-column:1/-1; width:100%;min-height:36px;background:#302038;color:#edf3b9;font-size:12px;
+  box-shadow:0 5px 12px rgba(52,28,60,.10);
+}
+body.pdh-home .spotlight-card .best-deal .btn-primary:disabled {background:#e4e0e2;color:#777079;box-shadow:none;}
+body.pdh-home .spotlight-card .best-deal__fine {display:block;font-size:10px;color:#766f75;line-height:1.5;margin:8px 0 0;}
+
+/* FILA 2: calculadora y tabla comienzan juntas, cada una con altura natural. */
+body.pdh-home .trade-grid {
+  display:grid;grid-template-columns:minmax(300px,.83fr) minmax(0,1.17fr);
+  gap:15px;align-items:start;
+}
+body.pdh-home .conversor-wrapper-modern {grid-column:auto;grid-row:auto;padding:18px;gap:12px;}
+body.pdh-home .conversor-wrapper-modern .section-head {margin-bottom:3px;}
+body.pdh-home .currency-tabs {background:#eae7ee;border-color:rgba(68,42,75,.12);}
+body.pdh-home .currency-tab {font-size:12px;color:#544659;}
+body.pdh-home .currency-tab.is-active,body.pdh-home .rate-tab.is-active {background:#33213b;color:#eff4bc;box-shadow:none;}
+body.pdh-home .radio-pill input {accent-color:#53345b;}
+body.pdh-home .radio-pill input:checked + span {color:#392241;}
+body.pdh-home .input-with-prefix {background:rgba(255,255,255,.9);border-color:#d9d0dc;}
+body.pdh-home .input-with-prefix:focus-within {border-color:#725c7d;box-shadow:0 0 0 3px rgba(91,61,99,.12);}
+body.pdh-home .quick-amt {color:#5b4d60;background:rgba(255,255,255,.7);border-color:#e0d7e2;}
+body.pdh-home .quick-amt:hover {color:#35203e;border-color:#b1a3b5;}
+body.pdh-home .converter-direction .swap {background:#eee8ef;border-color:#dcd1df;color:#462b4e;}
+body.pdh-home .resultado-modern {
+  border:1px solid rgba(87,144,85,.20);
+  background: linear-gradient(120deg,rgba(231,244,223,.85),rgba(247,249,238,.86));
+  min-height:90px;color:#214b31;
+}
+body.pdh-home .resultado-modern__value {color:#216d43;}
+body.pdh-home .resultado-modern__caption {color:#526a55;}
+body.pdh-home .fineprint {color:#74707a;}
+body.pdh-home .casas-cambio {grid-column:auto;grid-row:auto;padding:17px 15px;}
+body.pdh-home .casas-cambio .section-head {align-items:start;}
+body.pdh-home .casas-cambio .tabla-casas-wrapper {background:rgba(255,255,255,.72);border-color:#e0d9e5;}
+body.pdh-home .casas-cambio .tabla-casas {min-width:430px;}
+body.pdh-home .casas-cambio .tabla-casas thead {background:rgba(236,232,239,.7);}
+body.pdh-home .casas-cambio .tabla-casas tr.winner-row {background:rgba(223,243,210,.6);}
+body.pdh-home .casas-cambio .tabla-casas td.compra {color:#207048;}
+body.pdh-home .casas-cambio .tabla-casas td.venta {color:#ad465e;}
+body.pdh-home .rate-tabs {background:#efecf0;border-color:#e6e0e7;}
+body.pdh-home .table-actions .btn-link {background:#ece7ee;color:#3b2644;}
+body.pdh-home .table-actions .btn-link:hover {background:#e2d8e6;}
+body.pdh-home .comparison-hint {color:#6b6470;font-size:12px;}
+
+/* FILA 3: histórico principal y SUNAT compacto, sin estirar a la altura del gráfico. */
+body.pdh-home .reference-grid {
+  display:grid;grid-template-columns:minmax(0,1.42fr) minmax(255px,.75fr);
+  align-items:start;gap:15px;
+}
+body.pdh-home .reference-grid .trend-card {min-width:0;padding:16px 18px;}
+body.pdh-home .reference-grid .trend-chart {min-height:155px;max-height:180px;background:rgba(255,255,255,.45);}
+body.pdh-home .reference-grid #trend-svg {min-height:148px;max-height:175px;}
+body.pdh-home .trend-badge {background:#eee9f1;color:#503459;}
+body.pdh-home .trend-open {background:#ece7ef;color:#44294e;margin-top:2px;}
+body.pdh-home .trend-open:hover {background:#dfd7e4;}
+body.pdh-home .sunat-widget {display:flex;grid-row:auto;grid-column:auto;gap:13px;padding:18px;min-height:0;}
+body.pdh-home .sunat-widget .section-title {font-size:19px;color:#344e69;}
+body.pdh-home .sunat-grid {gap:9px;}
+body.pdh-home .sunat-item {background:#f4f2f5;border-color:rgba(65,44,73,.10);padding:14px 6px;}
+body.pdh-home .sunat-val {font-size:clamp(17px,1.6vw,22px);}
+body.pdh-home .sunat-note {margin:0;color:#77717d;font-size:12px;}
+body.pdh-home .sunat-widget__link {margin-top:0;background:#ece7ef;color:#42264c;border-color:#e4dce7;}
+body.pdh-home .sunat-widget__link:hover {background:#dfd6e3;}
+
+/* Contenido secundario: compacto, legible y consistente con el tema anterior. */
+body.pdh-home .ad-unit--horizontal,body.pdh-home .guide-shortcut,body.pdh-home .info-grid .panel {border-radius:14px;}
+body.pdh-home .guide-shortcut {background:rgba(255,255,255,.72);}
+body.pdh-home .guide-shortcut strong {color:#332639;}
+body.pdh-home .guide-shortcut small {color:#6b626e;}
+body.pdh-home .guide-shortcut__icon {background:#eef4dd;color:#3b7952;}
+body.pdh-home .guide-shortcut:nth-child(2) .guide-shortcut__icon {background:#eee7ef;color:#60456a;}
+body.pdh-home .guide-shortcut:nth-child(3) .guide-shortcut__icon {background:#e8f0ef;color:#43746d;}
+body.pdh-home .about-site p,body.pdh-home .faq details p {color:#625a66;}
+body.pdh-home .about-site a,body.pdh-home .guide-section .section-head > a {color:#573365;}
+body.pdh-home .faq details {background:rgba(252,251,252,.85);border-color:#e5dfe8;}
+body.pdh-home .faq summary {color:#3e3145;font-size:13px;}
+body.pdh-home .faq summary::after {color:#604169;}
+body.pdh-home .site-footer {background:rgba(243,239,245,.8);border-color:rgba(80,59,88,.12);margin-top:18px;}
+body.pdh-home .site-footer nav h3 {color:#35273d;}
+body.pdh-home .site-footer nav a,body.pdh-home .site-footer__bottom {color:#645c6c;}
+
+/* Publicidad: conservar 2+2+1 posiciones, sin mostrar cinco cajas vacías
+   a visitantes ni a revisores de AdSense. Clase ads-preview = revisión local. */
+body.pdh-home.ads-preview .shell {
+  grid-template-columns:clamp(108px,9vw,142px) minmax(0,1fr) clamp(108px,9vw,142px);
+  max-width:1580px;
+}
+body.pdh-home.ads-preview .center {max-width:none;}
+body.pdh-home.ads-preview .ads {display:flex;position:sticky;top:18px;gap:14px;}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled) {
+  min-height:245px;padding:18px 9px;
+  color:#4d4051;
+  background:linear-gradient(158deg,rgba(245,242,246,.89),rgba(225,220,227,.88));
+  border:1px solid rgba(244,241,244,.55);
+  border-radius:15px;
+  box-shadow:0 10px 26px rgba(0,0,0,.12);
+}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled):first-child {min-height:285px;}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled)::after {display:none;}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled) .ad-unit__label {color:#6f6573;font-size:10px;}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled) .ad-unit__art {background:rgba(64,40,70,.08);color:#75607c;font-size:27px;width:42px;height:42px;}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled) strong {color:#514555;font-size:12px;font-weight:720;}
+body.pdh-home.ads-preview .ad-unit:not(.is-filled) small {color:#847b86;font-size:10px;}
+body.pdh-home.ads-preview .ad-unit--horizontal:not(.is-filled) {min-height:74px;padding:17px 16px;flex-direction:row;background:rgba(238,235,240,.85);}
+body.pdh-home.ads-preview .ad-unit--horizontal:not(.is-filled):first-child {min-height:74px;}
+body.pdh-home.ads-preview .ad-unit--horizontal:not(.is-filled) .ad-unit__art {margin:0;width:32px;height:32px;}
+body.pdh-home.ads-preview .ad-unit--horizontal:not(.is-filled) strong {font-size:13px;max-width:none;}
+body.pdh-home.ads-preview .ad-unit--horizontal:not(.is-filled) small {margin:0;}
+
+/* Evitar un contenedor publicitario vacío en producción, incluso si se añade
+   una hoja previa que conserva columnas para banners. */
+body.pdh-home:not(.ads-preview) .shell {display:block;max-width:1180px;}
+body.pdh-home:not(.ads-preview) .center {width:100%;}
+
+/* Responsive: no se fuerza nunca la altura igual entre SUNAT y el gráfico. */
+@media (max-width:1240px) {
+  body.pdh-home.ads-preview .shell {display:block;max-width:1180px;}
+  body.pdh-home.ads-preview .ads {display:none!important;}
+  body.pdh-home .page {padding:17px 16px 30px;}
+}
+@media (max-width:980px) {
+  body.pdh-home .market-overview {grid-template-columns:minmax(0,1fr) minmax(265px,.8fr);}
+  body.pdh-home .trade-grid {grid-template-columns:minmax(285px,.84fr) minmax(0,1.16fr);}
+  body.pdh-home .casas-cambio .tabla-casas {min-width:380px;}
+  body.pdh-home .reference-grid {grid-template-columns:minmax(0,1.25fr) minmax(240px,.75fr);}
+}
+@media (max-width:790px) {
+  body.pdh-home .market-overview {grid-template-columns:minmax(0,1fr);}
+  body.pdh-home .spotlight-card .best-deal__row {grid-template-columns:76px minmax(0,1fr) auto;}
+  body.pdh-home .spotlight-card .best-deal__rates {grid-column:1/3;}
+  body.pdh-home .spotlight-card .best-deal .btn-primary {grid-column:3;grid-row:1/3;white-space:normal;width:128px;}
+  body.pdh-home .trade-grid {grid-template-columns:minmax(0,1fr);}
+  body.pdh-home .reference-grid {grid-template-columns:minmax(0,1fr) minmax(230px,.8fr);}
+  body.pdh-home .casas-cambio .tabla-casas {min-width:450px;}
+}
+@media (max-width:660px) {
+  body.pdh-home {background-attachment:scroll;}
+  body.pdh-home .page {padding:10px 8px 22px;}
+  body.pdh-home .center {border-radius:18px;padding:12px;}
+  body.pdh-home .pdh-main {gap:13px;}
+  body.pdh-home .market-overview,body.pdh-home .trade-grid,body.pdh-home .reference-grid {grid-template-columns: minmax(0,1fr);gap:12px;}
+  body.pdh-home .hero-intro {padding:4px 3px 0;}
+  body.pdh-home .hero-intro h1 {font-size:clamp(24px,6.5vw,34px);}
+  body.pdh-home .pdh-pill {min-height:102px;padding:12px 10px;}
+  body.pdh-home .pdh-pill__value {font-size:clamp(22px,6.4vw,31px);}
+  body.pdh-home .spotlight-card, body.pdh-home .sunat-widget {padding:15px;}
+  body.pdh-home .spotlight-card .best-deal__row {grid-template-columns:76px minmax(0,1fr);}
+  body.pdh-home .spotlight-card .best-deal__rates,body.pdh-home .spotlight-card .best-deal .btn-primary {grid-column:1/-1;grid-row:auto;width:100%;}
+  body.pdh-home .casas-cambio .tabla-casas {min-width:0;width:100%;}
+  body.pdh-home .reference-grid .trend-chart {min-height:155px;max-height:220px;}
+  body.pdh-home .reference-grid #trend-svg {min-height:155px;max-height:220px;}
+  body.pdh-home .sunat-widget {padding:16px;}
+  body.pdh-home .panel,body.pdh-home .guide-shortcut {-webkit-backdrop-filter:none;backdrop-filter:none;}
+  body.pdh-home .site-footer {margin-top:13px;}
+}
+@media (max-width:400px) {
+  body.pdh-home .site-brand__copy strong {font-size:15px;}
+  body.pdh-home .pdh-pill__value {font-size:22px;}
+  body.pdh-home .casas-cambio,body.pdh-home .conversor-wrapper-modern {padding:13px 10px;}
+  body.pdh-home .rate-tabs {gap:0;}
+  body.pdh-home .rate-tab {padding:6px 7px;}
+  body.pdh-home .spotlight-card .section-title {font-size:16px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  body.pdh-home .guide-shortcut:hover,body.pdh-home .converter-direction .swap:hover {transform:none;}
+}

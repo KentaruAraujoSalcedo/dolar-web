@@ -46,7 +46,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/IMG/icons/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/IMG/icons/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#2563EB">
+  <meta name="theme-color" content="#261a30">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -203,6 +203,7 @@
   </script>
 
   <link rel="stylesheet" href="/css/home-redesign.css">
+  <link rel="stylesheet" href="/css/home-polish.css">
 
   <!-- Conservamos el código existente de AdSense para no perder la verificación del sitio.
        Los contenedores visuales vacíos permanecen en pausa hasta configurar unidades reales. -->
@@ -211,7 +212,7 @@
 
 </head>
 
-<body class="pdh-home ads-preview">
+<body class="pdh-home">
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXR4KKWH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a class="skip-link" href="#main">Saltar al contenido</a>
 
@@ -239,78 +240,84 @@
       <aside class="ads left" aria-label="Espacios publicitarios de la izquierda">
         <div class="ad-unit" data-ad-slot="left-top" aria-label="Espacio publicitario lateral superior izquierdo">
           <span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div>
-          <strong>Tu anuncio aquí</strong><small>Espacio reservado</small>
+          <strong>Espacio para publicidad</strong><small>Sin anuncios activos</small>
         </div>
         <div class="ad-unit" data-ad-slot="left-bottom" aria-label="Espacio publicitario lateral inferior izquierdo">
           <span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div>
-          <strong>Tu anuncio aquí</strong><small>Espacio reservado</small>
+          <strong>Espacio para publicidad</strong><small>Sin anuncios activos</small>
         </div>
       </aside>
 
       <div class="center">
         <main id="main" class="pdh-main">
-          <section class="overview-grid" aria-label="Cotizaciones y calculadora del dólar">
+          <!-- Prioridad 1: precio del dólar y casa recomendada, una fila sin alturas forzadas. -->
+          <section class="market-overview" aria-label="Mejores cotizaciones disponibles">
             <div class="hero-intro">
-              <div class="hero-intro__eyebrow"><span class="live-dot" aria-hidden="true"></span> Comparador USD / PEN</div>
-              <h1>Precio del dólar hoy en Perú</h1>
-              <p class="hero-intro__lead">Compara tasas de compra y venta de casas de cambio online y calcula cuánto podrías recibir.</p>
-              <div class="updated-chip" id="actualizado-estado"><span class="live-dot" aria-hidden="true"></span><span>Última actualización: <time id="updatedAt" datetime=""><span id="fecha">consultando</span> <span id="hora"></span></time></span></div>
-              <p id="estado-datos" class="data-alert" role="status" hidden></p>
-
-              <div class="pdh-pills" aria-label="Mejores precios disponibles">
-                <div class="pdh-pill pdh-pill--buy"><span class="pdh-pill__icon" aria-hidden="true">↘</span><span class="pdh-pill__label">Mejor compra</span><strong class="pdh-pill__value" id="best-compra">—</strong><span class="pdh-pill__meta">La más alta · vendes USD</span></div>
-                <div class="pdh-pill pdh-pill--sell"><span class="pdh-pill__icon" aria-hidden="true">↗</span><span class="pdh-pill__label">Mejor venta</span><strong class="pdh-pill__value" id="best-venta">—</strong><span class="pdh-pill__meta">La más baja · compras USD</span></div>
-              </div>
-            </div>
-
-            <section class="panel conversor-wrapper-modern" aria-labelledby="t-conversor">
-              <header class="section-head"><span class="feature-icon" aria-hidden="true">▦</span><h2 id="t-conversor" class="section-title">Calculadora de cambio</h2></header>
-              <div class="currency-tabs" role="group" aria-label="Moneda que tienes">
-                <button type="button" class="currency-tab is-active" data-have="USD" aria-pressed="true">Tengo dólares (USD)</button>
-                <button type="button" class="currency-tab" data-have="PEN" aria-pressed="false">Tengo soles (PEN)</button>
-              </div>
-              <div class="modo-opciones" aria-label="Tipo de cálculo">
-                <label class="radio-pill"><input type="radio" name="modo" value="recibir" checked><span>¿Cuánto recibo?</span></label>
-                <label class="radio-pill"><input type="radio" name="modo" value="necesito"><span>¿Cuánto necesito?</span></label>
-              </div>
-              <div class="amount-head"><label id="label-monto" for="monto">Monto que tienes</label><div class="quick-row" aria-label="Montos rápidos"><button type="button" class="chip quick-amt" data-amt="100">$ 100</button><button type="button" class="chip quick-amt" data-amt="500">$ 500</button><button type="button" class="chip quick-amt" data-amt="1000">$ 1,000</button></div></div>
-              <div class="input-with-prefix"><span id="prefix-monto" class="prefix">$</span><input type="number" id="monto" inputmode="decimal" min="0" step="0.01" value="1000" placeholder="Ej: 1000" autocomplete="off"><span id="currency-input-label" class="currency-input-label">USD</span></div>
-              <div class="converter-direction"><span id="cur-have">Dólares (USD)</span><button type="button" class="swap" id="btn-swap" aria-label="Invertir monedas" title="Invertir monedas">⇄</button><span id="cur-want">Soles (PEN)</span></div>
-              <select id="moneda-tengo" class="sr-only" aria-label="Moneda que tienes"><option value="USD" selected>USD</option><option value="PEN">PEN</option></select>
-              <select id="moneda-quiero" class="sr-only" aria-label="Moneda que deseas"><option value="PEN" selected>PEN</option><option value="USD">USD</option></select>
-              <div id="resultado-modern" class="resultado-modern" aria-live="polite"><span id="resultado-kicker" class="resultado-modern__label">Recibirías aproximadamente</span><strong id="resultado-valor" class="resultado-modern__value">—</strong><span id="resultado-caption" class="resultado-modern__caption">Esperando tasas disponibles</span></div>
-              <p class="fineprint">Estimación informativa; confirma la tasa y las condiciones antes de operar.</p>
-            </section>
-
-            <section class="panel sunat-widget" aria-labelledby="t-sunat">
-              <header class="section-head sunat-widget__head"><img src="/IMG/casas/88x34/sunat.webp" alt="" width="50" height="22" loading="lazy"><div><h2 id="t-sunat" class="section-title">SUNAT</h2><span class="section-subtitle">Referencia oficial</span></div></header>
-              <div class="sunat-grid"><div class="sunat-item"><span class="sunat-lbl">Compra</span><strong class="sunat-val" id="sunat-compra">—</strong></div><div class="sunat-item"><span class="sunat-lbl">Venta</span><strong class="sunat-val" id="sunat-venta">—</strong></div></div>
-              <p class="sunat-note">Es un valor referencial, no una oferta de cambio.</p>
-              <a class="sunat-widget__link" href="/precio-dolar-sunat/">Entender la tasa SUNAT <span aria-hidden="true">↗</span></a>
+<div class="hero-intro__eyebrow"><span aria-hidden="true" class="live-dot"></span> Comparador USD / PEN</div>
+<h1>Precio del dólar hoy en Perú</h1>
+<p class="hero-intro__lead">Compara tasas de compra y venta de casas de cambio online y calcula cuánto podrías recibir.</p>
+<div class="updated-chip" id="actualizado-estado"><span aria-hidden="true" class="live-dot"></span><span>Última actualización: <time datetime="" id="updatedAt"><span id="fecha">consultando</span> <span id="hora"></span></time></span></div>
+<p class="data-alert" hidden="" id="estado-datos" role="status"></p>
+<div aria-label="Mejores precios disponibles" class="pdh-pills">
+<div class="pdh-pill pdh-pill--buy"><span aria-hidden="true" class="pdh-pill__icon">↘</span><span class="pdh-pill__label">Mejor compra</span><strong class="pdh-pill__value" id="best-compra">—</strong><span class="pdh-pill__meta">La más alta · vendes USD</span></div>
+<div class="pdh-pill pdh-pill--sell"><span aria-hidden="true" class="pdh-pill__icon">↗</span><span class="pdh-pill__label">Mejor venta</span><strong class="pdh-pill__value" id="best-venta">—</strong><span class="pdh-pill__meta">La más baja · compras USD</span></div>
+</div>
+</div>
+            <section class="panel spotlight-card" aria-labelledby="t-spotlight">
+              <header class="section-head"><span class="feature-icon" aria-hidden="true">★</span><div><h2 id="t-spotlight" class="section-title">Mejor casa de cambio</h2><span class="section-subtitle">Según tu moneda y operación</span></div></header>
+              <div aria-label="Casa destacada según la operación" class="best-deal"><div class="best-deal__head"><span class="best-deal__tag">Mejor tasa para tu operación</span></div><div class="best-deal__row"><img alt="" height="34" id="best-logo" loading="lazy" src="/IMG/ui/best-placeholder.webp" width="88"/><div class="best-deal__details"><strong id="best-name">—</strong><small id="best-note"></small></div><div class="best-deal__rates"><span>Compra <b id="best-buy">—</b></span><span>Venta <b id="best-sell">—</b></span></div><button class="btn-primary" disabled="" id="btn-ir-mejor" type="button">Ir a la casa ↗</button></div><p class="best-deal__fine">Los precios pueden cambiar antes de confirmar tu operación.</p></div>
             </section>
           </section>
 
-          <section class="insights-grid" aria-label="Comparación e historial">
-            <section class="panel casas-cambio" id="comparador" aria-labelledby="t-comparador">
-              <div class="section-head section-head--split"><div class="section-head__title"><span class="feature-icon" aria-hidden="true">▥</span><h2 id="t-comparador" class="section-title">Comparador de casas de cambio</h2></div><div class="rate-tabs" role="group" aria-label="Ordenar y comparar"><button type="button" class="rate-tab is-active" data-rate="compra" aria-pressed="true">Mejor compra</button><button type="button" class="rate-tab" data-rate="venta" aria-pressed="false">Mejor venta</button></div></div>
-              <p class="comparison-hint" id="comparison-hint">Si vendes dólares, una compra más alta te conviene.</p>
-              <div class="tabla-casas-wrapper tabla-casas-wrapper--wide"><table class="tabla-casas"><thead><tr><th>Casa</th><th class="compra">Compra (S/)</th><th class="venta">Venta (S/)</th><th id="columna-resultado">Resultado</th></tr></thead><tbody id="tablaCuerpo"><tr class="empty-row"><td colspan="4">Cargando cotizaciones…</td></tr></tbody></table></div>
-              <div class="table-actions"><button type="button" class="btn-link" id="btn-open-ranking" aria-controls="rankingModal">Ver más casas disponibles <span aria-hidden="true">⌄</span></button><span id="casas-cantidad" class="table-actions__count"></span></div>
-              <div class="best-deal" aria-label="Casa destacada según la operación"><div class="best-deal__head"><span class="best-deal__tag">Mejor tasa para tu operación</span></div><div class="best-deal__row"><img id="best-logo" src="/IMG/ui/best-placeholder.webp" alt="" width="88" height="34" loading="lazy"><div class="best-deal__details"><strong id="best-name">—</strong><small id="best-note"></small></div><div class="best-deal__rates"><span>Compra <b id="best-buy">—</b></span><span>Venta <b id="best-sell">—</b></span></div><button type="button" id="btn-ir-mejor" class="btn-primary" disabled>Ir a la casa ↗</button></div><p class="best-deal__fine">Los precios pueden cambiar antes de confirmar tu operación.</p></div>
-            </section>
+          <!-- Prioridad 2: calculadora y comparación a la misma altura de inicio, con altura natural. -->
+          <section class="trade-grid" aria-label="Calcula y compara casas de cambio">
+            <section aria-labelledby="t-conversor" class="panel conversor-wrapper-modern">
+<header class="section-head"><span aria-hidden="true" class="feature-icon">▦</span><h2 class="section-title" id="t-conversor">Calculadora de cambio</h2></header>
+<div aria-label="Moneda que tienes" class="currency-tabs" role="group">
+<button aria-pressed="true" class="currency-tab is-active" data-have="USD" type="button">Tengo dólares (USD)</button>
+<button aria-pressed="false" class="currency-tab" data-have="PEN" type="button">Tengo soles (PEN)</button>
+</div>
+<div aria-label="Tipo de cálculo" class="modo-opciones">
+<label class="radio-pill"><input checked="" name="modo" type="radio" value="recibir"/><span>¿Cuánto recibo?</span></label>
+<label class="radio-pill"><input name="modo" type="radio" value="necesito"/><span>¿Cuánto necesito?</span></label>
+</div>
+<div class="amount-head"><label for="monto" id="label-monto">Monto que tienes</label><div aria-label="Montos rápidos" class="quick-row"><button class="chip quick-amt" data-amt="100" type="button">$ 100</button><button class="chip quick-amt" data-amt="500" type="button">$ 500</button><button class="chip quick-amt" data-amt="1000" type="button">$ 1,000</button></div></div>
+<div class="input-with-prefix"><span class="prefix" id="prefix-monto">$</span><input autocomplete="off" id="monto" inputmode="decimal" min="0" placeholder="Ej: 1000" step="0.01" type="number" value="1000"/><span class="currency-input-label" id="currency-input-label">USD</span></div>
+<div class="converter-direction"><span id="cur-have">Dólares (USD)</span><button aria-label="Invertir monedas" class="swap" id="btn-swap" title="Invertir monedas" type="button">⇄</button><span id="cur-want">Soles (PEN)</span></div>
+<select aria-label="Moneda que tienes" class="sr-only" id="moneda-tengo"><option selected="" value="USD">USD</option><option value="PEN">PEN</option></select>
+<select aria-label="Moneda que deseas" class="sr-only" id="moneda-quiero"><option selected="" value="PEN">PEN</option><option value="USD">USD</option></select>
+<div aria-live="polite" class="resultado-modern" id="resultado-modern"><span class="resultado-modern__label" id="resultado-kicker">Recibirías aproximadamente</span><strong class="resultado-modern__value" id="resultado-valor">—</strong><span class="resultado-modern__caption" id="resultado-caption">Esperando tasas disponibles</span></div>
+<p class="fineprint">Estimación informativa; confirma la tasa y las condiciones antes de operar.</p>
+</section>
+            <section aria-labelledby="t-comparador" class="panel casas-cambio" id="comparador">
+<div class="section-head section-head--split"><div class="section-head__title"><span aria-hidden="true" class="feature-icon">▥</span><h2 class="section-title" id="t-comparador">Comparador de casas de cambio</h2></div><div aria-label="Ordenar y comparar" class="rate-tabs" role="group"><button aria-pressed="true" class="rate-tab is-active" data-rate="compra" type="button">Mejor compra</button><button aria-pressed="false" class="rate-tab" data-rate="venta" type="button">Mejor venta</button></div></div>
+<p class="comparison-hint" id="comparison-hint">Si vendes dólares, una compra más alta te conviene.</p>
+<div class="tabla-casas-wrapper tabla-casas-wrapper--wide"><table class="tabla-casas"><thead><tr><th>Casa</th><th class="compra">Compra (S/)</th><th class="venta">Venta (S/)</th><th id="columna-resultado">Resultado</th></tr></thead><tbody id="tablaCuerpo"><tr class="empty-row"><td colspan="4">Cargando cotizaciones…</td></tr></tbody></table></div>
+<div class="table-actions"><button aria-controls="rankingModal" class="btn-link" id="btn-open-ranking" type="button">Ver más casas disponibles <span aria-hidden="true">⌄</span></button><span class="table-actions__count" id="casas-cantidad"></span></div>
 
-            <section class="panel trend-card" id="tendencia" aria-labelledby="t-tendencia"><div class="section-head section-head--split"><div class="section-head__title"><span class="feature-icon" aria-hidden="true">↗</span><div><h2 id="t-tendencia" class="section-title">Evolución del dólar</h2><span class="section-subtitle">Histórico SUNAT · venta</span></div></div><span class="trend-badge">7 días</span></div><div class="trend-chart" id="trend-chart"><div id="trend-placeholder" class="trend-placeholder" role="status">Cargando historial oficial…</div><svg id="trend-svg" viewBox="0 0 480 240" role="img" aria-label="Gráfico de la tasa de venta SUNAT de los últimos siete días" preserveAspectRatio="xMidYMid meet" hidden></svg></div><p class="trend-foot" id="trend-foot">Las tasas históricas dependen de los datos que publique la fuente.</p><button type="button" id="btn-open-chart" class="trend-open" aria-controls="chartModal">Abrir gráfico detallado <span aria-hidden="true">↗</span></button></section>
+</section>
           </section>
 
-          <div class="ad-horizontal" aria-label="Espacio publicitario horizontal"><div class="ad-unit ad-unit--horizontal" data-ad-slot="content-horizontal"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Espacio publicitario horizontal</strong><small>Reservado para anuncios</small></div></div>
+          <!-- Prioridad 3: contexto oficial e histórico, debajo de la herramienta principal. -->
+          <section class="reference-grid" aria-label="Evolución del dólar y referencia SUNAT">
+            <section aria-labelledby="t-tendencia" class="panel trend-card" id="tendencia"><div class="section-head section-head--split"><div class="section-head__title"><span aria-hidden="true" class="feature-icon">↗</span><div><h2 class="section-title" id="t-tendencia">Evolución del dólar</h2><span class="section-subtitle">Histórico SUNAT · venta</span></div></div><span class="trend-badge">7 días</span></div><div class="trend-chart" id="trend-chart"><div class="trend-placeholder" id="trend-placeholder" role="status">Cargando historial oficial…</div><svg aria-label="Gráfico de la tasa de venta SUNAT de los últimos siete días" hidden="" id="trend-svg" preserveaspectratio="xMidYMid meet" role="img" viewbox="0 0 480 240"></svg></div><p class="trend-foot" id="trend-foot">Las tasas históricas dependen de los datos que publique la fuente.</p><button aria-controls="chartModal" class="trend-open" id="btn-open-chart" type="button">Abrir gráfico detallado <span aria-hidden="true">↗</span></button></section>
+            <section aria-labelledby="t-sunat" class="panel sunat-widget">
+<header class="section-head sunat-widget__head"><img alt="" height="22" loading="lazy" src="/IMG/casas/88x34/sunat.webp" width="50"/><div><h2 class="section-title" id="t-sunat">SUNAT</h2><span class="section-subtitle">Referencia oficial</span></div></header>
+<div class="sunat-grid"><div class="sunat-item"><span class="sunat-lbl">Compra</span><strong class="sunat-val" id="sunat-compra">—</strong></div><div class="sunat-item"><span class="sunat-lbl">Venta</span><strong class="sunat-val" id="sunat-venta">—</strong></div></div>
+<p class="sunat-note">Es un valor referencial, no una oferta de cambio.</p>
+<a class="sunat-widget__link" href="/precio-dolar-sunat/">Entender la tasa SUNAT <span aria-hidden="true">↗</span></a>
+</section>
+          </section>
+
+          <div class="ad-horizontal" aria-label="Espacio publicitario horizontal"><div class="ad-unit ad-unit--horizontal" data-ad-slot="content-horizontal"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Publicidad horizontal</strong><small>Reserva para futura monetización</small></div></div>
 
           <section class="guide-section" aria-labelledby="t-guias"><div class="section-head section-head--split"><h2 id="t-guias">Guías útiles</h2><a href="/guias/">Ver todas las guías →</a></div><div class="guide-shortcuts"><a class="guide-shortcut" href="/guias/compra-vs-venta/"><span class="guide-shortcut__icon">⇄</span><span><strong>Compra vs. venta</strong><small>Cómo identificar la tasa que te conviene.</small></span><span aria-hidden="true">›</span></a><a class="guide-shortcut" href="/guias/sunat-vs-mercado/"><span class="guide-shortcut__icon">◈</span><span><strong>SUNAT y el mercado</strong><small>Por qué los tipos de cambio son distintos.</small></span><span aria-hidden="true">›</span></a><a class="guide-shortcut" href="/guias/donde-cambiar-dolares-peru/"><span class="guide-shortcut__icon">◎</span><span><strong>Dónde cambiar dólares</strong><small>Compara alternativas con seguridad.</small></span><span aria-hidden="true">›</span></a></div></section>
 
-          <section class="info-grid"><div class="panel about-site"><div class="section-head"><span class="feature-icon" aria-hidden="true">◎</span><h2>¿Qué es PrecioDolarHoy.pe?</h2></div><p>Somos un comparador informativo del dólar en Perú. Reunimos cotizaciones de casas de cambio online y la referencia SUNAT para ayudarte a evaluar opciones.</p><a href="/about.html">Conoce nuestra metodología y limitaciones →</a></div><div class="panel faq"><div class="section-head"><span class="feature-icon" aria-hidden="true">?</span><h2>Preguntas frecuentes</h2></div><details><summary>¿Cuál es la diferencia entre compra y venta?</summary><p>Si vendes dólares, te interesa la tasa de compra más alta. Si compras dólares, te interesa la tasa de venta más baja.</p></details><details><summary>¿Cada cuánto se actualizan las tasas?</summary><p>Las cotizaciones se actualizan según la disponibilidad de las fuentes y la frecuencia de recopilación. En la portada se muestra la última fecha de actualización recibida.</p></details><details><summary>¿Puedo cambiar dinero en esta página?</summary><p>No. Precio Dólar Hoy es un comparador informativo. Las operaciones se realizan directamente con cada casa de cambio.</p></details></div></section>
+          <section class="info-grid"><div class="panel about-site"><div class="section-head"><span class="feature-icon" aria-hidden="true">◎</span><h2>Cómo comparamos el dólar</h2></div><p>Mostramos las tasas de compra y venta que publican las casas de cambio y las ordenamos según la operación elegida. SUNAT se presenta como una referencia aparte, no como una oferta. La hora de actualización y los precios pueden variar entre fuentes.</p><a href="/about.html">Conoce las fuentes, metodología y limitaciones →</a></div><div class="panel faq"><div class="section-head"><span class="feature-icon" aria-hidden="true">?</span><h2>Preguntas frecuentes</h2></div><details><summary>¿Cuál es la diferencia entre compra y venta?</summary><p>Si vendes dólares, te interesa la tasa de compra más alta. Si compras dólares, te interesa la tasa de venta más baja.</p></details><details><summary>¿Cada cuánto se actualizan las tasas?</summary><p>Las cotizaciones se actualizan según la disponibilidad de las fuentes y la frecuencia de recopilación. En la portada se muestra la última fecha de actualización recibida.</p></details><details><summary>¿Puedo cambiar dinero en esta página?</summary><p>No. Precio Dólar Hoy es un comparador informativo. Las operaciones se realizan directamente con cada casa de cambio.</p></details></div></section>
         </main>
         <footer class="site-footer" aria-label="Pie de página"><div class="site-footer__inner"><div class="site-footer__brand"><img src="/IMG/logo/logo-88.webp" alt="" width="50" height="50" loading="lazy"><strong>PrecioDólarHoy<span>.pe</span></strong><p>Compara el dólar con información clara.</p></div><nav aria-label="Guías"><h3>Guías</h3><a href="/guias/">Todas las guías</a><a href="/guias/compra-vs-venta/">Compra vs. venta</a><a href="/guias/sunat-vs-mercado/">SUNAT vs. mercado</a></nav><nav aria-label="Información"><h3>Información</h3><a href="/about.html">Sobre nosotros</a><a href="/contact.html">Contacto</a><a href="/precio-dolar-sunat/">Referencia SUNAT</a></nav><nav aria-label="Legal"><h3>Legal</h3><a href="/privacy.html">Privacidad</a><a href="/terms.html">Términos</a><a href="/cookies.html">Cookies</a></nav></div><div class="site-footer__bottom"><span>© <span id="year"></span> Precio Dólar Hoy</span><span>Información referencial. No realizamos operaciones de cambio.</span></div></footer>
       </div>
-      <aside class="ads right" aria-label="Espacios publicitarios de la derecha"><div class="ad-unit" data-ad-slot="right-top" aria-label="Espacio publicitario lateral superior derecho"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Tu anuncio aquí</strong><small>Espacio reservado</small></div><div class="ad-unit" data-ad-slot="right-bottom" aria-label="Espacio publicitario lateral inferior derecho"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Tu anuncio aquí</strong><small>Espacio reservado</small></div></aside>
+      <aside class="ads right" aria-label="Espacios publicitarios de la derecha"><div class="ad-unit" data-ad-slot="right-top" aria-label="Espacio publicitario lateral superior derecho"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Espacio para publicidad</strong><small>Sin anuncios activos</small></div><div class="ad-unit" data-ad-slot="right-bottom" aria-label="Espacio publicitario lateral inferior derecho"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Espacio para publicidad</strong><small>Sin anuncios activos</small></div></aside>
     </div>
   </div>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>

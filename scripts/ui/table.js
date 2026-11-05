@@ -36,7 +36,8 @@ export function renderTabla() {
   let filas = getCasasValidasLimpias({ fallbackToTasas: true });
   filas = sortCasas(filas, "auto");
 
-  // Muestra tres tasas principales; el modal ofrece las demás disponibles.
+  // Muestra hasta cinco tasas principales para que el comparador sea útil sin abrir el modal.
+  // El modal sigue ofreciendo el ranking completo.
   if (!filas.length) {
     const row = document.createElement('tr');
     row.className = 'empty-row';
@@ -46,7 +47,7 @@ export function renderTabla() {
     row.appendChild(cell);
     tbody.appendChild(row);
   }
-  const TOP_N = 3;
+  const TOP_N = 5;
   filas = filas.slice(0, TOP_N);
 
   // ============================

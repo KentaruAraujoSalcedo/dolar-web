@@ -171,23 +171,16 @@ export function renderBestDeal() {
 
   // Botón ir a la casa (con UTM)
   if (btnEl) {
-    const hasUrl = Boolean(winner.url);
-
-    btnEl.disabled = !hasUrl;
-    btnEl.textContent = hasUrl ? `Ir a ${winner.casa}` : 'Ir';
-
-    btnEl.onclick = hasUrl
-      ? () => {
-        const urlConUTM = withUTM(winner.url, {
-          source: 'preciodolarhoy',
-          medium: 'referral',
-          campaign: 'clickout',
-          content: 'best_deal',
-        });
-
-        window.open(urlConUTM, '_blank', 'noopener');
-      }
-      : null;
+    // Una URL inválida nunca debe abrirse, aunque la API incluya un valor no vacío.
+    const safeUrl = withUTM(winner.url, {
+      source: 'preciodolarhoy',
+      medium: 'referral',
+      campaign: 'clickout',
+      content: 'best_deal',
+    });
+    btnEl.disabled = !safeUrl;
+    btnEl.textContent = safeUrl ? `Ir a ${winner.casa}` : 'Enlace no disponible';
+    btnEl.onclick = safeUrl ? () => window.open(safeUrl, '_blank', 'noopener') : null;
   }
 
 }

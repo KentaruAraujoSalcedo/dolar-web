@@ -4,7 +4,7 @@
   <!-- HOME -->
   <url>
     <loc>https://preciodolarhoy.pe/</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -49,7 +49,7 @@
   <!-- NUEVAS GUIAS RECOMENDADAS -->
   <url>
     <loc>https://preciodolarhoy.pe/guias/donde-cambiar-dolares-peru/</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -92,7 +92,7 @@
   <!-- PAGINAS UTILES / LANDINGS -->
   <url>
     <loc>https://preciodolarhoy.pe/dolar-hoy-lima/</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -136,14 +136,14 @@
 
   <url>
     <loc>https://preciodolarhoy.pe/about.html</loc>
-    <lastmod>2026-02-03</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
     <loc>https://preciodolarhoy.pe/privacy.html</loc>
-    <lastmod>2026-02-03</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

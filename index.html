@@ -256,12 +256,14 @@
 }
 </script>
 
+  <!-- Conservamos el código existente de AdSense para no perder la verificación del sitio.
+       Los contenedores visuales vacíos permanecen en pausa hasta configurar unidades reales. -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6367086423665595"
     crossorigin="anonymous"></script>
 
 </head>
 
-<body>
+<body class="ads-paused">
 
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXR4KKWH" height="0" width="0"
@@ -307,6 +309,7 @@
 
             </div>
           </div>
+          <p id="estado-datos" class="fineprint" role="status" hidden></p>
         </header>
 
         <main id="main" class="pdh-main" aria-label="Contenido principal">
@@ -421,7 +424,7 @@
                 </div>
 
                 <button type="button" class="btn-link" id="btn-open-ranking" aria-controls="rankingModal">
-                  Ver ranking completo →
+                  Ver tasas disponibles →
                 </button>
               </header>
 
@@ -453,7 +456,7 @@
                       height="79" fetchpriority="high" loading="eager" decoding="async">
                   </div>
                   <div>
-                    <div class="best-deal__title" id="best-name">ZonaDólar</div>
+                    <div class="best-deal__title" id="best-name">—</div>
                     <div class="best-deal__note" id="best-note">—</div>
                   </div>
                 </div>
@@ -471,8 +474,8 @@
               </div>
 
               <div class="best-deal__cta">
-                <button type="button" class="btn-primary" id="btn-ir-mejor">
-                  Cambiar en ZonaDólar
+                <button type="button" class="btn-primary" id="btn-ir-mejor" disabled>
+                  Consultar casa de cambio
                 </button>
                 <p class="best-deal__fine"></p>
               </div>
@@ -514,7 +517,7 @@
 
             <!-- AD FINAL (mobile/tablet) -->
             <section class="panel ad-final" aria-label="Publicidad">
-              <div class="ad-slot ad-responsive" data-ad-slot="incontent-responsive" aria-label="Publicidad"></div>
+              <div class="ad-slot ad-responsive" data-ad-slot="final-responsive" aria-label="Publicidad"></div>
             </section>
 
           </section>
@@ -535,6 +538,28 @@
               sobre el tipo de cambio USD/PEN, para que puedas comparar opciones antes de
               comprar o vender dólares.
             </p>
+          </section>
+
+          <!-- METODOLOGÍA / TRANSPARENCIA -->
+          <section class="panel static-page" id="metodologia" aria-labelledby="metodologia-titulo">
+            <header class="section-head">
+              <h2 class="section-title" id="metodologia-titulo">Cómo se comparan los tipos de cambio</h2>
+            </header>
+            <div class="static-content">
+              <p>El comparador muestra las tasas de compra y venta recibidas de las fuentes de casas de cambio online.
+                La pantalla inicial destaca hasta tres opciones y el ranking presenta los registros válidos
+                incluidos en los datos disponibles; esto <strong>no equivale a todas las casas de cambio del Perú</strong>.</p>
+              <p>Para <strong>vender dólares</strong> y recibir soles, te interesa la tasa de <strong>compra más alta</strong>.
+                Para <strong>comprar dólares</strong> con soles, te interesa la tasa de <strong>venta más baja</strong>.
+                Los resultados del conversor son orientativos y no descuentan comisiones, límites, promociones ni
+                posibles diferencias al confirmar una operación.</p>
+              <p>La hora indicada arriba corresponde a la actualización reportada por el sistema. Una cotización
+                puede cambiar antes de que completes la operación. Comprueba siempre el precio final, las condiciones
+                y la identidad de la entidad directamente en su web oficial.</p>
+              <p>Precio Dólar Hoy es independiente y no realiza cambios de divisas.
+                <a href="/about.html">Consulta nuestra metodología y limitaciones</a> o
+                <a href="/guias/como-comparar/">aprende a comparar tasas paso a paso</a>.</p>
+            </div>
           </section>
 
           <!-- CÓMO FUNCIONA ESTA PAGINA -->
@@ -1175,50 +1200,12 @@
               <a href="/terms.html">Términos</a>
             </nav>
 
-            <!-- Col 4: Síguenos + App -->
-            <section class="pdh-footer__col" aria-label="Síguenos">
-              <h3 class="pdh-footer__title">Síguenos</h3>
-
-              <div class="pdh-footer__social" aria-label="Redes sociales">
-                <!-- Reemplaza # por tus links -->
-                <a class="pdh-footer__icon" href="#" aria-label="Facebook" rel="noopener" target="_blank">
-                  <!-- icon -->
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor"
-                      d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H16.8V5a23 23 0 0 0-2.5-.1c-2.5 0-4.3 1.5-4.3 4.4V11H7.5v3H10v8h3.5Z" />
-                  </svg>
-                </a>
-
-                <a class="pdh-footer__icon" href="#" aria-label="Instagram" rel="noopener" target="_blank">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor"
-                      d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.5 5.5 0 0 1 12 8.5Zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5ZM18 6.8a1.2 1.2 0 1 1-1.2 1.2A1.2 1.2 0 0 1 18 6.8Z" />
-                  </svg>
-                </a>
-
-                <a class="pdh-footer__icon" href="#" aria-label="TikTok" rel="noopener" target="_blank">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor"
-                      d="M14 3v10.2a3.6 3.6 0 1 1-3-3.5V7.1a7 7 0 1 0 7 7V8.3a5.7 5.7 0 0 1-4-5.3H14Z" />
-                  </svg>
-                </a>
-
-                <a class="pdh-footer__icon" href="/generador/index.html" aria-label="YouTube" rel="noopener" target="_blank">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor"
-                      d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.7 4.6 12 4.6 12 4.6s-5.7 0-7.5.5A3 3 0 0 0 2.4 7.2 31 31 0 0 0 2 12a31 31 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.8.5 7.5.5 7.5.5s5.7 0 7.5-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 22 12a31 31 0 0 0-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z" />
-                  </svg>
-                </a>
-              </div>
-
-              <!-- Botón Play Store (opcional) -->
-              <a class="pdh-footer__store" href="#" rel="noopener" target="_blank"
-                aria-label="Descargar en Google Play">
-                <span class="pdh-footer__storeTop">Disponible en</span>
-                <span class="pdh-footer__storeBottom">Google Play</span>
-              </a>
-            </section>
-
+            <!-- Col 4: contacto verificable en lugar de redes/app inexistentes -->
+            <nav class="pdh-footer__col" aria-label="Contacto y transparencia">
+              <h3 class="pdh-footer__title">Transparencia</h3>
+              <p><a href="/about.html">Quiénes somos y metodología</a></p>
+              <p><a href="/contact.html">Contacto</a></p>
+            </nav>
           </div>
 
           <!-- Barra inferior -->
@@ -1312,7 +1299,7 @@
   </div>
 
   <!-- Cookies banner-->
-  <div id="cookie-banner">
+  <div id="cookie-banner" role="region" aria-label="Preferencias de cookies">
     Usamos cookies para mejorar tu experiencia.
     <a href="/cookies.html">Ver cookies</a>
     <button onclick="acceptCookies()">Aceptar</button>

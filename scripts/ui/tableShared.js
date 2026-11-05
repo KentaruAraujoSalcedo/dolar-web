@@ -13,6 +13,13 @@ import { moneyFmt } from "./format.js";
 import { getCasaLogoSrc } from "./logos.js";
 import { withUTM } from "./utm.js";
 
+// Los textos de las fuentes externas deben escaparse antes de insertarse con innerHTML.
+export function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[character]));
+}
+
 // Cache por referencia del array base (state.validas o state.tasas)
 const _cleanCasasCache = new WeakMap();
 
@@ -96,34 +103,30 @@ export function applyTableRateModeByConverter(tableEl) {
  */
 export function buildCasaCellHTML(c, { content = "tabla", basePath = "" } = {}) {
   const casaLabel = String(c?.casa || "").trim() || "Casa de cambio";
-
-  const rawLogo = getCasaLogoSrc(c?.casa);
+  const safeLabel = escapeHTML(casaLabel);
+  const rawLogo = getCasaLogoSrc(c?.casa); // Catálogo local: no usar logos arbitrarios de la API.
   const logoSrc = rawLogo ? (basePath + rawLogo.replace(/^\//, "")) : null;
-
   const urlConUTM = c?.url
     ? withUTM(c.url, {
-      source: "preciodolarhoy",
-      medium: "referral",
-      campaign: "clickout",
-      content,
+      source: "preciodolarhoy", medium: "referral", campaign: "clickout", content
     })
     : "";
 
-  return `
-    <td class="casa">
-      <a class="casa-wrap" href="${urlConUTM}" target="_blank" rel="noopener sponsored" title="${casaLabel}">
-        <span class="casa-logo ${logoSrc ? "" : "is-missing"}" aria-hidden="${logoSrc ? "false" : "true"}">
-          ${logoSrc
-      ? `<img src="${logoSrc}" alt="${casaLabel}" loading="lazy" decoding="async" width="88" height="34">`
-      : `<span class="logo-fallback" aria-hidden="true">${casaLabel.slice(0, 2).toUpperCase()}</span>`
-    }
-        </span>
+  const contentHTML = `
+    <span class="casa-logo ${logoSrc ? "" : "is-missing"}" aria-hidden="${logoSrc ? "false" : "true"}">
+      ${logoSrc
+        ? `<img src="${escapeHTML(logoSrc)}" alt="${safeLabel}" loading="lazy" decoding="async" width="88" height="34">`
+        : `<span class="logo-fallback" aria-hidden="true">${escapeHTML(casaLabel.slice(0, 2).toUpperCase())}</span>`}
+    </span>
+    <span class="casa-name sr-only">${safeLabel}</span>
+    <span class="casa-chevron" aria-hidden="true">▾</span>`;
 
-        <span class="casa-name sr-only">${casaLabel}</span>
-        <span class="casa-chevron" aria-hidden="true">▾</span>
-      </a>
-    </td>
-  `;
+  // Un registro sin enlace válido no debe convertirse en un <a href="">.
+  const wrap = urlConUTM
+    ? `<a class="casa-wrap" href="${escapeHTML(urlConUTM)}" target="_blank" rel="noopener noreferrer" title="${safeLabel}">${contentHTML}</a>`
+    : `<span class="casa-wrap" title="${safeLabel}">${contentHTML}</span>`;
+
+  return `<td class="casa">${wrap}</td>`;
 }
 
 /**

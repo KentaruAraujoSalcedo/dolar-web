@@ -13,7 +13,10 @@ export function renderSunat() {
   const v = document.getElementById('sunat-venta');
   if (!c || !v) return;
 
-  if (isReadySunat()) {
+  const ready = isReadySunat();
+  c.dataset.hasRate = String(ready);
+  v.dataset.hasRate = String(ready);
+  if (ready) {
     c.textContent = rateFmt(state.sunat.compra);
     v.textContent = rateFmt(state.sunat.venta);
   } else {

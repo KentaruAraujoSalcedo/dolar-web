@@ -1,16 +1,6 @@
-// ==============================
-// File: scripts/ui/haveWant.js
-// ==============================
-
+// Dirección real del cambio. El modo "necesito" modifica qué monto introduce
+// el usuario, no invierte la moneda que tiene ni la que desea obtener.
 import { state } from '../state.js';
-
-// En recibir: (tengo -> quiero)
-// En necesito: (quiero -> tengo)  ← se invierte
 export function getHaveWant() {
-  const { modo, monedaTengo, monedaQuiero } = state;
-
-  const have = (modo === 'recibir') ? monedaTengo : monedaQuiero;
-  const want = (modo === 'recibir') ? monedaQuiero : monedaTengo;
-
-  return { have, want };
+  return { have: state.monedaTengo, want: state.monedaQuiero };
 }

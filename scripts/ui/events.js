@@ -1,103 +1,82 @@
-// ==============================
-// File: scripts/ui/events.js
-// ==============================
-
-import { setState } from '../state.js';
+import { state, setState } from '../state.js';
 import { $, $$ } from './dom.js';
-import { updateLabels, ensureOppositeSelect, syncAdornmentAndChips } from './labels.js';
+import { ensureOppositeSelect, syncAdornmentAndChips } from './labels.js';
 
 export function bindEvents({ onChange }) {
   const montoEl = $('#monto');
-  const selTengo = $('#moneda-tengo');   // ahora está oculto (sr-only), pero sigue existiendo
-  const selQuiero = $('#moneda-quiero'); // ahora está oculto (sr-only), pero sigue existiendo
-
-  // Pills visibles (UI PRO)
+  const selTengo = $('#moneda-tengo');
+  const selQuiero = $('#moneda-quiero');
   const curHave = $('#cur-have');
   const curWant = $('#cur-want');
 
-  // Helper: setea monto SIEMPRE en número
   function setMontoFromInput() {
     if (!montoEl) return;
     const raw = String(montoEl.value ?? '').trim().replace(',', '.');
-    const v = parseFloat(raw);
-    setState({ monto: Number.isFinite(v) ? v : 0 });
+    const val = raw === '' ? NaN : Number(raw);
+    setState({ monto: Number.isFinite(val) && val > 0 ? val : NaN });
   }
-
-  // Helper: pinta la línea PRO (USD ⇄ PEN)
   function paintCurrencyLine() {
-    if (!curHave || !curWant || !selTengo || !selQuiero) return;
-
-    curHave.textContent = selTengo.value === 'USD' ? 'Dólares (USD)' : 'Soles (PEN)';
-    curWant.textContent = selQuiero.value === 'USD' ? 'Dólares (USD)' : 'Soles (PEN)';
-  }
-
-  // Radios (modo)
-  $$('input[name="modo"]').forEach(r => {
-    r.addEventListener('change', () => {
-      setState({ modo: r.value });
-      updateLabels();
-      syncAdornmentAndChips();
-      onChange({ type: 'mode' });
-    });
-  });
-
-  // ✅ Monto (sin debounce, inmediato)
-  montoEl?.addEventListener('input', () => {
-    setMontoFromInput();
-    syncAdornmentAndChips();
-    onChange({ type: 'amount' });
-  });
-
-  // ✅ Chips rápidos (dispara input para que todo siga el mismo flujo)
-  $$('.quick-amt').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const v = parseFloat(btn.dataset.amt);
-      if (!Number.isFinite(v) || !montoEl) return;
-
-      montoEl.value = String(v);
-      montoEl.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-  });
-
-  // ✅ Botón invertir (control principal de monedas en UI PRO)
-  const btnSwap = $('#btn-swap');
-  btnSwap?.addEventListener('click', () => {
     if (!selTengo || !selQuiero) return;
-
-    // 1️⃣ Invertimos "tengo" y forzamos "quiero" a ser el opuesto
-    selTengo.value = selTengo.value === 'USD' ? 'PEN' : 'USD';
-    ensureOppositeSelect(selTengo, selQuiero);
-
-    setState({
-      monedaTengo: selTengo.value,
-      monedaQuiero: selQuiero.value
+    if (curHave) curHave.textContent = selTengo.value === 'USD' ? 'Dólares (USD)' : 'Soles (PEN)';
+    if (curWant) curWant.textContent = selQuiero.value === 'USD' ? 'Dólares (USD)' : 'Soles (PEN)';
+    $$('.currency-tab').forEach(btn => {
+      const active = btn.dataset.have === selTengo.value;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', String(active));
     });
-
-    // 2️⃣ ✨ Animación PRO del swap (micro–interacción)
-    const line = document.querySelector('.currency-line');
-    line?.classList.add('is-swap');
-    setTimeout(() => line?.classList.remove('is-swap'), 220);
-
-    // 3️⃣ Sincronizar UI y cálculos
-    updateLabels();
+    // La compra relevante corresponde a USD -> PEN; la venta a PEN -> USD.
+    $$('.rate-tab').forEach(btn => {
+      const active = btn.dataset.rate === (selTengo.value === 'USD' ? 'compra' : 'venta');
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+    const hint = document.getElementById('comparison-hint');
+    if (hint) hint.textContent = selTengo.value === 'USD'
+      ? 'Si vendes dólares, una compra más alta te conviene.'
+      : 'Si compras dólares, una venta más baja te conviene.';
+  }
+  function updateInputChips() {
     syncAdornmentAndChips();
+    const currency = state.modo === 'necesito' ? state.monedaQuiero : state.monedaTengo;
+    const symbol = currency === 'USD' ? '$' : 'S/';
+    $$('.quick-amt').forEach(btn => {
+      const num = Number(btn.dataset.amt);
+      if (Number.isFinite(num)) btn.textContent = `${symbol} ${num.toLocaleString('es-PE')}`;
+    });
+  }
+  function changeDirection(have) {
+    if (!selTengo || !selQuiero || !['USD','PEN'].includes(have)) return;
+    selTengo.value = have;
+    ensureOppositeSelect(selTengo, selQuiero);
+    setState({ monedaTengo: selTengo.value, monedaQuiero: selQuiero.value });
     setMontoFromInput();
-
+    updateInputChips();
     paintCurrencyLine();
     onChange({ type: 'currency' });
-  });
-
-
-  // Pintado inicial (por si state inicial cambió)
-  paintCurrencyLine();
-
-  // Botón calcular (si existe)
-  const btnCalc = $('#btn-calcular');
-  btnCalc?.addEventListener('click', () => {
+  }
+  $$('input[name="modo"]').forEach(r => r.addEventListener('change', () => {
+    if (!r.checked) return;
+    setState({ modo: r.value });
+    updateInputChips();
+    onChange({ type: 'mode' });
+  }));
+  montoEl?.addEventListener('input', () => {
     setMontoFromInput();
-    syncAdornmentAndChips();
     onChange({ type: 'amount' });
   });
-
-
+  $$('.quick-amt').forEach(btn => btn.addEventListener('click', () => {
+    const amount = Number(btn.dataset.amt);
+    if (!montoEl || !Number.isFinite(amount)) return;
+    montoEl.value = String(amount);
+    montoEl.dispatchEvent(new Event('input', { bubbles: true }));
+  }));
+  $('#btn-swap')?.addEventListener('click', () => {
+    if (!selTengo) return;
+    changeDirection(selTengo.value === 'USD' ? 'PEN' : 'USD');
+  });
+  $$('.currency-tab').forEach(btn => btn.addEventListener('click', () => changeDirection(btn.dataset.have)));
+  $$('.rate-tab').forEach(btn => btn.addEventListener('click', () => changeDirection(btn.dataset.rate === 'compra' ? 'USD' : 'PEN')));
+  $('#btn-calcular')?.addEventListener('click', () => { setMontoFromInput(); onChange({type:'amount'}); });
+  updateInputChips();
+  paintCurrencyLine();
 }

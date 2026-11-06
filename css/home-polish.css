@@ -529,3 +529,41 @@ body.pdh-home .trend-foot,body.pdh-home .sunat-note {font-size:12px;}
    formaban una franja amarilla aunque el nuevo fondo fuese transparente. */
 body.pdh-home .spotlight-card .best-deal::before,
 body.pdh-home .spotlight-card .best-deal::after {content:none!important;display:none!important;animation:none!important;}
+
+/* ------------------------------------------------------------
+   CABECERA COMPACTA · evitar repetición visual del nombre de marca
+   El título descriptivo sigue siendo el H1 para usuarios y SEO.
+   Conservamos los IDs de la hora de actualización y de alertas.
+   ------------------------------------------------------------ */
+body.pdh-home .market-overview {gap:11px;}
+body.pdh-home .hero-intro {padding:1px 3px 0;}
+body.pdh-home .hero-intro__topline {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:9px 16px;
+  min-width:0;
+}
+body.pdh-home .hero-intro__topline h1 {
+  margin:0;
+  max-width:none;
+  font-size:clamp(24px,2.35vw,31px);
+  line-height:1.14;
+  letter-spacing:-.044em;
+}
+body.pdh-home .hero-intro__topline .updated-chip {
+  margin:0;
+  max-width:100%;
+  flex-shrink:0;
+  font-size:11px;
+  padding:6px 10px;
+  line-height:1.35;
+}
+body.pdh-home .hero-intro .data-alert {margin:8px 0 0;}
+@media (max-width:660px) {
+  body.pdh-home .hero-intro {padding:1px 2px 0;}
+  body.pdh-home .hero-intro__topline {align-items:flex-start;flex-direction:column;gap:7px;}
+  body.pdh-home .hero-intro__topline h1 {font-size:clamp(23px,6.4vw,29px);}
+  body.pdh-home .hero-intro__topline .updated-chip {font-size:10px;padding:5px 9px;}
+}

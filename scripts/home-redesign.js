@@ -31,8 +31,9 @@ function renderTrend(days) {
     .slice(-7);
 
   if (data.length < 2) {
+    placeholder.hidden = false;
     placeholder.textContent = 'Aún no hay suficientes datos históricos para mostrar una tendencia.';
-    svg.hidden = true;
+    svg.setAttribute('hidden', '');
     if (foot) foot.textContent = 'El histórico se muestra únicamente cuando la fuente devuelve datos reales.';
     return;
   }
@@ -74,7 +75,10 @@ function renderTrend(days) {
   svg.append(svgEl('rect',{x:Math.min(410,px-66),y:Math.max(3,py-30),width:64,height:23,rx:8,fill:'#e3f9e9',stroke:'#c5eccf'}));
   svg.append(svgEl('text',{x:Math.min(410,px-66)+32,y:Math.max(3,py-30)+16,'text-anchor':'middle',fill:'#087b44','font-size':'12','font-weight':'800'},`S/ ${last.venta.toFixed(3)}`));
   svg.setAttribute('aria-label',`Evolución de venta SUNAT de ${data.length} días, desde ${data[0].venta.toFixed(3)} hasta ${last.venta.toFixed(3)} soles por dólar`);
-  svg.hidden=false; placeholder.hidden=true;
+  // En SVG, `hidden = false` puede NO retirar el atributo `hidden` del DOM.
+  // Retirarlo explícitamente evita que la regla CSS `[hidden]` oculte el gráfico.
+  svg.removeAttribute('hidden');
+  placeholder.hidden = true;
   if (foot) foot.textContent = `Último dato del gráfico: ${last.date.toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Lima'})}. Referencia SUNAT, no tasa de operación.`;
 }
 

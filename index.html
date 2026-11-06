@@ -205,6 +205,7 @@
   <link rel="stylesheet" href="/css/home-polish.css">
   <link rel="stylesheet" href="/css/home-layout-optimized.css">
   <link rel="stylesheet" href="/css/home-reference-unified.css">
+  <link rel="stylesheet" href="/css/home-final-polish.css">
 
   <!-- Conservamos el código existente de AdSense para no perder la verificación del sitio.
        Los contenedores visuales vacíos permanecen en pausa hasta configurar unidades reales. -->
@@ -338,37 +339,39 @@
               <p class="best-deal__fine">Compara y confirma la tasa directamente con la casa de cambio.</p>
             </section>
 
-            <section class="panel sunat-trend-card" id="tendencia" aria-labelledby="t-tendencia">
+            <section class="panel sunat-trend-card sunat-trend-card--stacked" id="tendencia" aria-labelledby="t-tendencia">
               <header class="sunat-trend-card__head">
                 <div class="sunat-trend-card__title">
                   <img alt="" height="25" loading="lazy" src="/IMG/casas/88x34/sunat.webp" width="56" />
                   <div>
                     <h2 class="section-title" id="t-tendencia">SUNAT y evolución del dólar</h2>
-                    <p class="section-subtitle">Tipo de cambio oficial · histórico de venta</p>
+                    <p class="section-subtitle">Referencia oficial · histórico de venta</p>
                   </div>
                 </div>
-                <span class="trend-badge" aria-label="Período del gráfico: últimos 7 días">7 días</span>
+                <div class="sunat-trend-card__rates" role="group" aria-label="Tipos de cambio SUNAT de referencia">
+                  <div class="sunat-trend-card__rate">
+                    <span>Compra</span><strong id="sunat-compra">—</strong>
+                  </div>
+                  <div class="sunat-trend-card__rate">
+                    <span>Venta</span><strong id="sunat-venta">—</strong>
+                  </div>
+                </div>
               </header>
               <div class="sunat-trend-card__body">
-                <div class="sunat-trend-card__rates" role="group" aria-label="Tipos de cambio SUNAT, referencia oficial">
-                <div class="sunat-trend-card__rate">
-                  <span>Compra</span><strong id="sunat-compra">—</strong>
+                <div class="sunat-trend-card__chart-heading">
+                  <span>Evolución de la venta SUNAT</span>
+                  <span class="trend-badge" aria-label="Período del gráfico: últimos 7 datos disponibles">Últimos 7 datos</span>
                 </div>
-                <div class="sunat-trend-card__rate">
-                  <span>Venta</span><strong id="sunat-venta">—</strong>
-                </div>
-                <p class="sunat-trend-card__disclaimer">Referencia oficial, no una oferta comercial.</p>
-              </div>
                 <div class="trend-chart" id="trend-chart">
                   <div class="trend-placeholder" id="trend-placeholder" role="status">Cargando historial oficial…</div>
-                  <svg aria-label="Gráfico de la tasa de venta SUNAT de los últimos siete días" hidden id="trend-svg" preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 480 240"></svg>
+                  <svg aria-label="Gráfico histórico de venta SUNAT" hidden id="trend-svg" preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 480 240"></svg>
                 </div>
               </div>
               <div class="sunat-trend-card__foot">
-                <p class="trend-foot" id="trend-foot">Las tasas históricas dependen de los datos que publique la fuente.</p>
+                <p class="trend-foot" id="trend-foot">Las tasas históricas dependen de los datos de la fuente.</p>
                 <div class="sunat-trend-card__links">
+                  <span class="sunat-trend-card__disclaimer">SUNAT es una referencia; no una oferta comercial.</span>
                   <a href="/precio-dolar-sunat/" class="sunat-trend-card__source">Sobre SUNAT <span aria-hidden="true">↗</span></a>
-                  <button aria-controls="chartModal" class="trend-open" id="btn-open-chart" type="button">Ver gráfico detallado <span aria-hidden="true">↗</span></button>
                 </div>
               </div>
             </section>

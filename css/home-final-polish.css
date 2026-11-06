@@ -1,0 +1,171 @@
+/* ===========================================================================
+   PrecioDolarHoy.pe · Afinación de la portada, noviembre de 2026
+   Solo modifica las tarjetas de cotización y la tercera fila.
+   La calculadora, el comparador, las páginas internas y las reservas publicitarias
+   mantienen sus reglas y funcionalidades.
+   =========================================================================== */
+
+/* Cotizaciones principales: valores destacados sin gastar tanta altura. */
+body.pdh-home .market-overview {align-items:center;gap:13px;}
+body.pdh-home .market-cards > .pdh-pills {height:auto;align-items:stretch;gap:11px;}
+body.pdh-home .market-cards .pdh-pill {
+  min-height:96px;height:auto;padding:10px 15px;
+  gap:4px;border-radius:14px;justify-content:center;
+}
+body.pdh-home .market-cards .pdh-pill__heading {gap:7px;}
+body.pdh-home .market-cards .pdh-pill__icon {
+  width:25px;height:25px;font-size:14px;border-radius:8px;
+}
+body.pdh-home .market-cards .pdh-pill__label {font-size:12px;line-height:1.2;}
+body.pdh-home .market-cards .pdh-pill__value {
+  font-size:clamp(25px,2.1vw,33px);line-height:1.04;letter-spacing:-.042em;
+}
+body.pdh-home .market-cards .pdh-pill__meta {
+  font-size:10.5px;line-height:1.25;margin:0;
+}
+
+/* Tarjeta recomendada: logotipo central, datos sin huecos y CTA presente. */
+body.pdh-home .reference-grid--unified .spotlight-card--featured {
+  justify-content:center;gap:11px;padding:17px 19px;
+  background:linear-gradient(150deg,rgba(243,249,232,.98),rgba(255,253,249,.96) 58%,rgba(247,244,248,.94));
+}
+body.pdh-home .reference-grid--unified .spotlight-card__head {justify-content:center;gap:8px;}
+body.pdh-home .reference-grid--unified .spotlight-card__heading {gap:1px;}
+body.pdh-home .reference-grid--unified .spotlight-card__eyebrow {font-size:10px;}
+body.pdh-home .reference-grid--unified .spotlight-card .section-title {font-size:17px;}
+body.pdh-home .reference-grid--unified .best-deal {
+  flex:0 1 auto;justify-content:center;align-items:stretch;gap:10px;
+}
+body.pdh-home .reference-grid--unified .best-deal__identity {
+  min-height:76px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;flex-wrap:nowrap;gap:6px;text-align:center;
+}
+body.pdh-home .reference-grid--unified .spotlight-card .best-deal__identity img {
+  display:block;width:180px;height:52px;max-width:85%;flex:none;
+  object-fit:contain;object-position:center center;
+}
+body.pdh-home .reference-grid--unified .best-deal__identity img[hidden] {display:none!important;}
+body.pdh-home .reference-grid--unified .best-deal__identity .best-deal__name-fallback {
+  text-align:center;font-size:18px;line-height:1.25;
+}
+body.pdh-home .reference-grid--unified .best-deal__operation {
+  margin:0;max-width:100%;text-align:center;padding:5px 10px;
+  background:rgba(229,237,215,.8);color:#44563b;border-color:rgba(87,111,71,.12);
+  font-size:10.5px;
+}
+body.pdh-home .reference-grid--unified .best-deal__selected {
+  padding:10px 13px;gap:10px;background:rgba(255,255,255,.78);
+}
+body.pdh-home .reference-grid--unified .best-deal__selected strong {
+  font-size:clamp(23px,2.1vw,29px);color:#29533b;
+}
+body.pdh-home .reference-grid--unified .best-deal__note {
+  min-height:0;text-align:center;font-size:11px;line-height:1.4;
+}
+body.pdh-home .reference-grid--unified .best-deal .btn-primary {
+  min-height:40px;margin:0;border-radius:10px;
+}
+body.pdh-home .reference-grid--unified .best-deal__fine {
+  text-align:center;font-size:10.5px;line-height:1.4;
+}
+
+/* SUNAT: encabezado + tasas en horizontal, gráfico ancho debajo. */
+body.pdh-home .reference-grid--unified .sunat-trend-card--stacked {
+  display:flex;flex-direction:column;gap:12px;padding:17px 19px;
+  min-width:0;align-self:stretch;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__head {
+  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(167px,1fr);
+  align-items:center;column-gap:12px;row-gap:10px;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__title {gap:9px;}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__title img {
+  width:38px;height:29px;max-width:none;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__title .section-title {
+  font-size:clamp(15px,1.4vw,19px);line-height:1.2;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__title .section-subtitle {
+  font-size:10px;margin-top:3px;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rates {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;
+  min-width:0;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rate {
+  padding:8px 9px;min-width:0;background:rgba(245,242,247,.92);
+  border-radius:10px;display:flex;flex-direction:column;gap:3px;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rate span {font-size:10px;}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rate strong {
+  font-size:clamp(16px,1.45vw,19px);line-height:1.2;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__body {
+  display:block;min-width:0;
+}
+body.pdh-home .sunat-trend-card__chart-heading {
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;
+  color:#564c5c;font-size:11.5px;font-weight:750;
+}
+body.pdh-home .sunat-trend-card--stacked .trend-badge {
+  white-space:nowrap;font-size:10px;padding:4px 9px;
+}
+body.pdh-home .sunat-trend-card--stacked .trend-chart {
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  height:205px;min-height:205px;max-height:none;
+  padding:7px 10px 4px;background:linear-gradient(180deg,#fff,#fbfcfa);
+  border:1px solid rgba(86,73,94,.09);border-radius:12px;
+}
+body.pdh-home .sunat-trend-card--stacked #trend-svg {
+  display:block;width:100%;height:100%;min-height:0;max-height:none;
+  aspect-ratio:auto;flex:1 1 auto;
+}
+body.pdh-home .sunat-trend-card--stacked #trend-svg[hidden] {display:none!important;}
+body.pdh-home .sunat-trend-card--stacked .trend-placeholder {
+  display:block;margin:auto;padding:20px 15px;max-width:340px;
+  text-align:center;font-size:12px;line-height:1.55;color:#6e6875;
+}
+body.pdh-home .sunat-trend-card--stacked .trend-placeholder[hidden] {display:none!important;}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__foot {gap:6px;}
+body.pdh-home .sunat-trend-card--stacked .trend-foot {margin:0;font-size:10.5px;line-height:1.45;}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__links {
+  gap:8px 12px;align-items:center;justify-content:space-between;
+}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__disclaimer {font-size:10.5px;}
+body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__source {white-space:nowrap;font-size:11px;}
+
+@media (max-width:1100px) {
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__head {
+    grid-template-columns:minmax(0,1fr);gap:9px;
+  }
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rates {max-width:100%;}
+}
+@media (max-width:950px) {
+  body.pdh-home .reference-grid--unified .spotlight-card--featured {padding:17px;}
+  body.pdh-home .reference-grid--unified .best-deal__identity {min-height:65px;}
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__head {
+    grid-template-columns:minmax(0,1.3fr) minmax(165px,1fr);
+  }
+}
+@media (max-width:640px) {
+  body.pdh-home .market-overview {gap:10px;}
+  body.pdh-home .market-cards .pdh-pill {min-height:95px;padding:10px 11px;gap:4px;}
+  body.pdh-home .market-cards .pdh-pill__value {font-size:clamp(22px,6.3vw,29px);}
+  body.pdh-home .reference-grid--unified .spotlight-card__head {justify-content:flex-start;}
+  body.pdh-home .reference-grid--unified .best-deal__identity {min-height:75px;}
+  body.pdh-home .reference-grid--unified .spotlight-card .best-deal__identity img {max-width:70%;}
+  body.pdh-home .reference-grid--unified .sunat-trend-card--stacked {padding:15px;}
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__head {grid-template-columns:minmax(0,1fr);}
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rate {padding:9px 12px;}
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__rate strong {font-size:19px;}
+  body.pdh-home .sunat-trend-card--stacked .trend-chart {height:185px;min-height:185px;padding:4px 5px;}
+  body.pdh-home .sunat-trend-card__chart-heading {font-size:11px;}
+}
+@media (max-width:350px) {
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__links {align-items:flex-start;}
+  body.pdh-home .sunat-trend-card--stacked .sunat-trend-card__disclaimer {max-width:100%;}
+  body.pdh-home .reference-grid--unified .best-deal__selected {flex-wrap:wrap;}
+}
+@media (prefers-reduced-motion:reduce) {
+  body.pdh-home .reference-grid--unified .best-deal .btn-primary {transition:none;}
+}

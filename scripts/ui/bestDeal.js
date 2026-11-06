@@ -28,6 +28,8 @@ export function renderBestDeal() {
   const btnEl = els.btnIrMejor;
   const logoEl = els.bestLogo;
   const operationEl = document.getElementById('best-operation');
+  const selectedLabelEl = document.getElementById('best-selected-label');
+  const selectedRateEl = document.getElementById('best-selected-rate');
 
   // Se muestra el logo o, como alternativa si falta la imagen, el nombre.
   function setBrandImage(src, name) {
@@ -67,6 +69,8 @@ export function renderBestDeal() {
     sellEl.textContent = '—';
     if (noteEl) noteEl.textContent = '';
     if (operationEl) operationEl.textContent = 'Esperando datos';
+    if (selectedLabelEl) selectedLabelEl.textContent = 'Tasa de tu operación';
+    if (selectedRateEl) selectedRateEl.textContent = '—';
     if (btnEl) {
       btnEl.disabled = true;
       btnEl.textContent = 'Enlace no disponible';
@@ -113,6 +117,8 @@ export function renderBestDeal() {
     sellEl.textContent = '—';
     if (noteEl) noteEl.textContent = '';
     if (operationEl) operationEl.textContent = 'Esperando datos';
+    if (selectedLabelEl) selectedLabelEl.textContent = 'Tasa de tu operación';
+    if (selectedRateEl) selectedRateEl.textContent = '—';
     if (btnEl) { btnEl.disabled = true; btnEl.onclick = null; }
     setBrandImage(null, '');
     return;
@@ -123,6 +129,8 @@ export function renderBestDeal() {
   buyEl.textContent = rateFmt(winner.compra);
   sellEl.textContent = rateFmt(winner.venta);
   if (operationEl) operationEl.textContent = paintCompra ? 'Para vender dólares' : paintVenta ? 'Para comprar dólares' : 'Según tu operación';
+  if (selectedLabelEl) selectedLabelEl.textContent = paintCompra ? 'Tasa de compra' : paintVenta ? 'Tasa de venta' : 'Tasa de la casa';
+  if (selectedRateEl) selectedRateEl.textContent = rateFmt(paintCompra ? winner.compra : paintVenta ? winner.venta : null);
 
   // Nota: diferencia vs SUNAT (texto corto)
   if (noteEl) {

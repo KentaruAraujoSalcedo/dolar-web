@@ -267,15 +267,17 @@
               <div class="pdh-pills" aria-label="Mejores tasas de compra y venta">
                 <div class="pdh-pill pdh-pill--buy">
                   <div class="pdh-pill__heading"><span aria-hidden="true" class="pdh-pill__icon">↘</span><span class="pdh-pill__label">Mejor compra</span></div>
-                  <strong class="pdh-pill__value" id="best-compra" data-has-rate="false">—</strong>
-                  <span class="pdh-pill__meta">Si vendes dólares</span>
-                  <a class="pdh-pill__brand" id="best-compra-link" aria-disabled="true" tabindex="-1"><img id="best-compra-logo" alt="" width="88" height="34" hidden><span class="pdh-pill__brand-name" id="best-compra-name">Casa por confirmar</span><span class="pdh-pill__brand-arrow" aria-hidden="true">↗</span></a>
+                  <div class="pdh-pill__main">
+                    <div class="pdh-pill__quote"><strong class="pdh-pill__value" id="best-compra" data-has-rate="false">—</strong><span class="pdh-pill__meta">Si vendes dólares</span></div>
+                    <a class="pdh-pill__brand" id="best-compra-link" aria-disabled="true" tabindex="-1"><img id="best-compra-logo" alt="" width="88" height="34" hidden><span class="pdh-pill__brand-name" id="best-compra-name">Casa por confirmar</span><span class="pdh-pill__brand-arrow" aria-hidden="true">↗</span></a>
+                  </div>
                 </div>
                 <div class="pdh-pill pdh-pill--sell">
                   <div class="pdh-pill__heading"><span aria-hidden="true" class="pdh-pill__icon">↗</span><span class="pdh-pill__label">Mejor venta</span></div>
-                  <strong class="pdh-pill__value" id="best-venta" data-has-rate="false">—</strong>
-                  <span class="pdh-pill__meta">Si compras dólares</span>
-                  <a class="pdh-pill__brand" id="best-venta-link" aria-disabled="true" tabindex="-1"><img id="best-venta-logo" alt="" width="88" height="34" hidden><span class="pdh-pill__brand-name" id="best-venta-name">Casa por confirmar</span><span class="pdh-pill__brand-arrow" aria-hidden="true">↗</span></a>
+                  <div class="pdh-pill__main">
+                    <div class="pdh-pill__quote"><strong class="pdh-pill__value" id="best-venta" data-has-rate="false">—</strong><span class="pdh-pill__meta">Si compras dólares</span></div>
+                    <a class="pdh-pill__brand" id="best-venta-link" aria-disabled="true" tabindex="-1"><img id="best-venta-logo" alt="" width="88" height="34" hidden><span class="pdh-pill__brand-name" id="best-venta-name">Casa por confirmar</span><span class="pdh-pill__brand-arrow" aria-hidden="true">↗</span></a>
+                  </div>
                 </div>
               </div>
 
@@ -329,10 +331,10 @@
               </header>
               <div class="sunat-trend-card__body">
                 <div class="sunat-trend-card__chart-heading">
-                  <span id="trend-chart-title">Histórico de venta SUNAT</span>
+                  <span id="trend-chart-title">Histórico del mes · venta SUNAT</span>
                   <div class="trend-periods" role="group" aria-label="Período de la evolución del dólar">
                     <button type="button" class="trend-period" data-trend-period="today" aria-pressed="false">Hoy</button>
-                    <button type="button" class="trend-period is-active" data-trend-period="month" aria-pressed="true">30 días</button>
+                    <button type="button" class="trend-period is-active" data-trend-period="month" aria-pressed="true">Mes actual</button>
                   </div>
                 </div>
                 <div class="trend-chart" id="trend-chart" aria-live="polite">

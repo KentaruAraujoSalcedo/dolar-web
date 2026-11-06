@@ -25,7 +25,8 @@ function renderTrend(days) {
   const svg = document.getElementById('trend-svg');
   const placeholder = document.getElementById('trend-placeholder');
   const foot = document.getElementById('trend-foot');
-  if (!svg || !placeholder) return;
+  const chart = document.getElementById('trend-chart');
+  if (!svg || !placeholder || !chart) return;
 
   const data = (Array.isArray(days) ? days : [])
     .filter(d => d && Number.isFinite(Number(d.venta)) && Number(d.venta) > 0 && d.fecha)
@@ -36,9 +37,9 @@ function renderTrend(days) {
 
   if (data.length < 2) {
     placeholder.hidden = false;
-    placeholder.textContent = 'Aún no hay suficientes datos históricos para mostrar una tendencia.';
+    placeholder.textContent = 'Aún no hay suficientes registros del mes para mostrar una tendencia.';
     svg.setAttribute('hidden', '');
-    if (foot) foot.textContent = 'El histórico mensual solo muestra los registros reales disponibles de SUNAT.';
+    if (foot) foot.textContent = 'El gráfico utiliza exclusivamente los datos diarios disponibles del mes consultado.';
     return;
   }
 
@@ -47,8 +48,22 @@ function renderTrend(days) {
   const low = Math.min(...values), high = Math.max(...values);
   const padding = Math.max(.004, (high - low) * .22);
   const min = low - padding, max = high + padding;
-  const left = 53, right = 457, top = 22, bottom = 194;
-  const x = i => left + (right - left) * i / (data.length - 1);
+  // El SVG original usaba siempre 480x240; con una tarjeta más ancha, el
+  // navegador lo centraba y dejaba grandes franjas vacías a ambos lados.
+  // Ajustar el viewBox a la medida visible evita la reducción por aspect ratio.
+  const style = window.getComputedStyle(chart);
+  const horizontalPadding = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+  const verticalPadding = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
+  const width = Math.max(240, Math.round(chart.clientWidth - horizontalPadding));
+  const height = Math.max(155, Math.round(chart.clientHeight - verticalPadding));
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  const left = 52, right = width - 21, top = 19, bottom = height - 42;
+  // Los días reales se distribuyen entre los dos extremos, incluso cuando
+  // SUNAT solo tiene unos pocos registros del mes en curso.
+  const firstTime = data[0].date.getTime();
+  const lastTime = data[data.length - 1].date.getTime();
+  const x = i => left + (right - left) * (lastTime > firstTime ?
+    (data[i].date.getTime() - firstTime) / (lastTime - firstTime) : i / (data.length - 1));
   const y = v => top + (max - v) * (bottom - top) / (max - min);
 
   const defs = svgEl('defs');
@@ -68,25 +83,35 @@ function renderTrend(days) {
   const area = `${line}L${x(data.length-1)} ${bottom} L${x(0)} ${bottom} Z`;
   svg.append(svgEl('path',{d:area,fill:'url(#pdh-trend-fill)'}));
   svg.append(svgEl('path',{d:line,fill:'none',stroke:'#0c9b53','stroke-width':3.1,'stroke-linecap':'round','stroke-linejoin':'round'}));
-  const labelStep = Math.max(1, Math.ceil(data.length / 6));
+  const maxLabels = Math.max(2, Math.floor((right - left) / 55));
+  const labelStep = Math.max(1, Math.ceil(data.length / maxLabels));
   data.forEach((d,i) => {
     svg.append(svgEl('circle',{cx:x(i),cy:y(d.venta),r:i===data.length-1?5:3.3,fill:'#0c9b53',stroke:'#fff','stroke-width':i===data.length-1?2.5:1}));
     const label=d.date.toLocaleDateString('es-PE',{day:'numeric',month:'short',timeZone:'America/Lima'}).replace('.','');
-    if (i % labelStep === 0 || i === data.length - 1) {
-      svg.append(svgEl('text',{x:x(i),y:218,'text-anchor':'middle',fill:'#737187','font-size':'10','font-weight':'600'},label));
+    // Evitar etiquetas solapadas cerca del último punto en móviles.
+    if (i === 0 || i === data.length - 1 ||
+        (i % labelStep === 0 && right - x(i) >= 55)) {
+      const anchor = i === 0 ? 'start' : i === data.length - 1 ? 'end' : 'middle';
+      svg.append(svgEl('text',{x:x(i),y:height-17,'text-anchor':anchor,fill:'#737187','font-size':'10','font-weight':'600'},label));
     }
   });
   // Last official data point (not a guessed live market value).
   const last = data[data.length-1];
   const px = x(data.length-1), py = y(last.venta);
-  svg.append(svgEl('rect',{x:Math.min(410,px-66),y:Math.max(3,py-30),width:64,height:23,rx:8,fill:'#e3f9e9',stroke:'#c5eccf'}));
-  svg.append(svgEl('text',{x:Math.min(410,px-66)+32,y:Math.max(3,py-30)+16,'text-anchor':'middle',fill:'#087b44','font-size':'12','font-weight':'800'},`S/ ${last.venta.toFixed(3)}`));
+  const bubbleX = Math.max(left, Math.min(width - 70, px - 68));
+  const bubbleY = Math.max(2, py - 30);
+  svg.append(svgEl('rect',{x:bubbleX,y:bubbleY,width:66,height:23,rx:8,fill:'#e3f9e9',stroke:'#c5eccf'}));
+  svg.append(svgEl('text',{x:bubbleX+33,y:bubbleY+16,'text-anchor':'middle',fill:'#087b44','font-size':'12','font-weight':'800'},`S/ ${last.venta.toFixed(3)}`));
   svg.setAttribute('aria-label',`Evolución de venta SUNAT de ${data.length} registros diarios, desde ${data[0].venta.toFixed(3)} hasta ${last.venta.toFixed(3)} soles por dólar`);
   // En SVG, `hidden = false` puede NO retirar el atributo `hidden` del DOM.
   // Retirarlo explícitamente evita que la regla CSS `[hidden]` oculte el gráfico.
   svg.removeAttribute('hidden');
   placeholder.hidden = true;
-  if (foot) foot.textContent = `${data.length} registros diarios disponibles. Último dato: ${last.date.toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Lima'})}. Referencia SUNAT, no tasa comercial.`;
+  const month = last.date.toLocaleDateString('es-PE',{month:'long',year:'numeric',timeZone:'America/Lima'});
+  const monthLabel = month.charAt(0).toUpperCase() + month.slice(1);
+  const title = document.getElementById('trend-chart-title');
+  if (title) title.textContent = `Histórico de venta SUNAT · ${monthLabel}`;
+  if (foot) foot.textContent = `${monthLabel} · ${data.length} ${data.length === 1 ? 'registro diario disponible' : 'registros diarios disponibles'}. Último dato: ${last.date.toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Lima'})}.`;
 }
 
 function displayTrendPeriod(period) {
@@ -110,7 +135,7 @@ function displayTrendPeriod(period) {
     if (foot) foot.textContent = 'La referencia SUNAT es diaria. El gráfico de hoy estará disponible cuando exista una fuente intradía con historial autorizado.';
     return;
   }
-  if (title) title.textContent = 'Histórico de venta SUNAT · hasta 30 días';
+  if (title) title.textContent = 'Histórico de venta SUNAT · mes actual';
   if (!hasLoadedHistory) {
     if (svg) svg.setAttribute('hidden','');
     if (placeholder) { placeholder.hidden = false; placeholder.textContent = 'Cargando historial oficial…'; }
@@ -124,6 +149,14 @@ export async function loadHomeTrend() {
     button.addEventListener('click', () => displayTrendPeriod(button.dataset.trendPeriod));
   });
   displayTrendPeriod('month');
+  let resizeFrame = null;
+  window.addEventListener('resize', () => {
+    if (resizeFrame !== null) window.cancelAnimationFrame(resizeFrame);
+    resizeFrame = window.requestAnimationFrame(() => {
+      resizeFrame = null;
+      if (hasLoadedHistory && currentPeriod === 'month') renderTrend(monthlyHistory);
+    });
+  }, {passive: true});
   try {
     monthlyHistory = await cargarSunatHistorialMes();
     hasLoadedHistory = true;

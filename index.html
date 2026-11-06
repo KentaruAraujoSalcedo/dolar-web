@@ -203,6 +203,7 @@
 
   <link rel="stylesheet" href="/css/home-redesign.css">
   <link rel="stylesheet" href="/css/home-polish.css">
+  <link rel="stylesheet" href="/css/home-layout-optimized.css">
 
   <!-- Conservamos el código existente de AdSense para no perder la verificación del sitio.
        Los contenedores visuales vacíos permanecen en pausa hasta configurar unidades reales. -->
@@ -273,30 +274,10 @@
                 </div>
               </div>
 
-              <section class="panel spotlight-card" aria-labelledby="t-spotlight">
-                <header class="spotlight-card__head">
-                  <span class="spotlight-card__symbol" aria-hidden="true">★</span>
-                  <h2 class="section-title" id="t-spotlight">Mejor casa para ti</h2>
-                </header>
-                <div class="best-deal" aria-label="Casa recomendada para la operación seleccionada">
-                  <div class="best-deal__identity">
-                    <img alt="" height="40" id="best-logo" loading="lazy" src="/IMG/ui/best-placeholder.webp" width="110" />
-                    <strong class="best-deal__name-fallback" id="best-name">Sin cotizaciones</strong>
-                    <span class="best-deal__operation" id="best-operation">Según tu operación</span>
-                  </div>
-                  <div class="best-deal__rates" aria-label="Cotizaciones de la casa seleccionada">
-                    <span>Compra <b id="best-buy">—</b></span>
-                    <span>Venta <b id="best-sell">—</b></span>
-                  </div>
-                  <p class="best-deal__note" id="best-note" aria-live="polite"></p>
-                  <button class="btn-primary" disabled id="btn-ir-mejor" type="button">Consultar casa ↗</button>
-                </div>
-                <p class="best-deal__fine">Tasas informativas: confirma el precio antes de operar.</p>
-              </section>
             </div>
           </section>
 
-          <!-- Prioridad 2: calculadora y comparación a la misma altura de inicio, con altura natural. -->
+          <!-- Herramientas principales: la calculadora alimenta los resultados del comparador. -->
           <section class="trade-grid" aria-label="Calcula y compara casas de cambio">
             <section aria-labelledby="t-conversor" class="panel conversor-wrapper-modern">
 <header class="section-head"><span aria-hidden="true" class="feature-icon">▦</span><h2 class="section-title" id="t-conversor">Calculadora de cambio</h2></header>
@@ -326,14 +307,40 @@
           </section>
 
           <!-- Prioridad 3: contexto oficial e histórico, debajo de la herramienta principal. -->
-          <section class="reference-grid" aria-label="Evolución del dólar y referencia SUNAT">
-            <section aria-labelledby="t-tendencia" class="panel trend-card" id="tendencia"><div class="section-head section-head--split"><div class="section-head__title"><span aria-hidden="true" class="feature-icon">↗</span><div><h2 class="section-title" id="t-tendencia">Evolución del dólar</h2><span class="section-subtitle">Histórico SUNAT · venta</span></div></div><span class="trend-badge">7 días</span></div><div class="trend-chart" id="trend-chart"><div class="trend-placeholder" id="trend-placeholder" role="status">Cargando historial oficial…</div><svg aria-label="Gráfico de la tasa de venta SUNAT de los últimos siete días" hidden="" id="trend-svg" preserveaspectratio="xMidYMid meet" role="img" viewbox="0 0 480 240"></svg></div><p class="trend-foot" id="trend-foot">Las tasas históricas dependen de los datos que publique la fuente.</p><button aria-controls="chartModal" class="trend-open" id="btn-open-chart" type="button">Abrir gráfico detallado <span aria-hidden="true">↗</span></button></section>
+          <!-- Contexto de la operación: recomendación, referencia SUNAT e histórico. -->
+          <section class="reference-grid" aria-label="Mejor casa, referencia SUNAT y evolución del dólar">
+            <section class="panel spotlight-card" aria-labelledby="t-spotlight">
+                <header class="spotlight-card__head">
+                  <span class="spotlight-card__symbol" aria-hidden="true">★</span>
+                  <h2 class="section-title" id="t-spotlight">Mejor casa para ti</h2>
+                </header>
+                <div class="best-deal" aria-label="Casa recomendada para la operación seleccionada">
+                  <div class="best-deal__identity">
+                    <img alt="" height="40" id="best-logo" loading="lazy" src="/IMG/ui/best-placeholder.webp" width="110" />
+                    <strong class="best-deal__name-fallback" id="best-name">Sin cotizaciones</strong>
+                    <span class="best-deal__operation" id="best-operation">Según tu operación</span>
+                  </div>
+                  <div class="best-deal__selected" aria-live="polite">
+                    <span id="best-selected-label">Tasa de tu operación</span>
+                    <strong id="best-selected-rate">—</strong>
+                  </div>
+                  <!-- Los valores ocultos se conservan para la lógica existente. -->
+                  <div class="best-deal__rates" hidden aria-hidden="true">
+                    <span>Compra <b id="best-buy">—</b></span>
+                    <span>Venta <b id="best-sell">—</b></span>
+                  </div>
+                  <p class="best-deal__note" id="best-note" aria-live="polite"></p>
+                  <button class="btn-primary" disabled id="btn-ir-mejor" type="button">Consultar casa ↗</button>
+                </div>
+                <p class="best-deal__fine">Tasas informativas: confirma el precio antes de operar.</p>
+              </section>
             <section aria-labelledby="t-sunat" class="panel sunat-widget">
 <header class="section-head sunat-widget__head"><img alt="" height="22" loading="lazy" src="/IMG/casas/88x34/sunat.webp" width="50"/><div><h2 class="section-title" id="t-sunat">SUNAT</h2><span class="section-subtitle">Referencia oficial</span></div></header>
 <div class="sunat-grid"><div class="sunat-item"><span class="sunat-lbl">Compra</span><strong class="sunat-val" id="sunat-compra">—</strong></div><div class="sunat-item"><span class="sunat-lbl">Venta</span><strong class="sunat-val" id="sunat-venta">—</strong></div></div>
 <p class="sunat-note">Es un valor referencial, no una oferta de cambio.</p>
 <a class="sunat-widget__link" href="/precio-dolar-sunat/">Entender la tasa SUNAT <span aria-hidden="true">↗</span></a>
 </section>
+            <section aria-labelledby="t-tendencia" class="panel trend-card" id="tendencia"><div class="section-head section-head--split"><div class="section-head__title"><span aria-hidden="true" class="feature-icon">↗</span><div><h2 class="section-title" id="t-tendencia">Evolución del dólar</h2><span class="section-subtitle">Histórico SUNAT · venta</span></div></div><span class="trend-badge">7 días</span></div><div class="trend-chart" id="trend-chart"><div class="trend-placeholder" id="trend-placeholder" role="status">Cargando historial oficial…</div><svg aria-label="Gráfico de la tasa de venta SUNAT de los últimos siete días" hidden="" id="trend-svg" preserveaspectratio="xMidYMid meet" role="img" viewbox="0 0 480 240"></svg></div><p class="trend-foot" id="trend-foot">Las tasas históricas dependen de los datos que publique la fuente.</p><button aria-controls="chartModal" class="trend-open" id="btn-open-chart" type="button">Abrir gráfico detallado <span aria-hidden="true">↗</span></button></section>
           </section>
 
           <div class="ad-horizontal" aria-label="Espacio publicitario horizontal"><div class="ad-unit ad-unit--horizontal" data-ad-slot="content-horizontal"><span class="ad-unit__label">Publicidad</span><div class="ad-unit__art" aria-hidden="true">✦</div><strong>Publicidad horizontal</strong><small>Reserva para futura monetización</small></div></div>

@@ -1,0 +1,404 @@
+/* ============================================================================
+   PRECIO DÓLAR HOY · Referencia integrada y recomendación destacada
+   Ajuste localizado a la tercera fila. El resto de la portada conserva su diseño.
+   Sin dependencias JS nuevas; mantiene IDs de SUNAT, recomendación y gráfico.
+   ============================================================================ */
+
+/* Una recomendación compacta y una sola tarjeta SUNAT + gráfico (35 % / 65 %). */
+body.pdh-home .reference-grid.reference-grid--unified {
+  display:grid;
+  grid-template-columns:minmax(245px, .78fr) minmax(0, 1.5fr);
+  align-items:stretch;
+  gap:14px;
+}
+body.pdh-home .reference-grid--unified > * {
+  min-width:0;
+  grid-column:auto;
+  grid-row:auto;
+}
+
+/* Recomendación: protagonismo con un acento lima sobrio y sin recuadros duplicados. */
+body.pdh-home .reference-grid--unified .spotlight-card--featured {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-self:stretch;
+  justify-content:flex-start;
+  gap:14px;
+  padding:20px;
+  border:1px solid rgba(116,145,82,.35);
+  background:linear-gradient(150deg,rgba(241,249,226,.97) 0%,rgba(255,254,250,.93) 48%,rgba(247,244,248,.94) 100%);
+  box-shadow:0 12px 32px rgba(49,53,36,.08), 0 1px 2px rgba(49,53,36,.05);
+  overflow:hidden;
+  isolation:isolate;
+}
+body.pdh-home .reference-grid--unified .spotlight-card--featured::before {
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  background:linear-gradient(180deg,#8caa56,#d6e8aa 85%);
+  pointer-events:none;
+}
+body.pdh-home .reference-grid--unified .spotlight-card__head {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0;
+}
+body.pdh-home .reference-grid--unified .spotlight-card__symbol {
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:34px;
+  height:34px;
+  border-radius:11px;
+  background:#e6efc8;
+  color:#4c632e;
+  font-size:18px;
+}
+body.pdh-home .reference-grid--unified .spotlight-card__heading {display:flex;flex-direction:column;gap:3px;min-width:0;}
+body.pdh-home .reference-grid--unified .spotlight-card__eyebrow {
+  color:#587044;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:.065em;
+}
+body.pdh-home .reference-grid--unified .spotlight-card .section-title {
+  margin:0;
+  color:#302337;
+  font-size:clamp(16px,1.45vw,19px);
+  line-height:1.2;
+}
+body.pdh-home .reference-grid--unified .best-deal {
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:12px;
+  margin:0;
+  padding:0;
+  border:0;
+  background:none;
+  box-shadow:none;
+}
+body.pdh-home .reference-grid--unified .best-deal__identity {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px 12px;
+  min-height:44px;
+}
+body.pdh-home .reference-grid--unified .best-deal__identity img {
+  flex:0 1 auto;
+  width:120px;
+  height:42px;
+  max-width:52%;
+  object-fit:contain;
+  object-position:left center;
+}
+body.pdh-home .reference-grid--unified .best-deal__identity img[hidden] {display:none!important;}
+body.pdh-home .reference-grid--unified .best-deal__operation {
+  flex:0 1 auto;
+  max-width:58%;
+  margin-left:auto;
+  padding:6px 9px;
+  border:1px solid rgba(115,111,92,.11);
+  border-radius:9px;
+  background:rgba(249,249,241,.75);
+  color:#514859;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.3;
+}
+body.pdh-home .reference-grid--unified .best-deal__selected {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 14px;
+  border:1px solid rgba(107,135,85,.21);
+  border-radius:12px;
+  background:rgba(255,255,255,.68);
+}
+body.pdh-home .reference-grid--unified .best-deal__selected span {
+  color:#585461;
+  font-size:12px;
+  font-weight:650;
+  line-height:1.35;
+}
+body.pdh-home .reference-grid--unified .best-deal__selected strong {
+  font-size:clamp(22px,2vw,28px);
+  color:#254f3a;
+  font-weight:850;
+  font-variant-numeric:tabular-nums;
+  line-height:1.07;
+  white-space:nowrap;
+}
+body.pdh-home .reference-grid--unified .best-deal__rates[hidden] {display:none!important;}
+body.pdh-home .reference-grid--unified .best-deal__note {
+  min-height:0;
+  margin:0;
+  color:#4f5c46;
+  font-size:12px;
+  line-height:1.45;
+  font-weight:650;
+}
+body.pdh-home .reference-grid--unified .best-deal__note:empty {display:none;}
+body.pdh-home .reference-grid--unified .best-deal .btn-primary {
+  display:block;
+  width:100%;
+  min-height:43px;
+  padding:11px 15px;
+  margin-top:auto;
+  border-radius:11px;
+  background:#312039;
+  color:#eef3ba;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:0 5px 13px rgba(53,30,65,.12);
+  transition:background .16s,transform .16s;
+}
+body.pdh-home .reference-grid--unified .best-deal .btn-primary:hover:not(:disabled) {
+  background:#4a3052;
+  transform:translateY(-1px);
+}
+body.pdh-home .reference-grid--unified .best-deal .btn-primary:disabled {
+  background:#e3e1e5;
+  color:#797080;
+  box-shadow:none;
+  transform:none;
+}
+body.pdh-home .reference-grid--unified .best-deal__fine {
+  display:block;
+  margin:0;
+  color:#6e6870;
+  font-size:11px;
+  line-height:1.45;
+}
+
+/* SUNAT: datos oficiales arriba, histórico amplio debajo, vínculos agrupados. */
+body.pdh-home .reference-grid--unified .sunat-trend-card {
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  padding:19px 21px 17px;
+  min-width:0;
+}
+body.pdh-home .sunat-trend-card__head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-width:0;
+}
+body.pdh-home .sunat-trend-card__title {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:0;
+}
+body.pdh-home .sunat-trend-card__title img {
+  display:block;
+  width:47px;
+  height:32px;
+  max-width:18%;
+  object-fit:contain;
+  flex:none;
+}
+body.pdh-home .sunat-trend-card__title > div {min-width:0;}
+body.pdh-home .sunat-trend-card__title .section-title {
+  margin:0;
+  font-size:clamp(16px,1.45vw,20px);
+  letter-spacing:-.024em;
+  line-height:1.24;
+  color:#31263a;
+}
+body.pdh-home .sunat-trend-card__title .section-subtitle {
+  display:block;
+  margin:3px 0 0;
+  font-size:11px;
+  line-height:1.35;
+  color:#756f7a;
+}
+body.pdh-home .sunat-trend-card .trend-badge {
+  flex:none;
+  padding:6px 10px;
+  background:#eae5ee;
+  color:#50375b;
+  font-size:11px;
+}
+body.pdh-home .sunat-trend-card__rates {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(155px,1.2fr);
+  gap:8px;
+  align-items:stretch;
+}
+body.pdh-home .sunat-trend-card__rate {
+  display:flex;
+  justify-content:center;
+  flex-direction:column;
+  gap:2px;
+  padding:9px 12px;
+  background:#f7f5f8;
+  border:1px solid rgba(74,53,84,.10);
+  border-radius:11px;
+  min-width:0;
+}
+body.pdh-home .sunat-trend-card__rate span {
+  color:#716779;
+  font-size:11px;
+  line-height:1.2;
+}
+body.pdh-home .sunat-trend-card__rate strong {
+  color:#32263a;
+  font-size:clamp(17px,1.6vw,21px);
+  line-height:1.22;
+  font-weight:850;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+body.pdh-home .sunat-trend-card__disclaimer {
+  display:flex;
+  align-items:center;
+  margin:0;
+  color:#6f6875;
+  font-size:11px;
+  line-height:1.4;
+}
+body.pdh-home .sunat-trend-card .trend-chart {
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-height:196px;
+  max-height:none;
+  padding:4px 7px;
+  border:1px solid rgba(90,76,94,.08);
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(254,254,254,.90),rgba(249,250,248,.75));
+  overflow:hidden;
+}
+body.pdh-home .sunat-trend-card #trend-svg {
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:190px;
+  max-height:280px;
+  aspect-ratio:2 / 1;
+}
+body.pdh-home .sunat-trend-card #trend-svg[hidden] {display:none!important;}
+body.pdh-home .sunat-trend-card .trend-placeholder {
+  font-size:12px;
+  padding:35px 15px;
+  color:#6b6172;
+}
+body.pdh-home .sunat-trend-card__foot {display:flex;flex-direction:column;gap:10px;}
+body.pdh-home .sunat-trend-card .trend-foot {
+  margin:0;
+  font-size:11px;
+  line-height:1.45;
+  color:#716978;
+}
+body.pdh-home .sunat-trend-card__links {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px 14px;
+}
+body.pdh-home .sunat-trend-card__source {
+  color:#533a5d;
+  text-decoration:none;
+  font-size:12px;
+  line-height:1.4;
+  font-weight:750;
+}
+body.pdh-home .sunat-trend-card__source:hover {text-decoration:underline;}
+body.pdh-home .sunat-trend-card .trend-open {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 1 auto;
+  width:auto;
+  min-height:34px;
+  margin:0;
+  padding:8px 13px;
+  font-size:11px;
+  font-weight:800;
+  border:1px solid rgba(71,48,79,.08);
+  border-radius:10px;
+  background:#eee8f0;
+  color:#432a4c;
+}
+body.pdh-home .sunat-trend-card .trend-open:hover {background:#e4dce8;}
+
+/* Adapta las dos tarjetas de forma predecible; no crea huecos en móviles. */
+@media (max-width:950px) {
+  body.pdh-home .reference-grid.reference-grid--unified {
+    grid-template-columns:minmax(0,1fr);
+    gap:12px;
+  }
+  body.pdh-home .reference-grid--unified .spotlight-card--featured,
+  body.pdh-home .reference-grid--unified .sunat-trend-card {grid-column:1;}
+  body.pdh-home .reference-grid--unified .spotlight-card--featured {padding:17px;}
+  body.pdh-home .reference-grid--unified .best-deal {gap:10px;}
+  body.pdh-home .reference-grid--unified .sunat-trend-card {padding:17px;}
+}
+@media (max-width:600px) {
+  body.pdh-home .reference-grid--unified .spotlight-card--featured {gap:12px;padding:15px;}
+  body.pdh-home .reference-grid--unified .best-deal__identity img {max-width:50%;}
+  body.pdh-home .reference-grid--unified .best-deal__operation {max-width:58%;}
+  body.pdh-home .reference-grid--unified .best-deal__selected {padding:11px 12px;}
+  body.pdh-home .reference-grid--unified .best-deal__selected strong {font-size:23px;}
+  body.pdh-home .reference-grid--unified .sunat-trend-card {gap:11px;padding:15px;}
+  body.pdh-home .sunat-trend-card__rates {grid-template-columns:repeat(2,minmax(0,1fr));}
+  body.pdh-home .sunat-trend-card__disclaimer {grid-column:1/-1;}
+  body.pdh-home .sunat-trend-card .trend-chart {min-height:166px;padding:2px;}
+  body.pdh-home .sunat-trend-card #trend-svg {min-height:160px;max-height:230px;}
+  body.pdh-home .sunat-trend-card__links {align-items:stretch;}
+  body.pdh-home .sunat-trend-card .trend-open {flex:1;}
+}
+@media (max-width:355px) {
+  body.pdh-home .reference-grid--unified .best-deal__identity {align-items:flex-start;}
+  body.pdh-home .reference-grid--unified .best-deal__identity img {max-width:100%;}
+  body.pdh-home .reference-grid--unified .best-deal__operation {margin-left:0;max-width:100%;}
+  body.pdh-home .reference-grid--unified .best-deal__selected {align-items:flex-start;flex-direction:column;gap:6px;}
+  body.pdh-home .sunat-trend-card__title img {width:37px;}
+  body.pdh-home .sunat-trend-card__title .section-title {font-size:16px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  body.pdh-home .reference-grid--unified .best-deal .btn-primary {transition:none;}
+}
+
+/* Dashboard SUNAT: las dos tasas comparten superficie con el gráfico,
+   evitando una tarjeta alta y dejando el gráfico a una escala legible. */
+@media (min-width:601px) {
+  body.pdh-home .sunat-trend-card__body {
+    display:grid;
+    grid-template-columns:minmax(128px,.55fr) minmax(0,1.75fr);
+    gap:12px;
+    align-items:stretch;
+    min-width:0;
+  }
+  body.pdh-home .sunat-trend-card__rates {
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    gap:8px;
+  }
+  body.pdh-home .sunat-trend-card__rate {flex:1;}
+  body.pdh-home .sunat-trend-card__disclaimer {font-size:10px;line-height:1.35;}
+  body.pdh-home .sunat-trend-card .trend-chart {
+    min-height:248px;
+    max-height:none;
+    padding:3px;
+  }
+  body.pdh-home .sunat-trend-card #trend-svg {
+    min-height:230px;
+    max-height:255px;
+  }
+}
+@media (max-width:600px) {
+  body.pdh-home .sunat-trend-card__body {display:flex;flex-direction:column;gap:10px;}
+}

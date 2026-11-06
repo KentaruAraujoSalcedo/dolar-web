@@ -19,7 +19,6 @@ import {
   recalcularCeldas,
   renderSunat,
   renderResultadoConversor,
-  renderBestDeal,
   syncMontoUI
 } from './ui/index.js';
 
@@ -167,7 +166,6 @@ async function init() {
         }
 
         renderResultadoConversor();
-        renderBestDeal();
         renderBestHeader(state);
         renderHomeStats();
 
@@ -184,7 +182,6 @@ async function init() {
       renderSunat();
       renderTabla();
       renderResultadoConversor();
-      renderBestDeal();
       renderBestHeader(state);
       renderHomeStats();
     }

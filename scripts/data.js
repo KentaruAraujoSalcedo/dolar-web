@@ -112,21 +112,39 @@ export async function cargarData() {
 }
 
 /* ============================================================
-   SUNAT: últimos 7 días (para el gráfico)
-   - sigue usando /sunat-mensual
-   - IMPORTANTÍSIMO: sin x-api-key y sin cache:"no-store"
+   SUNAT: historial oficial disponible en /sunat-mensual.
+   Importante: esta API ofrece datos diarios, NO una serie intradía.
    ============================================================ */
+function fechaSunatISO(raw) {
+  const value = String(raw ?? '').trim();
+  let year, month, day;
+  let match = value.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:$|[T\s])/);
+  if (match) {
+    [,year,month,day] = match;
+  } else {
+    match = value.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+    if (!match) return null;
+    [,day,month,year] = match;
+  }
+  const y = Number(year), m = Number(month), d = Number(day);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) return null;
+  return `${String(y).padStart(4,'0')}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
 
-// Devuelve SIEMPRE un array de días [{fecha, compra, venta}, ...] (máx 7)
-export async function cargarSunatUltimos7Dias() {
+export async function cargarSunatHistorialMes() {
   const res = await fetch(`${API_BASE}/sunat-mensual`);
   if (!res.ok) return [];
-
   const payload = await res.json();
   const dias = Array.isArray(payload?.dias) ? payload.dias : [];
-
   return dias
-    .filter(d => d && d.fecha && Number.isFinite(d.compra) && Number.isFinite(d.venta))
-    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
-    .slice(-7);
+    .filter(d => d && fechaSunatISO(d.fecha) && Number.isFinite(Number(d.compra)) && Number.isFinite(Number(d.venta)) && Number(d.compra) > 0 && Number(d.venta) > 0)
+    .map(d => ({ fecha: fechaSunatISO(d.fecha), compra: Number(d.compra), venta: Number(d.venta) }))
+    .sort((a,b) => a.fecha.localeCompare(b.fecha))
+    .slice(-30);
+}
+
+// Compatibilidad con el gráfico modal histórico (últimos 7 registros).
+export async function cargarSunatUltimos7Dias() {
+  return (await cargarSunatHistorialMes()).slice(-7);
 }

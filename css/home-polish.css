@@ -291,3 +291,241 @@ body.pdh-home:not(.ads-preview) .center {width:100%;}
 @media (prefers-reduced-motion:reduce) {
   body.pdh-home .guide-shortcut:hover,body.pdh-home .converter-direction .swap:hover {transform:none;}
 }
+
+/* ================================================================
+   REFINAMIENTO DE LA PORTADA · TARJETAS SUPERIORES / LEGIBILIDAD
+   2026-11-05 · Mantiene IDs y lógica de la API original.
+   No cambia las 22 páginas secundarias ni activa publicidad.
+   ================================================================ */
+
+/* Una cabecera breve; debajo, tres indicadores a la misma altura. */
+body.pdh-home .market-overview {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:15px;
+}
+body.pdh-home .hero-intro {
+  padding:3px 4px 0;
+  width:100%;
+}
+body.pdh-home .hero-intro h1 {font-size:clamp(27px,2.8vw,38px);max-width:28ch;}
+body.pdh-home .hero-intro__lead {font-size:13px;margin:7px 0 11px;max-width:66ch;}
+body.pdh-home .updated-chip {font-size:11px;padding:6px 11px;}
+body.pdh-home .market-cards {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.27fr);
+  gap:13px;
+  align-items:stretch;
+  width:100%;
+}
+/* display:contents permite conservar .pdh-pills y los IDs sin añadir una cuarta columna. */
+body.pdh-home .market-cards > .pdh-pills {display:contents;}
+body.pdh-home .market-cards > .pdh-pills > .pdh-pill {min-width:0;}
+body.pdh-home .market-cards .pdh-pill {
+  min-height:188px;
+  margin:0;
+  padding:17px 17px 15px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:10px;
+  border-radius:16px;
+  box-shadow:0 5px 17px rgba(41,33,50,.035);
+}
+body.pdh-home .pdh-pill__heading {display:flex;align-items:center;gap:9px;}
+body.pdh-home .market-cards .pdh-pill__icon {
+  display:grid;
+  place-items:center;
+  width:30px;height:30px;
+  border-radius:10px;
+  font-size:16px;
+  flex:none;
+}
+body.pdh-home .market-cards .pdh-pill__label {margin:0;font-size:13px;font-weight:800;}
+body.pdh-home .market-cards .pdh-pill__value {
+  font-size:clamp(29px,2.5vw,37px);
+  line-height:1.04;
+  margin:0;
+  letter-spacing:-.05em;
+}
+body.pdh-home .market-cards .pdh-pill__meta {margin-top:1px;font-size:12px;line-height:1.35;}
+/* Un valor sin cargar nunca debe parecer "S/ —". */
+body.pdh-home #best-compra[data-has-rate="false"]::before,
+body.pdh-home #best-venta[data-has-rate="false"]::before {content:none;}
+
+/* Recomendación: una sola tarjeta, SIN un recuadro amarillo interno. */
+body.pdh-home .market-cards > .spotlight-card {
+  min-width:0;
+  padding:15px 16px 12px;
+  border:1px solid rgba(80,57,88,.15);
+  border-radius:16px;
+  background:linear-gradient(132deg,rgba(251,250,252,.95),rgba(245,241,246,.92));
+  box-shadow:0 5px 18px rgba(33,19,41,.055);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:8px;
+}
+body.pdh-home .spotlight-card__head {display:flex;align-items:center;gap:9px;min-height:22px;}
+body.pdh-home .spotlight-card__head .section-title {
+  margin:0;font-size:14px;line-height:1.25;font-weight:800;color:#33253a;
+}
+body.pdh-home .spotlight-card__symbol {
+  flex:none;display:grid;place-items:center;
+  width:26px;height:26px;border-radius:9px;
+  background:rgba(55,34,65,.09);color:#53365d;font-size:14px;
+}
+body.pdh-home .spotlight-card .best-deal {
+  margin:0;
+  padding:0;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+body.pdh-home .best-deal__identity {
+  display:flex;align-items:center;gap:13px;
+  min-height:40px;min-width:0;
+}
+body.pdh-home .spotlight-card .best-deal__identity img {
+  display:block;
+  width:110px;
+  height:40px;
+  max-width:42%;
+  object-fit:contain;
+  object-position:left center;
+  flex:0 1 auto;
+}
+body.pdh-home .spotlight-card .best-deal__identity img[hidden] {display:none!important;}
+body.pdh-home .best-deal__name-fallback {
+  display:none;
+  color:#33253a;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+body.pdh-home .best-deal__identity.is-logo-fallback .best-deal__name-fallback {display:block;}
+body.pdh-home .best-deal__operation {
+  margin-left:auto;
+  display:inline-block;
+  padding:6px 9px;
+  border-radius:9px;
+  color:#53455a;
+  background:rgba(231,225,235,.66);
+  font-size:11px;
+  font-weight:750;
+  line-height:1.3;
+  text-align:right;
+  white-space:normal;
+}
+body.pdh-home .spotlight-card .best-deal__rates {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:0;
+  border:0;
+  margin:0;
+}
+body.pdh-home .spotlight-card .best-deal__rates span {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+  min-width:0;
+  padding:7px 9px;
+  gap:8px;
+  border:1px solid rgba(85,66,89,.09);
+  border-radius:9px;
+  background:rgba(255,255,255,.7);
+  font-size:11px;
+  color:#6c6370;
+}
+body.pdh-home .spotlight-card .best-deal__rates b {
+  color:#382a40;
+  font-size:14px;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+}
+body.pdh-home .spotlight-card .best-deal__note {
+  min-height:0;
+  font-size:11px;
+  color:#68616e;
+  line-height:1.4;
+  margin:0;
+}
+body.pdh-home .spotlight-card .best-deal__note:empty {display:none;}
+body.pdh-home .spotlight-card .best-deal .btn-primary {
+  width:100%;min-height:35px;
+  margin:0;
+  padding:8px 12px;
+  border-radius:10px;
+  background:#33223c;
+  color:#e8f0af;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:none;
+}
+body.pdh-home .spotlight-card .best-deal__fine {
+  font-size:10px;line-height:1.35;
+  margin:0;
+  color:#79717c;
+}
+
+/* Refinamiento del centro: números y logotipos más visibles, menos aire. */
+body.pdh-home .trade-grid {grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:14px;}
+body.pdh-home .conversor-wrapper-modern,body.pdh-home .casas-cambio {padding:18px;}
+body.pdh-home .casas-cambio .tabla-casas td {font-size:12px;}
+body.pdh-home .casas-cambio .tabla-casas td.compra,
+body.pdh-home .casas-cambio .tabla-casas td.venta,
+body.pdh-home .casas-cambio .tabla-casas td.resultado {font-size:13px;font-variant-numeric:tabular-nums;}
+body.pdh-home .tabla-casas .casa-logo img {max-height:32px;}
+body.pdh-home .comparison-hint {font-size:12px;}
+body.pdh-home .resultado-modern__caption,body.pdh-home .fineprint {font-size:11px;}
+body.pdh-home .reference-grid .trend-chart {min-height:185px;max-height:235px;}
+body.pdh-home .reference-grid #trend-svg {min-height:185px;max-height:235px;}
+body.pdh-home .trend-foot,body.pdh-home .sunat-note {font-size:12px;}
+
+@media (max-width:1050px) {
+  body.pdh-home .market-cards {grid-template-columns:repeat(2,minmax(0,1fr));}
+  body.pdh-home .market-cards > .spotlight-card {grid-column:1/-1;}
+  body.pdh-home .market-cards .pdh-pill {min-height:128px;gap:9px;}
+  body.pdh-home .market-cards > .spotlight-card {min-height:154px;}
+  body.pdh-home .spotlight-card .best-deal__rates {max-width:100%;}
+  body.pdh-home .trade-grid {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);}
+}
+@media (max-width:790px) {
+  body.pdh-home .trade-grid {grid-template-columns:minmax(0,1fr);}
+  body.pdh-home .market-cards > .spotlight-card {grid-column:1/-1;}
+  body.pdh-home .reference-grid {grid-template-columns:minmax(0,1fr);}
+}
+@media (max-width:660px) {
+  body.pdh-home .market-overview {gap:12px;}
+  body.pdh-home .market-cards {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+  body.pdh-home .market-cards .pdh-pill {min-height:120px;padding:12px 11px;gap:7px;}
+  body.pdh-home .market-cards .pdh-pill__label {font-size:12px;}
+  body.pdh-home .market-cards .pdh-pill__value {font-size:clamp(22px,6.5vw,29px);}
+  body.pdh-home .market-cards .pdh-pill__meta {font-size:10px;}
+  body.pdh-home .market-cards > .spotlight-card {min-height:0;padding:14px;}
+  body.pdh-home .spotlight-card .best-deal__identity {flex-wrap:wrap;gap:8px;}
+  body.pdh-home .spotlight-card .best-deal__operation {max-width:64%;}
+  body.pdh-home .trade-grid {gap:12px;}
+  body.pdh-home .reference-grid .trend-chart {min-height:168px;max-height:235px;}
+  body.pdh-home .reference-grid #trend-svg {min-height:168px;max-height:235px;}
+}
+@media (max-width:355px) {
+  body.pdh-home .market-cards .pdh-pill__label {font-size:11px;}
+  body.pdh-home .market-cards .pdh-pill__value {font-size:21px;}
+  body.pdh-home .spotlight-card .best-deal__rates {gap:5px;}
+  body.pdh-home .spotlight-card .best-deal__rates span {padding:6px;gap:3px;font-size:10px;}
+  body.pdh-home .spotlight-card .best-deal__rates b {font-size:12px;}
+}
+/* Desactivar los brillos decorativos del tema antiguo en esta tarjeta:
+   formaban una franja amarilla aunque el nuevo fondo fuese transparente. */
+body.pdh-home .spotlight-card .best-deal::before,
+body.pdh-home .spotlight-card .best-deal::after {content:none!important;display:none!important;animation:none!important;}

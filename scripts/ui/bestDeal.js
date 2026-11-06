@@ -27,30 +27,52 @@ export function renderBestDeal() {
   const noteEl = els.bestNote;
   const btnEl = els.btnIrMejor;
   const logoEl = els.bestLogo;
+  const operationEl = document.getElementById('best-operation');
+
+  // Se muestra el logo o, como alternativa si falta la imagen, el nombre.
+  function setBrandImage(src, name) {
+    if (!logoEl) return;
+    const container = logoEl.closest('.best-deal__identity');
+    const useFallback = () => {
+      logoEl.hidden = true;
+      container?.classList.add('is-logo-fallback');
+    };
+    if (!src) {
+      logoEl.removeAttribute('src');
+      useFallback();
+      return;
+    }
+    logoEl.onload = () => {
+      logoEl.hidden = false;
+      container?.classList.remove('is-logo-fallback');
+    };
+    logoEl.onerror = useFallback;
+    logoEl.alt = name ? `Logo de ${name}` : '';
+    logoEl.src = src;
+    if (logoEl.complete && logoEl.naturalWidth > 0) {
+      logoEl.hidden = false;
+      container?.classList.remove('is-logo-fallback');
+    }
+  }
 
   if (!nameEl || !buyEl || !sellEl) return;
 
   // ✅ pool = validas sin SUNAT
   const filas = (Array.isArray(state.validas) ? state.validas : []).filter(x => !isSunatRow(x));
 
-  // Estado vacío
+  // Sin cotizaciones: no inventar casas ni prometer enlaces.
   if (!filas.length) {
-    nameEl.textContent = '—';
+    nameEl.textContent = 'Sin cotizaciones';
     buyEl.textContent = '—';
     sellEl.textContent = '—';
     if (noteEl) noteEl.textContent = '';
+    if (operationEl) operationEl.textContent = 'Esperando datos';
     if (btnEl) {
       btnEl.disabled = true;
-      btnEl.textContent = 'Ir';
+      btnEl.textContent = 'Enlace no disponible';
       btnEl.onclick = null;
     }
-    if (logoEl) {
-      logoEl.src = '/IMG/ui/best-placeholder.webp';
-      logoEl.alt = 'Mejor opción hoy';
-      logoEl.loading = 'eager';
-      logoEl.fetchPriority = 'high';
-      logoEl.decoding = 'async';
-    }
+    setBrandImage(null, '');
     return;
   }
 
@@ -86,17 +108,13 @@ export function renderBestDeal() {
   }
 
   if (!winner) {
-    nameEl.textContent = '—';
+    nameEl.textContent = 'Sin cotizaciones';
     buyEl.textContent = '—';
     sellEl.textContent = '—';
     if (noteEl) noteEl.textContent = '';
-    if (logoEl) {
-      logoEl.src = '/IMG/ui/best-placeholder.webp';
-      logoEl.alt = 'Mejor opción hoy';
-      logoEl.loading = 'eager';
-      logoEl.fetchPriority = 'high';
-      logoEl.decoding = 'async';
-    }
+    if (operationEl) operationEl.textContent = 'Esperando datos';
+    if (btnEl) { btnEl.disabled = true; btnEl.onclick = null; }
+    setBrandImage(null, '');
     return;
   }
 
@@ -104,6 +122,7 @@ export function renderBestDeal() {
   nameEl.textContent = winner.casa || '—';
   buyEl.textContent = rateFmt(winner.compra);
   sellEl.textContent = rateFmt(winner.venta);
+  if (operationEl) operationEl.textContent = paintCompra ? 'Para vender dólares' : paintVenta ? 'Para comprar dólares' : 'Según tu operación';
 
   // Nota: diferencia vs SUNAT (texto corto)
   if (noteEl) {
@@ -140,34 +159,9 @@ export function renderBestDeal() {
   }
 
 
-  // Logo
-  if (logoEl) {
-    const raw = getCasaLogoSrc(winner.casa);
-    const src = raw ? (BASE_PATH + raw) : "";
-
-    const finalSrc = src || "/IMG/ui/best-placeholder.webp";
-
-    // Pintar imagen
-    logoEl.src = finalSrc;
-    logoEl.alt = winner.casa ? `Logo de ${winner.casa}` : "Mejor opción hoy";
-    logoEl.loading = "eager";
-    logoEl.fetchPriority = "high";
-    logoEl.decoding = "async";
-
-    // Preload SOLO si es una ruta válida (evita "invalid href")
-    if (src && (src.startsWith("/") || src.startsWith("http"))) {
-      const key = "bestdeal-preload";
-      let link = document.querySelector(`link[data-${key}]`);
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "preload";
-        link.as = "image";
-        link.setAttribute(`data-${key}`, "1");
-        document.head.appendChild(link);
-      }
-      link.href = src;
-    }
-  }
+  // Mostrar una sola marca visual: logo, o nombre de respaldo si no existe.
+  const logoSource = getCasaLogoSrc(winner.casa);
+  setBrandImage(logoSource ? BASE_PATH + logoSource : null, winner.casa);
 
   // Botón ir a la casa (con UTM)
   if (btnEl) {
@@ -179,7 +173,8 @@ export function renderBestDeal() {
       content: 'best_deal',
     });
     btnEl.disabled = !safeUrl;
-    btnEl.textContent = safeUrl ? `Ir a ${winner.casa}` : 'Enlace no disponible';
+    btnEl.textContent = safeUrl ? 'Visitar casa de cambio ↗' : 'Enlace no disponible';
+    btnEl.setAttribute('aria-label', safeUrl ? `Visitar ${winner.casa} en una pestaña nueva` : 'Enlace no disponible');
     btnEl.onclick = safeUrl ? () => window.open(safeUrl, '_blank', 'noopener') : null;
   }
 

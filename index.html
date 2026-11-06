@@ -5,7 +5,6 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preload" as="image" href="/IMG/ui/best-placeholder.webp" fetchpriority="high">
   <link rel="modulepreload" href="/scripts/main.js">
 
   <!-- Cookies -->
@@ -250,23 +249,51 @@
 
       <div class="center">
         <main id="main" class="pdh-main">
-          <!-- Prioridad 1: precio del dólar y casa recomendada, una fila sin alturas forzadas. -->
-          <section class="market-overview" aria-label="Mejores cotizaciones disponibles">
+          <!-- Cabecera breve y tres indicadores de igual jerarquía. -->
+          <section class="market-overview" aria-label="Cotizaciones principales y mejor casa para cambiar">
             <div class="hero-intro">
-<div class="hero-intro__eyebrow"><span aria-hidden="true" class="live-dot"></span> Comparador USD / PEN</div>
-<h1>Precio del dólar hoy en Perú</h1>
-<p class="hero-intro__lead">Compara tasas de compra y venta de casas de cambio online y calcula cuánto podrías recibir.</p>
-<div class="updated-chip" id="actualizado-estado"><span aria-hidden="true" class="live-dot"></span><span>Última actualización: <time datetime="" id="updatedAt"><span id="fecha">consultando</span> <span id="hora"></span></time></span></div>
-<p class="data-alert" hidden="" id="estado-datos" role="status"></p>
-<div aria-label="Mejores precios disponibles" class="pdh-pills">
-<div class="pdh-pill pdh-pill--buy"><span aria-hidden="true" class="pdh-pill__icon">↘</span><span class="pdh-pill__label">Mejor compra</span><strong class="pdh-pill__value" id="best-compra">—</strong><span class="pdh-pill__meta">La más alta · vendes USD</span></div>
-<div class="pdh-pill pdh-pill--sell"><span aria-hidden="true" class="pdh-pill__icon">↗</span><span class="pdh-pill__label">Mejor venta</span><strong class="pdh-pill__value" id="best-venta">—</strong><span class="pdh-pill__meta">La más baja · compras USD</span></div>
-</div>
-</div>
-            <section class="panel spotlight-card" aria-labelledby="t-spotlight">
-              <header class="section-head"><span class="feature-icon" aria-hidden="true">★</span><div><h2 id="t-spotlight" class="section-title">Mejor casa de cambio</h2><span class="section-subtitle">Según tu moneda y operación</span></div></header>
-              <div aria-label="Casa destacada según la operación" class="best-deal"><div class="best-deal__head"><span class="best-deal__tag">Mejor tasa para tu operación</span></div><div class="best-deal__row"><img alt="" height="34" id="best-logo" loading="lazy" src="/IMG/ui/best-placeholder.webp" width="88"/><div class="best-deal__details"><strong id="best-name">—</strong><small id="best-note"></small></div><div class="best-deal__rates"><span>Compra <b id="best-buy">—</b></span><span>Venta <b id="best-sell">—</b></span></div><button class="btn-primary" disabled="" id="btn-ir-mejor" type="button">Ir a la casa ↗</button></div><p class="best-deal__fine">Los precios pueden cambiar antes de confirmar tu operación.</p></div>
-            </section>
+              <div class="hero-intro__eyebrow"><span aria-hidden="true" class="live-dot"></span> Comparador USD / PEN</div>
+              <h1>Precio del dólar hoy en Perú</h1>
+              <p class="hero-intro__lead">Compara casas de cambio online y calcula cuánto recibirías.</p>
+              <div class="updated-chip" id="actualizado-estado"><span aria-hidden="true" class="live-dot"></span><span>Última actualización: <time datetime="" id="updatedAt"><span id="fecha">consultando</span> <span id="hora"></span></time></span></div>
+              <p class="data-alert" hidden id="estado-datos" role="status"></p>
+            </div>
+
+            <div class="market-cards">
+              <div class="pdh-pills" aria-label="Mejores tasas de compra y venta">
+                <div class="pdh-pill pdh-pill--buy">
+                  <div class="pdh-pill__heading"><span aria-hidden="true" class="pdh-pill__icon">↘</span><span class="pdh-pill__label">Mejor compra</span></div>
+                  <strong class="pdh-pill__value" id="best-compra" data-has-rate="false">—</strong>
+                  <span class="pdh-pill__meta">Si vendes dólares</span>
+                </div>
+                <div class="pdh-pill pdh-pill--sell">
+                  <div class="pdh-pill__heading"><span aria-hidden="true" class="pdh-pill__icon">↗</span><span class="pdh-pill__label">Mejor venta</span></div>
+                  <strong class="pdh-pill__value" id="best-venta" data-has-rate="false">—</strong>
+                  <span class="pdh-pill__meta">Si compras dólares</span>
+                </div>
+              </div>
+
+              <section class="panel spotlight-card" aria-labelledby="t-spotlight">
+                <header class="spotlight-card__head">
+                  <span class="spotlight-card__symbol" aria-hidden="true">★</span>
+                  <h2 class="section-title" id="t-spotlight">Mejor casa para ti</h2>
+                </header>
+                <div class="best-deal" aria-label="Casa recomendada para la operación seleccionada">
+                  <div class="best-deal__identity">
+                    <img alt="" height="40" id="best-logo" loading="lazy" src="/IMG/ui/best-placeholder.webp" width="110" />
+                    <strong class="best-deal__name-fallback" id="best-name">Sin cotizaciones</strong>
+                    <span class="best-deal__operation" id="best-operation">Según tu operación</span>
+                  </div>
+                  <div class="best-deal__rates" aria-label="Cotizaciones de la casa seleccionada">
+                    <span>Compra <b id="best-buy">—</b></span>
+                    <span>Venta <b id="best-sell">—</b></span>
+                  </div>
+                  <p class="best-deal__note" id="best-note" aria-live="polite"></p>
+                  <button class="btn-primary" disabled id="btn-ir-mejor" type="button">Consultar casa ↗</button>
+                </div>
+                <p class="best-deal__fine">Tasas informativas: confirma el precio antes de operar.</p>
+              </section>
+            </div>
           </section>
 
           <!-- Prioridad 2: calculadora y comparación a la misma altura de inicio, con altura natural. -->

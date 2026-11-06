@@ -80,3 +80,87 @@ body.pdh-home .reference-grid--market .sunat-trend-card__disclaimer {font-size:1
   body.pdh-home .trend-period {font-size:10.5px;padding:6px 10px;}
 }
 @media(prefers-reduced-motion:reduce) {body.pdh-home .pdh-pill__brand {transition:none;}}
+
+
+/* Ajuste noviembre: la marca ganadora queda JUNTO a la tasa, no debajo.
+   No altera los IDs ni el comportamiento de los enlaces JS. */
+body.pdh-home .market-cards .pdh-pill {
+  min-height:101px;
+  gap:8px;
+  justify-content:center;
+}
+body.pdh-home .pdh-pill__main {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  width:100%;
+  min-width:0;
+}
+body.pdh-home .pdh-pill__quote {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+  min-width:0;
+  flex:1 1 auto;
+}
+body.pdh-home .pdh-pill__quote .pdh-pill__meta {margin-top:0;}
+body.pdh-home .pdh-pill__main .pdh-pill__brand {
+  align-self:center;
+  flex:0 0 auto;
+  max-width:104px;
+  min-height:32px;
+  margin:0;
+  padding:3px 5px;
+  gap:4px;
+}
+body.pdh-home .pdh-pill__main .pdh-pill__brand img {
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:85px;
+  max-height:30px;
+}
+body.pdh-home .pdh-pill__brand:not(.has-logo) .pdh-pill__brand-name {
+  display:block;
+  max-width:76px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+body.pdh-home .pdh-pill__main .pdh-pill__value {font-size:clamp(23px,2.25vw,32px);}
+
+/* Con datos mensuales parciales, el SVG se adapta a TODO el área disponible.
+   Su viewBox también se actualiza con JS para evitar barras vacías laterales. */
+body.pdh-home .reference-grid--market .trend-chart {
+  height:220px;
+  min-height:220px;
+  padding:7px 12px 5px;
+}
+body.pdh-home .reference-grid--market #trend-svg {
+  width:100%;height:100%;min-height:0;max-width:none;max-height:none;
+  flex:1 1 auto;
+}
+@media (max-width:900px) {
+  body.pdh-home .pdh-pill__main {gap:6px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__brand {max-width:83px;padding:3px 4px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__brand img {max-width:64px;max-height:26px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__value {font-size:clamp(21px,3.05vw,29px);}
+}
+@media (max-width:500px) {
+  body.pdh-home .market-cards .pdh-pill {min-height:100px;padding:9px 9px;gap:7px;}
+  body.pdh-home .pdh-pill__main {gap:4px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__value {font-size:clamp(19px,5.5vw,25px);}
+  body.pdh-home .pdh-pill__main .pdh-pill__brand {max-width:53px;min-height:27px;padding:3px;gap:2px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__brand img {max-width:40px;max-height:23px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__brand:not(.has-logo) .pdh-pill__brand-name {max-width:43px;font-size:9px;}
+  body.pdh-home .pdh-pill__brand-arrow {font-size:10px;}
+  body.pdh-home .pdh-pill__meta {font-size:10px;}
+  body.pdh-home .reference-grid--market .trend-chart {height:184px;min-height:184px;padding:4px 5px;}
+}
+@media (max-width:350px) {
+  body.pdh-home .pdh-pill__main .pdh-pill__brand {max-width:40px;padding:2px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__brand img {max-width:31px;max-height:20px;}
+  body.pdh-home .pdh-pill__main .pdh-pill__value {font-size:19px;}
+}

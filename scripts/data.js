@@ -49,7 +49,9 @@ export async function cargarData() {
     setState({ sunat: { compra: null, venta: null, fecha: null, source: null } });
   }
 
-  // resumen -> armar lista pequeña (como ya hacías)
+  // /api/data entrega el listado completo en resumen.todas desde la nueva API.
+  // Compatibilidad: si la API antigua aún no incluye `todas`, reconstruimos
+  // el conjunto a partir de los tops, sin romper el comparador.
   const resumen = payload.resumen;
 
   if (!resumen) {
@@ -65,29 +67,32 @@ export async function cargarData() {
     return;
   }
 
-  const map = new Map();
-  const push = (x) => {
-    if (!x || !x.casa) return;
-    map.set(slugCasa(x.casa), x);
-  };
+  const todasDisponibles = Array.isArray(resumen.todas);
+  const origen = todasDisponibles
+    ? resumen.todas
+    : [resumen.mejorCompra, resumen.mejorVenta,
+        ...(Array.isArray(resumen.topCompra) ? resumen.topCompra : []),
+        ...(Array.isArray(resumen.topVenta) ? resumen.topVenta : [])];
 
-  push(resumen.mejorCompra);
-  push(resumen.mejorVenta);
-  (resumen.topCompra || []).forEach(push);
-  (resumen.topVenta || []).forEach(push);
+  // Datos listos para pantalla: solo casas comerciales con ambas tasas válidas.
+  // `regular` es una cotización válida (spread alto), no un scraper fallido.
+  const mapa = new Map();
+  for (const casa of origen) {
+    if (!casa || !casa.casa) continue;
+    const slug = slugCasa(casa.casa);
+    const source = String(casa.source ?? '').trim().toLowerCase();
+    const compra = Number(casa.compra);
+    const venta = Number(casa.venta);
+    if (!slug || slug === 'sunat') continue;
+    if (source !== 'scraper' && source !== 'regular') continue;
+    if (!Number.isFinite(compra) || !Number.isFinite(venta) || compra <= 0 || venta <= 0) continue;
+    if (venta < compra) continue; // Nunca mostrar una cotización invertida.
+    if (!mapa.has(slug)) mapa.set(slug, { ...casa, slug, compra, venta, source });
+  }
 
-  const todasRaw = [...map.values()];
-
-  const todas = todasRaw.map(c => {
-    const slug = slugCasa(c.casa);
-    return {
-      ...c,
-      slug,
-    };
-  });
-
-  const validas = todas.filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
-  const invalidas = todas.filter(c => !Number.isFinite(c.compra) || !Number.isFinite(c.venta));
+  const validas = [...mapa.values()];
+  const todas = validas; // mismas filas para el ranking y la calculadora
+  const invalidas = []; // datos descartados no se publican en la interfaz
 
   const mejorCompra = validas.length ? Math.max(...validas.map(c => c.compra)) : null;
   const mejorVenta  = validas.length ? Math.min(...validas.map(c => c.venta))  : null;

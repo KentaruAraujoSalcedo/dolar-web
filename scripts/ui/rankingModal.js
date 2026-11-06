@@ -37,11 +37,9 @@ function renderMeta() {
   if (!meta) return;
 
   const totalTxt = Number.isFinite(state?.meta?.total) ? state.meta.total : "—";
-  const validasTxt = Number.isFinite(state?.meta?.validas)
-    ? state.meta.validas
-    : Array.isArray(state?.validas)
-      ? state.validas.length
-      : "—";
+  // La cifra del modal debe coincidir con las filas realmente mostradas;
+  // meta.json puede pertenecer a una lectura KV de otro momento.
+  const validasTxt = getCasasValidasLimpias({ fallbackToTasas: false }).length;
 
   meta.textContent = `Monitoreadas: ${totalTxt} · Válidas hoy: ${validasTxt}`;
   if (metaAll) metaAll.textContent = `${totalTxt} casas`;

@@ -154,7 +154,7 @@ export function recalcResultadosEnContainer(containerEl, rowSelector = ".fila-ca
 
 /**
  * Devuelve array limpio:
- * - solo source="scraper"
+ * - source="scraper" o "regular" (ambas cotizaciones válidas)
  * - sin SUNAT
  * - compra/venta numéricas (Number)
  * - filtra solo finitas
@@ -176,14 +176,14 @@ export function getCasasValidasLimpias({ fallbackToTasas = false } = {}) {
   if (cached) return cached;
 
   const out = base
-    .filter(c => (c?.source || "").toLowerCase() === "scraper")
+    .filter(c => ["scraper", "regular"].includes(String(c?.source || "").toLowerCase()))
     .filter(c => String(c?.casa || "").toUpperCase() !== "SUNAT" && String(c?.slug || "").toLowerCase() !== "sunat")
     .map(c => ({
       ...c,
       compra: Number(c?.compra),
       venta: Number(c?.venta),
     }))
-    .filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta));
+    .filter(c => Number.isFinite(c.compra) && Number.isFinite(c.venta) && c.compra > 0 && c.venta > 0 && c.venta >= c.compra);
 
   _cleanCasasCache.set(base, out);
   return out;

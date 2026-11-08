@@ -1,0 +1,97 @@
+/* PrecioDolarHoy.pe — Noticias del dólar, sección complementaria */
+body.pdh-home .pdh-news {
+  margin: 17px 0 20px;
+  min-width: 0;
+}
+body.pdh-home .pdh-news__heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+body.pdh-home .pdh-news__title {
+  margin: 0;
+  color: #24192e;
+  font-size: clamp(16px, 1.35vw, 20px);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -.035em;
+}
+body.pdh-home .pdh-news__subtitle {
+  font-size: 11px;
+  color: #716c7d;
+  margin: 3px 0 0;
+}
+body.pdh-home .pdh-news__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 215px), 1fr));
+  gap: 10px;
+}
+body.pdh-home .pdh-news__card {
+  min-width: 0;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #e6e0eb;
+  border-radius: 13px;
+  box-shadow: 0 3px 12px rgba(48, 31, 55, .055);
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+body.pdh-home .pdh-news__card:hover {
+  box-shadow: 0 7px 20px rgba(48, 31, 55, .11);
+  transform: translateY(-1px);
+}
+body.pdh-home .pdh-news__thumb {
+  display: block;
+  width: 116px;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  flex: 0 0 116px;
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid #e6e0eb;
+  background: #edeaf5;
+}
+body.pdh-home .pdh-news__details { min-width: 0; }
+body.pdh-home .pdh-news__link {
+  display: block;
+  color: #322441;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.42;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+body.pdh-home .pdh-news__link:hover,
+body.pdh-home .pdh-news__link:focus-visible {
+  color: #633b7a;
+  text-decoration: underline;
+}
+body.pdh-home .pdh-news__meta {
+  margin: 7px 0 0;
+  font-size: 10px;
+  line-height: 1.45;
+  color: #767081;
+}
+body.pdh-home .pdh-news__disclaimer {
+  margin: 7px 1px 0;
+  color: #827c8e;
+  font-size: 10px;
+  line-height: 1.5;
+}
+@media (max-width: 670px) {
+  body.pdh-home .pdh-news { margin: 16px 0; }
+  body.pdh-home .pdh-news__grid { grid-template-columns: 1fr; }
+  body.pdh-home .pdh-news__thumb { width: 104px; flex-basis: 104px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.pdh-home .pdh-news__card { transition: none; }
+  body.pdh-home .pdh-news__card:hover { transform: none; }
+}
+
+@media (max-width: 390px) {
+  body.pdh-home .pdh-news__thumb { width: 90px; flex-basis: 90px; }
+}

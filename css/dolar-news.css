@@ -1,6 +1,6 @@
 /* PrecioDolarHoy.pe — Noticias del dólar, sección complementaria */
 body.pdh-home .pdh-news {
-  margin: 4px 0;
+  margin: 0;
   min-width: 0;
 }
 body.pdh-home .pdh-news__heading {
@@ -77,7 +77,7 @@ body.pdh-home .pdh-news__meta {
   color: #767081;
 }
 @media (max-width: 670px) {
-  body.pdh-home .pdh-news { margin: 4px 0; }
+  body.pdh-home .pdh-news { margin: 0; }
   body.pdh-home .pdh-news__grid { grid-template-columns: 1fr; }
   body.pdh-home .pdh-news__thumb { width: 104px; flex-basis: 104px; }
 }

@@ -80,6 +80,7 @@
   <!-- CSS -->
   <link rel="stylesheet" href="/css/themes-estructura/theme-estructura-base.css">
   <link rel="stylesheet" href="/css/themes-diseno/theme-diseno-cool.css">
+  <link rel="stylesheet" href="/css/conversion-tools.css">
 
   <!-- JSON-LD: WebPage -->
   <script type="application/ld+json">
@@ -187,6 +188,28 @@
                 herramienta práctica, puedes hacerlo en nuestra
                 <a href="/">calculadora del precio del dólar hoy</a>.
               </p>
+
+
+              <!-- Calculadora funcional: usa únicamente tasas públicas de dolar-api -->
+              <section class="conversion-tool" data-conversion-tool data-mode="pen-usd" aria-labelledby="conversion-tool-title">
+                <div class="conversion-tool__top">
+                  <h2 id="conversion-tool-title">Calculadora de soles a dólares</h2>
+                  <span class="conversion-tool__badge">Comprar USD</span>
+                </div>
+                <p class="conversion-tool__intro">Calcula cuántos dólares podrías recibir usando la mejor tasa pública de <strong>venta</strong> disponible.</p>
+                <label class="conversion-tool__label" for="conversion-amount">¿Cuántos soles tienes?</label>
+                <div class="conversion-tool__field">
+                  <span class="conversion-tool__currency" aria-hidden="true">S/</span>
+                  <input class="conversion-tool__input" type="number" id="conversion-amount" data-amount min="0.01" max="1000000000000" step="any" value="375" inputmode="decimal" autocomplete="off" aria-describedby="conversion-tool-notice">
+                </div>
+                <div class="conversion-tool__output" role="status" aria-live="polite" aria-atomic="true">
+                  <span class="conversion-tool__result-label">Recibirías aproximadamente</span>
+                  <strong class="conversion-tool__result" data-result>Consultando tasa…</strong>
+                  <p class="conversion-tool__rate" data-rate>Consultando cotizaciones públicas…</p>
+                </div>
+                <p class="conversion-tool__updated" data-updated>—</p>
+                <p class="conversion-tool__notice" id="conversion-tool-notice">Estimación referencial, no una oferta garantizada. Verifica el precio y las condiciones antes de operar. <a href="/#comparador">Comparar casas de cambio</a>.</p>
+              </section>
 
               <h2>¿Cómo pasar de soles a dólares?</h2>
               <p>
@@ -408,6 +431,7 @@
     <button type="button" onclick="rejectCookies()">Rechazar</button>
   </div>
   <script defer src="/scripts/cookies.js"></script>
+  <script type="module" src="/scripts/conversion-tools.js"></script>
 
 </body>
 

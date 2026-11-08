@@ -76,12 +76,6 @@ body.pdh-home .pdh-news__meta {
   line-height: 1.45;
   color: #767081;
 }
-body.pdh-home .pdh-news__disclaimer {
-  margin: 7px 1px 0;
-  color: #827c8e;
-  font-size: 10px;
-  line-height: 1.5;
-}
 @media (max-width: 670px) {
   body.pdh-home .pdh-news { margin: 4px 0; }
   body.pdh-home .pdh-news__grid { grid-template-columns: 1fr; }

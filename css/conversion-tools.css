@@ -1,0 +1,127 @@
+/* ============================================================
+   Calculadoras de conversión en páginas educativas
+   Estilo local, sin afectar calculadora ni comparador de portada
+   ============================================================ */
+.conversion-tool {
+  margin: 24px 0 28px;
+  padding: clamp(16px, 3vw, 24px);
+  border: 1px solid rgba(76, 49, 89, .15);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fcfbff 0%, #f6f2f9 100%);
+  box-shadow: 0 10px 26px rgba(44, 24, 53, .09);
+}
+.conversion-tool__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  margin-bottom: 10px;
+}
+.static-content .conversion-tool h2 {
+  margin: 0;
+  font-size: clamp(1.08rem, 2.3vw, 1.32rem);
+  letter-spacing: -.02em;
+}
+.conversion-tool__badge {
+  display: inline-flex;
+  border-radius: 30px;
+  padding: 5px 10px;
+  color: #563460;
+  background: #ede6f2;
+  font-size: .76rem;
+  font-weight: 800;
+}
+.static-content .conversion-tool__intro {
+  font-size: .91rem;
+  line-height: 1.55;
+  margin-bottom: 16px;
+  color: #554b60;
+}
+.conversion-tool__label {
+  display: block;
+  margin-bottom: 7px;
+  color: #33263b;
+  font-size: .89rem;
+  font-weight: 800;
+}
+.conversion-tool__field {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #cfc5d8;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.conversion-tool__field:focus-within {
+  border-color: #755685;
+  box-shadow: 0 0 0 3px rgba(110, 62, 145, .13);
+}
+.conversion-tool__currency {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  color: #46314e;
+  font-weight: 800;
+  background: #f5f1f8;
+  border-right: 1px solid #e8e2ed;
+}
+.conversion-tool__input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  padding: 10px 12px;
+  border: none;
+  outline: none;
+  color: #24192b;
+  background: #fff;
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.conversion-tool__output {
+  margin-top: 14px;
+  padding: 17px;
+  border-radius: 13px;
+  border: 1px solid #cfe2d5;
+  background: #eaf6ee;
+}
+.conversion-tool__result-label {
+  display: block;
+  margin-bottom: 3px;
+  color: #37684c;
+  font-size: .84rem;
+  font-weight: 800;
+}
+.conversion-tool__result {
+  display: block;
+  color: #187446;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -.025em;
+  line-height: 1.23;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.static-content .conversion-tool__rate,
+.static-content .conversion-tool__updated,
+.static-content .conversion-tool__notice {
+  font-size: .82rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+  line-height: 1.45;
+}
+.static-content .conversion-tool__rate { color: #365d45; }
+.static-content .conversion-tool__updated { color: #605569; }
+.static-content .conversion-tool__notice { color: #62536a; }
+.static-content .conversion-tool__notice a { font-size: inherit; }
+@media(max-width: 520px) {
+  .conversion-tool { margin: 18px 0 24px; }
+  .conversion-tool__output { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .conversion-tool__field { transition: none; }
+}

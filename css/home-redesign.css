@@ -239,7 +239,7 @@ body.pdh-home .faq details[open] summary::after {transform:rotate(180deg);}
 body.pdh-home .faq details p {margin:0;border-top:1px solid #eeebf5;padding:10px 12px;color:#5b5771;font-size:11px;line-height:1.65;}
 /* ---- footer ---- */
 body.pdh-home .site-footer {padding:25px 18px 10px;margin-top:22px;background:linear-gradient(180deg,#f5f3ff,#f9f7ff);border:1px solid #ece8fb;border-radius:18px;}
-body.pdh-home .site-footer__inner {display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:25px;}
+body.pdh-home .site-footer__inner {display:grid;grid-template-columns:1.5fr repeat(4, minmax(0, 1fr));;gap:18px;}
 body.pdh-home .site-footer__brand {min-width:0;}
 body.pdh-home .site-footer__brand img {display:inline-block;width:39px;height:39px;vertical-align:middle;object-fit:contain;margin-right:6px;}
 body.pdh-home .site-footer__brand strong {font-size:15px;font-weight:850;color:#1d1a3e;letter-spacing:-.035em;white-space:nowrap;}

@@ -95,7 +95,6 @@
       grid.appendChild(article);
     });
     section.appendChild(grid);
-    section.appendChild(create('p', 'pdh-news__disclaimer', 'Imágenes ilustrativas propias. Titulares de terceros: consulta la fuente original para leer cada noticia.'));
     if (guides) guides.insertAdjacentElement('afterend', section);
     else info.insertAdjacentElement('beforebegin', section);
   }
